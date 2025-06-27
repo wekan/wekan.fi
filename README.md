@@ -1,3 +1,3 @@
-## wekan.team website
+## wekan.fi website
 
-At https://wekan.team
+At https://wekan.fi
