@@ -111,11 +111,19 @@ sudo snap set wekan port='80'
 
 <h4>Docker Windows/Mac/Linux</h4>
 
-<p>With docker-compose.yml from <a href="https://github.com/wekan/wekan">https://github.com/wekan/wekan</a></p>
+<p>Edit docker-compose.yml from <a href="https://github.com/wekan/wekan">https://github.com/wekan/wekan</a> to have:</p>
+
+<pre>
+ROOT_URL=http://YOUR-IP-ADDRESS
+</pre>
+
+Then start WeKan server:
 
 <pre>
 docker compose up -d
 </pre>
+
+Then use webbrowser at http://YOUR-IP-ADDRESS
 
 <hr>
 
