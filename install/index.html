@@ -87,9 +87,11 @@
 
 <h4>Linux Snap x86_64</h4>
 
-<p>If you are using Linux, it's easiest to install WeKan Snap, that has automatic updates.
-First install Snapd
-<a href="https://snapcraft.io/docs/installing-snapd">https://snapcraft.io/docs/installing-snapd</a>,  then:</p>
+<p>If you are using Linux, it's easiest to install WeKan Snap, that has automatic updates.</p>
+
+<p>1. Install Snapd: <a href="https://snapcraft.io/docs/installing-snapd">https://snapcraft.io/docs/installing-snapd</a></p>
+
+<p> 2. Install WeKan Server:</p>
 
 <p>
 <pre>
@@ -99,11 +101,15 @@ sudo snap set wekan port='80'
 </pre>
 </p>
 
-<p>And then use webbrowser at http://YOUR-IP-ADDRESS</p>
+<p>3. Register and login at http://YOUR-IP-ADDRESS/sign-in . First user will be Admin, and have
+Admin Panel at right top username / Admin Panel. Other registered users will be Normal users.
+At Admin Panel, it's possible to disable self-registration, manage users at People/People,
+set your logo at Settings/Layout, etc.</p>
 
 <h4>SSL/TLS</h4>
 
-<p>If WeKan is at public Internet, you can add SSL/TLS for example with <a href="https://github.com/wekan/wekan/tree/main/docs/Webserver">Caddy</a></p>
+<p>If WeKan is at public Internet, you can add SSL/TLS for example with
+<a href="https://github.com/wekan/wekan/tree/main/docs/Webserver">Caddy</a></p>
 
 <h4>Windows x86_64</h4>
 
@@ -113,17 +119,21 @@ sudo snap set wekan port='80'
 
 <p>Edit docker-compose.yml from <a href="https://github.com/wekan/wekan">https://github.com/wekan/wekan</a> to have:</p>
 
+<p>
 <pre>
 ROOT_URL=http://YOUR-IP-ADDRESS
 </pre>
+</p>
 
-Then start WeKan server:
+<p> Then start WeKan server:</p>
 
+<p>
 <pre>
 docker compose up -d
 </pre>
+</p>
 
-Then use webbrowser at http://YOUR-IP-ADDRESS
+<p>Then use webbrowser at http://YOUR-IP-ADDRESS</p>
 
 <hr>
 
