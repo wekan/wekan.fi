@@ -80,26 +80,24 @@
      <h2 class="fw-bold">On-Premise: Install WeKan ® Server <span class="version-number">v7.92</span>, Meteor 2.14,
          <a href="https://github.com/wekan/node-v14-esm/releases/tag/v14.21.4">Node.js 14.21.4</a>, MongoDB 7.0.21
         </h2>
-
-         <br /><br />
          <p>Newest WeKan at amd64 platforms: Windows On-Premise, Linux bundle, Snap Candidate, Docker, Kubernetes.
          Fixing other platforms In Progress.
          </p>
-         <br /><br />
          <hr>
 
 <h4>Linux Snap x86_64</h4>
 
 <p>If you are using Linux, it's easiest to install WeKan Snap, that has automatic updates.
-First install Snapd 
+First install Snapd
+<a href="https://snapcraft.io/docs/installing-snapd">https://snapcraft.io/docs/installing-snapd</a>,  then:</p>
 
-<a href="https://snapcraft.io/docs/installing-snapd">https://snapcraft.io/docs/installing-snapd</a>,  then:
-
+<p>
 <pre>
 sudo snap install wekan --channel=latest/candidate
 sudo snap set wekan root-url="http://YOUR-IP-ADDRESS"
 sudo snap set wekan port='80'
 </pre>
+</p>
 
 <p>And then use webbrowser at http://YOUR-IP-ADDRESS</p>
 
