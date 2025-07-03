@@ -113,14 +113,6 @@
             <p>App tested at Fairphone 4 with Ubuntu 20.04 based Ubuntu Touch.</p>
             <br />
 
-            <h2 class="fw-bold">Upgrading to Android SDK 34</h2>
-
-            <p><a href="https://www.youtube.com/watch?v=DbarW15E058">https://www.youtube.com/watch?v=DbarW15E058</a> that was mentioned at 
-               <a href="https://github.com/pwa-builder/PWABuilder/issues/4766#issuecomment-2229867608">https://github.com/pwa-builder/PWABuilder/issues/4766#issuecomment-2229867608</a></p>
-            <p><a href="https://github.com/wekan/wekan/blob/main/docs/Features/PWA.md#fullscreen-android-app-with-caddy-and-wekan-server">https://github.com/wekan/wekan/blob/main/docs/Features/PWA.md#fullscreen-android-app-with-caddy-and-wekan-server</a></p>
-            <p><a href="https://forums.meteor.com/t/play-store-rejecting-apps-built-with-latest-meteor-android-sdk-34/62028">https://forums.meteor.com/t/play-store-rejecting-apps-built-with-latest-meteor-android-sdk-34/62028</a></p>
-            <br />
-
             <h2 class="fw-bold">Enable all touch screen support</h2>
             <p><a href="https://github.com/wekan/wekan/blob/main/docs/DragDrop/Touch-Screen-support.md">https://github.com/wekan/wekan/blob/main/docs/DragDrop/Touch-Screen-support.md</a></p>
             <br />
@@ -129,6 +121,32 @@
             <p><a href="https://github.com/wekan/wekan/blob/main/docs/Browsers/Browser-compatibility-matrix.md">https://github.com/wekan/wekan/blob/main/docs/Browsers/Browser-compatibility-matrix.md</a></p>
             <br />
 
+            <h2 class="fw-bold">Upgrading to Android SDK 34</h2>
+
+            <p><a href="https://www.youtube.com/watch?v=DbarW15E058">https://www.youtube.com/watch?v=DbarW15E058</a> that was mentioned at 
+               <a href="https://github.com/pwa-builder/PWABuilder/issues/4766#issuecomment-2229867608">https://github.com/pwa-builder/PWABuilder/issues/4766#issuecomment-2229867608</a></p>
+            <p><a href="https://github.com/wekan/wekan/blob/main/docs/Features/PWA.md#fullscreen-android-app-with-caddy-and-wekan-server">https://github.com/wekan/wekan/blob/main/docs/Features/PWA.md#fullscreen-android-app-with-caddy-and-wekan-server</a></p>
+            <p><a href="https://forums.meteor.com/t/play-store-rejecting-apps-built-with-latest-meteor-android-sdk-34/62028">https://forums.meteor.com/t/play-store-rejecting-apps-built-with-latest-meteor-android-sdk-34/62028</a></p>
+            <br />
+
+            <h2 class="fw-bold">Upgrading to Android SDK 35</h2>
+            <p>2025-07-03: pwabuilder.com does make make .aab package for Play Console that uses Android SDK 35.</p>
+
+            <h2 class="fw-bold">Assetlinks for Android full screen app</h2>
+            <p>To have Play Store app fullscreen, pwabuilder.com has assetlinks.json where need to be added 2nd SHA256 that is at Play Console/YourApp/Release/Setup/AppIntegrity/App Signing/App signing key certificate/SHA256 certificate fingerprint.
+               In Finnish: Play Console/Sovelluksesi/Testaa ja julkaise/Sovelluksen vaatimuksenmukaisuus/Sovelluksen allekirjoittaminen/Sovelluksen allekirjoitusavaimen varmenne/SHA-256-varmenteen tunnuste.</p>
+            <br />
+
+            <h2 class="fw-bold">Pwabuilder.com settings for Android full screen app</h2>
+            <pre>
+- id: your.company.app.twa
+- Web view (Custom Tabs did not work)
+- Fullscreen
+- Notifications [X] Enable
+- Signing key [X] Use mine
+- Version: 1.0.0.0 (I usually increment to 2.0.0.0, 3.0.0.0 etc)
+- Version code: 1 (I usually increment to 2, 3 etc)
+</pre>
         </div>
     </div>
 
