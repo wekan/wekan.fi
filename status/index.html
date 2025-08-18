@@ -95,14 +95,13 @@
 
         <br />
 
-        <h2 id="cloudstatus">WeKan Cloud Status</h2>
+        <h2 id="cloudstatus">WeKan Cloud Status at Finland time</h2>
 
-            <h3>2025-08-18 21:00-22.30 Finland time</h3>
+            <h3>2025-08-18 21:00-22:30</h3>
             <ul>
-              <li>21.00: After releasing WeKan v7.94, some hosted WeKan kanban went offline. Fixing In Progress.</li>
-              <li>22.30: All hosted WeKan kanban works now.</li>
-              <li>Root cause:</li>
-              <li>Snap Candidate WeKan required reboot of server after updates.</li>
+              <li>21:00 After releasing WeKan v7.94, some hosted WeKan kanban went offline. Fixing In Progress.</li>
+              <li>22:30 All hosted WeKan kanban works now.</li>
+              <li>Root cause: Snap Candidate WeKan required reboot of server after updates.</li>
             </ul>
 
             <h3>2025-06-28</h3>
@@ -121,7 +120,7 @@
                   was previously, because they are making some changes to improve network quality.
                   Moving had minimal downtime.
               <li>Later at evening, there was some downtime.</li>
-              <li>8.15pm GMT+2: Fixing done, all services back online.</li>
+              <li>20:15 Fixing done, all services back online.</li>
               <li>Root cause:</li>
               <li>1) For Snap, reboot of server made them work.</li>
               <li>2) For RocketChat, lxc containers did not have any network connectivity. Fix was these commands
@@ -137,8 +136,8 @@ systemctl reload snap.lxd.daemon
 
             <h3>2024-10-16</h3>
             <ul>
-              <li>10.04pm GMT+3: Adding new WeKan hosting customer. Some downtime.</li>
-              <li>2.18am 2024-10-17 GMT+3: All hosting services online</li>
+              <li>2024-10-16 22:04 Adding new WeKan hosting customer. Some downtime.</li>
+              <li>2024-10-17 02:18 All hosting services online</li>
               <li>Root cause: To get new custom domain kanban.somecompany.com
                   CNAME TLS cert, had to disable and remove Origin Cert
                   from CloudFlare, so that Caddy can get Let's Encrypt cert.
@@ -149,15 +148,15 @@ systemctl reload snap.lxd.daemon
 
             <h3>2024-10-05</h3>
             <ul>
-              <li>4.00pm GMT+3: SSL/TLS errors at some hosting services.</li>
-              <li>4.30pm GMT+3: Fixing done, all services back online.</li>
+              <li>16:00 SSL/TLS errors at some hosting services.</li>
+              <li>16:30 Fixing done, all services back online.</li>
               <li>Root cause: Had to restart router, it was stuck.</li>
             </ul>
 
             <h3>2024-09-23</h3>
             <ul>
-              <li>4.00pm GMT+3: SSL/TLS errors at some hosting services.</li>
-              <li>4.30pm GMT+3: Fixing done, all services back online.</li>
+              <li>16:00 SSL/TLS errors at some hosting services.</li>
+              <li>16:30 Fixing done, all services back online.</li>
               <li>General info: Any WeKan hosting uses custom domain CNAME record (at customer nameserver).</li>
               <li>Root cause: Getting Let's Encrypt TLS cert did not work with CNAME record (at customer nameserver)
                   to CNAME record (at WeKan hosting nameserver), it required CNAME record (at customer nameserver) to
