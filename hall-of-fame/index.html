@@ -21,9 +21,6 @@
 
     <h3 class="hof">Note: If some security researcher gets CVE number for any of these, please send that number to support at wekan.team . Thanks!</h3>
 
-    <h3 class="hof">News 2025-10-11: <a href="https://github.com/wekan/wekan/releases/tag/v7.98">WeKan v7.98 fixes many security issues</a>
-    that will later be added to this Hall of Fame page</h3>
-
     <table border="1" margin="0" padding="10px" width="100%">
       <tr>
         <th width="10%">CVE</th>
@@ -35,6 +32,46 @@
         </th>
         <th width="40%">Vulnerabilities</th>
       </tr>
+
+      <tr>
+        <td valign="top">
+          <a href="https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2021-20654">CVE-2021-20654</a><br /> <br />
+          JVN: Many fixed.<br /> <br />
+        </td>
+        <td valign="top"><b>Fieldbleed</b> <h2><i class="fa fa-pencil-square-o" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></h2></td>
+        <td valign="top">JVN: 2021-2025 Many fixed.<br /></td>
+        <td valign="top">
+          <b>Cyb3rjunky</b> and <b>swsjona</b> about <a href="fieldbleed/#FIELD">input fields</a>.
+          <b>Ryoya Koyama</b> at Mitsui Bussan Secure Directions, Inc. (<a href="https://www.mbsd.jp/">https://www.mbsd.jp/</a>) about
+          <a href="fieldbleed/#SVG">Javascript inside .SVG attachment</a><br />
+          <b>Romain Korpas</b> at apitech.fr about IDOR.
+          <b>Nguyen Thanh Nguyen of Fortinet's FortiGuard Labs</b> about SVG.
+          <b>Sho Sugiyama</b> about XSS. And some anonymous security researchers.
+          <img src="GoldStar.png" width="30px" height="auto" />
+          <img src="GoldStar.png" width="30px" height="auto" />
+          <img src="GoldStar.png" width="30px" height="auto" />
+          <img src="GoldStar.png" width="30px" height="auto" /><br />
+          Did send detailed report!
+        </td>
+        <td valign="top">
+          <ul>
+            <li>XSS: <a href="fieldbleed/#FIELD">Javascript saved to field</a>, and <a href="fieldbleed/#SVG">Javascript inside .SVG attachment</a>, is run when page is reloaded</li>
+            <li>Affected Wekan v3.12-v4.11</li>
+            <li>Fixed at <a href="https://github.com/wekan/wekan/blob/main/CHANGELOG.md#v412-2020-06-08-wekan-release">Wekan v4.12 2020-06-08</a></li>
+            <li><a href="fieldbleed/">More details</a></li>
+            <li>Fixed at <a href="https://github.com/wekan/wekan/releases/tag/v7.98">WeKan v7.98</a> or earlier:
+                IDOR CWE-639 that affected WeKan 7.80-7.93: Romain Korpas at apitech.fr.<br>
+                Computational Resource Abuse in Export endpoints: Anynymous Security Researcher.<br>
+                FG-VD-22-078 Prevent SVG Billion Laughs Attack: Nguyen Thanh Nguyen of Fortinet's FortiGuard Labs.<br>
+                usd-2022-0041 CWE-284 Improper Access Control: Christian Pöschl of usd AG.<br>
+                JVN#14269684 Broken access control, JVN#74210258 Stored XSS, JVN#86586539 Stored XSS: Ryoua Koyama.<br>
+                JVN#15385465 CWE-79 XSS: Sho Sugiyama.<br>
+                JVN#80785288 CWE-79 XSS: Already previously fixed.
+            </li>
+          </ul>
+        </td>
+      </tr>
+
       <tr>
        <td valign="top">
           TODO
@@ -223,32 +260,6 @@
             <li>Affected Wekan v4.73-v4.74</li>
             <li>Fixed at <a href="https://github.com/wekan/wekan/blob/main/CHANGELOG.md#v475-2021-01-11-wekan-release">Wekan v4.75 2021-01-11</a></li>
             <li><a href="duebleed/">More details</a></li>
-          </ul>
-        </td>
-      </tr>
-
-      <tr>
-        <td valign="top">
-          <a href="https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2021-20654">CVE-2021-20654</a><br /> <br />
-          VRF#20-08-MDPNJ. VN: JVN#80785288 for attachments.<br /> <br />
-          <a href="fieldbleed/#80785288">New report JVN#74210258, investigating</a>
-        </td>
-        <td valign="top"><b>Fieldbleed</b> <h2><i class="fa fa-pencil-square-o" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></h2></td>
-        <td valign="top">JVN#80785288 2020-03-23 17.03 EET<br /> JVN#74210258 2022-05-23 13.33 EET<br /></td>
-        <td valign="top">
-          <b>Cyb3rjunky</b> and <b>swsjona</b> about <a href="fieldbleed/#FIELD">input fields</a>. <b>Ryoya Koyama</b> at Mitsui Bussan Secure Directions, Inc. (<a href="https://www.mbsd.jp/">https://www.mbsd.jp/</a>) about <a href="fieldbleed/#SVG">Javascript inside .SVG attachment</a><br />
-          <img src="GoldStar.png" width="30px" height="auto" />
-          <img src="GoldStar.png" width="30px" height="auto" />
-          <img src="GoldStar.png" width="30px" height="auto" />
-          <img src="GoldStar.png" width="30px" height="auto" /><br />
-          Did send detailed report!
-        </td>
-        <td valign="top">
-          <ul>
-            <li>XSS: <a href="fieldbleed/#FIELD">Javascript saved to field</a>, and <a href="fieldbleed/#SVG">Javascript inside .SVG attachment</a>, is run when page is reloaded</li>
-            <li>Affected Wekan v3.12-v4.11</li>
-            <li>Fixed at <a href="https://github.com/wekan/wekan/blob/main/CHANGELOG.md#v412-2020-06-08-wekan-release">Wekan v4.12 2020-06-08</a></li>
-            <li><a href="fieldbleed/">More details</a></li>
           </ul>
         </td>
       </tr>
