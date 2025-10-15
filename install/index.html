@@ -88,7 +88,21 @@
     Please <a class="button" href="https://github.com/wekan/wekan/issues">report all new bugs immediately</a>.
     If you use Standalone WeKan on public Internet, it's better use
     <a class="button" href="https://github.com/wekan/wekan/blob/main/docs/Platforms/FOSS/Snap/Install.md">Snap x64 automatic updates</a> and
-    restore from backup when needed, than to leave old vulnerable manually updated WeKan running.</p>
+    restore from backup when needed, than to leave old vulnerable manually updated WeKan running.
+    You can revert to previous snap version with:
+    <pre>
+    sudo snap stop wekan
+    sudo snap revert
+    </pre>
+    That will restore your previous mongodb raw database files of
+    <pre>
+    /var/snap/wekan/common
+    </pre>
+    to directory
+    <pre>
+    /var/snap/wekan/common/wekan
+    </pre>
+    </p>
 
     <p><a class="button" href="https://github.com/wekan/wekan/blob/main/docs/Platforms/FOSS/Sandstorm/Sandstorm.md">Sandstorm WeKan</a> is not usually affected by</strong>
     any Standalone WeKan security issues.</p>
