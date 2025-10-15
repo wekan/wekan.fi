@@ -82,7 +82,7 @@
 
     <p>At least <a class="button" href="https://github.com/wekan/wekan/blob/main/docs/Backup/Backup.md">Daily Backups</a>. <b style='color:red;'>Bugs, updates, users deleting list or card, harddrive full, harddrive crash etc can destroy your data. There is no undo yet.</b></p>
 
-    <p>Backup this directory, when WeKan and MongoDB is not running:</p>
+    <p>Backup this Snap Candidate directory, when WeKan and MongoDB is not running:</p>
 
     <p>
     <pre>
@@ -99,16 +99,22 @@
     If you use Standalone WeKan on public Internet, it's better use
     <a class="button" href="https://github.com/wekan/wekan/blob/main/docs/Platforms/FOSS/Snap/Install.md">Snap x64 automatic updates</a> and
     restore from backup when needed, than to leave old vulnerable manually updated WeKan running.
-    You can revert to previous snap version with:
+    You can revert to previous snap version with:</p>
+
+    <p>
     <pre>
     sudo snap stop wekan
     sudo snap revert
     </pre>
-    That will restore your previous mongodb raw database files of
+    </p>
+
+    <p>That will restore your previous mongodb raw database files to this directory:
     <pre>
-    /var/snap/wekan/common
+    /var/snap/wekan/common/wekan
     </pre>
-    to directory
+    </p>
+
+    <p>so then you can move files from common to elsewhere, and move from wekan to common, like files, .wt etc:</p>
     <pre>
     /var/snap/wekan/common/wekan
     </pre>
