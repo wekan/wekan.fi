@@ -108,18 +108,13 @@
     </pre>
     </p>
 
-    <p>That will restore your previous mongodb raw database files to this directory:
-    <pre>
-    /var/snap/wekan/common/wekan
-    </pre>
-    </p>
-
-    <p>so then you can move files from /var/snap/wekan/common to elsewhere,
-    and move from /var/snap/wekan/common/wekan to /var/snap/wekan/common, like files directory, .wt etc:</p>
+    <p>That will restore your previous mongodb raw database files to this directory SNAP_COMMON:
     <pre>
     /var/snap/wekan/common
     </pre>
     </p>
+
+    <p>Note: WeKan 8.00-8.06 had wrong raw database directory setting SNAP_COMMON/wekan, at WeKan 8.07 it's back to SNAP_COMMON.</p>
 
     <p><a class="button" href="https://github.com/wekan/wekan/blob/main/docs/Platforms/FOSS/Sandstorm/Sandstorm.md">Sandstorm WeKan</a> is not usually affected by</strong>
     any Standalone WeKan security issues.</p>
