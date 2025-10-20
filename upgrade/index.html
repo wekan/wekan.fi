@@ -120,7 +120,10 @@
         WeKan will start immediately without any data migrations,
         using existing MongoDB version and database structure.<br /><br />
         It will be possible to live migrate data from
-        MongoDB to SQLite database that is stored to /var/snap/wekan/common/</td>
+        MongoDB to SQLite database that is stored to /var/snap/wekan/common/<br /><br />
+        WeKan 8.00-8.06 had wrong raw database directory setting /var/snap/wekan/common/wekan and some cards were not visible.
+        Those are fixed at WeKan 8.07 where database directory is back to /var/snap/wekan/common and all cards are visible.
+        </td>
       </tr>
       <tr>
        <td valign="top"><a name="Kubernetes" href="../install/">Docker, Kubernetes, OpenShift</a>
