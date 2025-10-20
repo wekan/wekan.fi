@@ -105,10 +105,19 @@
     <pre>
     sudo snap stop wekan
     sudo snap revert
+    sudo snap start wekan
     </pre>
     </p>
 
-    <p>That will restore your previous mongodb raw database files to this directory SNAP_COMMON:
+    <p>And try to upgrade later with:</p>
+
+    <p>
+    <pre>
+    sudo snap refresh
+    </pre>
+    </p>  
+
+    <p>Content of MongoDB raw database files stays always SNAP_COMMON:
     <pre>
     /var/snap/wekan/common
     </pre>
