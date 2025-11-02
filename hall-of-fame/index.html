@@ -35,6 +35,36 @@
 
       <tr>
         <td valign="top">
+          TODO
+<br /> <br />
+        </td>
+        <td valign="top"><b>Spacebleed</b> <h2><i class="fa fa-space-shuttle" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></h2></td>
+        <td valign="top">2025-11-02 03:29 Europe/Helsinki time</td>
+        <td valign="top">
+          <b><a href="https://sth.sh">Siam Thanat Hack (STH)</a></b>
+          <img src="GoldStar.png" width="30px" height="auto" />
+          <img src="GoldStar.png" width="30px" height="auto" />
+          <img src="GoldStar.png" width="30px" height="auto" />
+          <img src="GoldStar.png" width="30px" height="auto" /><br />
+          Did send detailed report!
+        </td>
+        <td valign="top">
+          <ul>
+            <li>1. <i class="fa fa-files-o" aria-hidden="true"></i> File Attachments enables stored XSS (High)</li>
+            <li>2. <i class="fa fa-sitemap" aria-hidden="true"></i> Access to boards of any Orgs/Teams (High)</li>
+            <li>3. <i class="fa fa-sort-alpha-asc" aria-hidden="true"></i> Unauthenticated (or any) user can update board ‘sort’ (Low)</li>
+            <li>4. <i class="fa fa-comment-o" aria-hidden="true"></i> Members can forge others’ votes (Low).<br />
+                Bonus: <i class="fa fa-credit-card" aria-hidden="true"></i> Similar fixes to planning poker too done by xet7.</li>
+            <li>5. <i class="fa fa-file-code-o" aria-hidden="true"></i> Attachment API uses bearer value as userId and DoS (Low)</li>
+            <li>Affected Wekan v8.15</li>
+            <li>Fixed at <a href="https://github.com/wekan/wekan/blob/main/CHANGELOG.md#v816-2025-11-02-wekan-release">Wekan v8.16 2025-11-02</a></li>
+            <li><a href="spacebleed/">More details</a></li>
+          </ul>
+        </td>
+      </tr>
+
+      <tr>
+        <td valign="top">
           <a href="https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2021-20654">CVE-2021-20654</a><br /> <br />
           JVN: Many fixed.<br /> <br />
         </td>
@@ -46,7 +76,7 @@
           <a href="fieldbleed/#SVG">Javascript inside .SVG attachment</a><br />
           <b>Romain Korpas</b> at apitech.fr about IDOR.
           <b>Nguyen Thanh Nguyen of Fortinet's FortiGuard Labs</b> about SVG.
-          <b>Sho Sugiyama</b> about XSS. And some anonymous security researchers.
+          <b>Sho Sugiyama</b> about XSS. And some anonymous security researchers.<br />
           <img src="GoldStar.png" width="30px" height="auto" />
           <img src="GoldStar.png" width="30px" height="auto" />
           <img src="GoldStar.png" width="30px" height="auto" />
