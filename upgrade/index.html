@@ -113,7 +113,44 @@
         <td valign="top">6.09<br />
         <code>sudo snap list</code>
         </td>
-        <td valign="top">Wait for automatic upgrade.<br /><br />
+        <td valign="top">Manual upgrade, not tested yet:<br /><br />
+          <ol>
+          <li>Check with du about disk usage, do you have enough disk space to upgrade:<br>
+            <pre>
+            df -h
+            sudo du -sh /var/snap/wekan/common
+            </pre>
+          </li>
+          <li>Upgrade:
+<pre>
+sudo su
+cd /root
+snap stop wekan.wekan
+export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/snap/wekan/current/lib/x86_64-linux-gnu
+(export PATH="/snap/wekan/current/bin:$PATH" && mongodump --port 27019)
+sudo snap get wekan > snap-settings.sh
+mkdir /root/common
+mv /var/snap/wekan/common/* /root/common/
+snap start wekan.wekan
+snap refresh wekan --channel=latest/candidate --amend
+snap stop wekan.wekan
+mongorestore --drop --port 27019
+</pre>
+If there is errors when restoring, try without restoring indexes....
+          </li>
+          <li>If you use WeKan included Caddy, edit /var/snap/wekan/common/Caddyfile for new settings, for example:<br />
+<pre>
+wekan.example.com {
+        tls {
+                alpn http/1.1
+        }
+        reverse_proxy 127.0.0.1:3000
+}
+</pre>
+<a href="https://github.com/wekan/wekan/blob/main/docs/Webserver/Caddy.md">More info about Caddy</a>
+
+Wait for automatic upgrade.
+<br /><br />
         Developing a safe way to upgrade is In Progress right now.
         Related bugs are being fixed right now.<br /><br />
         After automatic update,
