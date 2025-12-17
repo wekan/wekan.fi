@@ -113,53 +113,8 @@
         <td valign="top">6.09<br />
         <code>sudo snap list</code>
         </td>
-        <td valign="top">Manual upgrade, not tested yet:<br /><br />
-          <ol>
-          <li>Check with du about disk usage, do you have enough disk space to upgrade:<br>
-            <pre>
-            df -h
-            sudo du -sh /var/snap/wekan/common
-            </pre>
-          </li>
-          <li>Upgrade:
-<pre>
-sudo su
-cd /root
-snap stop wekan.wekan
-export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/snap/wekan/current/lib/x86_64-linux-gnu
-(export PATH="/snap/wekan/current/bin:$PATH" && mongodump --port 27019)
-sudo snap get wekan > snap-settings.sh
-mkdir /root/common
-mv /var/snap/wekan/common/* /root/common/
-snap start wekan.wekan
-snap refresh wekan --channel=latest/candidate --amend
-snap stop wekan.wekan
-mongorestore --drop --port 27019
-</pre>
-If there is errors when restoring, try without restoring indexes....
-          </li>
-          <li>If you use WeKan included Caddy, edit /var/snap/wekan/common/Caddyfile for new settings, for example:<br />
-<pre>
-wekan.example.com {
-        tls {
-                alpn http/1.1
-        }
-        reverse_proxy 127.0.0.1:3000
-}
-</pre>
-<a href="https://github.com/wekan/wekan/blob/main/docs/Webserver/Caddy.md">More info about Caddy</a>
-
-Wait for automatic upgrade.
-<br /><br />
-        Developing a safe way to upgrade is In Progress right now.
-        Related bugs are being fixed right now.<br /><br />
-        After automatic update,
-        WeKan will start immediately without any data migrations,
-        using existing MongoDB version and database structure.<br /><br />
-        It will be possible to live migrate data from
-        MongoDB to SQLite database that is stored to /var/snap/wekan/common/<br /><br />
-        WeKan 8.00-8.06 had wrong raw database directory setting /var/snap/wekan/common/wekan and some cards were not visible.
-        Those are fixed at WeKan 8.07 where database directory is back to /var/snap/wekan/common and all cards are visible.
+        <td valign="top">
+          <a href="https://github.com/wekan/wekan/blob/main/docs/Backup/Backup.md">Manual upgrade info</a>
         </td>
       </tr>
       <tr>
@@ -177,11 +132,10 @@ Wait for automatic upgrade.
         <td valign="top">Newest</td>
         <td valign="top">If installing now, newest available.<br /><br />
 
-        Bitnami MongoDB Docker images do not exist anymore.
-        <a href="https://github.com/wekan/charts/issues/45">MongoDump/MongoRestore to groundhog2k MongoDB images</a><br /><br />
-
-        Developing a safe way to upgrade from WeKan 6.x and older to WeKan 7.x is In Progress right now.<br />
-        Related bugs are being fixed.</td>
+          Bitnami MongoDB Docker images do not exist anymore.
+          <a href="https://github.com/wekan/charts/issues/45">MongoDump/MongoRestore to groundhog2k MongoDB images</a><br /><br />
+          <a href="https://github.com/wekan/wekan/blob/main/docs/Backup/Backup.md">Manual upgrade info</a>
+        </td>
       </tr>
       <tr>
        <td valign="top"><a href="https://github.com/wekan/wekan/blob/main/docs/Platforms/FOSS/Sandstorm/Sandstorm.md">Sandstorm</a></td>
