@@ -40,6 +40,40 @@ security issue to security@wekan.fi ONLY ! NOT TO ANYONE ELSE ! Thanks!</h3>
           -
 <br /> <br />
         </td>
+        <td valign="top"><b>Megableed</b> <h2><i class="fa fa-megaphone" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></h2></td>
+        <td valign="top">2025-12-26 18:39 EET</td>
+        <td valign="top">
+          <b><a href="https://joshua.hu">Joshua Rogers</a> of Twitter MegaManSec</a></b><br />
+          <img src="GoldStar.png" width="30px" height="auto" />
+          <img src="GoldStar.png" width="30px" height="auto" />
+          <img src="GoldStar.png" width="30px" height="auto" />
+          <img src="GoldStar.png" width="30px" height="auto" /><br />
+          Did send detailed report!
+        </td>
+        <td valign="top">
+          <ul>
+            <li>1. <i class="fa fa-flag" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i> IDOR in setCreateTranslation. Non-admin could change Custom Translation</li>
+            <li>2. <i class="fa fa-user-secret" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i> Private-only board setting can be bypassed</li>
+            <li>3. <i class="fa fa-comment" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i> Card comment author spoofing (IDOR) via API</li>
+            <li>4. <i class="fa fa-plane" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i> Cross-board card move without destination authorization</li>
+            <li>5. <i class="fa fa-pencil" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i> Read-only roles can still update cards</li>
+            <li>6. <i class="fa fa-trash" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i> Checklist delete IDOR: checklist not verified against board/card</li>
+            <li>7. <i class="fa fa-check-square-o" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i> Checklist create IDOR: cardId not verified against boardId</li>
+            <li>8. <i class="fa fa-file" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i> Attachments publication leaks metadata without auth</li>
+            <li>9. <i class="fa fa-users" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i> Attachment upload not scoped to card/board relationship</li>
+            <li>10. <i class="fa fa-filter" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i> LDAP filter injection in LDAP auth</li>
+            <li>Affected Wekan v8.18</li>
+            <li>Fixed at <a href="https://github.com/wekan/wekan/blob/v8.19/CHANGELOG.md#v819-2025-12-29-wekan--release">Wekan v8.19 2025-12-29</a></li>
+            <li><a href="megableed/">More details</a></li>
+          </ul>
+        </td>
+      </tr>
+
+      <tr>
+        <td valign="top">
+          -
+<br /> <br />
+        </td>
         <td valign="top"><b>Spacebleed</b> <h2><i class="fa fa-space-shuttle" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></h2></td>
         <td valign="top">2025-11-02 03:29 EET</td>
         <td valign="top">
@@ -52,12 +86,12 @@ security issue to security@wekan.fi ONLY ! NOT TO ANYONE ELSE ! Thanks!</h3>
         </td>
         <td valign="top">
           <ul>
-            <li>1. <i class="fa fa-files-o" aria-hidden="true"></i> File Attachments enables stored XSS (High)</li>
-            <li>2. <i class="fa fa-sitemap" aria-hidden="true"></i> Access to boards of any Orgs/Teams (High)</li>
-            <li>3. <i class="fa fa-sort-alpha-asc" aria-hidden="true"></i> Unauthenticated (or any) user can update board ‘sort’ (Low)</li>
-            <li>4. <i class="fa fa-comment-o" aria-hidden="true"></i> Members can forge others’ votes (Low).<br />
-                Bonus: <i class="fa fa-credit-card" aria-hidden="true"></i> Similar fixes to planning poker too done by xet7.</li>
-            <li>5. <i class="fa fa-file-code-o" aria-hidden="true"></i> Attachment API uses bearer value as userId and DoS (Low)</li>
+            <li>1. <i class="fa fa-files-o" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i> File Attachments enables stored XSS (High)</li>
+            <li>2. <i class="fa fa-sitemap" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i> Access to boards of any Orgs/Teams (High)</li>
+            <li>3. <i class="fa fa-sort-alpha-asc" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i> Unauthenticated (or any) user can update board ‘sort’ (Low)</li>
+            <li>4. <i class="fa fa-comment-o" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i> Members can forge others’ votes (Low)<br />
+                Bonus: <i class="fa fa-credit-card" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i> Similar fixes to planning poker too done by xet7.</li>
+            <li>5. <i class="fa fa-file-code-o" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i> Attachment API uses bearer value as userId and DoS (Low)</li>
             <li>Affected Wekan v8.15</li>
             <li>Fixed at <a href="https://github.com/wekan/wekan/blob/main/CHANGELOG.md#v816-2025-11-02-wekan--release">Wekan v8.16 2025-11-02</a></li>
             <li><a href="spacebleed/">More details</a></li>
