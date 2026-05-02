@@ -160,6 +160,16 @@ sudo snap install wekan --channel=latest/candidate
 sudo snap set wekan root-url="http://YOUR-IP-ADDRESS"
 sudo snap set wekan port='80'
 </pre>
+If using manual snap package, with
+<a href="https://github.com/wekan/wekan/blob/main/docs/Platforms/FOSS/Snap/Many-Snaps-on-LXC.md">Parallel Snap</a>
+that has name wekan_other:
+<pre>
+sudo snap refresh --dangerous wekan-VERSION.snap wekan_other --amend
+</pre>
+Back to channel:
+<pre>
+sudo snap refresh wekan_other --channel=latest/candidate --amend
+</pre>
 </p>
 
 <p>3. Register and login at http://YOUR-IP-ADDRESS/sign-in . First user will be Admin, and have
