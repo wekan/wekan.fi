@@ -1,0 +1,110 @@
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <title>WeKan — Hall of Fame / BFLABleed</title>
+  <link rel="icon" href="../../wekan-favicon.png">
+  <link rel="stylesheet" type="text/css" href="../../css/main.css">
+  <link rel="stylesheet" href="../../font-awesome/css/font-awesome.min.css">
+</head>
+
+<body>
+
+  <img vAlign="center" src="../hof.svg" alt="Hall of Fame image from https://openclipart.org/detail/120343/trophy"
+    width="300px" height="auto" />
+  <br />
+
+  <div class="action-buttons">
+    <a class="button" href="https://wekan.fi/hall-of-fame">Back to Hall of Fame Contents</a>
+    <a class="button" href="https://wekan.fi">Back to Wekan Website</a>
+  </div>
+
+  <div class="hof">
+    <h1 class="hof">Contents / BFLABleed</h1>
+
+    <table border="1" margin="0" padding="10px" width="100%">
+      <tr>
+        <th width="10%">CVE</th>
+        <th width="10%">Vulnerability name</th>
+        <th width="10%">Date</th>
+        <th width="20%">
+          <a href="https://github.com/wekan/wekan/blob/main/SECURITY.md" style="color: red;">Responsible Security Disclosure</a>
+          by
+        </th>
+        <th width="40%">Vulnerabilities</th>
+      </tr>
+
+      <tr>
+        <td valign="top">
+          -
+          <br /> <br />
+        </td>
+        <td valign="top"><b>BFLABleed</b> <h2><i class="fa fa-unlock-alt" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></h2></td>
+        <td valign="top">2026-05-19</td>
+        <td valign="top">
+          <b>Fredrik Dietrichson</b><br />
+          <img src="../GoldStar.png" width="30px" height="auto" />
+          <img src="../GoldStar.png" width="30px" height="auto" />
+          <img src="../GoldStar.png" width="30px" height="auto" />
+          <img src="../GoldStar.png" width="30px" height="auto" />
+          <img src="../GoldStar.png" width="30px" height="auto" /><br />
+          Did send detailed report with full PoC and runtime verification!
+        </td>
+        <td valign="top">
+          <ul>
+            <li>1. <i class="fa fa-unlock-alt" aria-hidden="true"></i>
+                   <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i>
+                   BFLABleed — Broken Function Level Authorization: 48 REST endpoints
+                   missing await on board access checks, allowing authenticated non-members
+                   to read/write any board.
+            </li>
+            <li>CVSS: 8.1 (AV:N/AC:L/PR:L/UI:N/S:U/C:H/I:H/A:N)</li>
+            <li>Affected Wekan v9.20-v9.22</li>
+            <li>Fixed at <a href="https://github.com/wekan/wekan/blob/main/CHANGELOG.md">See CHANGELOG</a></li>
+            <li><a href="../bflableed/">More details</a></li>
+          </ul>
+        </td>
+      </tr>
+    </table>
+  </div>
+
+  <br />
+  <br />
+
+  <div class="hof">
+    <table border="1" margin="0" padding="10px" width="100%">
+
+      <tr>
+        <th width="5%">Timeline</th>
+        <th width="60%">Details</th>
+      </tr>
+      <tr>
+        <td vAlign="top"><b>2026-05-19</b></td>
+        <td vAlign="top">
+          Report received from Fredrik Dietrichson. 48 REST endpoints missing await on board access checks, allowing authenticated non-members to read/write any board. CVSS 8.1.<br />
+        </td>
+      </tr>
+      <tr>
+        <td vAlign="top"><b>2026-05-21</b></td>
+        <td vAlign="top">
+          Fix released. See <a href="https://github.com/wekan/wekan/blob/main/CHANGELOG.md">CHANGELOG</a> for details.
+        </td>
+      </tr>
+    </table>
+  </div>
+
+  <br />
+  <br />
+
+  <div class="action-buttons">
+    <a class="button" href="https://wekan.fi/hall-of-fame">Back to Hall of Fame Contents</a>
+    <a class="button" href="https://wekan.fi">Back to Wekan Website</a>
+  </div>
+
+  <h1>
+    <br />
+  </h1>
+
+</body>
+
+</html>
