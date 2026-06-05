@@ -1,0 +1,201 @@
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <title>WeKan — Hall of Fame / CloneBleed</title>
+  <link rel="icon" href="../../wekan-favicon.png">
+  <link rel="stylesheet" type="text/css" href="../../css/main.css">
+  <link rel="stylesheet" href="../../font-awesome/css/font-awesome.min.css">
+</head>
+
+<body>
+
+  <img vAlign="center" src="../hof.svg" alt="Hall of Fame image from https://openclipart.org/detail/120343/trophy"
+    width="300px" height="auto" />
+  <br />
+
+  <div class="action-buttons">
+    <a class="button" href="https://wekan.fi/hall-of-fame">Back to Hall of Fame Contents</a>
+    <a class="button" href="https://wekan.fi">Back to Wekan Website</a>
+  </div>
+
+  <div class="hof">
+    <h1 class="hof">Contents / CloneBleed</h1>
+
+    <table border="1" margin="0" padding="10px" width="100%">
+      <tr>
+        <th width="10%">CVE</th>
+        <th width="10%">Vulnerability name</th>
+        <th width="10%">Date</th>
+        <th width="20%">
+          <a href="https://github.com/wekan/wekan/blob/main/SECURITY.md" style="color: red;">Responsible Security Disclosure</a>
+          by
+        </th>
+        <th width="40%">Vulnerabilities</th>
+      </tr>
+
+      <tr>
+        <td valign="top">
+          CloneBleed <a href="https://github.com/wekan/wekan/security/advisories/GHSA-qfqv-42qw-vvwh">GHSA-qfqv-42qw-vvwh</a>
+          <br /> <br />
+        </td>
+        <td valign="top"><b>CloneBleed</b> <h2><i class="fa fa-clone" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></h2></td>
+        <td valign="top">2026-06-04</td>
+        <td valign="top">
+          <b>dizconnectz</b> (cloneBoard) and <b>Claude</b> (similar issues)<br />
+          <img src="../GoldStar.png" width="30px" height="auto" />
+          <img src="../GoldStar.png" width="30px" height="auto" />
+          <img src="../GoldStar.png" width="30px" height="auto" />
+          <img src="../GoldStar.png" width="30px" height="auto" />
+          <img src="../GoldStar.png" width="30px" height="auto" /><br />
+          Did send detailed report with full PoC!
+        </td>
+        <td valign="top">
+          <ul>
+            <li>1. <i class="fa fa-clone" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i> CloneBleed</li>
+            <li>Affected Wekan v9.34 and earlier</li>
+            <li>Fixed at
+               <a href="https://github.com/wekan/wekan/blob/main/CHANGELOG.md">Upcoming WeKan release</a>
+            </li>
+          </ul>
+        </td>
+      </tr>
+
+    </table>
+  </div>
+
+  <br />
+  <br />
+
+  <div class="hof">
+    <h2 class="hof">Details</h2>
+
+    <h3>1. CloneBleed — cloneBoard authorization bypass (GHSA-qfqv-42qw-vvwh, CWE-639, CWE-862)</h3>
+    <p>
+      The <code>cloneBoard</code> Meteor method in <code>models/import.js</code> copied an entire board —
+      including all cards, comments, attachments, member info and activities — identified solely by a
+      caller-supplied <code>sourceBoardId</code>, and performed no authorization check. It never verified
+      that the calling user was a member of (or otherwise permitted to read) the source board.
+    </p>
+    <p>
+      Any authenticated Wekan user who knew a board's ID (board IDs appear in board URLs and remain known to
+      removed members) could call <code>Meteor.call('cloneBoard', '&lt;targetBoardId&gt;')</code> over DDP and
+      obtain a permanent, fully-readable copy of that board's contents, even for private boards they had no
+      access to. The method called <code>exporter.build()</code> directly, skipping the
+      <code>canExport()</code> guard (<code>models/exporter.js</code>) that the REST export route correctly enforces.
+      The Meteor allow/deny rules in <code>server/permissions/boards.js</code> do not apply to server-side
+      method calls, so nothing else stopped it.
+    </p>
+    <p>
+      <b>CVSS 6.5</b> (AV:N/AC:L/PR:L/UI:N/S:U/C:H/I:N/A:N).
+    </p>
+    <p>
+      <b>Fix:</b> require <code>this.userId</code> and run the same <code>exporter.canExport(user)</code> check
+      the export route uses before building/cloning the board, so cloning a board now requires the same read
+      authorization as exporting it.
+    </p>
+
+    <h3>Similar issues found and fixed by code review</h3>
+    <p>
+      A review for the same class of bug found several server-side methods whose access checks were present in
+      the source but never actually enforced, plus a few methods missing a check entirely:
+    </p>
+    <ul>
+      <li><b>moveChecklist</b> (<code>server/models/checklists.js</code>): the membership guard called
+        <code>allowIsBoardMemberByCard(...)</code>, but that helper is <code>async</code> and was both unimported
+        and un-awaited, so <code>!allowIsBoardMemberByCard(...)</code> evaluated <code>!Promise</code> (always
+        <code>false</code>) and the check never ran. Now imported and awaited, and login is required.</li>
+      <li><b>updateListSort</b> (<code>server/models/lists.js</code>): the guard read
+        <code>typeof allowIsBoardMember === 'function' &amp;&amp; !allowIsBoardMember(...)</code>, but
+        <code>allowIsBoardMember</code> was never imported, so the <code>typeof</code> was always <code>false</code>
+        and the guard never ran. Replaced with a real <code>hasBoardWriteAccess</code> check, plus a check that the
+        list belongs to the named board, and a login check.</li>
+      <li><b>Attachment API</b> (<code>server/attachmentApi.js</code>, <code>server/routes/attachmentApi.js</code>):
+        the attachment Meteor methods and REST handlers called <code>board.isBoardMember(...)</code>, which is not a
+        method on the board model. Replaced with the real <code>board.hasMember(...)</code>, and the upload path now
+        also verifies the target card belongs to the named board (so <code>boardId</code> cannot be spoofed).</li>
+      <li><b>applyListWidth</b> (<code>server/models/users.js</code>): stored per-board list width with no
+        authorization. Now requires the caller to be a member of the board and the list to belong to that board.</li>
+      <li><b>getBackgroundImageURL</b> (<code>server/models/boards.js</code>): returned any board's background image
+        URL by ID. Now requires the board to be visible to the caller.</li>
+      <li><b>Missing-lists migration</b> (<code>server/migrations/fixMissingListsMigration.js</code>) and
+        <b>attachment migration</b> (<code>server/migrations/migrateAttachments.js</code>): only checked that the
+        caller was logged in. Reading status now requires board visibility, executing a board-rewriting migration
+        requires board admin (or instance admin), and the attachment migration methods require board access (global
+        status reads require instance admin).</li>
+      <li><b>Outgoing webhook delivery</b> (<code>server/notifications/outgoing.js</code>): trusted the
+        caller-supplied <code>integration</code> object and only checked that <em>some</em> integration with that URL
+        existed. It now verifies a matching integration exists on its own board and that the caller is a member of
+        that board.</li>
+      <li><b>userPositionHistory checkpoint methods</b> (<code>server/models/userPositionHistory.js</code>): the
+        <code>createCheckpoint</code>, <code>getRecent</code>, <code>getCheckpoints</code> and
+        <code>restoreToCheckpoint</code> methods only checked login, while the sibling
+        <code>positionHistory.track*</code> methods already require board visibility — the same
+        <a href="../SnowBleed/">PositionHistoryBleed</a> class. All four now require the board to be visible to the
+        caller before reading or restoring board-scoped position history.</li>
+    </ul>
+
+    <h3>Client-side permission gates that were not re-verified server-side</h3>
+    <p>
+      The browser UI hides actions from read-only members and from non-admins, but those checks are cosmetic — the
+      server-side <code>allow</code> rules and Meteor methods must enforce the same role. An audit found four gaps:
+    </p>
+    <ul>
+      <li><b>Custom Field allow rules</b> (<code>server/permissions/customFields.js</code>): used
+        <code>allowIsAnyBoardMember</code> (mere membership) for insert/update/remove, so read-only/comment-only/worker
+        members could create/modify/delete Custom Fields via direct DDP collection writes — the same read-only-write
+        class as <a href="../readonlybleed/">ReadOnlyBleed</a> (GHSA-6733), which had only fixed the REST path. Now uses
+        a write-access helper (<code>allowIsAnyBoardMemberWithWriteAccess</code>).</li>
+      <li><b>Comment-reaction allow rules</b> (<code>server/permissions/cardCommentReactions.js</code>): used
+        <code>allowIsBoardMember</code>, letting read-only members add/remove reactions. Now uses
+        <code>allowIsBoardMemberCommentOnly</code>, matching <code>CardComments.insert</code>.</li>
+      <li><b>archiveBoard</b> (<code>server/models/boards.js</code>): required only board membership, so any member
+        (including read-only) could archive a board over DDP, although the UI gates archiving behind board admin. Now
+        requires board admin (or global admin), matching the <code>Boards.allow</code> update/remove rules.</li>
+      <li><b>sendSMTPTestEmail</b> (<code>server/models/settings.js</code>): required only login, so any authenticated
+        user could trigger an SMTP test (and have the server's SMTP error messages surfaced to them), although the UI
+        gates it behind global admin. Now requires global admin.</li>
+    </ul>
+  </div>
+
+  <br />
+  <br />
+
+  <div class="hof">
+    <table border="1" margin="0" padding="10px" width="100%">
+
+      <tr>
+        <th width="5%">Timeline</th>
+        <th width="60%">Details</th>
+      </tr>
+      <tr>
+        <td vAlign="top"><a name="CLONE"></a><b>2026-06-04</b></td>
+        <td vAlign="top">
+          Report received from dizconnectz (GHSA-qfqv-42qw-vvwh).<br />
+        </td>
+      </tr>
+      <tr>
+        <td vAlign="top"><b>Upcoming release</b></td>
+        <td vAlign="top">Fixed at
+          <a href="https://github.com/wekan/wekan/blob/main/CHANGELOG.md">Upcoming WeKan release</a>,
+          together with the similar issues found by code review.
+        </td>
+      </tr>
+    </table>
+  </div>
+
+  <br />
+  <br />
+
+  <div class="action-buttons">
+    <a class="button" href="https://wekan.fi/hall-of-fame">Back to Hall of Fame Contents</a>
+    <a class="button" href="https://wekan.fi">Back to Wekan Website</a>
+  </div>
+
+  <h1>
+    <br />
+  </h1>
+
+</body>
+
+</html>

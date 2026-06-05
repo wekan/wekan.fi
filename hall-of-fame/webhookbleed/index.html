@@ -1,0 +1,147 @@
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <title>WeKan — Hall of Fame / WebhookBleed</title>
+  <link rel="icon" href="../../wekan-favicon.png">
+  <link rel="stylesheet" type="text/css" href="../../css/main.css">
+  <link rel="stylesheet" href="../../font-awesome/css/font-awesome.min.css">
+</head>
+
+<body>
+
+  <img vAlign="center" src="../hof.svg" alt="Hall of Fame image from https://openclipart.org/detail/120343/trophy"
+    width="300px" height="auto" />
+  <br />
+
+  <div class="action-buttons">
+    <a class="button" href="https://wekan.fi/hall-of-fame">Back to Hall of Fame Contents</a>
+    <a class="button" href="https://wekan.fi">Back to Wekan Website</a>
+  </div>
+
+  <div class="hof">
+    <h1 class="hof">Contents / WebhookBleed</h1>
+
+    <table border="1" margin="0" padding="10px" width="100%">
+      <tr>
+        <th width="10%">CVE</th>
+        <th width="10%">Vulnerability name</th>
+        <th width="10%">Date</th>
+        <th width="20%">
+          <a href="https://github.com/wekan/wekan/blob/main/SECURITY.md" style="color: red;">Responsible Security Disclosure</a>
+          by
+        </th>
+        <th width="40%">Vulnerabilities</th>
+      </tr>
+
+      <tr>
+        <td valign="top">
+          <a href="https://github.com/wekan/wekan/security/advisories/GHSA-hc3x-hq3m-663q">GHSA-hc3x-hq3m-663q</a>,
+          <a href="https://github.com/wekan/wekan/security/advisories/GHSA-7w2h-g83c-jqrp">GHSA-7w2h-g83c-jqrp</a>
+          <br /> <br />
+        </td>
+        <td valign="top"><b>WebhookBleed</b> <h2><i class="fa fa-link" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></h2></td>
+        <td valign="top">2026-05-31</td>
+        <td valign="top">
+          <b>Claude</b><br />
+          <img src="../GoldStar.png" width="30px" height="auto" />
+          <img src="../GoldStar.png" width="30px" height="auto" />
+          <img src="../GoldStar.png" width="30px" height="auto" />
+          <img src="../GoldStar.png" width="30px" height="auto" /><br />
+          Found and fixed by code review.
+        </td>
+        <td valign="top">
+          <ul>
+            <li>1. <i class="fa fa-link" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i> SSRF via webhook URLs (input-side validation)</li>
+            <li>2. <i class="fa fa-th-large" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i> copyBoard authorization bypass</li>
+            <li>3. <i class="fa fa-user" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i> Avatar scanner regression</li>
+            <li>Affected Wekan v9.31 and earlier</li>
+            <li>Fixed at
+               <a href="https://github.com/wekan/wekan/blob/main/CHANGELOG.md#v932-2026-05-31-wekan--release">Wekan v9.32 2026-05-31</a>
+            </li>
+          </ul>
+        </td>
+      </tr>
+
+    </table>
+  </div>
+
+  <br />
+  <br />
+
+  <div class="hof">
+    <h2 class="hof">Details</h2>
+
+    <h3>1. SSRF via webhook integration URLs — input-side validation (GHSA-hc3x-hq3m-663q, CWE-918)</h3>
+    <p>
+      Wekan's outgoing-webhook integrations let a board admin store an arbitrary URL that is later fetched
+      server-side, so a caller-controlled URL pointing at an internal address (cloud metadata at
+      <code>http://169.254.169.254/latest/meta-data/</code>, loopback, RFC 1918 ranges, etc.) could be used to reach
+      internal services or exfiltrate data.
+    </p>
+    <p>
+      The delivery layer was already fixed in v8.35/v8.36 (the <a href="../integrationbleed/">IntegrationBleed</a>
+      fixes) by routing webhook delivery through <code>fetchSafe</code> (<code>server/lib/ssrfGuard.js</code>), which
+      resolves DNS once, pins the connection to the validated IP and blocks redirects. This release adds the missing
+      input-side validation the advisory requested at the REST write paths in
+      <code>server/models/integrations.js</code>: <code>POST /api/boards/:boardId/integrations</code> relied only on
+      the schema regex, and <code>PUT /api/boards/:boardId/integrations/:intId</code> wrote the URL via
+      <code>Integrations.direct.updateAsync</code>, bypassing schema validation entirely. Both endpoints now run the
+      DNS-aware <code>validateAttachmentUrl()</code> before storing the URL, rejecting
+      private/loopback/link-local/reserved targets with HTTP 400.
+    </p>
+
+    <h3>2. Authorization bypass in copyBoard DDP method (GHSA-7w2h-g83c-jqrp, CWE-862)</h3>
+    <p>
+      The <code>copyBoard</code> Meteor method in <code>server/publications/boards.js</code> had no authorization
+      check: any logged-in user could copy any board by ID — including private boards — while the equivalent REST
+      endpoint correctly required board admin. The method also copied caller-supplied <code>properties</code> onto the
+      new board, letting an attacker inject <code>members</code> or <code>permission: 'public'</code>. The member-level
+      fix shipped in v9.09 (AuthBleed); this release tightens it to full parity with the REST endpoint by requiring
+      <code>board.hasAdmin(this.userId)</code>.
+    </p>
+
+    <h3>3. Regression from the avatar RCE fix (GHSA-35j7-h385-2q9g)</h3>
+    <p>
+      The avatar RCE fix renamed <code>asyncExec</code> to <code>asyncExecFile</code> in
+      <code>models/fileValidation.js</code>, but the admin-configured external scanner command line still called the
+      now-undefined <code>asyncExec</code>, throwing a swallowed <code>ReferenceError</code> and making every upload
+      silently fail validation whenever an external scanner was configured. Restored a shell-based
+      <code>asyncExec</code> used only for that admin-configured command line; MIME detection still uses the
+      shell-free <code>asyncExecFile</code>.
+    </p>
+  </div>
+
+  <br />
+  <br />
+
+  <div class="hof">
+    <table border="1" margin="0" padding="10px" width="100%">
+      <tr>
+        <th width="5%">Timeline</th>
+        <th width="60%">Details</th>
+      </tr>
+      <tr>
+        <td vAlign="top"><a name="WEBHOOK"></a><b>2026-05-31</b></td>
+        <td vAlign="top">Found and fixed by code review at
+          <a href="https://github.com/wekan/wekan/blob/main/CHANGELOG.md#v932-2026-05-31-wekan--release">Wekan v9.32 2026-05-31</a>
+        </td>
+      </tr>
+    </table>
+  </div>
+
+  <br />
+  <br />
+
+  <div class="action-buttons">
+    <a class="button" href="https://wekan.fi/hall-of-fame">Back to Hall of Fame Contents</a>
+    <a class="button" href="https://wekan.fi">Back to Wekan Website</a>
+  </div>
+
+  <h1>
+    <br />
+  </h1>
+
+</body>
+
+</html>

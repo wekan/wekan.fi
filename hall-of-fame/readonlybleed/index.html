@@ -1,0 +1,125 @@
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <title>WeKan — Hall of Fame / ReadOnlyBleed</title>
+  <link rel="icon" href="../../wekan-favicon.png">
+  <link rel="stylesheet" type="text/css" href="../../css/main.css">
+  <link rel="stylesheet" href="../../font-awesome/css/font-awesome.min.css">
+</head>
+
+<body>
+
+  <img vAlign="center" src="../hof.svg" alt="Hall of Fame image from https://openclipart.org/detail/120343/trophy"
+    width="300px" height="auto" />
+  <br />
+
+  <div class="action-buttons">
+    <a class="button" href="https://wekan.fi/hall-of-fame">Back to Hall of Fame Contents</a>
+    <a class="button" href="https://wekan.fi">Back to Wekan Website</a>
+  </div>
+
+  <div class="hof">
+    <h1 class="hof">Contents / ReadOnlyBleed</h1>
+
+    <table border="1" margin="0" padding="10px" width="100%">
+      <tr>
+        <th width="10%">CVE</th>
+        <th width="10%">Vulnerability name</th>
+        <th width="10%">Date</th>
+        <th width="20%">
+          <a href="https://github.com/wekan/wekan/blob/main/SECURITY.md" style="color: red;">Responsible Security Disclosure</a>
+          by
+        </th>
+        <th width="40%">Vulnerabilities</th>
+      </tr>
+
+      <tr>
+        <td valign="top">
+          <a href="https://github.com/wekan/wekan/security/advisories/GHSA-6733-4wgq-8xvr">GHSA-6733-4wgq-8xvr</a>
+          <br /> <br />
+        </td>
+        <td valign="top"><b>ReadOnlyBleed</b> <h2><i class="fa fa-pencil-square-o" aria-hidden="true"></i> <i class="fa fa-lock" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></h2></td>
+        <td valign="top">2026-05-31</td>
+        <td valign="top">
+          <b>Wernerina</b> (coordinated disclosure) and <b>Claude</b><br />
+          <img src="../GoldStar.png" width="30px" height="auto" />
+          <img src="../GoldStar.png" width="30px" height="auto" />
+          <img src="../GoldStar.png" width="30px" height="auto" />
+          <img src="../GoldStar.png" width="30px" height="auto" />
+          <img src="../GoldStar.png" width="30px" height="auto" /><br />
+          Did send detailed report!
+        </td>
+        <td valign="top">
+          <ul>
+            <li>1. <i class="fa fa-pencil-square-o" aria-hidden="true"></i> <i class="fa fa-lock" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i> Read-only members could write Custom Fields</li>
+            <li>Affected Wekan v9.31 and earlier</li>
+            <li>Fixed at
+               <a href="https://github.com/wekan/wekan/blob/main/CHANGELOG.md#v932-2026-05-31-wekan--release">Wekan v9.32 2026-05-31</a>
+            </li>
+          </ul>
+        </td>
+      </tr>
+
+    </table>
+  </div>
+
+  <br />
+  <br />
+
+  <div class="hof">
+    <h2 class="hof">Details</h2>
+
+    <h3>Read-only board members could create/modify/delete Custom Fields (GHSA-6733-4wgq-8xvr, CWE-862)</h3>
+    <p>
+      All six mutating REST handlers in <code>server/models/customFields.js</code> (POST/PUT custom-fields,
+      POST/PUT/DELETE dropdown-items, DELETE custom-fields) called the read-level
+      <code>Authentication.checkBoardAccess</code> instead of the write-level <code>checkBoardWriteAccess</code>,
+      letting a board member with the read-only role (<code>isReadOnly</code> / <code>isReadAssignedOnly</code>)
+      write Custom Field data via the REST API when <code>WITH_API=true</code>. This is a privilege escalation
+      via read-level authorization on write operations.
+    </p>
+    <p>
+      <b>Fix:</b> replaced the check with <code>checkBoardWriteAccess</code> in all six mutating handlers (the two
+      GET handlers correctly stay on <code>checkBoardAccess</code>), mirroring
+      <code>lists.js</code>/<code>swimlanes.js</code>/<code>cards.js</code>.
+    </p>
+  </div>
+
+  <br />
+  <br />
+
+  <div class="hof">
+    <table border="1" margin="0" padding="10px" width="100%">
+      <tr>
+        <th width="5%">Timeline</th>
+        <th width="60%">Details</th>
+      </tr>
+      <tr>
+        <td vAlign="top"><a name="READONLY"></a><b>2026-05</b></td>
+        <td vAlign="top">Report received from Wernerina (coordinated disclosure).<br /></td>
+      </tr>
+      <tr>
+        <td vAlign="top"><b>2026-05-31</b></td>
+        <td vAlign="top">Fixed at
+          <a href="https://github.com/wekan/wekan/blob/main/CHANGELOG.md#v932-2026-05-31-wekan--release">Wekan v9.32 2026-05-31</a>
+        </td>
+      </tr>
+    </table>
+  </div>
+
+  <br />
+  <br />
+
+  <div class="action-buttons">
+    <a class="button" href="https://wekan.fi/hall-of-fame">Back to Hall of Fame Contents</a>
+    <a class="button" href="https://wekan.fi">Back to Wekan Website</a>
+  </div>
+
+  <h1>
+    <br />
+  </h1>
+
+</body>
+
+</html>

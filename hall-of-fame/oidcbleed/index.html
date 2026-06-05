@@ -1,0 +1,152 @@
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <title>WeKan — Hall of Fame / OIDCBleed</title>
+  <link rel="icon" href="../../wekan-favicon.png">
+  <link rel="stylesheet" type="text/css" href="../../css/main.css">
+  <link rel="stylesheet" href="../../font-awesome/css/font-awesome.min.css">
+</head>
+
+<body>
+
+  <img vAlign="center" src="../hof.svg" alt="Hall of Fame image from https://openclipart.org/detail/120343/trophy"
+    width="300px" height="auto" />
+  <br />
+
+  <div class="action-buttons">
+    <a class="button" href="https://wekan.fi/hall-of-fame">Back to Hall of Fame Contents</a>
+    <a class="button" href="https://wekan.fi">Back to Wekan Website</a>
+  </div>
+
+  <div class="hof">
+    <h1 class="hof">Contents / OIDCBleed</h1>
+
+    <table border="1" margin="0" padding="10px" width="100%">
+      <tr>
+        <th width="10%">CVE</th>
+        <th width="10%">Vulnerability name</th>
+        <th width="10%">Date</th>
+        <th width="20%">
+          <a href="https://github.com/wekan/wekan/blob/main/SECURITY.md" style="color: red;">Responsible Security Disclosure</a>
+          by
+        </th>
+        <th width="40%">Vulnerabilities</th>
+      </tr>
+
+      <tr>
+        <td valign="top">
+          <a href="https://github.com/wekan/wekan/security/advisories/GHSA-cv95-8h7c-2ffq">GHSA-cv95-8h7c-2ffq</a>,
+          <a href="https://github.com/wekan/wekan/security/advisories/GHSA-mp7g-hj5q-gxhq">GHSA-mp7g-hj5q-gxhq</a>
+          <br /> <br />
+        </td>
+        <td valign="top"><b>OIDCBleed</b> <h2><i class="fa fa-key" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></h2></td>
+        <td valign="top">2026-05-31</td>
+        <td valign="top">
+          <b>alexwaira</b> (coordinated disclosure) and <b>Claude</b><br />
+          <img src="../GoldStar.png" width="30px" height="auto" />
+          <img src="../GoldStar.png" width="30px" height="auto" />
+          <img src="../GoldStar.png" width="30px" height="auto" />
+          <img src="../GoldStar.png" width="30px" height="auto" />
+          <img src="../GoldStar.png" width="30px" height="auto" /><br />
+          Did send detailed report!
+        </td>
+        <td valign="top">
+          <ul>
+            <li>1. <i class="fa fa-key" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i> OIDC method privilege escalation</li>
+            <li>2. <i class="fa fa-user-secret" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i> OIDC account takeover via email merge</li>
+            <li>Affected Wekan v9.31 and earlier</li>
+            <li>Fixed at
+               <a href="https://github.com/wekan/wekan/blob/main/CHANGELOG.md#v932-2026-05-31-wekan--release">Wekan v9.32 2026-05-31</a>
+            </li>
+          </ul>
+        </td>
+      </tr>
+
+    </table>
+  </div>
+
+  <br />
+  <br />
+
+  <div class="hof">
+    <h2 class="hof">Details</h2>
+
+    <h3>1. Missing authorization on OIDC Meteor methods allows privilege escalation to admin (GHSA-cv95-8h7c-2ffq, CWE-269, CWE-862)</h3>
+    <p>
+      Six Meteor methods used internally by the OIDC login flow were registered as globally DDP-callable with no
+      authorization, while their non-OIDC counterparts require admin. <code>setCreateOrgFromOidc</code> and
+      <code>setOrgAllFieldsFromOidc</code> (<code>server/models/org.js</code>), <code>setCreateTeamFromOidc</code> and
+      <code>setTeamAllFieldsFromOidc</code> (<code>server/models/team.js</code>) let any authenticated user
+      create/rename/deactivate/modify arbitrary organizations and teams — including
+      <code>orgAutoAddUsersWithDomainName</code> — bypassing the admin-only restriction.
+    </p>
+    <p>
+      Most critically, <code>groupRoutineOnLogin</code> (<code>packages/wekan-oidc/oidc_server.js</code>) sets
+      <code>isAdmin</code> from caller-supplied group data, so with <code>PROPAGATE_OIDC_DATA</code> enabled any
+      authenticated user could call it over DDP with <code>{groups:[{isAdmin:true,forceCreate:true}]}</code> and
+      promote themselves to global admin; <code>boardRoutineOnLogin</code> could likewise add the caller to the
+      default board.
+    </p>
+    <p>
+      <b>Fix:</b> these six methods are only ever invoked server-side (via <code>Meteor.callAsync</code>) during the
+      OIDC handshake. A server-to-server call runs with <code>this.connection === null</code>, whereas a client call
+      has a non-null connection, so each method now throws <code>not-authorized</code> when
+      <code>this.connection !== null</code>. The legitimate OIDC login flow is unaffected.
+    </p>
+
+    <h3>2. OIDC account takeover via unconditional email-based account merge (GHSA-mp7g-hj5q-gxhq, CWE-287)</h3>
+    <p>
+      The <code>onCreateUser</code> hook in <code>server/models/users.js</code> unconditionally merged an incoming
+      OIDC login into any existing Wekan account whose email <b>or</b> username matched the (attacker-controlled)
+      OIDC claims — no ownership check, no email-verification check, no notification. An attacker who could present a
+      matching <code>email</code>/<code>username</code> claim (trivial on self-hosted Keycloak/Authentik, where the
+      <code>email</code>/<code>email_verified</code> claims are attacker-settable) inherited the victim's
+      <code>_id</code>, boards, cards, attachments, API tokens and admin status, during the attacker's own first OIDC
+      login with no victim interaction.
+    </p>
+    <p>
+      <b>Fix:</b> fail closed, mirroring <code>LDAP_MERGE_EXISTING_USERS</code>: matching is now by email only (never
+      username); auto-linking is opt-in via the new <code>OAUTH2_MERGE_EXISTING_USERS</code> setting (OFF by default);
+      even when enabled the OIDC provider must assert <code>email_verified=true</code>; otherwise the OIDC login is
+      rejected with <code>oidc-email-already-in-use</code> instead of merging.
+    </p>
+  </div>
+
+  <br />
+  <br />
+
+  <div class="hof">
+    <table border="1" margin="0" padding="10px" width="100%">
+      <tr>
+        <th width="5%">Timeline</th>
+        <th width="60%">Details</th>
+      </tr>
+      <tr>
+        <td vAlign="top"><a name="OIDC"></a><b>2026-05</b></td>
+        <td vAlign="top">Report received from alexwaira (coordinated disclosure).<br /></td>
+      </tr>
+      <tr>
+        <td vAlign="top"><b>2026-05-31</b></td>
+        <td vAlign="top">Fixed at
+          <a href="https://github.com/wekan/wekan/blob/main/CHANGELOG.md#v932-2026-05-31-wekan--release">Wekan v9.32 2026-05-31</a>
+        </td>
+      </tr>
+    </table>
+  </div>
+
+  <br />
+  <br />
+
+  <div class="action-buttons">
+    <a class="button" href="https://wekan.fi/hall-of-fame">Back to Hall of Fame Contents</a>
+    <a class="button" href="https://wekan.fi">Back to Wekan Website</a>
+  </div>
+
+  <h1>
+    <br />
+  </h1>
+
+</body>
+
+</html>
