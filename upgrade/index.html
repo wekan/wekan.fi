@@ -83,6 +83,13 @@
     <br />
 
   <div class="hof">
+    <ol>
+      <li>mongodump/mongorestore to MongoDB 7.x (6.x and older with <a href="https://github.com/wekan/wekan/blob/main/docs/Backup/Backup.md#backup-wekan-snap-to-directory-dump">LD_LIBRARY_PATH</a>)</li>
+      <li>If there is WRITABLE_PATH/ files attachments avatars, copy from /var/snap/wekan/common/files or /data/files to newest WeKan directory</li>
+      <li>Admin Panel/Attachments, move attachments from MongoDB CollectionFS to any other storage to make then visible. Storage options are MongoDB GridFS Mongo-Files, S3/MinIO compatible, Azure Blob, Google Cloud Storage).</li>
+      <li>Attachments and avatars load slowly from MongoDB GridFS, and load fast from Filesystem.</li>
+      <li>After moving files to Filesystem, Admin Panel / MongoDB GridFS Storage / Compact MongoDB database to make it use less disk space.</li>
+    </ol>
 
     <table border="1" margin="0" padding="10px" width="100%">
       <tr>
@@ -103,7 +110,8 @@
         <td valign="top">Newest<br />
         <code>sudo snap list</code>
         </td>
-        <td valign="top">Already up-to-date.<br />Automatic updates.</td>
+        <td valign="top">Already newest.<br />Automatic updates.<br />Change from Candidate to Beta:<br />
+        <code>sudo snap refresh wekan --channel=latest/beta</code></td>
       </tr>
       <tr>
        <td valign="top">Snap Stable</td>
@@ -114,7 +122,17 @@
         <code>sudo snap list</code>
         </td>
         <td valign="top">
-          <a href="https://github.com/wekan/wekan/blob/main/docs/Backup/Backup.md">Manual upgrade info</a>
+          <ol>
+            <li>Upgrade to newest <a href="https://wekan.fi/install/">Snap Beta amd64/arm64</a>
+                or <a href="https://raw.githubusercontent.com/wekan/wekan/refs/heads/main/docker-compose.yml">docker-compose.yml amd64/arm64</a>
+                or <a href="https://github.com/wekan/wekan/blob/main/docs/Platforms/Propietary/Windows/Offline.md">Windows</a></li>
+            <li>mongodump/mongorestore to MongoDB 7.x (6.x and older with <a href="https://github.com/wekan/wekan/blob/main/docs/Backup/Backup.md#backup-wekan-snap-to-directory-dump">LD_LIBRARY_PATH</a>)</li>
+            <li>If there is WRITABLE_PATH/ files attachments avatars, copy from /var/snap/wekan/common/files or /data/files to newest WeKan directory</li>
+            <li>Admin Panel/Attachments, move attachments from MongoDB CollectionFS to any other storage to make then visible. Storage options are MongoDB GridFS Mongo-Files, S3/MinIO compatible, Azure Blob, Google Cloud Storage).</li>
+            <li>Attachments and avatars load slowly from MongoDB GridFS, and load fast from Filesystem.</li>
+            <li>After moving files to Filesystem, Admin Panel / MongoDB GridFS Storage / Compact MongoDB database to make it use less disk space.</li>
+          </ol>
+          <a href="https://github.com/wekan/wekan/blob/main/docs/Backup/Backup.md">More upgrade info</a>
         </td>
       </tr>
       <tr>
