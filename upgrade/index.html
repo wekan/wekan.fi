@@ -90,7 +90,7 @@
     <ol>
       <li>mongodump/mongorestore to MongoDB 7.x (6.x and older with <a href="https://github.com/wekan/wekan/blob/main/docs/Backup/Backup.md#backup-wekan-snap-to-directory-dump">LD_LIBRARY_PATH</a>)</li>
       <li>If there is WRITABLE_PATH/ files attachments avatars, copy from /var/snap/wekan/common/files or /data/files to newest WeKan directory</li>
-      <li>At WeKan 9.35 or newer: Admin Panel/Attachments, move attachments from MongoDB CollectionFS to any other storage to make then visible. Storage options are MongoDB GridFS Mongo-Files, S3/MinIO compatible, Azure Blob, Google Cloud Storage).</li>
+      <li>At WeKan 9.35 or newer: Admin Panel/Attachments, move attachments from MongoDB CollectionFS to any other storage to make then visible. Storage options are MongoDB GridFS Mongo-Files, S3/MinIO compatible, Azure Blob, Google Cloud Storage.</li>
       <li>Attachments and avatars load slowly from MongoDB GridFS, and load fast from Filesystem.</li>
       <li>After moving files to Filesystem, Admin Panel / MongoDB GridFS Storage / Compact MongoDB database to make it use less disk space.</li>
     </ol>
