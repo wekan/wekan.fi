@@ -36,8 +36,8 @@
 
       <tr>
         <td valign="top">
-          <a href="https://github.com/wekan/wekan/security/advisories/GHSA-cv95-8h7c-2ffq">GHSA-cv95-8h7c-2ffq</a>,
-          <a href="https://github.com/wekan/wekan/security/advisories/GHSA-mp7g-hj5q-gxhq">GHSA-mp7g-hj5q-gxhq</a>
+          <a href="https://github.com/wekan/wekan/security/advisories/GHSA-cv95-8h7c-2ffq">CVE-2026-53444 GHSA-cv95-8h7c-2ffq</a>,
+          <a href="https://github.com/wekan/wekan/security/advisories/GHSA-mp7g-hj5q-gxhq">CVE-2026-52893 GHSA-mp7g-hj5q-gxhq</a>
           <br /> <br />
         </td>
         <td valign="top"><b>OIDCBleed</b> <h2><i class="fa fa-key" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></h2></td>
@@ -72,7 +72,7 @@
   <div class="hof">
     <h2 class="hof">Details</h2>
 
-    <h3>1. Missing authorization on OIDC Meteor methods allows privilege escalation to admin (GHSA-cv95-8h7c-2ffq, CWE-269, CWE-862)</h3>
+    <h3>1. Missing authorization on OIDC Meteor methods allows privilege escalation to admin (CVE-2026-53444 GHSA-cv95-8h7c-2ffq, CWE-269, CWE-862)</h3>
     <p>
       Six Meteor methods used internally by the OIDC login flow were registered as globally DDP-callable with no
       authorization, while their non-OIDC counterparts require admin. <code>setCreateOrgFromOidc</code> and
@@ -95,7 +95,7 @@
       <code>this.connection !== null</code>. The legitimate OIDC login flow is unaffected.
     </p>
 
-    <h3>2. OIDC account takeover via unconditional email-based account merge (GHSA-mp7g-hj5q-gxhq, CWE-287)</h3>
+    <h3>2. OIDC account takeover via unconditional email-based account merge (CVE-2026-52893 GHSA-mp7g-hj5q-gxhq, CWE-287)</h3>
     <p>
       The <code>onCreateUser</code> hook in <code>server/models/users.js</code> unconditionally merged an incoming
       OIDC login into any existing Wekan account whose email <b>or</b> username matched the (attacker-controlled)

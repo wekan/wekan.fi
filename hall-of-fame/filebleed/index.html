@@ -58,7 +58,47 @@
         </td>
       </tr>
 
+      <tr>
+        <td valign="top">
+          <a href="https://github.com/wekan/wekan/security/advisories/GHSA-g6vm-7757-pr88">CVE-2026-52890 GHSA-g6vm-7757-pr88</a>
+        </td>
+        <td valign="top"><b>FileBleed</b> <h2><i class="fa fa-file-text-o" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></h2></td>
+        <td valign="top">2026-05-27</td>
+        <td valign="top">
+          <b>Jan Kahmen, <a href="https://turingpoint.de/">turingpoint GmbH</a></b><br />
+          <img src="../GoldStar.png" width="30px" height="auto" />
+          <img src="../GoldStar.png" width="30px" height="auto" />
+          <img src="../GoldStar.png" width="30px" height="auto" />
+          <img src="../GoldStar.png" width="30px" height="auto" /><br />
+          Did send detailed report!
+        </td>
+        <td valign="top">
+          <ul>
+            <li>Arbitrary file read and server DoS via attachment <code>versions.original.path</code></li>
+            <li>Affected Wekan v9.30 and earlier</li>
+            <li>Fixed at <a href="https://github.com/wekan/wekan/blob/main/CHANGELOG.md#v931-2026-05-27-wekan--release">Wekan v9.31 2026-05-27</a></li>
+            <li><a href="#G6VM">More details</a></li>
+          </ul>
+        </td>
+      </tr>
+
     </table>
+  </div>
+
+  <br />
+  <br />
+
+  <div class="hof">
+    <h3><a name="G6VM"></a>Arbitrary file read and server DoS via attachment <code>versions.original.path</code> (CVE-2026-52890 GHSA-g6vm-7757-pr88, CWE-22, CWE-400)</h3>
+    <p>
+      Attachment metadata field <code>versions.original.path</code> could be client-controlled through DDP insert,
+      allowing an authenticated user with board write access to point attachment reads at arbitrary server paths.
+      This enabled sensitive file disclosure and repeatable denial-of-service behavior.
+    </p>
+    <p>
+      <b>Fix:</b> harden attachment storage controls and API context handling, and move attachment storage settings
+      from board scope to Admin Panel scope. Fixed in Wekan v9.31.
+    </p>
   </div>
 
   <br />
@@ -70,6 +110,14 @@
       <tr>
         <th width="5%">Timeline</th>
         <th width="60%">Details</th>
+      </tr>
+      <tr>
+        <td vAlign="top"><a name="G6VM-TIMELINE"></a><b>2026-05-27</b></td>
+        <td vAlign="top">
+          Report received from Jan Kahmen (CVE-2026-52890 GHSA-g6vm-7757-pr88).<br />
+          Fixed at
+          <a href="https://github.com/wekan/wekan/blob/main/CHANGELOG.md#v931-2026-05-27-wekan--release">Wekan v9.31 2026-05-27</a>.
+        </td>
       </tr>
       <tr>
         <td vAlign="top"><a name="FIELD"></a><b>2023-02-16 17.35 EET</b></td>

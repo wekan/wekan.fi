@@ -38,7 +38,7 @@
 
       <tr>
         <td valign="top">
-          <a href="https://github.com/wekan/wekan/security/advisories/GHSA-qfqv-42qw-vvwh">GHSA-qfqv-42qw-vvwh</a>
+          <a href="https://github.com/wekan/wekan/security/advisories/GHSA-qfqv-42qw-vvwh">CVE-2026-53447 GHSA-qfqv-42qw-vvwh</a>
           <br /> <br />
         </td>
         <td valign="top"><b>CloneBleed</b> <h2><i class="fa fa-clone" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></h2></td>
@@ -78,8 +78,8 @@
 
       <tr>
         <td valign="top">
-          <a href="https://github.com/wekan/wekan/security/advisories/GHSA-cv95-8h7c-2ffq">GHSA-cv95-8h7c-2ffq</a>,
-          <a href="https://github.com/wekan/wekan/security/advisories/GHSA-mp7g-hj5q-gxhq">GHSA-mp7g-hj5q-gxhq</a>
+          <a href="https://github.com/wekan/wekan/security/advisories/GHSA-cv95-8h7c-2ffq">CVE-2026-53444 GHSA-cv95-8h7c-2ffq</a>,
+          <a href="https://github.com/wekan/wekan/security/advisories/GHSA-mp7g-hj5q-gxhq">CVE-2026-52893 GHSA-mp7g-hj5q-gxhq</a>
           <br /> <br />
         </td>
         <td valign="top"><b>OIDCBleed</b> <h2><i class="fa fa-key" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></h2></td>
@@ -95,8 +95,8 @@
         </td>
         <td valign="top">
           <ul>
-            <li>1. <i class="fa fa-key" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i> Missing authorization on OIDC Meteor methods allows privilege escalation to admin (GHSA-cv95-8h7c-2ffq, CWE-269, CWE-862). Six OIDC-flow methods were globally DDP-callable; <code>groupRoutineOnLogin</code> could set <code>isAdmin</code> from caller data</li>
-            <li>2. <i class="fa fa-user-secret" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i> OIDC account takeover via unconditional email-based account merge in <code>Accounts.onCreateUser</code> (GHSA-mp7g-hj5q-gxhq, CWE-287)</li>
+            <li>1. <i class="fa fa-key" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i> Missing authorization on OIDC Meteor methods allows privilege escalation to admin (CVE-2026-53444 GHSA-cv95-8h7c-2ffq, CWE-269, CWE-862). Six OIDC-flow methods were globally DDP-callable; <code>groupRoutineOnLogin</code> could set <code>isAdmin</code> from caller data</li>
+            <li>2. <i class="fa fa-user-secret" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i> OIDC account takeover via unconditional email-based account merge in <code>Accounts.onCreateUser</code> (CVE-2026-52893 GHSA-mp7g-hj5q-gxhq, CWE-287)</li>
             <li>Affected Wekan v9.31 and earlier</li>
             <li>Fixed at
                <a href="https://github.com/wekan/wekan/blob/main/CHANGELOG.md#v932-2026-05-31-wekan--release">Wekan v9.32 2026-05-31</a>
@@ -108,7 +108,7 @@
 
       <tr>
         <td valign="top">
-          <a href="https://github.com/wekan/wekan/security/advisories/GHSA-6733-4wgq-8xvr">GHSA-6733-4wgq-8xvr</a>
+          <a href="https://github.com/wekan/wekan/security/advisories/GHSA-6733-4wgq-8xvr">CVE-2026-52892 GHSA-6733-4wgq-8xvr</a>
           <br /> <br />
         </td>
         <td valign="top"><b>ReadOnlyBleed</b> <h2><i class="fa fa-pencil-square-o" aria-hidden="true"></i> <i class="fa fa-lock" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></h2></td>
@@ -124,7 +124,7 @@
         </td>
         <td valign="top">
           <ul>
-            <li>1. <i class="fa fa-pencil-square-o" aria-hidden="true"></i> <i class="fa fa-lock" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i> Read-only board members could create/modify/delete Custom Fields (GHSA-6733-4wgq-8xvr, CWE-862). The six mutating Custom Field REST handlers used the read-level <code>checkBoardAccess</code> instead of <code>checkBoardWriteAccess</code></li>
+            <li>1. <i class="fa fa-pencil-square-o" aria-hidden="true"></i> <i class="fa fa-lock" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i> Read-only board members could create/modify/delete Custom Fields (CVE-2026-52892 GHSA-6733-4wgq-8xvr, CWE-862). The six mutating Custom Field REST handlers used the read-level <code>checkBoardAccess</code> instead of <code>checkBoardWriteAccess</code></li>
             <li>Affected Wekan v9.31 and earlier</li>
             <li>Fixed at
                <a href="https://github.com/wekan/wekan/blob/main/CHANGELOG.md#v932-2026-05-31-wekan--release">Wekan v9.32 2026-05-31</a>
@@ -136,8 +136,8 @@
 
       <tr>
         <td valign="top">
-          <a href="https://github.com/wekan/wekan/security/advisories/GHSA-hc3x-hq3m-663q">GHSA-hc3x-hq3m-663q</a>,
-          <a href="https://github.com/wekan/wekan/security/advisories/GHSA-7w2h-g83c-jqrp">GHSA-7w2h-g83c-jqrp</a>
+          <a href="https://github.com/wekan/wekan/security/advisories/GHSA-hc3x-hq3m-663q">CVE-2026-53446 GHSA-hc3x-hq3m-663q</a>,
+          <a href="https://github.com/wekan/wekan/security/advisories/GHSA-7w2h-g83c-jqrp">CVE-2026-53445 GHSA-7w2h-g83c-jqrp</a>
           <br /> <br />
         </td>
         <td valign="top"><b>WebhookBleed</b> <h2><i class="fa fa-link" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></h2></td>
@@ -152,14 +152,41 @@
         </td>
         <td valign="top">
           <ul>
-            <li>1. <i class="fa fa-link" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i> Server-Side Request Forgery (SSRF) via webhook integration URLs — input-side validation (GHSA-hc3x-hq3m-663q, CWE-918). Builds on the v8.35/v8.36 <a href="integrationbleed/">IntegrationBleed</a> delivery-layer fix</li>
-            <li>2. <i class="fa fa-th-large" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i> Authorization bypass in <code>copyBoard</code> DDP method allows any user to copy private boards (GHSA-7w2h-g83c-jqrp, CWE-862). Tightened to require board admin, matching the REST endpoint</li>
-            <li>3. <i class="fa fa-user" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i> Regression from the avatar RCE fix (GHSA-35j7-h385-2q9g): external antivirus scanner broken (<code>asyncExec</code> undefined)</li>
+            <li>1. <i class="fa fa-link" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i> Server-Side Request Forgery (SSRF) via webhook integration URLs — input-side validation (CVE-2026-53446 GHSA-hc3x-hq3m-663q, CWE-918). Builds on the v8.35/v8.36 <a href="integrationbleed/">IntegrationBleed</a> delivery-layer fix</li>
+            <li>2. <i class="fa fa-th-large" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i> Authorization bypass in <code>copyBoard</code> DDP method allows any user to copy private boards (CVE-2026-53445 GHSA-7w2h-g83c-jqrp, CWE-862). Tightened to require board admin, matching the REST endpoint</li>
+            <li>3. <i class="fa fa-user" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i> Regression from the avatar RCE fix (CVE-2026-52891 GHSA-35j7-h385-2q9g): external antivirus scanner broken (<code>asyncExec</code> undefined)</li>
             <li>Affected Wekan v9.31 and earlier</li>
             <li>Fixed at
                <a href="https://github.com/wekan/wekan/blob/main/CHANGELOG.md#v932-2026-05-31-wekan--release">Wekan v9.32 2026-05-31</a>
             </li>
             <li><a href="webhookbleed/">More details</a></li>
+          </ul>
+        </td>
+      </tr>
+
+      <tr>
+        <td valign="top">
+          <a href="https://github.com/wekan/wekan/security/advisories/GHSA-g6vm-7757-pr88">CVE-2026-52890 GHSA-g6vm-7757-pr88</a>
+          <br /> <br />
+        </td>
+        <td valign="top"><b>FileBleed</b> <h2><i class="fa fa-file-text-o" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></h2></td>
+        <td valign="top">2026-05-27</td>
+        <td valign="top">
+          <b>Jan Kahmen of turingpoint GmbH</b><br />
+          <img src="GoldStar.png" width="30px" height="auto" />
+          <img src="GoldStar.png" width="30px" height="auto" />
+          <img src="GoldStar.png" width="30px" height="auto" />
+          <img src="GoldStar.png" width="30px" height="auto" /><br />
+          Reported responsibly, fixed quickly.
+        </td>
+        <td valign="top">
+          <ul>
+            <li>1. <i class="fa fa-file-text-o" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i> Arbitrary file read and server DoS via attachment <code>versions.original.path</code> (CVE-2026-52890 GHSA-g6vm-7757-pr88, CWE-22, CWE-400)</li>
+            <li>Affected Wekan v9.30 and earlier</li>
+            <li>Fixed at
+               <a href="https://github.com/wekan/wekan/blob/main/CHANGELOG.md#v931-2026-05-27-wekan--release">Wekan v9.31 2026-05-27</a>
+            </li>
+            <li><a href="filebleed/#G6VM">More details</a></li>
           </ul>
         </td>
       </tr>

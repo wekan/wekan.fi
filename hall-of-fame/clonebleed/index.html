@@ -36,7 +36,7 @@
 
       <tr>
         <td valign="top">
-          CloneBleed <a href="https://github.com/wekan/wekan/security/advisories/GHSA-qfqv-42qw-vvwh">GHSA-qfqv-42qw-vvwh</a>
+          CloneBleed <a href="https://github.com/wekan/wekan/security/advisories/GHSA-qfqv-42qw-vvwh">CVE-2026-53447 GHSA-qfqv-42qw-vvwh</a>
           <br /> <br />
         </td>
         <td valign="top"><b>CloneBleed</b> <h2><i class="fa fa-clone" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></h2></td>
@@ -70,7 +70,7 @@
   <div class="hof">
     <h2 class="hof">Details</h2>
 
-    <h3>1. CloneBleed — cloneBoard authorization bypass (GHSA-qfqv-42qw-vvwh, CWE-639, CWE-862)</h3>
+    <h3>1. CloneBleed — cloneBoard authorization bypass (CVE-2026-53447 GHSA-qfqv-42qw-vvwh, CWE-639, CWE-862)</h3>
     <p>
       The <code>cloneBoard</code> Meteor method in <code>models/import.js</code> copied an entire board —
       including all cards, comments, attachments, member info and activities — identified solely by a
@@ -144,7 +144,7 @@
       <li><b>Custom Field allow rules</b> (<code>server/permissions/customFields.js</code>): used
         <code>allowIsAnyBoardMember</code> (mere membership) for insert/update/remove, so read-only/comment-only/worker
         members could create/modify/delete Custom Fields via direct DDP collection writes — the same read-only-write
-        class as <a href="../readonlybleed/">ReadOnlyBleed</a> (GHSA-6733), which had only fixed the REST path. Now uses
+        class as <a href="../readonlybleed/">ReadOnlyBleed</a> (CVE-2026-52892 GHSA-6733-4wgq-8xvr), which had only fixed the REST path. Now uses
         a write-access helper (<code>allowIsAnyBoardMemberWithWriteAccess</code>).</li>
       <li><b>Comment-reaction allow rules</b> (<code>server/permissions/cardCommentReactions.js</code>): used
         <code>allowIsBoardMember</code>, letting read-only members add/remove reactions. Now uses
@@ -171,7 +171,7 @@
       <tr>
         <td vAlign="top"><a name="CLONE"></a><b>2026-06-04</b></td>
         <td vAlign="top">
-          Report received from dizconnectz (GHSA-qfqv-42qw-vvwh).<br />
+          Report received from dizconnectz (CVE-2026-53447 GHSA-qfqv-42qw-vvwh).<br />
         </td>
       </tr>
       <tr>

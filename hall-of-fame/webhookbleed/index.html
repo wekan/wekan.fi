@@ -36,8 +36,8 @@
 
       <tr>
         <td valign="top">
-          <a href="https://github.com/wekan/wekan/security/advisories/GHSA-hc3x-hq3m-663q">GHSA-hc3x-hq3m-663q</a>,
-          <a href="https://github.com/wekan/wekan/security/advisories/GHSA-7w2h-g83c-jqrp">GHSA-7w2h-g83c-jqrp</a>
+          <a href="https://github.com/wekan/wekan/security/advisories/GHSA-hc3x-hq3m-663q">CVE-2026-53446 GHSA-hc3x-hq3m-663q</a>,
+          <a href="https://github.com/wekan/wekan/security/advisories/GHSA-7w2h-g83c-jqrp">CVE-2026-53445 GHSA-7w2h-g83c-jqrp</a>
           <br /> <br />
         </td>
         <td valign="top"><b>WebhookBleed</b> <h2><i class="fa fa-link" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></h2></td>
@@ -72,7 +72,7 @@
   <div class="hof">
     <h2 class="hof">Details</h2>
 
-    <h3>1. SSRF via webhook integration URLs — input-side validation (GHSA-hc3x-hq3m-663q, CWE-918)</h3>
+    <h3>1. SSRF via webhook integration URLs — input-side validation (CVE-2026-53446 GHSA-hc3x-hq3m-663q, CWE-918)</h3>
     <p>
       Wekan's outgoing-webhook integrations let a board admin store an arbitrary URL that is later fetched
       server-side, so a caller-controlled URL pointing at an internal address (cloud metadata at
@@ -91,7 +91,7 @@
       private/loopback/link-local/reserved targets with HTTP 400.
     </p>
 
-    <h3>2. Authorization bypass in copyBoard DDP method (GHSA-7w2h-g83c-jqrp, CWE-862)</h3>
+    <h3>2. Authorization bypass in copyBoard DDP method (CVE-2026-53445 GHSA-7w2h-g83c-jqrp, CWE-862)</h3>
     <p>
       The <code>copyBoard</code> Meteor method in <code>server/publications/boards.js</code> had no authorization
       check: any logged-in user could copy any board by ID — including private boards — while the equivalent REST
@@ -101,7 +101,7 @@
       <code>board.hasAdmin(this.userId)</code>.
     </p>
 
-    <h3>3. Regression from the avatar RCE fix (GHSA-35j7-h385-2q9g)</h3>
+    <h3>3. Regression from the avatar RCE fix (CVE-2026-52891 GHSA-35j7-h385-2q9g)</h3>
     <p>
       The avatar RCE fix renamed <code>asyncExec</code> to <code>asyncExecFile</code> in
       <code>models/fileValidation.js</code>, but the admin-configured external scanner command line still called the
