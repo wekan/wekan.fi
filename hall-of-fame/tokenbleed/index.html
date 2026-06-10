@@ -1,0 +1,186 @@
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <title>WeKan — Hall of Fame / TokenBleed</title>
+  <link rel="icon" href="../../wekan-favicon.png">
+  <link rel="stylesheet" type="text/css" href="../../css/main.css">
+  <link rel="stylesheet" href="../../font-awesome/css/font-awesome.min.css">
+</head>
+
+<body>
+
+  <img vAlign="center" src="../hof.svg" alt="Hall of Fame image from https://openclipart.org/detail/120343/trophy"
+    width="300px" height="auto" />
+  <br />
+
+  <div class="action-buttons">
+    <a class="button" href="https://wekan.fi/hall-of-fame">Back to Hall of Fame Contents</a>
+    <a class="button" href="https://wekan.fi">Back to Wekan Website</a>
+  </div>
+
+  <div class="hof">
+    <h1 class="hof">Contents / TokenBleed</h1>
+
+    <table border="1" margin="0" padding="10px" width="100%">
+      <tr>
+        <th width="10%">CVE</th>
+        <th width="10%">Vulnerability name</th>
+        <th width="10%">Date</th>
+        <th width="20%">
+          <a href="https://github.com/wekan/wekan/blob/main/SECURITY.md" style="color: red;">Responsible Security Disclosure</a>
+          by
+        </th>
+        <th width="40%">Vulnerabilities</th>
+      </tr>
+
+      <tr>
+        <td valign="top">
+          TokenBleed CVE requested
+          <br /> <br />
+        </td>
+        <td valign="top"><b>TokenBleed</b> <h2><i class="fa fa-ticket" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></h2></td>
+        <td valign="top">2026-06-10</td>
+        <td valign="top">
+          <b>Zion Boggan</b> (coordinated disclosure) and <b>Claude</b><br />
+          <img src="../GoldStar.png" width="30px" height="auto" />
+          <img src="../GoldStar.png" width="30px" height="auto" />
+          <img src="../GoldStar.png" width="30px" height="auto" />
+          <img src="../GoldStar.png" width="30px" height="auto" />
+          <img src="../GoldStar.png" width="30px" height="auto" /><br />
+          Did send detailed report with PoC!
+        </td>
+        <td valign="top">
+          <ul>
+            <li>1. <i class="fa fa-ticket" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i> TokenBleed</li>
+            <li>Affected Wekan v9.35 and earlier</li>
+            <li>Fixed at
+               <a href="https://github.com/wekan/wekan/blob/main/CHANGELOG.md">Upcoming WeKan release</a>
+            </li>
+          </ul>
+        </td>
+      </tr>
+
+    </table>
+  </div>
+
+  <br />
+  <br />
+
+  <div class="hof">
+    <h2 class="hof">Details</h2>
+
+    <h3>1. TokenBleed — unauthenticated login-token minting via un-awaited auth check (CWE-863, CWE-287)</h3>
+    <p>
+      <code>Authentication.checkUserId</code> in <code>server/authentication.js</code> is an
+      <code>async</code> function. Both of its throws — the 401 when <code>userId</code> is
+      <code>undefined</code>, and the 403 when the user is not an admin — therefore become
+      <em>rejected promises</em> rather than synchronous exceptions.
+    </p>
+    <p>
+      The REST handler for <code>POST /api/createtoken/:userId</code> in
+      <code>server/models/users.js</code> called the check without <code>await</code>, inside a plain
+      synchronous <code>try/catch</code>:
+    </p>
+    <pre>
+WebApp.handlers.post('/api/createtoken/:userId', function(req, res) {
+  try {
+    Authentication.checkUserId(req.userId);            // not awaited — rejection is detached
+    const id = req.params.userId;
+    const token = Accounts._generateStampedLoginToken();
+    Accounts._insertLoginToken(id, token);             // mints a login token for :userId
+    sendJsonResult(res, { code: 200, data: { _id: id, authToken: token.token } });
+  } catch (error) {
+    sendJsonResult(res, { code: 200, data: error });
+  }
+});
+    </pre>
+    <p>
+      A synchronous <code>try/catch</code> cannot catch a rejected promise, so the failed check never
+      stopped execution. The handler went on to mint and return a usable login token for whatever user
+      ID was in the URL. An unauthenticated request (<code>req.userId</code> is <code>undefined</code>)
+      hits the 401 branch, but that throw is also async and detached, so the bypass worked with
+      <b>no credentials at all</b>.
+    </p>
+    <p>
+      <b>Impact:</b> <code>POST /api/createtoken/&lt;admin-user-id&gt;</code> returned a usable
+      <code>authToken</code> for that admin. An attacker could obtain a target admin's user ID from
+      <code>GET /api/users</code> (exposed by the same problem), then mint an admin token and take over
+      the instance. Precondition: REST API enabled (<code>WITH_API=true</code>), which is the default
+      in the Snap and Docker builds.
+    </p>
+
+    <h3>2. Systemic detached-rejection bypass across the Admin REST API</h3>
+    <p>
+      The same pattern affected every other handler that called an <code>async</code>
+      <code>Authentication</code> check without <code>await</code> from a synchronous <code>try/catch</code>.
+      In <code>server/models/users.js</code> and <code>server/models/boards.js</code> these were:
+    </p>
+    <ul>
+      <li><code>GET /api/users</code> — user enumeration</li>
+      <li><code>GET /api/users/:userId</code> — read any user (with boards)</li>
+      <li><code>PUT /api/users/:userId</code> — edit user / <code>takeOwnership</code> / disable-enable login</li>
+      <li><code>POST /api/users/</code> — create a user (handler was not even <code>async</code>)</li>
+      <li><code>DELETE /api/users/:userId</code> — delete any user</li>
+      <li><code>POST /api/deletetoken</code> — destroy any user's login tokens</li>
+      <li><code>GET /api/boards</code> and <code>GET /api/boards_count</code> — board listing/counts</li>
+      <li><code>DELETE /api/boards/:boardId</code> — delete any board</li>
+      <li><code>GET /api/users/:userId/boards</code> — list any user's boards (un-awaited <code>checkAdminOrCondition</code>)</li>
+      <li><code>POST /api/boards/:boardId/copy</code> — copy any board (un-awaited <code>checkAdminOrCondition</code>, originally outside the <code>try</code>)</li>
+    </ul>
+    <p>
+      <code>POST /api/createtoken/:userId</code> was the most serious because it hands out a working
+      session.
+    </p>
+
+    <h3>Fix</h3>
+    <p>
+      Every async <code>Authentication</code> check is now <code>await</code>ed so a failed check rejects
+      <em>before</em> any privileged code runs, and the two handlers that were not <code>async</code>
+      (<code>POST /api/users/</code> and <code>POST /api/createtoken/:userId</code>) were made
+      <code>async</code>. The <code>POST /api/boards/:boardId/copy</code> check was also moved inside the
+      handler's <code>try/catch</code> so a denied caller gets a clean error response.
+    </p>
+  </div>
+
+  <br />
+  <br />
+
+  <div class="hof">
+    <table border="1" margin="0" padding="10px" width="100%">
+
+      <tr>
+        <th width="5%">Timeline</th>
+        <th width="60%">Details</th>
+      </tr>
+      <tr>
+        <td vAlign="top"><a name="TOKEN"></a><b>2026-06-10</b></td>
+        <td vAlign="top">
+          Report received from Zion Boggan (coordinated disclosure, CVE requested).<br />
+        </td>
+      </tr>
+      <tr>
+        <td vAlign="top"><b>Upcoming release</b></td>
+        <td vAlign="top">Fixed at
+          <a href="https://github.com/wekan/wekan/blob/main/CHANGELOG.md">Upcoming WeKan release</a>,
+          by awaiting every async authentication check across the Admin REST API.
+        </td>
+      </tr>
+    </table>
+  </div>
+
+  <br />
+  <br />
+
+  <div class="action-buttons">
+    <a class="button" href="https://wekan.fi/hall-of-fame">Back to Hall of Fame Contents</a>
+    <a class="button" href="https://wekan.fi">Back to Wekan Website</a>
+  </div>
+
+  <h1>
+    <br />
+  </h1>
+
+</body>
+
+</html>

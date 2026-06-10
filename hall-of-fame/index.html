@@ -38,6 +38,33 @@
 
       <tr>
         <td valign="top">
+          CVE requested
+          <br /> <br />
+        </td>
+        <td valign="top"><b>TokenBleed</b> <h2><i class="fa fa-ticket" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></h2></td>
+        <td valign="top">2026-06-10</td>
+        <td valign="top">
+          <b>Zion Boggan</b> (coordinated disclosure) and <b>Claude</b><br />
+          <img src="GoldStar.png" width="30px" height="auto" />
+          <img src="GoldStar.png" width="30px" height="auto" />
+          <img src="GoldStar.png" width="30px" height="auto" />
+          <img src="GoldStar.png" width="30px" height="auto" />
+          <img src="GoldStar.png" width="30px" height="auto" /><br />
+          Did send detailed report with PoC!
+        </td>
+        <td valign="top">
+          <ul>
+            <li>1. <i class="fa fa-ticket" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i> TokenBleed — unauthenticated login-token minting via un-awaited auth check in <code>POST /api/createtoken/:userId</code> (CWE-863, CWE-287). <code>Authentication.checkUserId</code> is <code>async</code>, so its 401/403 throws became rejected promises that a synchronous <code>try/catch</code> could not catch; the un-awaited call never stopped execution, so the handler minted and returned a usable login token for any user ID — including an admin — with no credentials (unauthenticated account takeover)</li>
+            <li>2. <i class="fa fa-users" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i> The same detached-rejection bypass affected the other un-awaited <code>checkUserId</code>/<code>checkAdminOrCondition</code> handlers: <code>GET /api/users</code>, <code>GET /api/users/:userId</code>, <code>PUT /api/users/:userId</code>, <code>POST /api/users/</code>, <code>DELETE /api/users/:userId</code>, <code>POST /api/deletetoken</code>, <code>GET /api/boards</code>, <code>GET /api/boards_count</code>, <code>DELETE /api/boards/:boardId</code>, <code>GET /api/users/:userId/boards</code> and <code>POST /api/boards/:boardId/copy</code> (user enumeration, deletion, takeOwnership, board member changes and board deletion)</li>
+            <li>Affected Wekan v9.35 and earlier</li>
+            <li>Fixed at <a href="https://github.com/wekan/wekan/blob/main/CHANGELOG.md">See CHANGELOG (Upcoming release)</a></li>
+            <li><a href="tokenbleed/">More details</a></li>
+          </ul>
+        </td>
+      </tr>
+
+      <tr>
+        <td valign="top">
           <a href="https://github.com/wekan/wekan/security/advisories/GHSA-qfqv-42qw-vvwh">CVE-2026-53447 GHSA-qfqv-42qw-vvwh</a>
           <br /> <br />
         </td>
