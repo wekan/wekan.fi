@@ -1,0 +1,196 @@
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <title>WeKan — Hall of Fame / BoardBleed</title>
+  <link rel="icon" href="../../wekan-favicon.png">
+  <link rel="stylesheet" type="text/css" href="../../css/main.css">
+  <link rel="stylesheet" href="../../font-awesome/css/font-awesome.min.css">
+</head>
+
+<body>
+
+  <img vAlign="center" src="../hof.svg" alt="Hall of Fame image from https://openclipart.org/detail/120343/trophy"
+    width="300px" height="auto" />
+  <br />
+
+  <div class="action-buttons">
+    <a class="button" href="https://wekan.fi/hall-of-fame">Back to Hall of Fame Contents</a>
+    <a class="button" href="https://wekan.fi">Back to Wekan Website</a>
+  </div>
+
+  <div class="hof">
+    <h1 class="hof">Contents / BoardBleed</h1>
+
+    <table border="1" margin="0" padding="10px" width="100%">
+      <tr>
+        <th width="10%">CVE</th>
+        <th width="10%">Vulnerability name</th>
+        <th width="10%">Date</th>
+        <th width="20%">
+          <a href="https://github.com/wekan/wekan/blob/main/SECURITY.md" style="color: red;">Responsible Security Disclosure</a>
+          by
+        </th>
+        <th width="40%">Vulnerabilities</th>
+      </tr>
+
+      <tr>
+        <td valign="top">
+          <a href="https://github.com/wekan/wekan/security/advisories/GHSA-gm7v-pc38-53jr">GHSA-gm7v-pc38-53jr</a>
+          CVE requested
+          <br /> <br />
+        </td>
+        <td valign="top"><b>BoardBleed</b> <h2><i class="fa fa-exchange" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></h2></td>
+        <td valign="top">2026-06-11</td>
+        <td valign="top">
+          <b>0xzap</b> (coordinated disclosure) and <b>Claude</b><br />
+          <img src="../GoldStar.png" width="30px" height="auto" />
+          <img src="../GoldStar.png" width="30px" height="auto" />
+          <img src="../GoldStar.png" width="30px" height="auto" />
+          <img src="../GoldStar.png" width="30px" height="auto" />
+          <img src="../GoldStar.png" width="30px" height="auto" /><br />
+          Did send detailed report with PoC!
+        </td>
+        <td valign="top">
+          <ul>
+            <li>1. <i class="fa fa-exchange" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i> BoardBleed — cross-board write via collection allow rule</li>
+            <li>CVSS: 7.x High (AV:N/AC:L/PR:L/UI:N/S:C/C:N/I:H/A:L)</li>
+            <li>Affected Wekan v9.35 and earlier</li>
+            <li>Fixed at
+               <a href="https://github.com/wekan/wekan/blob/main/CHANGELOG.md">Upcoming WeKan release</a>
+            </li>
+          </ul>
+        </td>
+      </tr>
+
+    </table>
+  </div>
+
+  <br />
+  <br />
+
+  <div class="hof">
+    <h2 class="hof">Details</h2>
+
+    <h3>1. BoardBleed — any authenticated user can move Cards/Lists/Swimlanes into a private board they are not a member of (CWE-284, CWE-639)</h3>
+    <p>
+      WeKan boards are membership-scoped: a private board is only readable/writable by its active
+      members. The DDP collection write policies for Cards, Lists and Swimlanes authorize an update
+      by checking the <em>current</em> (pre-update) <code>boardId</code> of the document and asking
+      whether the caller has write access to <em>that</em> board. They never validate the
+      <em>new</em> <code>boardId</code> an attacker supplies.
+    </p>
+    <p>
+      Because every logged-in user can create their own board (where they are admin and therefore
+      have write access), an attacker can take a document they own and, in a single update, set its
+      <code>boardId</code> (plus <code>swimlaneId</code>/<code>listId</code>) to a victim's private
+      board. The allow rule sees the attacker's own source board, approves the write, and the
+      document is relocated into a board the attacker is not a member of and cannot even read. This
+      lets an unprivileged user inject arbitrary cards/lists/swimlanes (attacker-controlled titles,
+      descriptions, assignees, etc.) into any private board by id, defeating board-level access
+      control.
+    </p>
+    <p>
+      The Cards write policy authorized only against <code>doc.boardId</code>, which Meteor
+      populates from the stored document (the <code>fetch: ['boardId']</code> array), i.e. the
+      <b>source</b> board:
+    </p>
+    <pre>
+// server/permissions/cards.js
+Cards.allow({
+  async update(userId, doc, fields) {
+    return await canUpdateCard(userId, doc, fields);   // <-- doc.boardId = SOURCE board
+  },
+  fetch: ['boardId'],
+});
+    </pre>
+    <p>
+      There was no deny rule preventing a change of <code>boardId</code>. The update modifier
+      <code>{ $set: { boardId: &lt;victimBoard&gt; } }</code> passed the allow check because at
+      evaluation time <code>doc.boardId</code> was still the attacker's own board, where
+      <code>allowIsBoardMemberWithWriteAccess</code> returns <code>true</code>. The identical
+      pattern existed for Lists (<code>server/permissions/lists.js</code>) and Swimlanes
+      (<code>server/permissions/swimlanes.js</code>).
+    </p>
+    <p>
+      The standard auto-generated Meteor collection methods <code>/cards/update</code>,
+      <code>/lists/update</code> and <code>/swimlanes/update</code> are callable by any
+      authenticated DDP client directly over the Meteor websocket and were gated solely by these
+      allow rules.
+    </p>
+    <p>
+      <b>Impact:</b> an unprivileged authenticated user could inject attacker-controlled cards,
+      lists and swimlanes into <em>any</em> private board by id — for example planting a misleading
+      card titled "invoice approvals are now routed to &lt;attacker&gt;" into a victim's restricted
+      board. Confirmed live against <code>wekanteam/wekan:latest</code> (v9.35.0): the planted card
+      was visible through the board owner's own authenticated REST view, so the injected document
+      was genuinely part of the victim's private board.
+    </p>
+
+    <h3>2. REST API was not affected</h3>
+    <p>
+      The REST API for the same operation
+      (<code>PUT /api/boards/:boardId/lists/:listId/cards/:cardId</code> with
+      <code>newBoardId</code>) correctly calls
+      <code>Authentication.checkBoardWriteAccess(req.userId, newBoardId)</code> on the
+      <b>destination</b> board (<code>server/models/cards.js</code>). Only the DDP allow/deny
+      layer, reachable directly over the Meteor websocket by any authenticated client, was
+      vulnerable.
+    </p>
+
+    <h3>Fix</h3>
+    <p>
+      A shared <code>denyCrossBoardMove(userId, modifier)</code> helper was added in
+      <code>server/lib/utils.js</code>, and a <code>deny</code> <code>update</code> rule was added
+      to each of <code>Cards</code>, <code>Lists</code> and <code>Swimlanes</code>
+      (<code>server/permissions/cards.js</code>, <code>lists.js</code>, <code>swimlanes.js</code>).
+      The deny rule inspects the update modifier: when it <code>$set</code>s a <code>boardId</code>,
+      the move is rejected unless the caller has write access (active, write-capable member) on the
+      <em>destination</em> board. A cross-board move is therefore now only permitted into a board
+      where the user is genuinely a write-capable member, while same-board edits and legitimate
+      moves between boards the user belongs to keep working.
+    </p>
+  </div>
+
+  <br />
+  <br />
+
+  <div class="hof">
+    <table border="1" margin="0" padding="10px" width="100%">
+
+      <tr>
+        <th width="5%">Timeline</th>
+        <th width="60%">Details</th>
+      </tr>
+      <tr>
+        <td vAlign="top"><a name="BOARD"></a><b>2026-06-11</b></td>
+        <td vAlign="top">
+          Report received from 0xzap (coordinated disclosure, GHSA-gm7v-pc38-53jr, CVE requested).<br />
+        </td>
+      </tr>
+      <tr>
+        <td vAlign="top"><b>Upcoming release</b></td>
+        <td vAlign="top">Fixed at
+          <a href="https://github.com/wekan/wekan/blob/main/CHANGELOG.md">Upcoming WeKan release</a>,
+          by denying any DDP update that moves a Card/List/Swimlane to a destination board the
+          caller has no write access to.
+        </td>
+      </tr>
+    </table>
+  </div>
+
+  <br />
+  <br />
+
+  <div class="action-buttons">
+    <a class="button" href="https://wekan.fi/hall-of-fame">Back to Hall of Fame Contents</a>
+    <a class="button" href="https://wekan.fi">Back to Wekan Website</a>
+  </div>
+
+  <h1>
+    <br />
+  </h1>
+
+</body>
+
+</html>
