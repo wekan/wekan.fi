@@ -1,0 +1,162 @@
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <title>WeKan — Hall of Fame / ProxyBleed</title>
+  <link rel="icon" href="../../wekan-favicon.png">
+  <link rel="stylesheet" type="text/css" href="../../css/main.css">
+  <link rel="stylesheet" href="../../font-awesome/css/font-awesome.min.css">
+</head>
+
+<body>
+
+  <img vAlign="center" src="../hof.svg" alt="Hall of Fame image from https://openclipart.org/detail/120343/trophy"
+    width="300px" height="auto" />
+  <br />
+
+  <div class="action-buttons">
+    <a class="button" href="https://wekan.fi/hall-of-fame">Back to Hall of Fame Contents</a>
+    <a class="button" href="https://wekan.fi">Back to Wekan Website</a>
+  </div>
+
+  <div class="hof">
+    <h1 class="hof">Contents / ProxyBleed</h1>
+
+    <table border="1" margin="0" padding="10px" width="100%">
+      <tr>
+        <th width="10%">CVE</th>
+        <th width="10%">Vulnerability name</th>
+        <th width="10%">Date</th>
+        <th width="20%">
+          <a href="https://github.com/wekan/wekan/blob/main/SECURITY.md" style="color: red;">Responsible Security Disclosure</a>
+          by
+        </th>
+        <th width="40%">Vulnerabilities</th>
+      </tr>
+
+      <tr>
+        <td valign="top">
+          <a href="https://github.com/wekan/wekan/security/advisories/GHSA-jggc-qvfc-jr6x">GHSA-jggc-qvfc-jr6x</a>
+          CVE requested
+          <br /> <br />
+        </td>
+        <td valign="top"><b>ProxyBleed</b> <h2><i class="fa fa-user-secret" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></h2></td>
+        <td valign="top">2026-06-15</td>
+        <td valign="top">
+          <b>rz1027</b> (coordinated disclosure) and <b>Claude</b><br />
+          <img src="../GoldStar.png" width="30px" height="auto" />
+          <img src="../GoldStar.png" width="30px" height="auto" />
+          <img src="../GoldStar.png" width="30px" height="auto" />
+          <img src="../GoldStar.png" width="30px" height="auto" />
+          <img src="../GoldStar.png" width="30px" height="auto" /><br />
+          Did send detailed report with PoC!
+        </td>
+        <td valign="top">
+          <ul>
+            <li>1. <i class="fa fa-user-secret" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i> ProxyBleed — header-login IP allowlist bypass via X-Forwarded-For spoofing</li>
+            <li>CVSS: 9.8 Critical (CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H)</li>
+            <li>Affected Wekan v9.44 and earlier</li>
+            <li>Fixed at
+               <a href="https://github.com/wekan/wekan/blob/main/CHANGELOG.md">Upcoming WeKan release (v9.45)</a>
+            </li>
+          </ul>
+        </td>
+      </tr>
+
+    </table>
+  </div>
+
+  <br />
+  <br />
+
+  <div class="hof">
+    <h2 class="hof">Details</h2>
+
+    <h3>1. ProxyBleed — header-login IP allowlist bypass via X-Forwarded-For spoofing (CWE-290, CWE-287, CWE-348)</h3>
+    <p>
+      Wekan's header-login feature (reverse-proxy / SSO style passwordless login) lets a trusted
+      front-end proxy authenticate a user by passing the username in a request header (e.g.
+      <code>X-Auth-User: admin</code>). Because this mints a full login session with no password,
+      it is gated on a source-IP allowlist, <code>HEADER_LOGIN_TRUSTED_IPS</code>, so that only
+      requests coming from the trusted proxy are honored.
+    </p>
+    <p>
+      The vulnerability was that the source IP used for this allowlist check was taken from the
+      client-supplied <code>X-Forwarded-For</code> request header rather than the real TCP
+      connection. An unauthenticated attacker who can reach the Wekan app port directly therefore
+      only had to send a single GET request with a forged <code>X-Forwarded-For</code> set to any
+      allowlisted IP, plus the username header:
+    </p>
+    <pre>
+GET / HTTP/1.1
+Host: wekan.example.com
+X-Forwarded-For: 10.0.0.5        # any IP in HEADER_LOGIN_TRUSTED_IPS
+X-Auth-User: admin               # any existing username, including admin
+    </pre>
+    <p>
+      The allowlist check read the attacker-controlled <code>X-Forwarded-For</code> value, saw an
+      allowlisted IP, and accepted the header login. Wekan then minted and returned a usable
+      passwordless login session (a <code>meteor_login_token</code>) for the named user.
+    </p>
+    <p>
+      <b>Impact:</b> complete account takeover and admin impersonation. By setting
+      <code>X-Auth-User: admin</code> (or any existing username), an unauthenticated attacker who
+      can reach the app port obtained a full session for that account — no password, no credentials,
+      a single request. An <em>empty</em> <code>HEADER_LOGIN_TRUSTED_IPS</code> allowlist also
+      failed open, accepting header logins from anywhere.
+    </p>
+
+    <h3>Fix</h3>
+    <p>
+      The source IP is now derived from the real TCP socket peer (the immediate connecting client)
+      instead of trusting <code>X-Forwarded-For</code> blindly. <code>X-Forwarded-For</code> is only
+      honored when the immediate peer is itself a configured trusted proxy, in which case the
+      right-most untrusted hop is used as the client IP. The allowlist now also fails closed: if
+      <code>HEADER_LOGIN_TRUSTED_IPS</code> is unset or empty, header login is refused rather than
+      accepted from anywhere.
+    </p>
+  </div>
+
+  <br />
+  <br />
+
+  <div class="hof">
+    <table border="1" margin="0" padding="10px" width="100%">
+
+      <tr>
+        <th width="5%">Timeline</th>
+        <th width="60%">Details</th>
+      </tr>
+      <tr>
+        <td vAlign="top"><a name="PROXY"></a><b>2026-06-15</b></td>
+        <td vAlign="top">
+          Report received from rz1027 (coordinated disclosure, GHSA-jggc-qvfc-jr6x, CVE requested).<br />
+        </td>
+      </tr>
+      <tr>
+        <td vAlign="top"><b>Upcoming release</b></td>
+        <td vAlign="top">Fixed at
+          <a href="https://github.com/wekan/wekan/blob/main/CHANGELOG.md">Upcoming WeKan release (v9.45)</a>,
+          by deriving the header-login source IP from the real TCP socket peer, only honoring
+          <code>X-Forwarded-For</code> from configured trusted proxies, and failing closed when the
+          allowlist is unset.
+        </td>
+      </tr>
+    </table>
+  </div>
+
+  <br />
+  <br />
+
+  <div class="action-buttons">
+    <a class="button" href="https://wekan.fi/hall-of-fame">Back to Hall of Fame Contents</a>
+    <a class="button" href="https://wekan.fi">Back to Wekan Website</a>
+  </div>
+
+  <h1>
+    <br />
+  </h1>
+
+</body>
+
+</html>

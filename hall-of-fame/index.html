@@ -38,6 +38,35 @@
 
       <tr>
         <td valign="top">
+          <a href="https://github.com/wekan/wekan/security/advisories/GHSA-jggc-qvfc-jr6x">GHSA-jggc-qvfc-jr6x</a>
+          CVE requested
+          <br /> <br />
+        </td>
+        <td valign="top"><b>ProxyBleed</b> <h2><i class="fa fa-user-secret" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></h2></td>
+        <td valign="top">2026-06-15</td>
+        <td valign="top">
+          <b>rz1027</b> (coordinated disclosure) and <b>Claude</b><br />
+          <img src="GoldStar.png" width="30px" height="auto" />
+          <img src="GoldStar.png" width="30px" height="auto" />
+          <img src="GoldStar.png" width="30px" height="auto" />
+          <img src="GoldStar.png" width="30px" height="auto" />
+          <img src="GoldStar.png" width="30px" height="auto" /><br />
+          Did send detailed report with PoC!
+        </td>
+        <td valign="top">
+          <ul>
+            <li>1. <i class="fa fa-user-secret" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i> ProxyBleed — header-login IP allowlist bypass via X-Forwarded-For spoofing (GHSA-jggc-qvfc-jr6x, CWE-290, CWE-287, CWE-348). Wekan's header-login (reverse-proxy SSO) feature gated passwordless login on a source-IP allowlist (<code>HEADER_LOGIN_TRUSTED_IPS</code>) but read the client-supplied <code>X-Forwarded-For</code> header as the source IP. An unauthenticated attacker who can reach the app port directly sends a single GET request with a spoofed <code>X-Forwarded-For: &lt;allowlisted-ip&gt;</code> plus the username header (e.g. <code>X-Auth-User: admin</code>) and is minted a full passwordless login session (<code>meteor_login_token</code>) for any existing user including admin — complete account takeover and admin impersonation. An empty allowlist also failed open</li>
+            <li>CVSS: 9.8 Critical (CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H)</li>
+            <li>The fix derives the source IP from the real TCP socket peer, only honors <code>X-Forwarded-For</code> when the immediate peer is a configured trusted proxy (taking the right-most untrusted hop), and fails closed when the allowlist is unset</li>
+            <li>Affected Wekan v9.44 and earlier</li>
+            <li>Fixed at <a href="https://github.com/wekan/wekan/blob/main/CHANGELOG.md">See CHANGELOG (Upcoming release, v9.45)</a></li>
+            <li><a href="proxybleed/">More details</a></li>
+          </ul>
+        </td>
+      </tr>
+
+      <tr>
+        <td valign="top">
           <a href="https://github.com/wekan/wekan/security/advisories/GHSA-gm7v-pc38-53jr">GHSA-gm7v-pc38-53jr</a>
           CVE requested
           <br /> <br />
