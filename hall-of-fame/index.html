@@ -59,7 +59,7 @@
             <li>CVSS: 9.8 Critical (CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H)</li>
             <li>The fix derives the source IP from the real TCP socket peer, only honors <code>X-Forwarded-For</code> when the immediate peer is a configured trusted proxy (taking the right-most untrusted hop), and fails closed when the allowlist is unset</li>
             <li>Affected Wekan v9.44 and earlier</li>
-            <li>Fixed at <a href="https://github.com/wekan/wekan/blob/main/CHANGELOG.md">See CHANGELOG (Upcoming release, v9.45)</a></li>
+            <li>Fixed at <a href="https://github.com/wekan/wekan/blob/main/CHANGELOG.md#v946-2026-06-15-wekan--release">See CHANGELOG (v9.46)</a></li>
             <li><a href="proxybleed/">More details</a></li>
           </ul>
         </td>
@@ -88,7 +88,7 @@
             <li>CVSS: 7.x High (AV:N/AC:L/PR:L/UI:N/S:C/C:N/I:H/A:L)</li>
             <li>The REST move endpoint (<code>PUT /api/boards/:boardId/lists/:listId/cards/:cardId</code> with <code>newBoardId</code>) was not affected; it checks <code>checkBoardWriteAccess</code> on the destination board. Only the DDP allow/deny layer was vulnerable</li>
             <li>Affected Wekan v9.35 and earlier</li>
-            <li>Fixed at <a href="https://github.com/wekan/wekan/blob/main/CHANGELOG.md">See CHANGELOG (Upcoming release)</a></li>
+            <li>Fixed at <a href="https://github.com/wekan/wekan/blob/main/CHANGELOG.md#v937-2026-06-11-wekan--release">See CHANGELOG (v9.37)</a></li>
             <li><a href="boardbleed/">More details</a></li>
           </ul>
         </td>
@@ -115,7 +115,7 @@
             <li>1. <i class="fa fa-ticket" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i> TokenBleed — unauthenticated login-token minting via un-awaited auth check in <code>POST /api/createtoken/:userId</code> (CWE-863, CWE-287). <code>Authentication.checkUserId</code> is <code>async</code>, so its 401/403 throws became rejected promises that a synchronous <code>try/catch</code> could not catch; the un-awaited call never stopped execution, so the handler minted and returned a usable login token for any user ID — including an admin — with no credentials (unauthenticated account takeover)</li>
             <li>2. <i class="fa fa-users" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i> The same detached-rejection bypass affected the other un-awaited <code>checkUserId</code>/<code>checkAdminOrCondition</code> handlers: <code>GET /api/users</code>, <code>GET /api/users/:userId</code>, <code>PUT /api/users/:userId</code>, <code>POST /api/users/</code>, <code>DELETE /api/users/:userId</code>, <code>POST /api/deletetoken</code>, <code>GET /api/boards</code>, <code>GET /api/boards_count</code>, <code>DELETE /api/boards/:boardId</code>, <code>GET /api/users/:userId/boards</code> and <code>POST /api/boards/:boardId/copy</code> (user enumeration, deletion, takeOwnership, board member changes and board deletion)</li>
             <li>Affected Wekan v9.35 and earlier</li>
-            <li>Fixed at <a href="https://github.com/wekan/wekan/blob/main/CHANGELOG.md">See CHANGELOG (Upcoming release)</a></li>
+            <li>Fixed at <a href="https://github.com/wekan/wekan/blob/main/CHANGELOG.md#v936-2026-06-10-wekan--release">See CHANGELOG (v9.36)</a></li>
             <li><a href="tokenbleed/">More details</a></li>
           </ul>
         </td>
@@ -155,7 +155,7 @@
             <li>13. <i class="fa fa-archive" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i> archiveBoard required only membership, not board admin (UI gates it behind admin)</li>
             <li>14. <i class="fa fa-envelope-o" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i> sendSMTPTestEmail required only login, not global admin</li>
             <li>Affected Wekan v9.34 and earlier</li>
-            <li>Fixed at <a href="https://github.com/wekan/wekan/blob/main/CHANGELOG.md">See CHANGELOG (Upcoming release)</a></li>
+            <li>Fixed at <a href="https://github.com/wekan/wekan/blob/main/CHANGELOG.md#v935-2026-06-06-wekan--release">See CHANGELOG (v9.35)</a></li>
             <li><a href="clonebleed/">More details</a></li>
           </ul>
         </td>
