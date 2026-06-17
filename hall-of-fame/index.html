@@ -67,8 +67,7 @@
 
       <tr>
         <td valign="top">
-          <a href="https://github.com/wekan/wekan/security/advisories/GHSA-gm7v-pc38-53jr">GHSA-gm7v-pc38-53jr</a>
-          CVE requested
+          <a href="https://github.com/wekan/wekan/security/advisories/GHSA-gm7v-pc38-53jr">CVE-2026-55234 GHSA-gm7v-pc38-53jr</a>
           <br /> <br />
         </td>
         <td valign="top"><b>BoardBleed</b> <h2><i class="fa fa-exchange" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></h2></td>
@@ -84,7 +83,7 @@
         </td>
         <td valign="top">
           <ul>
-            <li>1. <i class="fa fa-exchange" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i> BoardBleed — broken access control: any authenticated user could move their Cards/Lists/Swimlanes into a private board they are not a member of (cross-board write via collection allow rule) (GHSA-gm7v-pc38-53jr, CWE-284, CWE-639). The DDP write policies for Cards, Lists and Swimlanes authorized an update by checking only the document's CURRENT (source) <code>boardId</code> and never validated the NEW <code>boardId</code> in the update modifier; any logged-in user could <code>$set</code> <code>boardId</code> to a victim's private board over <code>/cards/update</code>, <code>/lists/update</code> or <code>/swimlanes/update</code> and inject attacker-controlled cards/lists/swimlanes into a board they cannot even read</li>
+            <li>1. <i class="fa fa-exchange" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i> BoardBleed — broken access control: any authenticated user could move their Cards/Lists/Swimlanes into a private board they are not a member of (cross-board write via collection allow rule) (CVE-2026-55234 GHSA-gm7v-pc38-53jr, CWE-284, CWE-639). The DDP write policies for Cards, Lists and Swimlanes authorized an update by checking only the document's CURRENT (source) <code>boardId</code> and never validated the NEW <code>boardId</code> in the update modifier; any logged-in user could <code>$set</code> <code>boardId</code> to a victim's private board over <code>/cards/update</code>, <code>/lists/update</code> or <code>/swimlanes/update</code> and inject attacker-controlled cards/lists/swimlanes into a board they cannot even read</li>
             <li>CVSS: 7.x High (AV:N/AC:L/PR:L/UI:N/S:C/C:N/I:H/A:L)</li>
             <li>The REST move endpoint (<code>PUT /api/boards/:boardId/lists/:listId/cards/:cardId</code> with <code>newBoardId</code>) was not affected; it checks <code>checkBoardWriteAccess</code> on the destination board. Only the DDP allow/deny layer was vulnerable</li>
             <li>Affected Wekan v9.35 and earlier</li>
