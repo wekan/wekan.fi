@@ -54,7 +54,7 @@
             <li><i class="fa fa-scissors" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i> InputBleed — <code>stripHtml()</code> in <code>client/lib/importDependencies.js</code> stripped HTML tags with a single pass of <code>/&lt;[^&gt;]*&gt;/g</code>. That is incomplete: a dangling unclosed tag with no closing <code>&gt;</code> (e.g. a trailing <code>&lt;script</code> or <code>&lt;svg/onload=...</code>) is never matched by the regex and survives untouched, leaving <code>&lt;script</code> in the output; and removing one match can splice surrounding text into a new match. A crafted card-dependency ("Red Strings") import file could thus smuggle an HTML/script fragment past the sanitizer (CWE-79, CWE-80, CWE-116)</li>
             <li>GitHub CodeQL code scanning alert #421, rule <code>js/incomplete-multi-character-sanitization</code>, severity High</li>
             <li>Fixed by looping the tag-stripping replacement to a fixed point and then removing any remaining stray <code>&lt;</code>/<code>&gt;</code> characters, so neither a complete nor a partial tag can remain</li>
-            <li>Fixed at <a href="https://github.com/wekan/wekan/blob/main/CHANGELOG.md">See CHANGELOG (Upcoming release)</a></li>
+            <li>Fixed at <a href="https://github.com/wekan/wekan/blob/main/CHANGELOG.md#v952-2026-06-18-wekan--release">Wekan v9.52 2026-06-18</a></li>
             <li><a href="inputbleed/">More details</a></li>
           </ul>
         </td>
