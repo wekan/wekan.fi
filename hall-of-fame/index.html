@@ -38,6 +38,30 @@
 
       <tr>
         <td valign="top">
+          -
+          <br /> <br />
+        </td>
+        <td valign="top"><b>InputBleed</b> <h2><i class="fa fa-code" aria-hidden="true"></i> <i class="fa fa-scissors" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></h2></td>
+        <td valign="top">2026-06-18</td>
+        <td valign="top">
+          <b>GitHub CodeQL</b> (code scanning alert #421) and <b>Claude</b> (fix)<br />
+          <img src="GoldStar.png" width="30px" height="auto" />
+          <img src="GoldStar.png" width="30px" height="auto" /><br />
+          Automated code scanning flagged the incomplete sanitization.
+        </td>
+        <td valign="top">
+          <ul>
+            <li><i class="fa fa-code" aria-hidden="true"></i> <i class="fa fa-scissors" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i> InputBleed — <code>stripHtml()</code> in <code>client/lib/importDependencies.js</code> stripped HTML tags with a single pass of <code>/&lt;[^&gt;]*&gt;/g</code>. That is incomplete: a dangling unclosed tag with no closing <code>&gt;</code> (e.g. a trailing <code>&lt;script</code> or <code>&lt;svg/onload=...</code>) is never matched by the regex and survives untouched, leaving <code>&lt;script</code> in the output; and removing one match can splice surrounding text into a new match. A crafted card-dependency ("Red Strings") import file could thus smuggle an HTML/script fragment past the sanitizer (CWE-79, CWE-80, CWE-116)</li>
+            <li>GitHub CodeQL code scanning alert #421, rule <code>js/incomplete-multi-character-sanitization</code>, severity High</li>
+            <li>Fixed by looping the tag-stripping replacement to a fixed point and then removing any remaining stray <code>&lt;</code>/<code>&gt;</code> characters, so neither a complete nor a partial tag can remain</li>
+            <li>Fixed at <a href="https://github.com/wekan/wekan/blob/main/CHANGELOG.md">See CHANGELOG (Upcoming release)</a></li>
+            <li><a href="inputbleed/">More details</a></li>
+          </ul>
+        </td>
+      </tr>
+
+      <tr>
+        <td valign="top">
           <a href="https://github.com/wekan/wekan/security/advisories/GHSA-jggc-qvfc-jr6x">GHSA-jggc-qvfc-jr6x</a>
           CVE requested
           <br /> <br />

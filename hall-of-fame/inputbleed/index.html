@@ -1,0 +1,128 @@
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <title>Wekan — Hall of Fame / InputBleed</title>
+  <link rel="icon" href="../../wekan-favicon.png">
+  <link rel="stylesheet" type="text/css" href="../../css/main.css">
+  <link rel="stylesheet" href="../../font-awesome/css/font-awesome.min.css">
+</head>
+
+<body>
+
+  <img vAlign="center" src="../hof.svg" alt="Hall of Fame image from https://openclipart.org/detail/120343/trophy"
+    width="300px" height="auto" />
+  <br />
+
+  <div class="action-buttons">
+    <a class="button" href="https://wekan.fi/hall-of-fame">Back to Hall of Fame Contents</a>
+    <a class="button" href="https://wekan.fi">Back to Wekan Website</a>
+  </div>
+
+  <div class="hof">
+    <h1 class="hof">Contents / InputBleed <i class="fa fa-code" aria-hidden="true"></i> <i class="fa fa-scissors" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></h1>
+
+    <table border="1" margin="0" padding="10px" width="100%">
+
+      <tr>
+        <th width="10%">CVE</th>
+        <th width="10%">Vulnerability name</th>
+        <th width="10%">Date</th>
+        <th width="20%">
+          <a href="https://github.com/wekan/wekan/blob/main/SECURITY.md">Responsible Security Disclosure</a>
+          by
+        </th>
+        <th width="40%">Vulnerabilities</th>
+      </tr>
+
+      <tr>
+        <td valign="top">
+          -
+        </td>
+        <td valign="top"><b>InputBleed</b> <h2><i class="fa fa-code" aria-hidden="true"></i> <i class="fa fa-scissors" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></h2></td>
+        <td valign="top">2026-06-18 EET</td>
+        <td valign="top">
+          <b>GitHub CodeQL</b> (code scanning alert #421)<br />
+          <b><a href="https://github.com/xet7">xet7 - maintainer of Wekan</a></b> and <b>Claude</b> (fix)<br />
+          <img src="../GoldStar.png" width="30px" height="auto" />
+          <img src="../GoldStar.png" width="30px" height="auto" /><br />
+          Automated code scanning flagged the incomplete multi-character sanitization,
+          which was then fixed.
+        </td>
+        <td valign="top">
+          <ul>
+            <li><i class="fa fa-code" aria-hidden="true"></i> <i class="fa fa-scissors" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i>
+                <b>InputBleed</b> — Incomplete multi-character HTML sanitization allowed HTML/script element injection
+                (CWE-79 Cross-site Scripting, CWE-80 Improper Neutralization of Script-Related HTML Tags,
+                CWE-116 Improper Encoding or Escaping of Output).</li>
+            <li>GitHub CodeQL code scanning alert #421, rule
+                <code>js/incomplete-multi-character-sanitization</code>, severity High.</li>
+            <li><code>stripHtml()</code> in <code>client/lib/importDependencies.js</code> removed HTML tags with a
+                single pass of <code>/&lt;[^&gt;]*&gt;/g</code>. This is an incomplete multi-character sanitization in
+                two ways: (1) a dangling, unclosed tag that has no closing <code>&gt;</code> &mdash; for example a
+                trailing <code>&lt;script</code> or <code>&lt;svg/onload=...</code> &mdash; is never matched by the
+                regex at all and survives untouched, leaving <code>&lt;script</code> in the output (exactly what the
+                scanner warned about); and (2) removing one match can splice the surrounding text into a new match.
+                A crafted card-dependency ("Red Strings") import file &mdash; the WeKan/generic JSON or Miro item
+                titles and connector captions that pass through <code>stripHtml</code> &mdash; could therefore smuggle
+                an HTML/script fragment past the sanitizer.</li>
+            <li>Fixed by looping the tag-stripping replacement to a fixed point and then removing any remaining stray
+                <code>&lt;</code>/<code>&gt;</code> characters, so neither a complete nor a partial tag can remain.</li>
+            <li>Fixed at <a href="https://github.com/wekan/wekan/blob/main/CHANGELOG.md">Wekan Upcoming release (see CHANGELOG)</a></li>
+            <li><a href="https://github.com/wekan/wekan/blob/main/client/lib/importDependencies.js">Fixed code</a></li>
+          </ul>
+        </td>
+      </tr>
+
+    </table>
+  </div>
+
+  <br />
+  <br />
+
+  <div class="hof">
+    <table border="1" margin="0" padding="10px" width="100%">
+
+      <tr>
+        <th width="5%">Timeline</th>
+        <th width="60%">Details</th>
+      </tr>
+      <tr>
+        <td vAlign="top"><a name="INPUT"></a><b>2026-06-16</b></td>
+        <td vAlign="top">
+          GitHub CodeQL code scanning first detected the incomplete multi-character sanitization
+          (<code>js/incomplete-multi-character-sanitization</code>) in <code>client/lib/importDependencies.js</code>
+          on branch main, raising alert #421 (severity High).
+        </td>
+      </tr>
+
+      <tr>
+        <td vAlign="top">
+          <b>2026-06-18</b>
+        </td>
+        <td vAlign="top">
+          Fixed by xet7 and Claude by looping the tag-stripping replacement to a fixed point and then
+          removing any remaining stray <code>&lt;</code>/<code>&gt;</code> characters in <code>stripHtml()</code>,
+          and released in the
+          <a href="https://github.com/wekan/wekan/blob/main/CHANGELOG.md">Wekan Upcoming release</a>.
+        </td>
+      </tr>
+
+    </table>
+  </div>
+
+  <br />
+  <br />
+
+  <div class="action-buttons">
+    <a class="button" href="https://wekan.fi/hall-of-fame">Back to Hall of Fame Contents</a>
+    <a class="button" href="https://wekan.fi">Back to Wekan Website</a>
+  </div>
+
+  <h1>
+    <br />
+  </h1>
+
+</body>
+
+</html>
