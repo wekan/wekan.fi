@@ -38,6 +38,33 @@
 
       <tr>
         <td valign="top">
+          <a href="https://github.com/wekan/wekan/security/advisories/GHSA-gv8h-5p3p-6hx7">GHSA-gv8h-5p3p-6hx7</a>
+          <br /> <br />
+        </td>
+        <td valign="top"><b>ChecklistBleed</b> <h2><i class="fa fa-exchange" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></h2></td>
+        <td valign="top">2026-06-20</td>
+        <td valign="top">
+          <b>DavidCarliez</b> (coordinated disclosure) and <b>Claude</b> (fix)<br />
+          <img src="GoldStar.png" width="30px" height="auto" />
+          <img src="GoldStar.png" width="30px" height="auto" />
+          <img src="GoldStar.png" width="30px" height="auto" />
+          <img src="GoldStar.png" width="30px" height="auto" />
+          <img src="GoldStar.png" width="30px" height="auto" /><br />
+          Did send detailed report with PoC!
+        </td>
+        <td valign="top">
+          <ul>
+            <li><i class="fa fa-exchange" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i> ChecklistBleed — the Checklists/ChecklistItems DDP collection allow rules (<code>server/permissions/checklists.js</code>, <code>checklistItems.js</code>) authorized an update against only the document's CURRENT (source) <code>cardId</code>, never the destination. A low-privileged user could move a checklist/item they own onto a card in a private board they are not a member of by <code>$set</code>-ting a new <code>cardId</code>/<code>checklistId</code> (boardId is then denormalized from the destination card), writing attacker-controlled checklist data into the victim's private board — same class as <a href="boardbleed/">BoardBleed</a>, but for the card-attached checklist documents (GHSA-gv8h-5p3p-6hx7, CWE-863)</li>
+            <li>CVSS:3.1 Moderate (AV:N/AC:L/PR:L/UI:N/S:U/C:N/I:L/A:N)</li>
+            <li>Fixed by adding <code>denyCrossBoardMoveByCard</code>/<code>denyCrossBoardMoveByChecklistItem</code> in <code>server/lib/utils.js</code> and a <code>Checklists.deny</code>/<code>ChecklistItems.deny</code> update rule that rejects any move whose destination board the caller cannot write to</li>
+            <li>Affected Wekan v9.62 and earlier; fixed at the upcoming WeKan release</li>
+            <li><a href="checklistbleed/">More details</a></li>
+          </ul>
+        </td>
+      </tr>
+
+      <tr>
+        <td valign="top">
           -
           <br /> <br />
         </td>

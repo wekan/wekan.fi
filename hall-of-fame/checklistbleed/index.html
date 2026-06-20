@@ -1,0 +1,204 @@
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <title>WeKan — Hall of Fame / ChecklistBleed</title>
+  <link rel="icon" href="../../wekan-favicon.png">
+  <link rel="stylesheet" type="text/css" href="../../css/main.css">
+  <link rel="stylesheet" href="../../font-awesome/css/font-awesome.min.css">
+</head>
+
+<body>
+
+  <img vAlign="center" src="../hof.svg" alt="Hall of Fame image from https://openclipart.org/detail/120343/trophy"
+    width="300px" height="auto" />
+  <br />
+
+  <div class="action-buttons">
+    <a class="button" href="https://wekan.fi/hall-of-fame">Back to Hall of Fame Contents</a>
+    <a class="button" href="https://wekan.fi">Back to Wekan Website</a>
+  </div>
+
+  <div class="hof">
+    <h1 class="hof">Contents / ChecklistBleed</h1>
+
+    <table border="1" margin="0" padding="10px" width="100%">
+      <tr>
+        <th width="10%">CVE</th>
+        <th width="10%">Vulnerability name</th>
+        <th width="10%">Date</th>
+        <th width="20%">
+          <a href="https://github.com/wekan/wekan/blob/main/SECURITY.md" style="color: red;">Responsible Security Disclosure</a>
+          by
+        </th>
+        <th width="40%">Vulnerabilities</th>
+      </tr>
+
+      <tr>
+        <td valign="top">
+          <a href="https://github.com/wekan/wekan/security/advisories/GHSA-gv8h-5p3p-6hx7">GHSA-gv8h-5p3p-6hx7</a>
+          <br /> <br />
+        </td>
+        <td valign="top"><b>ChecklistBleed</b> <h2><i class="fa fa-exchange" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></h2></td>
+        <td valign="top">2026-06-20</td>
+        <td valign="top">
+          <b>DavidCarliez</b> (coordinated disclosure) and <b>Claude</b> (fix)<br />
+          <img src="../GoldStar.png" width="30px" height="auto" />
+          <img src="../GoldStar.png" width="30px" height="auto" />
+          <img src="../GoldStar.png" width="30px" height="auto" />
+          <img src="../GoldStar.png" width="30px" height="auto" />
+          <img src="../GoldStar.png" width="30px" height="auto" /><br />
+          Did send detailed report with PoC!
+        </td>
+        <td valign="top">
+          <ul>
+            <li>1. <i class="fa fa-exchange" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i> ChecklistBleed — cross-board checklist write via collection allow rule</li>
+            <li>CVSS:3.1 Moderate (AV:N/AC:L/PR:L/UI:N/S:U/C:N/I:L/A:N), CWE-863</li>
+            <li>Affected Wekan v9.62 and earlier</li>
+            <li>Fixed at
+               <a href="https://github.com/wekan/wekan/blob/main/CHANGELOG.md">upcoming WeKan release</a>
+            </li>
+          </ul>
+        </td>
+      </tr>
+
+    </table>
+  </div>
+
+  <br />
+  <br />
+
+  <div class="hof">
+    <h2 class="hof">Details</h2>
+
+    <h3>1. ChecklistBleed — any authenticated user can write checklist/checklist-item data into a private board they are not a member of (CWE-863)</h3>
+    <p>
+      WeKan boards are membership-scoped: a private board is only readable/writable by its active
+      members. Checklists and checklist items are attached to a card and carry a <em>denormalized</em>
+      <code>boardId</code> (so the board publication can filter them with a single reactive cursor).
+      They are moved between cards by setting a new <code>cardId</code> (and, for items, a new
+      <code>checklistId</code>) in an update; a server <code>Checklists.before.update</code> hook then
+      re-derives <code>boardId</code> from the destination card.
+    </p>
+    <p>
+      The DDP collection write policies for Checklists and ChecklistItems authorize an update by
+      checking only the <em>current</em> (pre-update) <code>cardId</code> of the document and asking
+      whether the caller has write access to <em>that</em> card's board. They never validate the
+      <em>new</em> destination (<code>cardId</code>, <code>checklistId</code> or <code>boardId</code>)
+      supplied in the update modifier.
+    </p>
+    <pre>
+// server/permissions/checklists.js
+Checklists.allow({
+  async update(userId, doc) {
+    return await allowIsBoardMemberWithWriteAccessByCard(userId, await Cards.findOneAsync(doc.cardId));
+  },                                                 // <-- doc.cardId = SOURCE card
+  fetch: ['userId', 'cardId'],
+});
+// server/permissions/checklistItems.js has the same pattern.
+    </pre>
+    <p>
+      Because every logged-in user can create their own board (where they are a write-capable
+      member), an attacker can create a checklist or checklist item on their own card and then, in a
+      single <code>/checklists/update</code> or <code>/checklistItems/update</code> DDP call,
+      <code>$set</code> its <code>cardId</code> to a card in a victim's private board. The allow rule
+      sees the attacker's own source card, approves the write, and the
+      <code>Checklists.before.update</code> hook denormalizes <code>boardId</code> from the
+      destination card — so the attacker-controlled checklist/item becomes attached to the victim's
+      private board's publication/query model. The only practical precondition is knowledge of a
+      target private card id; board membership is not required.
+    </p>
+    <p>
+      The protected <code>moveChecklist</code> Meteor method
+      (<code>server/models/checklists.js</code>) correctly checks board membership on
+      <em>both</em> the source and the destination card:
+    </p>
+    <pre>
+if (!(await allowIsBoardMemberByCard(this.userId, sourceCard))) {
+  throw new Meteor.Error('not-authorized', 'Not authorized to move checklist from source card');
+}
+if (!(await allowIsBoardMemberByCard(this.userId, newCard))) {
+  throw new Meteor.Error('not-authorized', 'Not authorized to move checklist to target card');
+}
+    </pre>
+    <p>
+      But a DDP client can simply bypass that method and update the collections directly over the
+      Meteor websocket, where only the (source-only) allow rules applied.
+    </p>
+    <p>
+      <b>Impact:</b> a low-privileged authenticated user could inject attacker-controlled checklist
+      and checklist-item data (titles, completion state) into <em>any</em> private board by target
+      card id, defeating board-level access control. This is the same class as
+      <a href="../boardbleed/">BoardBleed</a> (GHSA-gm7v-pc38-53jr), which had only fixed the
+      <code>boardId</code>-based cross-board move for Cards/Lists/Swimlanes; Checklists and
+      ChecklistItems move via <code>cardId</code>/<code>checklistId</code> and were not covered.
+    </p>
+
+    <h3>2. The moveChecklist Meteor method and REST API were not affected</h3>
+    <p>
+      The server-side <code>moveChecklist</code> Meteor method validates both source and destination
+      board membership, and server-side trusted code bypasses allow/deny entirely. Only the DDP
+      allow/deny layer, reachable directly over the Meteor websocket by any authenticated client,
+      was vulnerable.
+    </p>
+
+    <h3>Fix</h3>
+    <p>
+      Two helpers, <code>denyCrossBoardMoveByCard(userId, modifier)</code> and
+      <code>denyCrossBoardMoveByChecklistItem(userId, modifier)</code>, were added in
+      <code>server/lib/utils.js</code>, and a <code>deny</code> <code>update</code> rule was added to
+      each of <code>Checklists</code> and <code>ChecklistItems</code>
+      (<code>server/permissions/checklists.js</code>, <code>server/permissions/checklistItems.js</code>).
+      The deny rule inspects the update modifier and rejects the move unless the caller has write
+      access (active, write-capable member) on the <em>destination</em> board — resolved from the new
+      <code>boardId</code>, the new <code>cardId</code>'s card, or (for items) the new
+      <code>checklistId</code>'s checklist → card. An unknown/missing destination fails closed. A
+      cross-board checklist move is therefore now only permitted into a board where the user is
+      genuinely a write-capable member, while same-card edits and legitimate moves between boards the
+      user belongs to keep working. A regression test
+      (<code>server/lib/tests/checklistbleed.security.tests.js</code>) was added.
+    </p>
+  </div>
+
+  <br />
+  <br />
+
+  <div class="hof">
+    <table border="1" margin="0" padding="10px" width="100%">
+
+      <tr>
+        <th width="5%">Timeline</th>
+        <th width="60%">Details</th>
+      </tr>
+      <tr>
+        <td vAlign="top"><a name="CHECKLIST"></a><b>2026-06-20</b></td>
+        <td vAlign="top">
+          Report received from DavidCarliez (coordinated disclosure, GHSA-gv8h-5p3p-6hx7).<br />
+        </td>
+      </tr>
+      <tr>
+        <td vAlign="top"><b>Upcoming release</b></td>
+        <td vAlign="top">Fixed at the
+          <a href="https://github.com/wekan/wekan/blob/main/CHANGELOG.md">upcoming WeKan release</a>,
+          by denying any DDP update that moves a Checklist/ChecklistItem to a destination board the
+          caller has no write access to.
+        </td>
+      </tr>
+    </table>
+  </div>
+
+  <br />
+  <br />
+
+  <div class="action-buttons">
+    <a class="button" href="https://wekan.fi/hall-of-fame">Back to Hall of Fame Contents</a>
+    <a class="button" href="https://wekan.fi">Back to Wekan Website</a>
+  </div>
+
+  <h1>
+    <br />
+  </h1>
+
+</body>
+
+</html>
