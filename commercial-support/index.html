@@ -32,6 +32,10 @@
         }
     </style>
 
+<script 
+  src="https://www.paypal.com/sdk/js?client-id=BAARvvwDsTZvnqLF3-OnpiVD35MHMj7LmCqb2-Mlqait5QoLpnzDCAStI7ZbUpKNSPFFqi0Uk71mpIU-Fo&components=hosted-buttons&disable-funding=venmo&currency=EUR">
+</script>
+
 </head>
 
 <body>
@@ -196,7 +200,15 @@
 
             <h4>2) PayPal</h4>
 
-            <p>Send any custom amount with PayPal to <a href="mailto:support@wekan.fi">support@wekan.fi</p>
+<div id="paypal-container-S9WLF56986PCA"></div>
+<script>
+  paypal.HostedButtons({
+    hostedButtonId: "S9WLF56986PCA",
+  }).render("#paypal-container-S9WLF56986PCA")
+</script>
+           <!--
+            <p>Or send any custom amount with PayPal to <a href="mailto:support@wekan.fi">support@wekan.fi</a></p>
+           -->
 
             <h4><a name="invoice">3) PDF invoice with IBAN Bank number</h4>
 
