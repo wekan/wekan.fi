@@ -86,18 +86,19 @@
     <h2>General Upgrade Steps</h2>
     <p>With these steps, attachments and avatars are visible.</p>
     <ol>
+      <li>Production Setup, for 14k or more users: <a href="https://github.com/wekan/wekan/tree/main/docs/Platforms/FOSS/Docker/Meteor3">Docker amd64/arm64</a> where is
+          <code>METEOR_REACTIVITY_ORDER=oplog,polling</code> with other settings mentioned at
+          <a href="https://raw.githubusercontent.com/wekan/wekan/refs/heads/main/docker-compose.yml">docker-compose.yml amd64/arm64</a> and
+          <a href="https://wekan.fi/docs/">Docs</a>
+      </li>
       <li>For automatic updates, <a href="https://wekan.fi/install">Snap Beta amd64/arm64</a>,
           that may need <code>sudo snap set wekan mongodb-port='27019'</code>.
-          Other settings similar like below Docker.
-      </li>
-      <li><a href="https://github.com/wekan/wekan/tree/main/docs/Platforms/FOSS/Docker/Meteor3">Docker amd64/arm64 Production Setup</a> where is
-          <code>METEOR_REACTIVITY_ORDER=oplog,polling</code> with
-          <a href="https://raw.githubusercontent.com/wekan/wekan/refs/heads/main/docker-compose.yml">docker-compose.yml amd64/arm64</a>
+          Other settings similar like above Docker.
       </li>
       <li>For <a href="https://github.com/wekan/wekan/blob/main/docs/Platforms/Propietary/Windows/Offline.md">Windows</a>:
           <code>METEOR_REACTIVITY_ORDER=polling</code> and
           <a href="https://github.com/wekan/wekan/tree/main/docs/Platforms/FOSS/Docker/Meteor3/restore">these Docker settings</a>
-          (NOT experimental changeStreams and NOT oplog) and others similar like above Docker Production Setup.
+          (NOT experimental changeStreams and NOT oplog) and others similar like above Docker.
       </li>
       <li>(or MongoDB alternative, experimental <a href="https://github.com/wekan/wekan/blob/main/docs/Databases/FerretDB2-PostgreSQL.md">FerretDB 2/PostgreSQL</a>,
           see <a href="https://github.com/wekan/wekan/issues/6425">issue 6425</a>)
