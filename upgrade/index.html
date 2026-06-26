@@ -84,15 +84,31 @@
 
   <div class="hof">
     <h2>General Upgrade Steps</h2>
-    <p>With these steps, attachments and avatars are visible, with upgrade to WeKan 9.35 or newer <a href="https://wekan.fi/install/">Snap Beta amd64/arm64 (automatic updates)</a>
-    or <a href="https://raw.githubusercontent.com/wekan/wekan/refs/heads/main/docker-compose.yml">docker-compose.yml amd64/arm64</a>
-    or <a href="https://github.com/wekan/wekan/blob/main/docs/Platforms/Propietary/Windows/Offline.md">Windows</a>:</p>
+    <p>With these steps, attachments and avatars are visible.</p>
     <ol>
-      <li>mongodump/mongorestore to MongoDB 7.x (6.x and older with <a href="https://github.com/wekan/wekan/blob/main/docs/Backup/Backup.md#backup-wekan-snap-to-directory-dump">LD_LIBRARY_PATH</a>)</li>
+      <li>For automatic updates, <a href="https://wekan.fi/install">Snap Beta amd64/arm64</a>,
+          that may need <code>sudo snap set wekan mongodb-port='27019'</code>.
+          Other settings similar like below Docker.
+      </li>
+      <li><a href="https://github.com/wekan/wekan/tree/main/docs/Platforms/FOSS/Docker/Meteor3">Docker amd64/arm64 Production Setup</a> where is
+          <code>METEOR_REACTIVITY_ORDER=oplog,polling</code> with
+          <a href="https://raw.githubusercontent.com/wekan/wekan/refs/heads/main/docker-compose.yml">docker-compose.yml amd64/arm64</a>
+      </li>
+      <li>For <a href="https://github.com/wekan/wekan/blob/main/docs/Platforms/Propietary/Windows/Offline.md">Windows</a>:
+          <code>METEOR_REACTIVITY_ORDER=polling</code> and
+          <a href="https://github.com/wekan/wekan/tree/main/docs/Platforms/FOSS/Docker/Meteor3/restore">these Docker settings</a>
+          (NOT experimental changeStreams and NOT oplog) and others similar like above Docker Production Setup.
+      </li>
+      <li>(or MongoDB alternative, experimental <a href="https://github.com/wekan/wekan/blob/main/docs/Databases/FerretDB2-PostgreSQL.md">FerretDB 2/PostgreSQL</a>,
+          see <a href="https://github.com/wekan/wekan/issues/6425">issue 6425</a>)
+      </li>
+      <li>mongodump <a href="https://github.com/wekan/wekan/blob/main/docs/Backup/Backup.md#backup-wekan-snap-to-directory-dump">MongoDB 3.x</a>) or any other MongoDB version</li>
+      <li>mongorestore to MongoDB 7.x</li>
       <li>If there is WRITABLE_PATH/ files attachments avatars, copy from /var/snap/wekan/common/files or /data/files to newest WeKan directory</li>
-      <li>At WeKan 9.35 or newer: Admin Panel/Attachments, move attachments from MongoDB CollectionFS to any other storage to make then visible. Storage options are MongoDB GridFS Mongo-Files, S3/MinIO compatible, Azure Blob, Google Cloud Storage.</li>
-      <li>Attachments and avatars load slowly from MongoDB GridFS, and load fast from Filesystem.</li>
-      <li>After moving files to Filesystem, Admin Panel / MongoDB GridFS Storage / Compact MongoDB database to make it use less disk space.</li>
+      <li>Admin Panel/Attachments/Default Storage: Filesystem</li>
+      <li>Admin Panel/Attachments/Move Attachments from MongoDB CollectionFS to Filesystem</li>
+      <li>Admin Panel/Attachments/Move Attachments from MongoDB Meteor-Files to Filesystem</li>
+      <li>Admin Panel/Attachments/MongoDB GridFS Storage/Compact MongoDB database, to make it use less disk space.</li>
     </ol>
 
     <table border="1" margin="0" padding="10px" width="100%">
