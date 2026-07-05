@@ -38,6 +38,33 @@
 
       <tr>
         <td valign="top">
+          <a href="https://github.com/wekan/wekan/security/advisories/GHSA-mwq8-ccpm-r533">GHSA-mwq8-ccpm-r533</a>
+          <br /> <br />
+        </td>
+        <td valign="top"><b>ExcelBleed</b> <h2><i class="fa fa-file-excel-o" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></h2></td>
+        <td valign="top">2026-07-05</td>
+        <td valign="top">
+          <b>sec-reex</b> (coordinated disclosure) and <b>Claude</b> (fix)<br />
+          <img src="GoldStar.png" width="30px" height="auto" />
+          <img src="GoldStar.png" width="30px" height="auto" />
+          <img src="GoldStar.png" width="30px" height="auto" />
+          <img src="GoldStar.png" width="30px" height="auto" />
+          <img src="GoldStar.png" width="30px" height="auto" /><br />
+          Did send detailed report with runtime-confirmed PoC!
+        </td>
+        <td valign="top">
+          <ul>
+            <li><i class="fa fa-file-excel-o" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i> ExcelBleed — broken access control in the Excel-export route (<code>GET /api/boards/:boardId/exportExcel</code>): <code>models/exportExcel.js</code> called its guard <code>exporterExcel.canExport(user)</code> <b>without <code>await</code></b>. Because <code>canExport</code> is <code>async</code> it returns an always-truthy Promise, so <code>if (exporterExcel.canExport(user) || impersonateDone)</code> was always true and the export ran regardless of the guard's real result. Any authenticated user could download the full contents of any private board they are not a member of (card titles + descriptions, lists, swimlanes, members, metadata). Same un-awaited async-auth bug class as <a href="bflableed/">BFLABleed</a>, <a href="clonebleed/">CloneBleed</a> and <a href="tokenbleed/">TokenBleed</a> (GHSA-mwq8-ccpm-r533, CWE-862, CWE-639)</li>
+            <li>CVSS:3.1 Moderate (AV:N/AC:L/PR:L/UI:N/S:U/C:H/I:N/A:N)</li>
+            <li>The Excel-export route was the lone remaining un-awaited <code>canExport</code> call site; the JSON export route (<code>/export</code>) was correctly awaited and returned 403 to the same non-member. Fixed by adding <code>await</code>, matching every other export route (<code>export.js</code>, <code>exportPDF.js</code>, <code>exportExcelCard.js</code>, <code>import.js</code>)</li>
+            <li>Affected Wekan v9.57.0 and earlier; fixed at the upcoming WeKan release</li>
+            <li><a href="excelbleed/">More details</a></li>
+          </ul>
+        </td>
+      </tr>
+
+      <tr>
+        <td valign="top">
           <a href="https://github.com/wekan/wekan/security/advisories/GHSA-66m2-4wfr-c45p">GHSA-66m2-4wfr-c45p</a>
           <br /> <br />
         </td>

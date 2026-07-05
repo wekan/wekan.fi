@@ -1,0 +1,188 @@
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <title>WeKan — Hall of Fame / ExcelBleed</title>
+  <link rel="icon" href="../../wekan-favicon.png">
+  <link rel="stylesheet" type="text/css" href="../../css/main.css">
+  <link rel="stylesheet" href="../../font-awesome/css/font-awesome.min.css">
+</head>
+
+<body>
+
+  <img vAlign="center" src="../hof.svg" alt="Hall of Fame image from https://openclipart.org/detail/120343/trophy"
+    width="300px" height="auto" />
+  <br />
+
+  <div class="action-buttons">
+    <a class="button" href="https://wekan.fi/hall-of-fame">Back to Hall of Fame Contents</a>
+    <a class="button" href="https://wekan.fi">Back to Wekan Website</a>
+  </div>
+
+  <div class="hof">
+    <h1 class="hof">Contents / ExcelBleed</h1>
+
+    <table border="1" margin="0" padding="10px" width="100%">
+      <tr>
+        <th width="10%">CVE</th>
+        <th width="10%">Vulnerability name</th>
+        <th width="10%">Date</th>
+        <th width="20%">
+          <a href="https://github.com/wekan/wekan/blob/main/SECURITY.md" style="color: red;">Responsible Security Disclosure</a>
+          by
+        </th>
+        <th width="40%">Vulnerabilities</th>
+      </tr>
+
+      <tr>
+        <td valign="top">
+          <a href="https://github.com/wekan/wekan/security/advisories/GHSA-mwq8-ccpm-r533">GHSA-mwq8-ccpm-r533</a>
+          <br /> <br />
+        </td>
+        <td valign="top"><b>ExcelBleed</b> <h2><i class="fa fa-file-excel-o" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></h2></td>
+        <td valign="top">2026-07-05</td>
+        <td valign="top">
+          <b>sec-reex</b> (coordinated disclosure) and <b>Claude</b> (fix)<br />
+          <img src="../GoldStar.png" width="30px" height="auto" />
+          <img src="../GoldStar.png" width="30px" height="auto" />
+          <img src="../GoldStar.png" width="30px" height="auto" />
+          <img src="../GoldStar.png" width="30px" height="auto" />
+          <img src="../GoldStar.png" width="30px" height="auto" /><br />
+          Did send detailed report with runtime-confirmed PoC!
+        </td>
+        <td valign="top">
+          <ul>
+            <li>1. <i class="fa fa-file-excel-o" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i> ExcelBleed — un-awaited async access-control guard in the Excel-export REST route lets any authenticated user export any private board</li>
+            <li>CVSS:3.1 Moderate (AV:N/AC:L/PR:L/UI:N/S:U/C:H/I:N/A:N), CWE-862, CWE-639</li>
+            <li>Affected Wekan v9.57.0 and earlier</li>
+            <li>Fixed at
+               <a href="https://github.com/wekan/wekan/blob/main/CHANGELOG.md">upcoming WeKan release</a>
+            </li>
+          </ul>
+        </td>
+      </tr>
+
+    </table>
+  </div>
+
+  <br />
+  <br />
+
+  <div class="hof">
+    <h2 class="hof">Details</h2>
+
+    <h3>1. ExcelBleed — any authenticated non-member can export the full contents of any private board (CWE-862, CWE-639)</h3>
+    <p>
+      WeKan boards are membership-scoped: a private board is only readable by its active members. The
+      REST export routes gate access with an <code>async canExport(user)</code> guard that resolves the
+      board and returns <code>board.isVisibleBy(user)</code>. Every export route
+      (<code>models/export.js</code>, <code>exportPDF.js</code>, <code>exportExcelCard.js</code>,
+      <code>import.js</code>) <code>await</code>s that guard — except the Excel-export route.
+    </p>
+    <p>
+      In <code>models/exportExcel.js</code> the guard was called <b>without <code>await</code></b>.
+      Because <code>canExport</code> is <code>async</code>, it returns a Promise, and a Promise object
+      is always truthy — so the <code>||</code> short-circuit approved the export unconditionally and
+      the real visibility result (which never resolved before the branch was taken) was ignored:
+    </p>
+    <pre>
+// models/exportExcel.js  (vulnerable)
+const exporterExcel = new ExporterExcel(boardId, userLanguage);
+if (exporterExcel.canExport(user) || impersonateDone) {   // &lt;-- missing await; Promise is always truthy
+  ...
+  exporterExcel.build(res);                                // &lt;-- runs for ANY authenticated user
+} else {
+  res.end(TAPi18n.__('user-can-not-export-excel'));
+}
+
+// models/server/ExporterExcel.js
+async canExport(user) {
+  const board = await ReactiveCache.getBoard(this._boardId);
+  return board &amp;&amp; board.isVisibleBy(user);                 // correct — but never awaited above
+}
+    </pre>
+    <p>
+      <b>Steps to reproduce</b> (runtime-confirmed on v9.57.0). As non-member <em>bob</em> against a
+      private board owned by <em>alice</em>:
+    </p>
+    <ul>
+      <li>Control: <code>GET /api/boards/&lt;id&gt;/export?authToken=&lt;BOB&gt;</code> (JSON, correctly
+        awaited) &rarr; <b>403</b>.</li>
+      <li>Bypass: <code>GET /api/boards/&lt;id&gt;/exportExcel?authToken=&lt;BOB&gt;</code> &rarr;
+        <b>200</b> with a real <code>.xlsx</code>; <code>xl/sharedStrings.xml</code> contains alice's
+        private data.</li>
+    </ul>
+    <p>
+      <b>Impact:</b> an authenticated non-member could read the full contents of any board by id —
+      card titles and descriptions, lists, swimlanes, members and metadata — including private boards
+      they are not a member of. This is the same un-awaited async-auth bug class WeKan already
+      remediated in <a href="../bflableed/">BFLABleed</a> (48 REST endpoints, v9.22),
+      <a href="../clonebleed/">CloneBleed</a> (un-awaited <code>allowIsBoardMemberByCard</code>, v9.35)
+      and <a href="../tokenbleed/">TokenBleed</a>. The Excel-export route was the lone remaining
+      un-awaited <code>canExport</code> call site.
+    </p>
+
+    <h3>Fix</h3>
+    <p>
+      The guard is now awaited, matching every other export route:
+    </p>
+    <pre>
+// models/exportExcel.js  (fixed)
+if ((await exporterExcel.canExport(user)) || impersonateDone) {
+  ...
+  exporterExcel.build(res);
+} else {
+  res.end(TAPi18n.__('user-can-not-export-excel'));
+}
+    </pre>
+    <p>
+      A non-member now correctly receives the "cannot export" response for
+      <code>/api/boards/:boardId/exportExcel</code>, identical to the already-hardened
+      <code>/export</code> route.
+    </p>
+  </div>
+
+  <br />
+  <br />
+
+  <div class="hof">
+    <table border="1" margin="0" padding="10px" width="100%">
+
+      <tr>
+        <th width="5%">Timeline</th>
+        <th width="60%">Details</th>
+      </tr>
+      <tr>
+        <td vAlign="top"><a name="EXCEL"></a><b>2026-07-05</b></td>
+        <td vAlign="top">
+          Report received from sec-reex (coordinated disclosure, GHSA-mwq8-ccpm-r533), with a
+          read-only, runtime-confirmed PoC as part of an incomplete-patch measurement study.<br />
+        </td>
+      </tr>
+      <tr>
+        <td vAlign="top"><b>Upcoming release</b></td>
+        <td vAlign="top">Fixed at the
+          <a href="https://github.com/wekan/wekan/blob/main/CHANGELOG.md">upcoming WeKan release</a>,
+          by adding <code>await</code> to the <code>canExport</code> guard in
+          <code>models/exportExcel.js</code> so the Excel-export route enforces board visibility like
+          every other export route.
+        </td>
+      </tr>
+    </table>
+  </div>
+
+  <br />
+  <br />
+
+  <div class="action-buttons">
+    <a class="button" href="https://wekan.fi/hall-of-fame">Back to Hall of Fame Contents</a>
+    <a class="button" href="https://wekan.fi">Back to Wekan Website</a>
+  </div>
+
+  <h1>
+    <br />
+  </h1>
+
+</body>
+
+</html>
