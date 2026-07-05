@@ -1,0 +1,168 @@
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <title>WeKan — Hall of Fame / DnsBleed</title>
+  <link rel="icon" href="../../wekan-favicon.png">
+  <link rel="stylesheet" type="text/css" href="../../css/main.css">
+  <link rel="stylesheet" href="../../font-awesome/css/font-awesome.min.css">
+</head>
+
+<body>
+
+  <img vAlign="center" src="../hof.svg" alt="Hall of Fame image from https://openclipart.org/detail/120343/trophy"
+    width="300px" height="auto" />
+  <br />
+
+  <div class="action-buttons">
+    <a class="button" href="https://wekan.fi/hall-of-fame">Back to Hall of Fame Contents</a>
+    <a class="button" href="https://wekan.fi">Back to Wekan Website</a>
+  </div>
+
+  <div class="hof">
+    <h1 class="hof">Contents / DnsBleed</h1>
+
+    <table border="1" margin="0" padding="10px" width="100%">
+      <tr>
+        <th width="10%">CVE</th>
+        <th width="10%">Vulnerability name</th>
+        <th width="10%">Date</th>
+        <th width="20%">
+          <a href="https://github.com/wekan/wekan/blob/main/SECURITY.md" style="color: red;">Responsible Security Disclosure</a>
+          by
+        </th>
+        <th width="40%">Vulnerabilities</th>
+      </tr>
+
+      <tr>
+        <td valign="top">
+          <a href="https://github.com/wekan/wekan/security/advisories/GHSA-66m2-4wfr-c45p">GHSA-66m2-4wfr-c45p</a>
+          <br /> <br />
+        </td>
+        <td valign="top"><b>DnsBleed</b> <h2><i class="fa fa-globe" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></h2></td>
+        <td valign="top">2026-07-01</td>
+        <td valign="top">
+          <b>4n207</b> (coordinated disclosure) and <b>Claude</b> (fix)<br />
+          <img src="../GoldStar.png" width="30px" height="auto" />
+          <img src="../GoldStar.png" width="30px" height="auto" />
+          <img src="../GoldStar.png" width="30px" height="auto" />
+          <img src="../GoldStar.png" width="30px" height="auto" />
+          <img src="../GoldStar.png" width="30px" height="auto" /><br />
+          Did send detailed report with PoC!
+        </td>
+        <td valign="top">
+          <ul>
+            <li><i class="fa fa-globe" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i> SSRF filter bypass via DNS-resolving hostname in outgoing webhooks (CWE-918)</li>
+            <li>CVSS:3.1 High (AV:N/AC:L/PR:L/UI:N/S:C/C:H/I:L/A:N)</li>
+            <li>Incomplete-fix follow-up to <a href="../webhookbleed/">WebhookBleed</a>
+              (GHSA-hc3x-hq3m-663q) and <a href="../integrationbleed/">IntegrationBleed / RebindBleed</a></li>
+            <li>Affected Wekan v8.36 and later</li>
+            <li>Fixed at the upcoming WeKan release</li>
+          </ul>
+        </td>
+      </tr>
+
+    </table>
+  </div>
+
+  <br />
+  <br />
+
+  <div class="hof">
+    <h2 class="hof">Details</h2>
+
+    <h3>SSRF filter bypass via DNS-resolving hostname in outgoing webhooks (GHSA-66m2-4wfr-c45p, CWE-918)</h3>
+    <p>
+      Wekan's outgoing-webhook (board <b>Integrations</b>) URLs are validated by a synchronous validator in
+      <code>models/integrations.js</code> that blocks private / loopback / link-local addresses by regex-matching the
+      URL <b>hostname string</b> — it never resolves DNS. An attacker can therefore supply a public hostname that
+      resolves to a blocked address and slip past the blocklist:
+    </p>
+    <ul>
+      <li><code>169-254-169-254.nip.io</code> → <code>169.254.169.254</code> (cloud instance metadata / IMDS)</li>
+      <li><code>127-0-0-1.nip.io</code> → <code>127.0.0.1</code> (loopback)</li>
+      <li>any attacker-controlled domain with an A / AAAA record pointing at an internal RFC 1918 / ULA host</li>
+    </ul>
+    <p>
+      <code>nip.io</code> / <code>sslip.io</code> are public wildcard-DNS services that require no attacker
+      infrastructure. The report's core point is correct and is the reason this class of bug keeps recurring:
+      <b>matching the hostname string is not an SSRF boundary</b>, because the string can't see the IP the name
+      actually resolves to.
+    </p>
+
+    <h3>Why the reported PoC was already blocked</h3>
+    <p>
+      The advisory quotes the <code>models/integrations.js</code> string blocklist and states that the webhook send
+      path does not re-validate the resolved IP. That was true before, but the delivery path had already been fixed:
+    </p>
+    <ul>
+      <li>
+        <b>Delivery time.</b> Outgoing webhooks are sent through <code>fetchSafe</code>
+        (<code>server/lib/ssrfGuard.js</code>, added in the <a href="../integrationbleed/">IntegrationBleed
+        RebindBleed</a> fix), which resolves the hostname, validates the resolved IP, pins the TCP connection to it
+        (closing DNS-rebinding) and blocks redirects. <code>169-254-169-254.nip.io</code> resolves to
+        <code>169.254.169.254</code> and is rejected before any request is sent.
+      </li>
+      <li>
+        <b>Input time.</b> The REST write paths <code>POST</code> / <code>PUT /api/boards/:boardId/integrations</code>
+        were hardened in <a href="../webhookbleed/">WebhookBleed</a> to run the DNS-aware
+        <code>validateAttachmentUrl()</code>, which resolves the hostname and rejects any blocked resolved IP.
+      </li>
+    </ul>
+
+    <h3>The completing fix</h3>
+    <p>
+      This release closes the remaining gap and, more importantly, the drift risk the advisory highlights. The
+      delivery guard previously resolved only IPv4 <code>A</code>-records (<code>dns.resolve4</code>), leaving it blind
+      to <code>AAAA</code> (an IPv6-only internal target was merely fail-closed, and legitimate IPv6 webhooks were
+      unreachable) and kept a <i>second, less-complete</i> private-range block-list that could drift out of sync with
+      the input-time one.
+    </p>
+    <ul>
+      <li>
+        <code>fetchSafe</code> now resolves <b>both address families</b> via <code>dns.lookup({ all: true })</code> —
+        the same resolver call the input-time validator uses — and validates every resolved address.
+      </li>
+      <li>
+        The three previously-separate block-lists (schema regex, delivery guard, input validator) are unified behind
+        the single shared <code>isIpBlocked</code> in <code>models/lib/attachmentUrlValidation.js</code>, so the input
+        and delivery layers can no longer disagree about what is private.
+      </li>
+      <li>
+        The schema-level <code>url</code> validator is documented in code as a non-authoritative first-line UI check
+        only, so the regex is never again mistaken for the SSRF boundary.
+      </li>
+    </ul>
+  </div>
+
+  <br />
+  <br />
+
+  <div class="hof">
+    <table border="1" margin="0" padding="10px" width="100%">
+      <tr>
+        <th width="5%">Timeline</th>
+        <th width="60%">Details</th>
+      </tr>
+      <tr>
+        <td vAlign="top"><a name="DNS"></a><b>2026-07-01</b></td>
+        <td vAlign="top">Reported by 4n207 (GHSA-66m2-4wfr-c45p) and fixed at the upcoming WeKan release.</td>
+      </tr>
+    </table>
+  </div>
+
+  <br />
+  <br />
+
+  <div class="action-buttons">
+    <a class="button" href="https://wekan.fi/hall-of-fame">Back to Hall of Fame Contents</a>
+    <a class="button" href="https://wekan.fi">Back to Wekan Website</a>
+  </div>
+
+  <h1>
+    <br />
+  </h1>
+
+</body>
+
+</html>
