@@ -38,6 +38,33 @@
 
       <tr>
         <td valign="top">
+          <a href="https://github.com/wekan/wekan/security/advisories/GHSA-x3xm-pxrv-jg7p">GHSA-x3xm-pxrv-jg7p</a>
+          <br /> <br />
+        </td>
+        <td valign="top"><b>ScannerBleed</b> <h2><i class="fa fa-terminal" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></h2></td>
+        <td valign="top">2026-07-05</td>
+        <td valign="top">
+          <b>DavidCarliez</b> (coordinated disclosure) and <b>Claude</b> (fix)<br />
+          <img src="GoldStar.png" width="30px" height="auto" />
+          <img src="GoldStar.png" width="30px" height="auto" />
+          <img src="GoldStar.png" width="30px" height="auto" />
+          <img src="GoldStar.png" width="30px" height="auto" />
+          <img src="GoldStar.png" width="30px" height="auto" /><br />
+          Did send detailed report with PoC!
+        </td>
+        <td valign="top">
+          <ul>
+            <li><i class="fa fa-terminal" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i> ScannerBleed — shell injection (RCE) via a malicious upload filename in the external antivirus scanner command path. In <code>models/fileValidation.js</code>, when an admin-configured external scanner command line with a <code>{file}</code> placeholder is set, the uploaded file path was interpolated and run through <code>asyncExec</code> (<code>promisify(exec)</code>), which spawns <code>/bin/sh -c</code> and interprets all shell metacharacters. Wrapping the path in double quotes is not a shell boundary — inside double quotes the shell still expands <code>$(...)</code>, backticks and <code>\</code> — so a filename like <code>$(touch /tmp/pwn).png</code> or <code>a`id`.png</code> executed as the Wekan server process. Any authenticated user who can upload an attachment could trigger it. Same RCE class as <a href="avatarbleed/">AvatarBleed</a> (CVE-2026-52891), but in a code path that was never covered by that fix (GHSA-x3xm-pxrv-jg7p, CWE-78)</li>
+            <li>CVSS:3.1 9.9 Critical (AV:N/AC:L/PR:L/UI:N/S:C/C:H/I:H/A:H)</li>
+            <li>Unlike the sibling MIME-detection path (<code>detectMimeFromFile</code>, which already uses <code>execFile</code> with no shell) and unlike the AvatarBleed fix (which strips non-alphanumeric characters), this scanner path had zero sanitization. Fixed by POSIX single-quote-escaping the interpolated file path via a new <code>shellQuote()</code> helper — inside single quotes the shell interprets no metacharacters, so a malicious filename can no longer inject commands, while the admin's command line and the exact on-disk path are preserved</li>
+            <li>Affected Wekan v9.06 and earlier through the current release; fixed at the upcoming WeKan release</li>
+            <li><a href="scannerbleed/">More details</a></li>
+          </ul>
+        </td>
+      </tr>
+
+      <tr>
+        <td valign="top">
           <a href="https://github.com/wekan/wekan/security/advisories/GHSA-mwq8-ccpm-r533">GHSA-mwq8-ccpm-r533</a>
           <br /> <br />
         </td>

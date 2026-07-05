@@ -1,0 +1,150 @@
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <title>WeKan — Hall of Fame / ScannerBleed</title>
+  <link rel="icon" href="../../wekan-favicon.png">
+  <link rel="stylesheet" type="text/css" href="../../css/main.css">
+  <link rel="stylesheet" href="../../font-awesome/css/font-awesome.min.css">
+</head>
+
+<body>
+
+  <img vAlign="center" src="../hof.svg" alt="Hall of Fame image from https://openclipart.org/detail/120343/trophy"
+    width="300px" height="auto" />
+  <br />
+
+  <div class="action-buttons">
+    <a class="button" href="https://wekan.fi/hall-of-fame">Back to Hall of Fame Contents</a>
+    <a class="button" href="https://wekan.fi">Back to Wekan Website</a>
+  </div>
+
+  <div class="hof">
+    <h1 class="hof">Contents / ScannerBleed</h1>
+
+    <table border="1" margin="0" padding="10px" width="100%">
+      <tr>
+        <th width="10%">CVE</th>
+        <th width="10%">Vulnerability name</th>
+        <th width="10%">Date</th>
+        <th width="20%">
+          <a href="https://github.com/wekan/wekan/blob/main/SECURITY.md" style="color: red;">Responsible Security Disclosure</a>
+          by
+        </th>
+        <th width="40%">Vulnerabilities</th>
+      </tr>
+
+      <tr>
+        <td valign="top">
+          <a href="https://github.com/wekan/wekan/security/advisories/GHSA-x3xm-pxrv-jg7p">GHSA-x3xm-pxrv-jg7p</a>
+          <br /> <br />
+        </td>
+        <td valign="top"><b>ScannerBleed</b> <h2><i class="fa fa-terminal" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></h2></td>
+        <td valign="top">2026-07-05</td>
+        <td valign="top">
+          <b>DavidCarliez</b> (coordinated disclosure) and <b>Claude</b> (fix)<br />
+          <img src="../GoldStar.png" width="30px" height="auto" />
+          <img src="../GoldStar.png" width="30px" height="auto" />
+          <img src="../GoldStar.png" width="30px" height="auto" />
+          <img src="../GoldStar.png" width="30px" height="auto" />
+          <img src="../GoldStar.png" width="30px" height="auto" /><br />
+          Did send detailed report with PoC!
+        </td>
+        <td valign="top">
+          <ul>
+            <li><i class="fa fa-terminal" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i> ScannerBleed — shell injection (RCE) via a malicious upload filename in the external antivirus scanner command path (GHSA-x3xm-pxrv-jg7p, CWE-78)</li>
+            <li>CVSS:3.1 9.9 Critical (AV:N/AC:L/PR:L/UI:N/S:C/C:H/I:H/A:H)</li>
+            <li>Affected Wekan v9.06 and earlier through the current release</li>
+            <li>Fixed at the upcoming WeKan release</li>
+          </ul>
+        </td>
+      </tr>
+
+    </table>
+  </div>
+
+  <br />
+  <br />
+
+  <div class="hof">
+    <table border="1" margin="0" padding="10px" width="100%">
+      <tr>
+        <th width="40%">Where</th>
+        <th width="60%">Details</th>
+      </tr>
+      <tr>
+        <td vAlign="top"><b>Affected code</b></td>
+        <td vAlign="top">
+          <code>models/fileValidation.js</code> — the external scanner (antivirus) invocation in
+          <code>isFileValid()</code>.
+        </td>
+      </tr>
+      <tr>
+        <td vAlign="top"><b>Root cause</b></td>
+        <td vAlign="top">
+          When an admin has configured an external scanner command line with a <code>{file}</code>
+          placeholder, the uploaded file path was interpolated into the command and run through
+          <code>asyncExec</code> (<code>promisify(exec)</code>), which spawns <code>/bin/sh -c</code>
+          and interprets all shell metacharacters:
+          <br /><br />
+          <code>await asyncExec(externalCommandLine.replace("{file}", '"' + fileObj.path + '"'));</code>
+          <br /><br />
+          Wrapping the path in double quotes is not a shell boundary — inside double quotes the shell
+          still expands <code>$(...)</code>, backticks and <code>\</code>. A filename such as
+          <code>$(touch /tmp/pwn).png</code> or <code>a`id`.png</code> escaped the argument and
+          executed as the Wekan server process. Any authenticated user who can upload an attachment
+          could trigger it on servers with an external scanner configured. Same RCE class as
+          <a href="../avatarbleed/">AvatarBleed</a> (CVE-2026-52891), but in a code path that was never
+          covered by that fix. Unlike the sibling MIME-detection path (<code>detectMimeFromFile</code>,
+          which already uses <code>execFile</code> with no shell) and unlike the AvatarBleed fix
+          (which strips non-alphanumeric characters), this scanner path had zero sanitization.
+        </td>
+      </tr>
+      <tr>
+        <td vAlign="top"><b>Fix</b></td>
+        <td vAlign="top">
+          POSIX single-quote-escape the interpolated file path via a new <code>shellQuote()</code>
+          helper (wrap in single quotes, escape embedded <code>'</code> as <code>'\''</code>). Inside
+          single quotes the shell interprets no metacharacters, so a malicious filename can no longer
+          break out of the argument or inject commands, while the admin's arbitrary command line and
+          the exact on-disk path are both preserved.
+        </td>
+      </tr>
+    </table>
+  </div>
+
+  <br />
+  <br />
+
+  <div class="hof">
+    <table border="1" margin="0" padding="10px" width="100%">
+      <tr>
+        <th width="5%">Timeline</th>
+        <th width="60%">Details</th>
+      </tr>
+      <tr>
+        <td vAlign="top"><a name="X3XM"></a><b>2026-07-05</b></td>
+        <td vAlign="top">Report received from DavidCarliez.</td>
+      </tr>
+      <tr>
+        <td vAlign="top"><b>2026-07-05</b></td>
+        <td vAlign="top">Fixed at the upcoming WeKan release.</td>
+      </tr>
+    </table>
+  </div>
+
+  <br />
+  <br />
+
+  <div class="action-buttons">
+    <a class="button" href="https://wekan.fi/hall-of-fame">Back to Hall of Fame Contents</a>
+    <a class="button" href="https://wekan.fi">Back to Wekan Website</a>
+  </div>
+
+  <h1>
+    <br />
+  </h1>
+
+</body>
+
+</html>
