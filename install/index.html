@@ -81,16 +81,22 @@
         Node.js v24.x
         <a href="https://nodejs.org/dist/latest-v24.x/">official</a> and
         <a href="https://unofficial-builds.nodejs.org/download/release/v24.18.0/">unofficial</a>,
-        <a href="https://github.com/wekan/FerretDB/releases">FerretDB v1 SQLite</a> (default at bundle/Docker/Snap Candidate),
-        <a href="https://www.mongodb.com/try/download/community">MongoDB 7.x or 6.x</a> (Kubernetes), or
-        <a href="https://github.com/wekan/wekan/blob/main/docs/Databases/FerretDB2-PostgreSQL.md">FerretDB v2/PostgreSQL/DocumentDB</a> (not tested).
+        <a href="https://github.com/wekan/FerretDB/releases">FerretDB v1 SQLite</a> (default at bundle/Docker/Snap Candidate/Snap Beta),
+        <a href="https://github.com/wekan/wekan/blob/main/docs/Databases/FerretDB2-PostgreSQL.md">FerretDB v2/PostgreSQL/DocumentDB</a> (not tested),
+        <a href="https://www.mongodb.com/try/download/community">MongoDB 7.x or 6.x</a>
      </h2>
-     <p>Newest WeKan at platforms:
+
+     <h2>Newest WeKan at platforms</h2>
+       <p>
         <ul>
-          <li><a href="https://github.com/wekan/wekan/releases">Windows/Mac/Linux bundle .zip</a>, no container, Node.js/FerretDB v1/SQLite</li>
-          <li>Snap Candidate and Snap Beta</li>
-          <li>Docker</li>
-          <li>Kubernetes</li>
+          <li><a href="https://github.com/wekan/wekan/releases">Windows/Mac/Linux bundle .zip</a>, no container, includes Node.js/FerretDB v1/SQLite and start-wekan script</li>
+          <li>Automatic Updates: <a href="https://snapcraft.io/wekan">Snap Candidate and Snap Beta</a> amd64/arm64. Trying to add s390x/ppc64el/riscv64</li>
+          <li><a href="https://raw.githubusercontent.com/wekan/wekan/refs/heads/main/docker-compose.yml">Docker</a> amd64/arm64/s390x/ppc64le/riscv64 at Docker Registries: 
+            <a href="https://github.com/wekan/wekan/pkgs/container/wekan">GitHub</a>,
+            <a href="https://hub.docker.com/r/wekanteam/wekan">Docker Hub</a> and
+            <a href="https://quay.io/repository/wekan/wekan?tab=tags&tag=latest">RedHat Quay.io</a>
+          </li>
+          <li>Kubernetes amd64</li>
         </ul>
         Fixing other platforms In Progress.
      </p>
