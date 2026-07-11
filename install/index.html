@@ -78,11 +78,20 @@
 <div class="container-fluid bg-white">
     <div class="container px-4 py-5">
      <h2 class="fw-bold">On-Premise: Install WeKan ® Server <span class="version-number">v9.86</span>, Meteor 3.5,
-        <a href="https://nodejs.org/dist/latest-v24.x/">Node.js v24.x</a>. MongoDB 7.x or 6.x, or
-        <a href="https://github.com/wekan/FerretDB">FerretDB v1/SQLite</a>,
-        <a href="https://github.com/wekan/wekan/blob/main/docs/Databases/FerretDB2-PostgreSQL.md">FerretDB v2/PostgreSQL/DocumentDB</a>.
+        Node.js v24.x
+        <a href="https://nodejs.org/dist/latest-v24.x/">official</a> and
+        <a href="https://unofficial-builds.nodejs.org/download/release/v24.18.0/">unofficial</a>,
+        <a href="https://github.com/wekan/FerretDB/releases">FerretDB v1 SQLite</a> (default at bundle/Docker/Snap Candidate),
+        <a href="https://www.mongodb.com/try/download/community">MongoDB 7.x or 6.x</a> (Kubernetes), or
+        <a href="https://github.com/wekan/wekan/blob/main/docs/Databases/FerretDB2-PostgreSQL.md">FerretDB v2/PostgreSQL/DocumentDB</a> (not tested).
      </h2>
-     <p>Newest WeKan at platforms: Windows On-Premise, Linux bundle, Snap Candidate, Docker, Kubernetes.
+     <p>Newest WeKan at platforms:
+        <ul>
+          <li><a href="https://github.com/wekan/wekan/releases">Windows/Mac/Linux bundle .zip</a>, no container, Node.js/FerretDB v1/SQLite</li>
+          <li>Snap Candidate and Snap Beta</li>
+          <li>Docker</li>
+          <li>Kubernetes</li>
+        </ul>
         Fixing other platforms In Progress.
      </p>
     <hr>
