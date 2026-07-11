@@ -199,8 +199,10 @@ The codebase MUST be developed to be reusable in different contexts.
 The codebase MUST be independent from any secret, undisclosed, proprietary or non-open licensed software or services for execution and understanding.
 </td>
 <td>
-It is possible to use Open Source <a href="https://github.com/wekan/wekan/blob/main/docs/Databases/FerretDB2-PostgreSQL.md">FerretDB 2 / PostgreSQL</a>
-as complete replacement of non-open license MongoDB.
+Open Source <a href="https://github.com/wekan/FerretDB/releases">FerretDB 1 / SQLite</a> is
+default database used by WeKan. It is also possible to use
+<a href="https://github.com/wekan/wekan/blob/main/docs/Databases/FerretDB2-PostgreSQL.md">FerretDB 2 / PostgreSQL</a>
+as complete replacement of non-open license MongoDB server.
 </td>
 </tr>
 
@@ -296,7 +298,7 @@ List of <a href="https://github.com/wekan/wekan/tree/main/packages">WeKan packag
 The software SHOULD NOT require services or platforms available from only a single vendor.
 </td>
 <td>
-The database is only available from one vendor, this will change within the coming year.
+Works with many databases and file storage.
 </td>
 </tr>
 
@@ -1052,7 +1054,7 @@ Non-open standards that are machine testable SHOULD be preferred over non-open s
 All functionality in the source code MUST have automated tests.
 </td>
 <td>
-No test suite currently.
+Currently there is about 800 tests, and more are being added.
 </td>
 </tr>
 
