@@ -38,6 +38,33 @@
 
       <tr>
         <td valign="top">
+          <a href="https://github.com/wekan/wekan/security/advisories/GHSA-xm8x-c8wg-jhmf">GHSA-xm8x-c8wg-jhmf</a>
+          <br /> <br />
+        </td>
+        <td valign="top"><b>SortBleed</b> <h2><i class="fa fa-sort" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></h2></td>
+        <td valign="top">2026-07-13</td>
+        <td valign="top">
+          <b>5ud0 / Tarmo Technologies</b> (coordinated disclosure) and <b>xet7</b> (fix)<br />
+          <img src="GoldStar.png" width="30px" height="auto" />
+          <img src="GoldStar.png" width="30px" height="auto" />
+          <img src="GoldStar.png" width="30px" height="auto" />
+          <img src="GoldStar.png" width="30px" height="auto" />
+          <img src="GoldStar.png" width="30px" height="auto" /><br />
+          Did send detailed report with PoC!
+        </td>
+        <td valign="top">
+          <ul>
+            <li><i class="fa fa-sort" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i> SortBleed — broken access control / privilege escalation: a low-privilege (comment-only / read-only) board member could escalate to board admin and take over a private board via the board <code>sort</code> collection-allow rule (CVE requested, GHSA-xm8x-c8wg-jhmf, CWE-863, CWE-269). To support drag-to-reorder, a second <code>Boards.allow({ update })</code> rule returned <code>true</code> for any board member whenever the update touched the <code>sort</code> field. Meteor evaluates allow rules with OR semantics and does not scope an approving rule to the field that satisfied it: once any allow callback approves and no deny rejects, the ENTIRE modifier is applied. Because <code>canUpdateBoardSort</code> only checked that <code>sort</code> was AMONG the modified fields (not the only one), a comment-only / read-only member could smuggle arbitrary board mutations into the same <code>$set</code> as <code>sort</code> in one DDP <code>Boards.update</code> call — <code>{$set: {sort: 99, members: [...self as admin...], permission: 'public', title: '...'}}</code> — making themselves admin, flipping the private board to public, renaming it, and evicting the legitimate owner. The last-admin deny rule did not help because it only inspected <code>$pull</code>. Same allow-rule field-conflation class as <a href="boardbleed/">BoardBleed</a> (CVE-2026-55234), but on the Board document itself</li>
+            <li>CVSS:3.1 8.8 High (AV:N/AC:L/PR:L/UI:N/S:U/C:H/I:H/A:H)</li>
+            <li>Fixed by restricting <code>canUpdateBoardSort</code> (<code>server/lib/utils.js</code>) so the sort-reorder rule approves an update ONLY when <code>sort</code> is the sole modified field (<code>fieldNames</code> is exactly <code>['sort']</code>). Defense in depth: the last-admin deny rule (<code>server/permissions/boards.js</code>) now also rejects a <code>$set</code> rewrite of the <code>members</code> array that would drop the last active admin. The legitimate All Boards drag-reorder is unaffected — it persists order per-user in <code>profile.boardSortIndex</code>, not in the board document</li>
+            <li>Affected Wekan v9.85 and earlier through the current release; fixed at the upcoming WeKan release</li>
+            <li><a href="sortbleed/">More details</a></li>
+          </ul>
+        </td>
+      </tr>
+
+      <tr>
+        <td valign="top">
           <a href="https://github.com/wekan/wekan/security/advisories/GHSA-x3xm-pxrv-jg7p">GHSA-x3xm-pxrv-jg7p</a>
           <br /> <br />
         </td>

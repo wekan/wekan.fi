@@ -1,0 +1,216 @@
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <title>WeKan — Hall of Fame / SortBleed</title>
+  <link rel="icon" href="../../wekan-favicon.png">
+  <link rel="stylesheet" type="text/css" href="../../css/main.css">
+  <link rel="stylesheet" href="../../font-awesome/css/font-awesome.min.css">
+</head>
+
+<body>
+
+  <img vAlign="center" src="../hof.svg" alt="Hall of Fame image from https://openclipart.org/detail/120343/trophy"
+    width="300px" height="auto" />
+  <br />
+
+  <div class="action-buttons">
+    <a class="button" href="https://wekan.fi/hall-of-fame">Back to Hall of Fame Contents</a>
+    <a class="button" href="https://wekan.fi">Back to Wekan Website</a>
+  </div>
+
+  <div class="hof">
+    <h1 class="hof">Contents / SortBleed</h1>
+
+    <table border="1" margin="0" padding="10px" width="100%">
+      <tr>
+        <th width="10%">CVE</th>
+        <th width="10%">Vulnerability name</th>
+        <th width="10%">Date</th>
+        <th width="20%">
+          <a href="https://github.com/wekan/wekan/blob/main/SECURITY.md" style="color: red;">Responsible Security Disclosure</a>
+          by
+        </th>
+        <th width="40%">Vulnerabilities</th>
+      </tr>
+
+      <tr>
+        <td valign="top">
+          <a href="https://github.com/wekan/wekan/security/advisories/GHSA-xm8x-c8wg-jhmf">GHSA-xm8x-c8wg-jhmf</a>
+          <br /> <br />
+        </td>
+        <td valign="top"><b>SortBleed</b> <h2><i class="fa fa-sort" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></h2></td>
+        <td valign="top">2026-07-13</td>
+        <td valign="top">
+          <b>5ud0 / Tarmo Technologies</b> (coordinated disclosure) and <b>xet7</b> (fix)<br />
+          <img src="../GoldStar.png" width="30px" height="auto" />
+          <img src="../GoldStar.png" width="30px" height="auto" />
+          <img src="../GoldStar.png" width="30px" height="auto" />
+          <img src="../GoldStar.png" width="30px" height="auto" />
+          <img src="../GoldStar.png" width="30px" height="auto" /><br />
+          Did send detailed report with PoC!
+        </td>
+        <td valign="top">
+          <ul>
+            <li>1. <i class="fa fa-sort" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i> SortBleed — a comment-only / read-only board member can escalate to board admin and take over a private board via the <code>sort</code> collection-allow rule (CWE-863 Incorrect Authorization, CWE-269 Improper Privilege Management)</li>
+            <li>CVSS:3.1 8.8 High (AV:N/AC:L/PR:L/UI:N/S:U/C:H/I:H/A:H)</li>
+            <li>Affected Wekan v9.85 and earlier</li>
+            <li>Fixed at
+               <a href="https://github.com/wekan/wekan/blob/main/CHANGELOG.md#upcoming-wekan--release">upcoming WeKan release</a>
+            </li>
+          </ul>
+        </td>
+      </tr>
+
+    </table>
+  </div>
+
+  <br />
+  <br />
+
+  <div class="hof">
+    <h2 class="hof">Details</h2>
+
+    <h3>1. SortBleed — a low-privilege board member can escalate to board admin and take over a private board via the board <code>sort</code> allow rule (CWE-863, CWE-269)</h3>
+    <p>
+      Wekan exposes the <code>Boards</code> MongoDB collection to authenticated DDP clients through
+      Meteor allow/deny rules, so a browser can issue a direct <code>Boards.update(selector, modifier)</code>
+      over the wire. The intended board-document write rule is <code>allowIsBoardAdmin</code> (only a board
+      admin may update a board), reinforced by deny rules that forbid removing the last admin and forbid
+      tampering with the star count.
+    </p>
+    <p>
+      To support drag-to-reorder on the All Boards / Public Boards pages, a <b>second</b>
+      <code>Boards.allow({ update })</code> rule was added that returns <code>true</code> for any board
+      member whenever the update touches the <code>sort</code> field:
+    </p>
+    <pre>
+// server/lib/utils.js (vulnerable)
+export function canUpdateBoardSort(userId, board, fieldNames) {
+  return !!userId && (fieldNames || []).includes('sort') && allowIsBoardMember(userId, board);
+}
+
+// server/permissions/boards.js
+Boards.allow({
+  update: allowIsBoardAdmin,   // intended board-document write policy
+  remove: allowIsBoardAdmin,
+  fetch: ['members'],
+});
+Boards.allow({
+  update(userId, board, fieldNames) {
+    return canUpdateBoardSort(userId, board, fieldNames);  // true if 'sort' is *among* the fields
+  },
+  fetch: ['members'],
+});
+    </pre>
+    <p>
+      Meteor evaluates allow rules with <b>OR</b> semantics and does <b>not</b> scope an approving rule to
+      the field that satisfied it: if any allow callback returns <code>true</code> and no deny callback
+      returns <code>true</code>, the <b>entire</b> modifier is applied to the document. Because
+      <code>canUpdateBoardSort</code> only checked that <code>sort</code> was one of the modified fields
+      (not that it was the <em>only</em> one), a low-privilege board member could smuggle arbitrary board
+      mutations into the same <code>$set</code> as <code>sort</code>. A comment-only or read-only member (a
+      deliberately restricted collaborator with no write access at all) could therefore rewrite
+      <code>members</code> to make themselves board admin, flip a private board's <code>permission</code> to
+      <code>public</code>, change the board title, and evict the legitimate owner — all with a single DDP
+      call:
+    </p>
+    <pre>
+{$set: {sort: 99, permission: 'public', title: 'PWNED', members: [{userId: attacker, isAdmin: true, isActive: true}]}}
+    </pre>
+    <p>
+      The last-admin deny rule did not help because it only inspected <code>$pull</code> operations, so a
+      wholesale <code>$set: { members: [...] }</code> bypassed it entirely.
+    </p>
+    <p>
+      <b>Attacker model:</b> an authenticated Wekan user who is an active member of the target board in any
+      role — including the most restricted roles (comment-only, read-only, worker), which are explicitly
+      meant to have no ability to modify the board or its membership. No board-admin rights, no global-admin
+      rights, and no victim interaction are required. The only bound on impact is that the attacker must
+      already be a member of the board they take over.
+    </p>
+    <p>
+      <b>Impact:</b> full board-admin control over a board the attacker was granted only restricted access
+      to — privilege escalation (set <code>isAdmin = true</code> for themselves), board takeover / denial of
+      service to the owner (<code>$set</code> the whole members array to only themselves, evicting the
+      legitimate admin), a confidentiality breach (change <code>permission</code> from private to public,
+      exposing swimlanes, lists, cards, comments, attachments and the member list — public boards are
+      world-readable in Wekan), and arbitrary integrity changes (title, color, settings). Once board admin,
+      the attacker inherits every board-admin capability (adding integrations / outgoing webhooks,
+      adding/removing members, archiving or deleting the board, changing everyone's roles). Confirmed at
+      runtime by the reporter against a local instance (v9.84 image; the vulnerable code is byte-identical
+      across v9.84, v9.85 and main): the control call (a members rewrite without <code>sort</code>) was
+      correctly denied with <code>403 Access denied</code>, while the identical rewrite <em>with</em>
+      <code>sort:99</code> added was accepted.
+    </p>
+
+    <h3>Fix</h3>
+    <p>
+      The sort-reorder allow rule is now restricted to updates that touch <b>only</b> the <code>sort</code>
+      field (and nothing else), so it can never approve a modifier that also mutates <code>members</code>,
+      <code>permission</code>, <code>title</code> or any other field:
+    </p>
+    <pre>
+// server/lib/utils.js (fixed)
+export function canUpdateBoardSort(userId, board, fieldNames) {
+  const fields = fieldNames || [];
+  return !!userId && fields.length === 1 && fields[0] === 'sort' && allowIsBoardMember(userId, board);
+}
+    </pre>
+    <p>
+      With <code>sort</code> required to be the sole modified field, the only remaining allow rule for a
+      multi-field board update is <code>allowIsBoardAdmin</code>, which a comment-only / read-only member
+      fails — so the whole modifier is rejected. As <b>defense in depth</b>, the last-admin deny rule in
+      <code>server/permissions/boards.js</code> now also rejects a <code>$set</code> rewrite of the
+      <code>members</code> array that would drop the last active admin, not just a <code>$pull</code>. A
+      regression test in <code>server/lib/tests/boards.security.tests.js</code> covers the multi-field
+      smuggling case (<code>['sort', 'members']</code>, <code>['sort', 'permission', 'title']</code>, etc.).
+      The legitimate All Boards / Public Boards drag-reorder is unaffected: it persists the manual order
+      per-user in <code>profile.boardSortIndex</code> (<code>Users.setBoardSortIndex</code>), not in the
+      board document.
+    </p>
+  </div>
+
+  <br />
+  <br />
+
+  <div class="hof">
+    <table border="1" margin="0" padding="10px" width="100%">
+
+      <tr>
+        <th width="5%">Timeline</th>
+        <th width="60%">Details</th>
+      </tr>
+      <tr>
+        <td vAlign="top"><a name="SORT"></a><b>2026-07-13</b></td>
+        <td vAlign="top">
+          Report received from 5ud0 / Tarmo Technologies (coordinated disclosure, GHSA-xm8x-c8wg-jhmf).<br />
+        </td>
+      </tr>
+      <tr>
+        <td vAlign="top"><b>upcoming release</b></td>
+        <td vAlign="top">Fixed at
+          <a href="https://github.com/wekan/wekan/blob/main/CHANGELOG.md#upcoming-wekan--release">upcoming WeKan release</a>,
+          by restricting the board <code>sort</code> allow rule to updates that touch only the
+          <code>sort</code> field, so a board member can no longer smuggle members/permission/title
+          changes into the same modifier.
+        </td>
+      </tr>
+    </table>
+  </div>
+
+  <br />
+  <br />
+
+  <div class="action-buttons">
+    <a class="button" href="https://wekan.fi/hall-of-fame">Back to Hall of Fame Contents</a>
+    <a class="button" href="https://wekan.fi">Back to Wekan Website</a>
+  </div>
+
+  <h1>
+    <br />
+  </h1>
+
+</body>
+
+</html>
