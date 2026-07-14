@@ -1,0 +1,223 @@
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <title>WeKan — Hall of Fame / MimeBleed</title>
+  <link rel="icon" href="../../wekan-favicon.png">
+  <link rel="stylesheet" type="text/css" href="../../css/main.css">
+  <link rel="stylesheet" href="../../font-awesome/css/font-awesome.min.css">
+</head>
+
+<body>
+
+  <img vAlign="center" src="../hof.svg" alt="Hall of Fame image from https://openclipart.org/detail/120343/trophy"
+    width="300px" height="auto" />
+  <br />
+
+  <div class="action-buttons">
+    <a class="button" href="https://wekan.fi/hall-of-fame">Back to Hall of Fame Contents</a>
+    <a class="button" href="https://wekan.fi">Back to Wekan Website</a>
+  </div>
+
+  <div class="hof">
+    <h1 class="hof">Contents / MimeBleed</h1>
+
+    <table border="1" margin="0" padding="10px" width="100%">
+      <tr>
+        <th width="10%">CVE</th>
+        <th width="10%">Vulnerability name</th>
+        <th width="10%">Date</th>
+        <th width="20%">
+          <a href="https://github.com/wekan/wekan/blob/main/SECURITY.md" style="color: red;">Responsible Security Disclosure</a>
+          by
+        </th>
+        <th width="40%">Vulnerabilities</th>
+      </tr>
+
+      <tr>
+        <td valign="top">
+          <a href="https://github.com/wekan/wekan/security/advisories/GHSA-jhph-whx8-wq6p">GHSA-jhph-whx8-wq6p</a>
+          <br /> <br />
+        </td>
+        <td valign="top"><b>MimeBleed</b> <h2><i class="fa fa-file-image-o" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></h2></td>
+        <td valign="top">2026-07-14</td>
+        <td valign="top">
+          <b>HNUfwj</b> (coordinated disclosure) and <b>xet7</b> (fix)<br />
+          <img src="../GoldStar.png" width="30px" height="auto" />
+          <img src="../GoldStar.png" width="30px" height="auto" />
+          <img src="../GoldStar.png" width="30px" height="auto" />
+          <img src="../GoldStar.png" width="30px" height="auto" />
+          <img src="../GoldStar.png" width="30px" height="auto" /><br />
+          Did send detailed report with PoC!
+        </td>
+        <td valign="top">
+          <ul>
+            <li>1. <i class="fa fa-file-image-o" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i> MimeBleed — file-upload MIME-type validation bypass leading to stored XSS via a missing system binary fallback (CWE-434 Unrestricted Upload of File with Dangerous Type)</li>
+            <li>CVSS:3.1 8.3 High (AV:N/AC:L/PR:L/UI:R/S:C/C:H/I:H/A:N)</li>
+            <li>Affected container deployments without the <code>file</code> binary and <code>WITH_API=true</code></li>
+            <li>Fixed at
+               <a href="https://github.com/wekan/wekan/blob/main/CHANGELOG.md#upcoming-wekan--release">upcoming WeKan release</a>
+            </li>
+          </ul>
+        </td>
+      </tr>
+
+    </table>
+  </div>
+
+  <br />
+  <br />
+
+  <div class="hof">
+    <h2 class="hof">Details</h2>
+
+    <h3>1. MimeBleed — file-upload MIME-type validation bypass → stored XSS via missing system binary fallback (CWE-434)</h3>
+    <p>
+      WeKan's file-upload validation function <code>isFileValid()</code> in
+      <code>models/fileValidation.js</code> detects a file's real MIME type by running the Unix
+      <code>file</code> command. When the <code>file</code> binary is not installed on the server
+      (common in minimal Docker / Alpine container deployments), <code>detectMimeFromFile()</code>
+      silently returned <code>undefined</code>, and the code fell back to the <b>client-supplied</b>
+      <code>fileObj.type</code> value from the upload request.
+    </p>
+    <p>
+      An attacker could therefore set <code>fileType</code> to <code>"image/png"</code> to bypass the
+      dangerous-MIME check and upload an HTML file containing JavaScript, resulting in <b>stored XSS</b>
+      served under the application origin.
+    </p>
+    <p>
+      The vulnerable fallback (before the fix):
+    </p>
+    <pre>
+// models/fileValidation.js — detectMimeFromFile (before)
+async function detectMimeFromFile(filePath) {
+  if (!Meteor.isServer) return undefined;
+  try {
+    const { stdout } = await asyncExecFile('file', ['--mime-type', '-b', String(filePath)]);
+    const mime = (stdout || '').trim().toLowerCase();
+    if (!mime) return undefined;
+    return { mime };
+  } catch (e) {
+    // Silently returns undefined when `file` is unavailable — NO warning logged
+  }
+  return undefined;
+}
+
+// isFileValid (before): falls back to the ATTACKER-CONTROLLED fileObj.type
+const mimeTypeResult = await detectMimeFromFile(fileObj.path);
+const detectedMime = mimeTypeResult?.mime || (fileObj.type || '').toLowerCase();
+...
+const dangerousMimes = new Set(['text/html','image/svg+xml','application/javascript', ...]);
+if (dangerousMimes.has(detectedMime)) {   // BYPASSED when fileType is spoofed to image/png
+  // dangerous-content scan (only runs for deny-listed types)
+}
+    </pre>
+    <p>
+      <b>Attacker model / prerequisites:</b> WeKan deployed without the <code>file</code> command
+      (default in minimal container images), <code>WITH_API=true</code>, and an authenticated user
+      with board write access.
+    </p>
+    <p>
+      <b>Steps to reproduce (from the report):</b>
+    </p>
+    <pre>
+1. Authenticate: POST /users/login to obtain authToken.
+2. Create a malicious HTML file:
+     &lt;html&gt;&lt;body&gt;&lt;script&gt;alert('XSS')&lt;/script&gt;&lt;/body&gt;&lt;/html&gt;
+3. Base64-encode it.
+4. POST /api/attachment/upload with:
+     { "fileType": "image/png", "fileData": "&lt;base64 html&gt;",
+       "boardId": "&lt;board&gt;", "cardId": "&lt;card&gt;" }
+5. Server returns 200 OK — file stored without dangerous-content scanning.
+6. Accessing the attachment serves HTML+JS under the WeKan origin.
+    </pre>
+    <p>
+      <b>Impact:</b> stored XSS under the WeKan application origin — JavaScript execution in other
+      users' browsers, session/authentication-token theft, and actions performed as the victim,
+      including admin operations if an admin opens the malicious attachment.
+    </p>
+
+    <h3>Fix</h3>
+    <p>
+      The client-supplied MIME type can no longer gate the safety scan. When content-based detection
+      via the <code>file</code> command is unavailable, WeKan falls back to a <b>dependency-free JS
+      content sniff</b>, <code>looksLikeDangerousMarkup()</code>, that inspects the real bytes for
+      definitive HTML / SVG / XML / <code>&lt;script&gt;</code> signatures and <b>forces the
+      dangerous-content scan regardless of the claimed MIME type</b>. So a spoofed
+      <code>image/png</code> that is actually HTML + JavaScript is detected and rejected. The sniff
+      matches only definitive markup signatures, so genuine binary uploads (real PNG / JPEG / PDF,
+      including large ones) are unaffected. WeKan also now logs a one-time warning when the
+      <code>file</code> command is missing (previously the failure was silent).
+    </p>
+    <pre>
+// models/fileValidation.js (after)
+export function looksLikeDangerousMarkup(text) {
+  if (!text) return false;
+  if (/&lt;\s*(script|html|svg|iframe|object|embed|foreignobject|meta\b)/i.test(text)) return true;
+  if (/^[\s﻿]*(&lt;\?xml|&lt;!doctype)/i.test(text)) return true;
+  if (/&lt;!entity/i.test(text)) return true;
+  return false;
+}
+
+// When `file` is unavailable, sniff the real bytes and force the scan:
+let contentLooksDangerous = false;
+if (!mimeTypeResult) {
+  const { text } = await readTextHead(fileObj.path, 65536);
+  contentLooksDangerous = looksLikeDangerousMarkup(text);
+}
+if (dangerousMimes.has(detectedMime) || contentLooksDangerous) {
+  const allowed = await checkDangerousMimeAllowance(detectedMime, fileObj.path, fileObj.size || 0);
+  if (!allowed) return false;   // spoofed image/png HTML+JS is rejected here
+}
+    </pre>
+    <p>
+      A regression test (<code>server/lib/tests/fileValidationBypass.security.tests.js</code>) covers
+      both the spoofed dangerous uploads (HTML, <code>&lt;script&gt;</code>, SVG, XML, DOCTYPE,
+      iframe/object/embed, ENTITY) and safe binaries (PNG / JPEG / PDF magic bytes, plain text, CSV,
+      JSON). Operators are also advised to install the <code>file</code> package for full
+      content-based MIME detection; WeKan's official images already include it.
+    </p>
+  </div>
+
+  <br />
+  <br />
+
+  <div class="hof">
+    <table border="1" margin="0" padding="10px" width="100%">
+
+      <tr>
+        <th width="5%">Timeline</th>
+        <th width="60%">Details</th>
+      </tr>
+      <tr>
+        <td vAlign="top"><a name="MIME"></a><b>2026-07-14</b></td>
+        <td vAlign="top">
+          Report received from HNUfwj (coordinated disclosure, GHSA-jhph-whx8-wq6p).<br />
+        </td>
+      </tr>
+      <tr>
+        <td vAlign="top"><b>upcoming release</b></td>
+        <td vAlign="top">Fixed at
+          <a href="https://github.com/wekan/wekan/blob/main/CHANGELOG.md#upcoming-wekan--release">upcoming WeKan release</a>,
+          by sniffing file content in dependency-free JS when the <code>file</code> binary is
+          unavailable, so the client-supplied MIME type can no longer skip the dangerous-content scan.
+        </td>
+      </tr>
+    </table>
+  </div>
+
+  <br />
+  <br />
+
+  <div class="action-buttons">
+    <a class="button" href="https://wekan.fi/hall-of-fame">Back to Hall of Fame Contents</a>
+    <a class="button" href="https://wekan.fi">Back to Wekan Website</a>
+  </div>
+
+  <h1>
+    <br />
+  </h1>
+
+</body>
+
+</html>

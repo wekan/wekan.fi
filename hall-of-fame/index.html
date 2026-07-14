@@ -38,6 +38,33 @@
 
       <tr>
         <td valign="top">
+          <a href="https://github.com/wekan/wekan/security/advisories/GHSA-jhph-whx8-wq6p">GHSA-jhph-whx8-wq6p</a>
+          <br /> <br />
+        </td>
+        <td valign="top"><b>MimeBleed</b> <h2><i class="fa fa-file-image-o" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></h2></td>
+        <td valign="top">2026-07-14</td>
+        <td valign="top">
+          <b>HNUfwj</b> (coordinated disclosure) and <b>xet7</b> (fix)<br />
+          <img src="GoldStar.png" width="30px" height="auto" />
+          <img src="GoldStar.png" width="30px" height="auto" />
+          <img src="GoldStar.png" width="30px" height="auto" />
+          <img src="GoldStar.png" width="30px" height="auto" />
+          <img src="GoldStar.png" width="30px" height="auto" /><br />
+          Did send detailed report with PoC!
+        </td>
+        <td valign="top">
+          <ul>
+            <li><i class="fa fa-file-image-o" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i> MimeBleed — file-upload MIME-type validation bypass leading to stored XSS (GHSA-jhph-whx8-wq6p, CWE-434). WeKan's upload validation (<code>models/fileValidation.js</code>) detects a file's real MIME type by running the Unix <code>file</code> command. On minimal Docker/Alpine images where <code>file</code> is not installed, <code>detectMimeFromFile()</code> silently returned <code>undefined</code> and the code fell back to the CLIENT-supplied <code>fileObj.type</code>. An authenticated board member (with <code>WITH_API=true</code>) could upload an HTML file containing JavaScript while setting <code>fileType: "image/png"</code>: the spoofed type is not on the dangerous-MIME deny-list, so the dangerous-content scan was skipped and the file was stored, giving stored XSS served under the WeKan origin (session theft, actions as the victim, including admin)</li>
+            <li>CVSS:3.1 8.3 High (AV:N/AC:L/PR:L/UI:R/S:C/C:H/I:H/A:N)</li>
+            <li>Fixed so the client-supplied type can never gate the safety scan: when content-based detection via <code>file</code> is unavailable, WeKan falls back to a dependency-free JS content sniff (<code>looksLikeDangerousMarkup()</code>) that inspects the real bytes for HTML/SVG/XML/<code>&lt;script&gt;</code> signatures and forces the dangerous-content scan regardless of the claimed MIME, so a spoofed <code>image/png</code> that is really HTML+JS is rejected. The sniff only matches definitive markup, so genuine binary uploads (real PNG/JPEG/PDF, including large ones) are unaffected. WeKan also logs a one-time warning when <code>file</code> is missing (previously silent)</li>
+            <li>Affected container deployments without the <code>file</code> binary and <code>WITH_API=true</code>; fixed at the upcoming WeKan release</li>
+            <li><a href="mimebleed/">More details</a></li>
+          </ul>
+        </td>
+      </tr>
+
+      <tr>
+        <td valign="top">
           <a href="https://github.com/wekan/wekan/security/advisories/GHSA-xm8x-c8wg-jhmf">GHSA-xm8x-c8wg-jhmf</a>
           <br /> <br />
         </td>
