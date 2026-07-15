@@ -179,7 +179,7 @@
 
 <p>
 <pre>
-sudo snap install wekan --channel=latest/beta
+sudo snap install wekan
 sudo snap set wekan root-url="http://YOUR-IP-ADDRESS"
 sudo snap set wekan port='80'
 </pre>
@@ -189,9 +189,9 @@ that has name wekan_other:
 <pre>
 sudo snap refresh --dangerous wekan-VERSION.snap wekan_other --amend
 </pre>
-Back to channel:
+Please change to stable channel, if you are at candidate/beta/edge channel. All channels have newest WeKan.
 <pre>
-sudo snap refresh wekan_other --channel=latest/beta --amend
+sudo snap refresh wekan --channel=latest/stable --amend
 </pre>
 </p>
 
