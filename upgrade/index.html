@@ -83,35 +83,6 @@
     <br />
 
   <div class="hof">
-    <h2>General Upgrade Steps</h2>
-    <p>With these steps, attachments and avatars are visible.</p>
-    <ol>
-      <li><b>Production Setup</b>, for 14k or more users: <a href="https://github.com/wekan/wekan/tree/main/docs/Platforms/FOSS/Docker/Meteor3">Docker amd64/arm64</a> where is
-          <code>METEOR_REACTIVITY_ORDER=oplog,polling</code> with other settings mentioned at
-          <a href="https://raw.githubusercontent.com/wekan/wekan/refs/heads/main/docker-compose.yml">docker-compose.yml</a> and
-          <a href="https://wekan.fi/docs/">Docs</a>
-      </li>
-      <li>For automatic updates, <a href="https://wekan.fi/install">Snap Beta amd64/arm64</a>,
-          that may need <code>sudo snap set wekan mongodb-port='27019'</code>.
-          Other settings similar like above Docker.
-      </li>
-      <li>For <a href="https://github.com/wekan/wekan/blob/main/docs/Platforms/Propietary/Windows/Offline.md">Windows</a>:
-          <code>METEOR_REACTIVITY_ORDER=polling</code> and
-          <a href="https://github.com/wekan/wekan/tree/main/docs/Platforms/FOSS/Docker/Meteor3/restore">these Docker settings</a>
-          (NOT experimental changeStreams and NOT oplog) and others similar like above Docker.
-      </li>
-      <li>(or MongoDB alternative, experimental <a href="https://github.com/wekan/wekan/blob/main/docs/Databases/FerretDB2-PostgreSQL.md">FerretDB 2/PostgreSQL</a>,
-          see <a href="https://github.com/wekan/wekan/issues/6425">issue 6425</a>)
-      </li>
-      <li>mongodump <a href="https://github.com/wekan/wekan/blob/main/docs/Backup/Backup.md#backup-wekan-snap-to-directory-dump">MongoDB 3.x</a>) or any other MongoDB version</li>
-      <li>mongorestore to MongoDB 7.x</li>
-      <li>If there is WRITABLE_PATH/ files attachments avatars, copy from /var/snap/wekan/common/files or /data/files to newest WeKan directory</li>
-      <li>Admin Panel/Attachments/Default Storage: Filesystem</li>
-      <li>Admin Panel/Attachments/Move Attachments from MongoDB CollectionFS to Filesystem</li>
-      <li>Admin Panel/Attachments/Move Attachments from MongoDB Meteor-Files to Filesystem</li>
-      <li>Admin Panel/Attachments/MongoDB GridFS Storage/Compact MongoDB database, to make it use less disk space.</li>
-    </ol>
-
     <table border="1" margin="0" padding="10px" width="100%">
       <tr>
         <th width="20%">Platform</th>
@@ -139,13 +110,31 @@
        <td valign="top">
           <img src="../hall-of-fame/GoldStar.png" width="30px" height="auto" />
        </td>
-        <td valign="top">6.09<br />
+        <td valign="top">Newest<br />
         <code>sudo snap list</code>
         </td>
         <td valign="top">
-          Use above "General Upgrade Steps" to upgrade.
+          Newest WeKan is now also at Snap Stable. Upgrade to newest:<br />
+          <code>sudo snap refresh wekan --channel=latest/stable --amend</code><br />
+          On first start after upgrading from old WeKan 6, it automatically migrates the
+          MongoDB data and attachments/avatars to FerretDB (SQLite). Migration progress shows
+          at the WeKan web address, and a migration interrupted by a snap refresh or reboot
+          resumes where it left off. The original MongoDB data is never modified or deleted.<br /><br />
+          Watch migration and database logs:<br />
+          <code>sudo snap logs -f wekan.mongodb</code><br /><br />
+          Retry or force a fresh MongoDB &rarr; FerretDB migration:<br />
+          <code>sudo snap run wekan.migrate</code><br /><br />
+          Choose which database WeKan runs on (mongodb also pauses auto-migration,
+          ferretdb switches to the migrated FerretDB):<br />
+          <code>sudo snap run wekan.database mongodb</code><br />
+          <code>sudo snap run wekan.database ferretdb</code><br /><br />
+          Maintenance page on/off: while on, users see an "under maintenance" page (HTTP 503),
+          and you can start <code>sudo snap start wekan.mongodb</code> or
+          <code>sudo snap start wekan.ferretdb</code> by hand to reach the data over the
+          MongoDB wire protocol on port 27019 (one at a time, they share the port):<br />
+          <code>sudo snap run wekan.maintenance on</code><br />
+          <code>sudo snap run wekan.maintenance off</code><br /><br />
           <a href="https://github.com/wekan/wekan/blob/main/docs/Backup/Backup.md">More upgrade info</a>
-          Snap Beta works at newest Ubuntu amd64/arm64, Debian 13 amd64/arm64 etc. Not at Debian 12.
         </td>
       </tr>
       <tr>
@@ -166,6 +155,34 @@
           Bitnami MongoDB Docker images do not exist anymore.
           <a href="https://github.com/wekan/charts/issues/45">MongoDump/MongoRestore to groundhog2k MongoDB images</a><br /><br />
           <a href="https://github.com/wekan/wekan/blob/main/docs/Backup/Backup.md">Manual upgrade info</a>
+          <h3>General Upgrade Steps</h3>
+          <p>With these steps, attachments and avatars are visible.</p>
+          <ol>
+            <li><b>Production Setup</b>, for 14k or more users: <a href="https://github.com/wekan/wekan/tree/main/docs/Platforms/FOSS/Docker/Meteor3">Docker amd64/arm64</a> where is
+                <code>METEOR_REACTIVITY_ORDER=oplog,polling</code> with other settings mentioned at
+                <a href="https://raw.githubusercontent.com/wekan/wekan/refs/heads/main/docker-compose.yml">docker-compose.yml</a> and
+                <a href="https://wekan.fi/docs/">Docs</a>
+            </li>
+            <li>For automatic updates, <a href="https://wekan.fi/install">Snap Beta amd64/arm64</a>,
+                that may need <code>sudo snap set wekan mongodb-port='27019'</code>.
+                Other settings similar like above Docker.
+            </li>
+            <li>For <a href="https://github.com/wekan/wekan/blob/main/docs/Platforms/Propietary/Windows/Offline.md">Windows</a>:
+                <code>METEOR_REACTIVITY_ORDER=polling</code> and
+                <a href="https://github.com/wekan/wekan/tree/main/docs/Platforms/FOSS/Docker/Meteor3/restore">these Docker settings</a>
+                (NOT experimental changeStreams and NOT oplog) and others similar like above Docker.
+            </li>
+            <li>(or MongoDB alternative, experimental <a href="https://github.com/wekan/wekan/blob/main/docs/Databases/FerretDB2-PostgreSQL.md">FerretDB 2/PostgreSQL</a>,
+                see <a href="https://github.com/wekan/wekan/issues/6425">issue 6425</a>)
+            </li>
+            <li>mongodump <a href="https://github.com/wekan/wekan/blob/main/docs/Backup/Backup.md#backup-wekan-snap-to-directory-dump">MongoDB 3.x</a>) or any other MongoDB version</li>
+            <li>mongorestore to MongoDB 7.x</li>
+            <li>If there is WRITABLE_PATH/ files attachments avatars, copy from /var/snap/wekan/common/files or /data/files to newest WeKan directory</li>
+            <li>Admin Panel/Attachments/Default Storage: Filesystem</li>
+            <li>Admin Panel/Attachments/Move Attachments from MongoDB CollectionFS to Filesystem</li>
+            <li>Admin Panel/Attachments/Move Attachments from MongoDB Meteor-Files to Filesystem</li>
+            <li>Admin Panel/Attachments/MongoDB GridFS Storage/Compact MongoDB database, to make it use less disk space.</li>
+          </ol>
         </td>
       </tr>
       <tr>
