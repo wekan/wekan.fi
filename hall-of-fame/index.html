@@ -38,6 +38,54 @@
 
       <tr>
         <td valign="top">
+          -
+          <br /> <br />
+        </td>
+        <td valign="top"><b>EscapeBleed</b> <h2><i class="fa fa-code" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></h2></td>
+        <td valign="top">2026-07-17</td>
+        <td valign="top">
+          <b>GitHub CodeQL</b> (code scanning alert #423) and <b>xet7</b> (fix)<br />
+          <img src="GoldStar.png" width="30px" height="auto" />
+          <img src="GoldStar.png" width="30px" height="auto" /><br />
+          Automated code scanning flagged the incomplete escaping.
+        </td>
+        <td valign="top">
+          <ul>
+            <li><i class="fa fa-code" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i> EscapeBleed — code that built a <code>RegExp</code> from a CSS declaration in <code>tests/maximizedCardPosition.test.cjs</code> escaped only parentheses (<code>str.replace(/[()]/g, '\\$&amp;')</code>) instead of the full regex metacharacter set, so an input containing other metacharacters (including a backslash) would not be escaped correctly and the generated pattern could match the wrong thing (CWE-116 Improper Encoding or Escaping of Output)</li>
+            <li>GitHub CodeQL code scanning alert #423, rule <code>js/incomplete-sanitization</code>, severity High</li>
+            <li>Fixed by escaping the complete metacharacter set (<code>str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&amp;')</code>), matching the correct pattern already used elsewhere in the tests. Test-only code with a fixed, trusted input list — no injection exposure — but the incomplete escape was genuinely wrong</li>
+            <li>Fixed at <a href="https://github.com/wekan/wekan/blob/main/CHANGELOG.md#upcoming-wekan--release">upcoming WeKan release</a></li>
+            <li><a href="escapebleed/">More details</a></li>
+          </ul>
+        </td>
+      </tr>
+
+      <tr>
+        <td valign="top">
+          -
+          <br /> <br />
+        </td>
+        <td valign="top"><b>RandomBleed</b> <h2><i class="fa fa-random" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></h2></td>
+        <td valign="top">2026-07-17</td>
+        <td valign="top">
+          <b>GitHub CodeQL</b> (code scanning alert #422) and <b>xet7</b> (fix)<br />
+          <img src="GoldStar.png" width="30px" height="auto" />
+          <img src="GoldStar.png" width="30px" height="auto" /><br />
+          Automated code scanning flagged the biased randomness.
+        </td>
+        <td valign="top">
+          <ul>
+            <li><i class="fa fa-random" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i> RandomBleed — the startup schema upgrade (<code>server/lib/schemaUpgradeSteps.js</code>) generates Meteor-style document ids with <code>crypto.randomBytes(len)</code> mapped through <code>byte % ID_CHARS.length</code>. Because 256 is not a multiple of the 55-character alphabet, that modulo skews generated ids toward the first 36 characters (each ~1.4% more likely than the rest), reducing the entropy of the ids used for the swimlanes/lists/checklist-items the upgrade creates (CWE-1204 weak randomness)</li>
+            <li>GitHub CodeQL code scanning alert #422, rule <code>js/biased-cryptographic-random</code>, severity High</li>
+            <li>Fixed with rejection sampling: bytes at or above the largest multiple of the alphabet size (220) are discarded and resampled, so every character is exactly equally likely; ids stay Meteor-style 17 characters. A negative regression test pins that out-of-range bytes are never wrapped</li>
+            <li>Fixed at <a href="https://github.com/wekan/wekan/blob/main/CHANGELOG.md#upcoming-wekan--release">upcoming WeKan release</a></li>
+            <li><a href="randombleed/">More details</a></li>
+          </ul>
+        </td>
+      </tr>
+
+      <tr>
+        <td valign="top">
           <a href="https://github.com/wekan/wekan/security/advisories/GHSA-jhph-whx8-wq6p">GHSA-jhph-whx8-wq6p</a>
           <br /> <br />
         </td>

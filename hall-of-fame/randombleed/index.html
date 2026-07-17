@@ -1,0 +1,130 @@
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <title>WeKan — Hall of Fame / RandomBleed</title>
+  <link rel="icon" href="../../wekan-favicon.png">
+  <link rel="stylesheet" type="text/css" href="../../css/main.css">
+  <link rel="stylesheet" href="../../font-awesome/css/font-awesome.min.css">
+</head>
+
+<body>
+
+  <img vAlign="center" src="../hof.svg" alt="Hall of Fame image from https://openclipart.org/detail/120343/trophy"
+    width="300px" height="auto" />
+  <br />
+
+  <div class="action-buttons">
+    <a class="button" href="https://wekan.fi/hall-of-fame">Back to Hall of Fame Contents</a>
+    <a class="button" href="https://wekan.fi">Back to Wekan Website</a>
+  </div>
+
+  <div class="hof">
+    <h1 class="hof">Contents / RandomBleed</h1>
+
+    <table border="1" margin="0" padding="10px" width="100%">
+      <tr>
+        <th width="10%">CVE</th>
+        <th width="10%">Vulnerability name</th>
+        <th width="10%">Date</th>
+        <th width="20%">
+          <a href="https://github.com/wekan/wekan/blob/main/SECURITY.md" style="color: red;">Responsible Security Disclosure</a>
+          by
+        </th>
+        <th width="40%">Vulnerabilities</th>
+      </tr>
+
+      <tr>
+        <td valign="top">
+          -
+          <br /> <br />
+        </td>
+        <td valign="top"><b>RandomBleed</b> <h2><i class="fa fa-random" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></h2></td>
+        <td valign="top">2026-07-17</td>
+        <td valign="top">
+          <b>GitHub CodeQL</b> (code scanning alert #422) and <b>xet7</b> (fix)<br />
+          <img src="../GoldStar.png" width="30px" height="auto" />
+          <img src="../GoldStar.png" width="30px" height="auto" /><br />
+          Automated code scanning flagged the biased randomness.
+        </td>
+        <td valign="top">
+          <ul>
+            <li>1. <i class="fa fa-random" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i> RandomBleed — biased random ids from a cryptographically secure source: modulo on <code>crypto.randomBytes</code> skews generated document ids toward the first characters of the alphabet (CWE-1204 weak randomness)</li>
+            <li>GitHub CodeQL code scanning alert #422, rule <code>js/biased-cryptographic-random</code>, severity High</li>
+            <li>Affected the startup schema upgrade id generation (<code>server/lib/schemaUpgradeSteps.js</code>)</li>
+            <li>Fixed at
+               <a href="https://github.com/wekan/wekan/blob/main/CHANGELOG.md#upcoming-wekan--release">upcoming WeKan release</a>
+            </li>
+          </ul>
+        </td>
+      </tr>
+
+    </table>
+  </div>
+
+  <br />
+  <br />
+
+  <div class="hof">
+    <h2 class="hof">Details</h2>
+
+    <h3>1. RandomBleed — biased random ids from a cryptographically secure source (CWE-1204)</h3>
+    <p>
+      WeKan's startup schema upgrade (<code>server/lib/schemaUpgradeSteps.js</code>) creates new
+      documents — default swimlanes, rescued lists, extracted checklist items — for data migrated
+      from old WeKan versions, and gives each a Meteor-style 17-character random id so upgraded
+      documents look exactly like app-created ones. The id generator drew cryptographically secure
+      random bytes and mapped each byte to a character with modulo:
+    </p>
+    <pre>
+// vulnerable — modulo over a non-power-of-two alphabet is biased
+const ID_CHARS = '23456789ABCDEFGHJKLMNPQRSTWXYZabcdefghijkmnopqrstuvwxyz'; // 55 chars
+function randomId(len = 17) {
+  const bytes = crypto.randomBytes(len);
+  let out = '';
+  for (let i = 0; i &lt; len; i++) out += ID_CHARS[bytes[i] % ID_CHARS.length];
+  return out;
+}
+    </pre>
+    <p>
+      A byte is a uniform value in <code>0..255</code>, i.e. 256 possibilities. The alphabet has 55
+      characters, and 256 is <b>not</b> a multiple of 55: <code>256 = 4 × 55 + 36</code>. So the
+      values <code>0..219</code> map four-to-one onto the 55 characters, but the leftover values
+      <code>220..255</code> map an extra time onto the <b>first 36</b> characters. Those first 36
+      characters therefore appear with probability <code>5/256</code> while the remaining 19 appear
+      with probability <code>4/256</code> — the first 36 are ~25% more likely per draw (~1.4% of the
+      total distribution each vs ~1.1%). The ids are still hard to guess, but the reduced entropy is
+      exactly what CodeQL's <code>js/biased-cryptographic-random</code> rule flags: a cryptographically
+      secure source is being used in a way that throws away part of its uniformity.
+    </p>
+    <p>
+      <b>Fix:</b> rejection sampling. Only accept bytes below the largest multiple of the alphabet
+      size (<code>256 − (256 mod 55) = 220</code>); discard and redraw anything in <code>220..255</code>,
+      so every character is exactly equally likely. The ids stay Meteor-style 17 characters (and
+      exact-length for any requested length):
+    </p>
+    <pre>
+// fixed — rejection sampling removes the modulo bias
+function randomId(len = 17) {
+  const limit = 256 - (256 % ID_CHARS.length);   // 220
+  let out = '';
+  while (out.length &lt; len) {
+    const bytes = crypto.randomBytes(len - out.length);
+    for (let i = 0; i &lt; bytes.length &amp;&amp; out.length &lt; len; i++) {
+      if (bytes[i] &lt; limit) out += ID_CHARS[bytes[i] % ID_CHARS.length];
+    }
+  }
+  return out;
+}
+    </pre>
+    <p>
+      A negative regression test pins that out-of-range bytes are resampled rather than wrapped, so
+      the biased modulo cannot silently return. CodeQL rule
+      <code>js/biased-cryptographic-random</code> was resolved by this change, and the whole codebase
+      was swept for other <code>randomBytes</code> modulo uses — this was the only one.
+    </p>
+  </div>
+
+</body>
+
+</html>

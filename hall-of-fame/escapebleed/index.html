@@ -1,0 +1,117 @@
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <title>WeKan — Hall of Fame / EscapeBleed</title>
+  <link rel="icon" href="../../wekan-favicon.png">
+  <link rel="stylesheet" type="text/css" href="../../css/main.css">
+  <link rel="stylesheet" href="../../font-awesome/css/font-awesome.min.css">
+</head>
+
+<body>
+
+  <img vAlign="center" src="../hof.svg" alt="Hall of Fame image from https://openclipart.org/detail/120343/trophy"
+    width="300px" height="auto" />
+  <br />
+
+  <div class="action-buttons">
+    <a class="button" href="https://wekan.fi/hall-of-fame">Back to Hall of Fame Contents</a>
+    <a class="button" href="https://wekan.fi">Back to Wekan Website</a>
+  </div>
+
+  <div class="hof">
+    <h1 class="hof">Contents / EscapeBleed</h1>
+
+    <table border="1" margin="0" padding="10px" width="100%">
+      <tr>
+        <th width="10%">CVE</th>
+        <th width="10%">Vulnerability name</th>
+        <th width="10%">Date</th>
+        <th width="20%">
+          <a href="https://github.com/wekan/wekan/blob/main/SECURITY.md" style="color: red;">Responsible Security Disclosure</a>
+          by
+        </th>
+        <th width="40%">Vulnerabilities</th>
+      </tr>
+
+      <tr>
+        <td valign="top">
+          -
+          <br /> <br />
+        </td>
+        <td valign="top"><b>EscapeBleed</b> <h2><i class="fa fa-code" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></h2></td>
+        <td valign="top">2026-07-17</td>
+        <td valign="top">
+          <b>GitHub CodeQL</b> (code scanning alert #423) and <b>xet7</b> (fix)<br />
+          <img src="../GoldStar.png" width="30px" height="auto" />
+          <img src="../GoldStar.png" width="30px" height="auto" /><br />
+          Automated code scanning flagged the incomplete escaping.
+        </td>
+        <td valign="top">
+          <ul>
+            <li>1. <i class="fa fa-code" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i> EscapeBleed — incomplete string escaping when building a regular expression from a CSS declaration (CWE-116 Improper Encoding or Escaping of Output)</li>
+            <li>GitHub CodeQL code scanning alert #423, rule <code>js/incomplete-sanitization</code>, severity High</li>
+            <li>Affected only the WeKan test suite (<code>tests/maximizedCardPosition.test.cjs</code>)</li>
+            <li>Fixed at
+               <a href="https://github.com/wekan/wekan/blob/main/CHANGELOG.md#upcoming-wekan--release">upcoming WeKan release</a>
+            </li>
+          </ul>
+        </td>
+      </tr>
+
+    </table>
+  </div>
+
+  <br />
+  <br />
+
+  <div class="hof">
+    <h2 class="hof">Details</h2>
+
+    <h3>1. EscapeBleed — incomplete string escaping when building a RegExp (CWE-116)</h3>
+    <p>
+      A regression test that verifies WeKan's maximized-card CSS
+      (<code>tests/maximizedCardPosition.test.cjs</code>) turned each expected CSS declaration
+      into a regular expression so it could assert the declaration is present with
+      <code>!important</code>. To do that it escaped the declaration string before interpolating
+      it into a <code>RegExp</code> — but the escape only handled parentheses:
+    </p>
+    <pre>
+// vulnerable — escapes only ( and )
+new RegExp(`${decl.replace(/[()]/g, '\\$&')}\\s*!important`).test(m[1]);
+    </pre>
+    <p>
+      A regular-expression metacharacter set includes far more than parentheses:
+      <code>. * + ? ^ $ { } | [ ] \</code>. Escaping only <code>(</code> and <code>)</code>
+      leaves every other metacharacter active, so an input string containing them would be
+      compiled into a pattern that means something different from the literal text — matching the
+      wrong thing (a false positive or false negative), and, critically, an input containing a
+      backslash is not escaped at all. This is the same class of defect as
+      <a href="../inputbleed/">InputBleed</a> (incomplete sanitization), which CodeQL also flagged.
+    </p>
+    <p>
+      In this case the input was a fixed, trusted list of CSS declaration strings authored in the
+      test itself, none of which contain metacharacters, so there was <b>no injection exposure</b>
+      and the test still passed. The escape was nonetheless genuinely incorrect and would silently
+      misbehave the moment a declaration containing a metacharacter (for example a value with
+      <code>.</code> or <code>[</code>) was added.
+    </p>
+    <p>
+      <b>Fix:</b> escape the complete regular-expression metacharacter set (including the
+      backslash), matching the correct pattern already used elsewhere in the WeKan tests
+      (for example <code>tests/archiveLinkGrouping.test.cjs</code>):
+    </p>
+    <pre>
+// fixed — escapes the full metacharacter set, including backslash
+new RegExp(`${decl.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\s*!important`).test(m[1]);
+    </pre>
+    <p>
+      CodeQL rule <code>js/incomplete-sanitization</code> was resolved by this change. The whole
+      class was swept: the other dynamically-built regular expressions added in the same work
+      either already escaped the full set or interpolated only fixed identifiers.
+    </p>
+  </div>
+
+</body>
+
+</html>
