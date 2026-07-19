@@ -1,0 +1,83 @@
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <title>WeKan — Hall of Fame / LiveBleed</title>
+  <link rel="icon" href="../../wekan-favicon.png">
+  <link rel="stylesheet" type="text/css" href="../../css/main.css">
+  <link rel="stylesheet" href="../../font-awesome/css/font-awesome.min.css">
+</head>
+
+<body>
+
+  <img vAlign="center" src="../hof.svg" alt="Hall of Fame image from https://openclipart.org/detail/120343/trophy"
+    width="300px" height="auto" />
+  <br />
+
+  <div class="action-buttons">
+    <a class="button" href="https://wekan.fi/hall-of-fame">Back to Hall of Fame Contents</a>
+    <a class="button" href="https://wekan.fi">Back to Wekan Website</a>
+  </div>
+
+  <div class="hof">
+    <h1 class="hof">Contents / LiveBleed</h1>
+
+    <table border="1" margin="0" padding="10px" width="100%">
+      <tr>
+        <th width="10%">CVE</th>
+        <th width="10%">Vulnerability name</th>
+        <th width="10%">Date</th>
+        <th width="20%">
+          <a href="https://github.com/wekan/wekan/blob/main/SECURITY.md" style="color: red;">Responsible Security Disclosure</a>
+          by
+        </th>
+        <th width="40%">Vulnerabilities</th>
+      </tr>
+
+      <tr>
+        <td valign="top">
+          -
+          <br /> <br />
+        </td>
+        <td valign="top"><b>LiveBleed</b> <h2><i class="fa fa-globe" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></h2></td>
+        <td valign="top">2026-07-19</td>
+        <td valign="top">
+          <b>meifukun</b> (<a href="https://github.com/meifukun">GitHub</a>) and <b>xet7</b> (fix)<br />
+          <img src="../GoldStar.png" width="30px" height="auto" /><br />
+          Privately reported 8 issues reviewed against WeKan v9.95.0.
+        </td>
+        <td valign="top">
+          <ul>
+            <li><i class="fa fa-globe" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i> LiveBleed &mdash; the live Trello import (<code>server/trelloApiImport.js</code>) downloaded attacker-controlled Trello attachment / background / avatar URLs with bare <code>fetch()</code> &mdash; no SSRF guard, unlike the offline path &mdash; and stored the response as an imported attachment readable back through the attachment API, giving NON-BLIND SSRF (cloud metadata / internal services). Fixed by gating every live-import download with <code>validateAttachmentUrl()</code>, matching the offline import (CWE-918 Server-Side Request Forgery)</li>
+            <li>Reported privately by meifukun (<a href="https://github.com/meifukun">https://github.com/meifukun</a>)</li>
+            <li>Fixed at <a href="https://github.com/wekan/wekan/blob/main/CHANGELOG.md#upcoming-wekan--release">upcoming WeKan release</a></li>
+            <li><a href="./">More details</a></li>
+          </ul>
+        </td>
+      </tr>
+
+    </table>
+  </div>
+
+  <br />
+  <br />
+
+  <div class="hof">
+    <h2 class="hof">Details</h2>
+
+    <h3>LiveBleed — CWE-918 Server-Side Request Forgery</h3>
+    <p>
+      the live Trello import (<code>server/trelloApiImport.js</code>) downloaded attacker-controlled Trello attachment / background / avatar URLs with bare <code>fetch()</code> &mdash; no SSRF guard, unlike the offline path &mdash; and stored the response as an imported attachment readable back through the attachment API, giving NON-BLIND SSRF (cloud metadata / internal services). Fixed by gating every live-import download with <code>validateAttachmentUrl()</code>, matching the offline import.
+    </p>
+    <p>
+      Reported privately by <b>meifukun</b> (<a href="https://github.com/meifukun">https://github.com/meifukun</a>),
+      who reviewed 8 issues against WeKan <code>v9.95.0</code> (commit
+      <code>f602b9459fa1622f60ee8c3b639f02035f3ab32b</code>) on local self-hosted instances only.
+      Fixed at the
+      <a href="https://github.com/wekan/wekan/blob/main/CHANGELOG.md#upcoming-wekan--release">upcoming WeKan release</a>.
+    </p>
+  </div>
+
+</body>
+
+</html>

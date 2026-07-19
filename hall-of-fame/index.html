@@ -41,6 +41,160 @@
           -
           <br /> <br />
         </td>
+        <td valign="top"><b>RedirectBleed</b> <h2><i class="fa fa-external-link" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></h2></td>
+        <td valign="top">2026-07-19</td>
+        <td valign="top">
+          <b>meifukun</b> (<a href="https://github.com/meifukun">GitHub</a>) and <b>xet7</b> (fix)<br />
+          <img src="GoldStar.png" width="30px" height="auto" /><br />
+          Privately reported 8 issues reviewed against WeKan v9.95.0.
+        </td>
+        <td valign="top">
+          <ul>
+            <li><i class="fa fa-external-link" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i> RedirectBleed &mdash; avatar localization (<code>server/lib/localizeAvatar.js</code>) validated only the ORIGINAL URL host with <code>assertSafePublicUrl</code> and then fetched with native <code>fetch(url, {redirect:'follow'})</code>, so an authenticated user could set <code>profile.avatarUrl</code> to a public redirector that 302s to 127.0.0.1, a private network, or 169.254.169.254 and the WeKan server followed it (SSRF). Fixed by fetching through the DNS-pinned, redirect-rejecting <code>fetchSafe</code> and scheme-validating <code>profile.avatarUrl</code> at write time (CWE-918 Server-Side Request Forgery)</li>
+            <li>Reported privately by meifukun (<a href="https://github.com/meifukun">https://github.com/meifukun</a>)</li>
+            <li>Fixed at <a href="https://github.com/wekan/wekan/blob/main/CHANGELOG.md#upcoming-wekan--release">upcoming WeKan release</a></li>
+            <li><a href="redirectbleed/">More details</a></li>
+          </ul>
+        </td>
+      </tr>
+
+      <tr>
+        <td valign="top">
+          -
+          <br /> <br />
+        </td>
+        <td valign="top"><b>SourceBleed</b> <h2><i class="fa fa-code" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></h2></td>
+        <td valign="top">2026-07-19</td>
+        <td valign="top">
+          <b>meifukun</b> (<a href="https://github.com/meifukun">GitHub</a>) and <b>xet7</b> (fix)<br />
+          <img src="GoldStar.png" width="30px" height="auto" /><br />
+          Privately reported 8 issues reviewed against WeKan v9.95.0.
+        </td>
+        <td valign="top">
+          <ul>
+            <li><i class="fa fa-code" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i> SourceBleed &mdash; a Trello board imported with a <code>javascript:</code> url had that URL stored as an activity <code>source.url</code> (<code>models/trelloCreator.js</code>) and rendered as an activity-sidebar link (<code>client/components/activities/activities.js</code>) with no scheme check, so a board admin who clicked the &quot;Trello&quot; source link ran attacker JavaScript in their session and could read <code>Meteor.loginToken</code> (stored XSS &rarr; account takeover). Fixed by only storing and linking <code>http(s)</code> source URLs (CWE-79 Stored Cross-site Scripting)</li>
+            <li>Reported privately by meifukun (<a href="https://github.com/meifukun">https://github.com/meifukun</a>)</li>
+            <li>Fixed at <a href="https://github.com/wekan/wekan/blob/main/CHANGELOG.md#upcoming-wekan--release">upcoming WeKan release</a></li>
+            <li><a href="sourcebleed/">More details</a></li>
+          </ul>
+        </td>
+      </tr>
+
+      <tr>
+        <td valign="top">
+          -
+          <br /> <br />
+        </td>
+        <td valign="top"><b>LiveBleed</b> <h2><i class="fa fa-globe" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></h2></td>
+        <td valign="top">2026-07-19</td>
+        <td valign="top">
+          <b>meifukun</b> (<a href="https://github.com/meifukun">GitHub</a>) and <b>xet7</b> (fix)<br />
+          <img src="GoldStar.png" width="30px" height="auto" /><br />
+          Privately reported 8 issues reviewed against WeKan v9.95.0.
+        </td>
+        <td valign="top">
+          <ul>
+            <li><i class="fa fa-globe" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i> LiveBleed &mdash; the live Trello import (<code>server/trelloApiImport.js</code>) downloaded attacker-controlled Trello attachment / background / avatar URLs with bare <code>fetch()</code> &mdash; no SSRF guard, unlike the offline path &mdash; and stored the response as an imported attachment readable back through the attachment API, giving NON-BLIND SSRF (cloud metadata / internal services). Fixed by gating every live-import download with <code>validateAttachmentUrl()</code>, matching the offline import (CWE-918 Server-Side Request Forgery)</li>
+            <li>Reported privately by meifukun (<a href="https://github.com/meifukun">https://github.com/meifukun</a>)</li>
+            <li>Fixed at <a href="https://github.com/wekan/wekan/blob/main/CHANGELOG.md#upcoming-wekan--release">upcoming WeKan release</a></li>
+            <li><a href="livebleed/">More details</a></li>
+          </ul>
+        </td>
+      </tr>
+
+      <tr>
+        <td valign="top">
+          -
+          <br /> <br />
+        </td>
+        <td valign="top"><b>CasBleed</b> <h2><i class="fa fa-random" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></h2></td>
+        <td valign="top">2026-07-19</td>
+        <td valign="top">
+          <b>meifukun</b> (<a href="https://github.com/meifukun">GitHub</a>) and <b>xet7</b> (fix)<br />
+          <img src="GoldStar.png" width="30px" height="auto" /><br />
+          Privately reported 8 issues reviewed against WeKan v9.95.0.
+        </td>
+        <td valign="top">
+          <ul>
+            <li><i class="fa fa-random" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i> CasBleed &mdash; with CAS login enabled, <code>packages/wekan-accounts-cas/cas_server.js</code> stored validated CAS user data in a single module-global <code>_userData</code> shared across concurrent logins. Two logins racing could bind an attacker's credential token to a victim's user data, issuing the attacker a session for the victim's account (full admin if the victim was an admin). Fixed by binding the validated CAS user data PER credential token (CWE-362 Race Condition &rarr; Account Takeover)</li>
+            <li>Reported privately by meifukun (<a href="https://github.com/meifukun">https://github.com/meifukun</a>)</li>
+            <li>Fixed at <a href="https://github.com/wekan/wekan/blob/main/CHANGELOG.md#upcoming-wekan--release">upcoming WeKan release</a></li>
+            <li><a href="casbleed/">More details</a></li>
+          </ul>
+        </td>
+      </tr>
+
+      <tr>
+        <td valign="top">
+          -
+          <br /> <br />
+        </td>
+        <td valign="top"><b>MetricsBleed</b> <h2><i class="fa fa-tachometer" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></h2></td>
+        <td valign="top">2026-07-19</td>
+        <td valign="top">
+          <b>meifukun</b> (<a href="https://github.com/meifukun">GitHub</a>) and <b>xet7</b> (fix)<br />
+          <img src="GoldStar.png" width="30px" height="auto" /><br />
+          Privately reported 8 issues reviewed against WeKan v9.95.0.
+        </td>
+        <td valign="top">
+          <ul>
+            <li><i class="fa fa-tachometer" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i> MetricsBleed &mdash; the <code>/metrics</code> endpoint (<code>models/server/metrics.js</code>) trusted the client-supplied <code>X-Forwarded-For</code> header UNCONDITIONALLY when checking <code>METRICS_ACCEPTED_IP_ADDRESS</code>, so an unauthenticated requester could send <code>X-Forwarded-For: &lt;whitelisted-ip&gt;</code> and read operational Prometheus metrics (connected/registered user counts, board counts, active board titles). Fixed by trusting XFF only when <code>METRICS_TRUST_PROXY</code> is set (parsed spoof-resistantly from the right); otherwise the real socket peer address is used (CWE-290 Authentication Bypass by Spoofing)</li>
+            <li>Reported privately by meifukun (<a href="https://github.com/meifukun">https://github.com/meifukun</a>)</li>
+            <li>Fixed at <a href="https://github.com/wekan/wekan/blob/main/CHANGELOG.md#upcoming-wekan--release">upcoming WeKan release</a></li>
+            <li><a href="metricsbleed/">More details</a></li>
+          </ul>
+        </td>
+      </tr>
+
+      <tr>
+        <td valign="top">
+          -
+          <br /> <br />
+        </td>
+        <td valign="top"><b>ImpersonateBleed</b> <h2><i class="fa fa-user-secret" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></h2></td>
+        <td valign="top">2026-07-19</td>
+        <td valign="top">
+          <b>meifukun</b> (<a href="https://github.com/meifukun">GitHub</a>) and <b>xet7</b> (fix)<br />
+          <img src="GoldStar.png" width="30px" height="auto" /><br />
+          Privately reported 8 issues reviewed against WeKan v9.95.0.
+        </td>
+        <td valign="top">
+          <ul>
+            <li><i class="fa fa-user-secret" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i> ImpersonateBleed &mdash; several board export endpoints (<code>models/export.js</code>, <code>exportExcel.js</code>, <code>exportExcelCard.js</code>, <code>exportPDF.js</code>) authorized export with <code>canExport(user) || impersonateDone</code>, where <code>impersonateDone</code> was merely the existence of ANY historical <code>ImpersonatedUsers</code> record for the user. A former admin who ever used impersonation kept permanent export access to any private board even after being demoted. Fixed by removing the impersonation bypass so export requires real board visibility (<code>canExport</code>) only (CWE-863 Incorrect Authorization)</li>
+            <li>Reported privately by meifukun (<a href="https://github.com/meifukun">https://github.com/meifukun</a>)</li>
+            <li>Fixed at <a href="https://github.com/wekan/wekan/blob/main/CHANGELOG.md#upcoming-wekan--release">upcoming WeKan release</a></li>
+            <li><a href="impersonatebleed/">More details</a></li>
+          </ul>
+        </td>
+      </tr>
+
+      <tr>
+        <td valign="top">
+          -
+          <br /> <br />
+        </td>
+        <td valign="top"><b>InviteBleed</b> <h2><i class="fa fa-ticket" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></h2></td>
+        <td valign="top">2026-07-19</td>
+        <td valign="top">
+          <b>meifukun</b> (<a href="https://github.com/meifukun">GitHub</a>) and <b>xet7</b> (fix)<br />
+          <img src="GoldStar.png" width="30px" height="auto" /><br />
+          Privately reported 8 issues reviewed against WeKan v9.95.0.
+        </td>
+        <td valign="top">
+          <ul>
+            <li><i class="fa fa-ticket" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i> InviteBleed &mdash; when public registration is disabled, invitation registration used a 6-digit code generated with <code>Math.random()</code> (~900,000 keyspace, non-cryptographic RNG; <code>server/models/settings.js</code>) with no throttling on the sign-up validation, so an attacker who knew a pending invitee's email could brute-force the code, claim the account and join its private boards. Fixed by generating a 128-bit <code>crypto.randomBytes</code> invitation code and rate-limiting <code>createUser</code> with <code>DDPRateLimiter</code> (CWE-330 Insufficiently Random Values + CWE-307 Excessive Auth Attempts)</li>
+            <li>Reported privately by meifukun (<a href="https://github.com/meifukun">https://github.com/meifukun</a>)</li>
+            <li>Fixed at <a href="https://github.com/wekan/wekan/blob/main/CHANGELOG.md#upcoming-wekan--release">upcoming WeKan release</a></li>
+            <li><a href="invitebleed/">More details</a></li>
+          </ul>
+        </td>
+      </tr>
+
+      <tr>
+        <td valign="top">
+          -
+          <br /> <br />
+        </td>
         <td valign="top"><b>EscapeBleed</b> <h2><i class="fa fa-code" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></h2></td>
         <td valign="top">2026-07-17</td>
         <td valign="top">
