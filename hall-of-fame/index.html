@@ -41,6 +41,28 @@
           -
           <br /> <br />
         </td>
+        <td valign="top"><b>ExportBleed</b> <h2><i class="fa fa-download" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></h2></td>
+        <td valign="top">2026-07-22</td>
+        <td valign="top">
+          <b>koyokr</b> (<a href="https://github.com/koyokr">GitHub</a>) and <b>xet7</b> (fix)<br />
+          <img src="GoldStar.png" width="30px" height="auto" /><br />
+          Privately reported via GitHub Security Advisory GHSA-8r5p-4q9j-f5jx.
+        </td>
+        <td valign="top">
+          <ul>
+            <li><i class="fa fa-download" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i> ExportBleed &mdash; a board member could store entity-encoded markup in a card title (e.g. <code>&lt;img src=x onerror=…&gt;</code>). It stays inert on the live board, but the HTML board exporter (<code>client/lib/exportHTML.js</code>) embedded a card-click handler that read the title/body via <code>.textContent</code> (which DECODES entities) and concatenated them into <code>innerHTML</code>. That second parse revived the tag and ran it when a recipient clicked the card in the export, disclosing all data in that document, including cards added AFTER the attacker's board membership was revoked. Fixed by building the modal from DOM nodes and assigning the title/body via <code>textContent</code>, never <code>innerHTML</code> (CWE-79 Cross-site Scripting)</li>
+            <li>Reported privately by koyokr (<a href="https://github.com/koyokr">https://github.com/koyokr</a>) via GHSA-8r5p-4q9j-f5jx</li>
+            <li>Fixed at <a href="https://github.com/wekan/wekan/blob/main/CHANGELOG.md#upcoming-wekan--release">upcoming WeKan release</a></li>
+            <li><a href="exportbleed/">More details</a></li>
+          </ul>
+        </td>
+      </tr>
+
+      <tr>
+        <td valign="top">
+          -
+          <br /> <br />
+        </td>
         <td valign="top"><b>RedirectBleed</b> <h2><i class="fa fa-external-link" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></h2></td>
         <td valign="top">2026-07-19</td>
         <td valign="top">
