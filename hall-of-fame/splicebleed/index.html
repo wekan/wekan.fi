@@ -1,0 +1,146 @@
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <title>WeKan — Hall of Fame / SpliceBleed</title>
+  <link rel="icon" href="../../wekan-favicon.png">
+  <link rel="stylesheet" type="text/css" href="../../css/main.css">
+  <link rel="stylesheet" href="../../font-awesome/css/font-awesome.min.css">
+</head>
+
+<body>
+
+  <img vAlign="center" src="../hof.svg" alt="Hall of Fame image from https://openclipart.org/detail/120343/trophy"
+    width="300px" height="auto" />
+  <br />
+
+  <div class="action-buttons">
+    <a class="button" href="https://wekan.fi/hall-of-fame">Back to Hall of Fame Contents</a>
+    <a class="button" href="https://wekan.fi">Back to Wekan Website</a>
+  </div>
+
+  <div class="hof">
+    <h1 class="hof">Contents / SpliceBleed</h1>
+
+    <table border="1" margin="0" padding="10px" width="100%">
+      <tr>
+        <th width="10%">CVE</th>
+        <th width="10%">Vulnerability name</th>
+        <th width="10%">Date</th>
+        <th width="20%">
+          <a href="https://github.com/wekan/wekan/blob/main/SECURITY.md" style="color: red;">Responsible Security Disclosure</a>
+          by
+        </th>
+        <th width="40%">Vulnerabilities</th>
+      </tr>
+
+      <tr>
+        <td valign="top">
+          -
+          <br /> <br />
+        </td>
+        <td valign="top"><b>SpliceBleed</b> <h2><i class="fa fa-scissors" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></h2></td>
+        <td valign="top">2026-07-22</td>
+        <td valign="top">
+          <b>GitHub CodeQL</b> (code scanning alert #425) and <b>xet7</b> (fix)<br />
+          <img src="../GoldStar.png" width="30px" height="auto" />
+          <img src="../GoldStar.png" width="30px" height="auto" /><br />
+          Automated code scanning flagged the incomplete multi-character sanitization.
+        </td>
+        <td valign="top">
+          <ul>
+            <li>1. <i class="fa fa-scissors" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i> SpliceBleed — incomplete multi-character sanitization when stripping exploit markup from a shown filename (CWE-116 Improper Encoding or Escaping of Output)</li>
+            <li>GitHub CodeQL code scanning alert #425, rule <code>js/incomplete-multi-character-sanitization</code>, severity High</li>
+            <li>Affected the WeKan filename display helper (<code>imports/lib/fileNameDisplay.js</code>)</li>
+            <li>Fixed at
+               <a href="https://github.com/wekan/wekan/blob/main/CHANGELOG.md#upcoming-wekan--release">upcoming WeKan release</a>
+            </li>
+          </ul>
+        </td>
+      </tr>
+
+    </table>
+  </div>
+
+  <br />
+  <br />
+
+  <div class="hof">
+    <h2 class="hof">Details</h2>
+
+    <h3>1. SpliceBleed — incomplete multi-character sanitization when stripping filename markup (CWE-116)</h3>
+    <p>
+      Every filename WeKan shows anywhere (card attachment lists, download headers) is passed
+      through <code>cleanFileName()</code> in <code>imports/lib/fileNameDisplay.js</code>, which
+      calls <code>stripExploitPatterns()</code> to remove HTML/script/XML/template-injection
+      markup so the displayed name is always plain, readable text. The original helper applied
+      each removal exactly once, in a single pass:
+    </p>
+    <pre>
+// vulnerable — a single pass of chained removals
+function stripExploitPatterns(s) {
+  return String(s == null ? '' : s)
+    .replace(/&lt;\?[\s\S]*?(\?&gt;|$)/g, '')                  // &lt;?php … ?&gt;
+    .replace(/&lt;!\[[\s\S]*?(\]&gt;|$)/g, '')                 // &lt;![CDATA[ … ]]&gt;
+    .replace(/\{\{[\s\S]*?\}\}|\$\{[\s\S]*?\}|&lt;%[\s\S]*?%&gt;/g, '')  // templates
+    .replace(/&lt;[^&gt;]*&gt;?/g, '')                         // any HTML/XML tag
+    .replace(/(javascript|vbscript|data)\s*:/gi, '')           // dangerous schemes
+    .replace(/[&lt;&gt;]/g, '');                               // stray angle brackets
+}
+    </pre>
+    <p>
+      A single pass is not enough when the removal of an INNER fragment splices two surviving
+      OUTER fragments into a brand-new dangerous token. For example the tag-stripping step
+      <code>/&lt;[^&gt;]*&gt;?/g</code> matches the shortest <code>&lt;…&gt;</code> run, so given
+      <code>&lt;scr&lt;x&gt;ipt&gt;</code> it removes the inner <code>&lt;x&gt;</code> and leaves
+      <code>&lt;script&gt;</code> — a live tag the pass has already moved past. The template step
+      does the same: <code>&lt;scr{{y}}ipt&gt;</code> becomes <code>&lt;script&gt;</code> once the
+      <code>{{y}}</code> is deleted. This is exactly the weakness GitHub CodeQL reports as
+      <code>js/incomplete-multi-character-sanitization</code>: "this string may still contain
+      <code>&lt;script</code>". It is the same class of defect as
+      <a href="../escapebleed/">EscapeBleed</a> and <a href="../inputbleed/">InputBleed</a>
+      (incomplete sanitization).
+    </p>
+    <p>
+      In WeKan this is defence-in-depth rather than a live cross-site-scripting hole: Blaze
+      <code>{{ }}</code> interpolation HTML-escapes every rendered filename, so a residual
+      <code>&lt;script&gt;</code> in the string is shown as literal text, never executed. The
+      single-pass strip was nonetheless genuinely incomplete — the whole point of
+      <code>stripExploitPatterns()</code> is that the stored/displayed text itself is plain, and a
+      crafted name could defeat that.
+    </p>
+    <p>
+      <b>Fix:</b> apply the removals REPEATEDLY until the string stops changing (a fixpoint loop).
+      Each pass only ever deletes text, so the string strictly shrinks and the loop always
+      terminates; any dangerous token that an earlier removal reveals is caught on the next
+      iteration.
+    </p>
+    <pre>
+// fixed — loop until the string stops changing (a fixpoint)
+function stripExploitPatterns(s) {
+  let out = String(s == null ? '' : s);
+  let prev;
+  do {
+    prev = out;
+    out = out
+      .replace(/&lt;\?[\s\S]*?(\?&gt;|$)/g, '')
+      .replace(/&lt;!\[[\s\S]*?(\]&gt;|$)/g, '')
+      .replace(/\{\{[\s\S]*?\}\}|\$\{[\s\S]*?\}|&lt;%[\s\S]*?%&gt;/g, '')
+      .replace(/&lt;[^&gt;]*&gt;?/g, '')
+      .replace(/(javascript|vbscript|data)\s*:/gi, '')
+      .replace(/[&lt;&gt;]/g, '');
+  } while (out !== prev);
+  return out;
+}
+    </pre>
+    <p>
+      After the fix, <code>&lt;scr&lt;x&gt;ipt&gt;</code> and <code>&lt;scr{{y}}ipt&gt;</code> both
+      reduce to empty/plain text and no <code>&lt;script</code> survives. CodeQL rule
+      <code>js/incomplete-multi-character-sanitization</code> was resolved by this change, and the
+      <code>tests/fileNameDisplay.test.cjs</code> suite pins the splice cases as regressions.
+    </p>
+  </div>
+
+</body>
+
+</html>

@@ -195,6 +195,54 @@
           -
           <br /> <br />
         </td>
+        <td valign="top"><b>SpliceBleed</b> <h2><i class="fa fa-scissors" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></h2></td>
+        <td valign="top">2026-07-22</td>
+        <td valign="top">
+          <b>GitHub CodeQL</b> (code scanning alert #425) and <b>xet7</b> (fix)<br />
+          <img src="GoldStar.png" width="30px" height="auto" />
+          <img src="GoldStar.png" width="30px" height="auto" /><br />
+          Automated code scanning flagged the incomplete multi-character sanitization.
+        </td>
+        <td valign="top">
+          <ul>
+            <li><i class="fa fa-scissors" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i> SpliceBleed — <code>stripExploitPatterns()</code> in <code>imports/lib/fileNameDisplay.js</code> removed HTML/script/XML/template markup from a shown filename in a single pass, so an input with nested or interleaved fragments (for example <code>&lt;scr&lt;x&gt;ipt&gt;</code> or <code>&lt;scr{{y}}ipt&gt;</code>) could have its inner part removed and the two surviving outer fragments spliced together into a fresh <code>&lt;script&gt;</code> token the single pass no longer re-examined (CWE-116 Improper Encoding or Escaping of Output)</li>
+            <li>GitHub CodeQL code scanning alert #425, rule <code>js/incomplete-multi-character-sanitization</code>, severity High</li>
+            <li>Fixed by applying the removals repeatedly until the string stops changing (a fixpoint loop); each pass only deletes text, so the string strictly shrinks and always terminates, and any dangerous token an earlier removal reveals is then removed too. Blaze <code>{{ }}</code> already HTML-escapes every rendered filename, so this is defence-in-depth on the displayed text rather than a live XSS, but the single-pass strip was genuinely incomplete</li>
+            <li>Fixed at <a href="https://github.com/wekan/wekan/blob/main/CHANGELOG.md#upcoming-wekan--release">upcoming WeKan release</a></li>
+            <li><a href="splicebleed/">More details</a></li>
+          </ul>
+        </td>
+      </tr>
+
+      <tr>
+        <td valign="top">
+          -
+          <br /> <br />
+        </td>
+        <td valign="top"><b>IdentityBleed</b> <h2><i class="fa fa-clone" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></h2></td>
+        <td valign="top">2026-07-22</td>
+        <td valign="top">
+          <b>GitHub CodeQL</b> (code scanning alert #424) and <b>xet7</b> (fix)<br />
+          <img src="GoldStar.png" width="30px" height="auto" />
+          <img src="GoldStar.png" width="30px" height="auto" /><br />
+          Automated code scanning flagged the identity (no-op) replacement.
+        </td>
+        <td valign="top">
+          <ul>
+            <li><i class="fa fa-clone" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i> IdentityBleed — a test in <code>tests/securityLog.test.cjs</code> built a menu-id regex with <code>id.replace('report-', 'report-')</code>, replacing a substring with itself: a no-op that CodeQL flags because it is almost always a mistake for a real transformation (CWE-116 Improper Encoding or Escaping of Output)</li>
+            <li>GitHub CodeQL code scanning alert #424, rule <code>js/identity-replacement</code>, severity Medium</li>
+            <li>Fixed by dropping the dead <code>replace</code> and matching <code>'js-' + id</code> directly. Test-only code with no runtime exposure, but the no-op was removed for correctness</li>
+            <li>Fixed at <a href="https://github.com/wekan/wekan/blob/main/CHANGELOG.md#upcoming-wekan--release">upcoming WeKan release</a></li>
+            <li><a href="identitybleed/">More details</a></li>
+          </ul>
+        </td>
+      </tr>
+
+      <tr>
+        <td valign="top">
+          -
+          <br /> <br />
+        </td>
         <td valign="top"><b>EscapeBleed</b> <h2><i class="fa fa-code" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></h2></td>
         <td valign="top">2026-07-17</td>
         <td valign="top">
