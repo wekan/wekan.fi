@@ -91,7 +91,7 @@
         <th width="30%">Details</th>
       </tr>
       <tr>
-       <td valign="top"><a href="../install/">Snap Beta</a></td>
+       <td valign="top"><a href="../install/">Snap</a></td>
        <td valign="top">
           <img src="../hall-of-fame/GoldStar.png" width="30px" height="auto" />
           <img src="../hall-of-fame/GoldStar.png" width="30px" height="auto" />
@@ -102,20 +102,8 @@
         <td valign="top">Newest<br />
         <code>sudo snap list</code>
         </td>
-        <td valign="top">Already newest.<br />Automatic updates.<br />Change from Candidate to Beta:<br />
-        <code>sudo snap refresh wekan --channel=latest/beta --amend</code></td>
-      </tr>
-      <tr>
-       <td valign="top">Snap Stable</td>
-       <td valign="top">
-          <img src="../hall-of-fame/GoldStar.png" width="30px" height="auto" />
-       </td>
-        <td valign="top">Newest<br />
-        <code>sudo snap list</code>
-        </td>
-        <td valign="top">
-          Newest WeKan is now also at Snap Stable. Upgrade to newest:<br />
-          <code>sudo snap refresh wekan --channel=latest/stable --amend</code><br />
+        <td valign="top">Already newest.<br />Automatic updates.<br />Please Change to Stable:<br />
+        <code>sudo snap refresh wekan --channel=latest/stable --amend</code><br /><br />
           On first start after upgrading from old WeKan 6, it automatically migrates the
           MongoDB data and attachments/avatars to FerretDB (SQLite). Migration progress shows
           at the WeKan web address, and a migration interrupted by a snap refresh or reboot
