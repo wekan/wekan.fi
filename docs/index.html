@@ -79,7 +79,7 @@
         <a class="btn btn-link" href="https://github.com/wekan/wekan/tree/main/docs">Docs</a>
         <a class="btn btn-link" href="https://github.com/wekan/wekan/blob/main/docs/Webserver/Scaling.md">Scaling</a>
 
-        <h2>Translations<h2>
+        <h2>Translations</h2>
         <a class="btn btn-link" href="https://github.com/wekan/wekan/blob/main/imports/i18n/data/en.i18n.json">PRs to English source language</a>
         <a class="btn btn-link" href="https://explore.transifex.com/wekan/wekan/">Other languages translate at Transifex, they will be included to newest releases</a>
 
@@ -117,18 +117,178 @@
         <a class="btn btn-link" href="https://wekan.fi/blog">Blog</a>
         <a class="btn btn-link" href="https://wekan.fi/privacy/">Privacy Policy</a>
 
-        <h2>New features of WeKan 8.x</h2>
-        <ul>
-          <li>Lists are board-wide (shared across swimlanes): the same lists (columns) appear in every swimlane, and each card belongs to one list and one swimlane. An 8.x experiment with per-swimlane lists (#4049) was reverted, because it duplicated columns per swimlane and moved cards unexpectedly; lists stay board-wide.</li>
-          <li>Adjusting swimlane height and list width from between of lists</li>
-          <li>Collapse Swimlane #1877</li>
-          <li>Collapse List #1793</li>
-          <li>Gantt Chart #2870</li>
-          <li>Per-user Workspaces with Remaining-feature of WeKan original design, a little different than at Trello and ClickUp</li>
-          <li>MultiSelect Copy/Move and change color of many selected</li>
-          <li>Number of cards per list and sum of custom number field in list head #3796</li>
-          <li>Admin Panel/Settings/Layout, for PWA: Custom head meta, link, icons, assetlinks.json, site.webmanifest <a href="https://github.com/wekan/wekan/blob/main/CHANGELOG.md#v833-2026-02-15-wekan--release">WeKan 8.33</a></li>
-        </ul>
+        <a name="features"></a><h2>Features</h2>
+        <p>A short summary of what WeKan has. Everything below is in the current
+        release — see the
+        <a href="https://github.com/wekan/wekan/blob/main/CHANGELOG.md">ChangeLog</a>
+        for when each part arrived.</p>
+
+        <div class="table-responsive">
+        <table class="table table-sm table-striped table-bordered">
+          <thead>
+            <tr><th style="width: 22%">Area</th><th>What WeKan has</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><b>Board views</b></td>
+                <td>Swimlanes, Lists, Table, Calendar, Gantt and Stats.</td></tr>
+            <tr><td><b>Cards</b></td>
+                <td>Description, labels, members, assignees, requester and assigner,
+                    received / start / due / end dates, checklists, subtasks, custom
+                    fields, attachments, comments, activity history, card colour,
+                    stickers, location, card-to-card dependencies, copy / move / link,
+                    card templates and archive.</td></tr>
+            <tr><td><b>Lists and swimlanes</b></td>
+                <td>Collapse a list or a swimlane, drag to set list width and swimlane
+                    height, cards-per-list counter and sum of a custom number field in
+                    the list header, work-in-progress limit, and sorting.</td></tr>
+            <tr><td><b>Multi-selection</b></td>
+                <td>Copy, move or recolour many selected cards at once.</td></tr>
+            <tr><td><b>Search and filter</b></td>
+                <td>Per-board filter, advanced filter, sorting, and global search across
+                    all your boards.</td></tr>
+            <tr><td><b>Automation</b></td>
+                <td>Rules as trigger &rarr; action, board buttons that run a rule, and
+                    global and per-board outgoing webhooks.</td></tr>
+            <tr><td><b>Roles</b></td>
+                <td>Nine per-board roles: admin, normal, normal-assigned-only,
+                    no-comments, comment-only, comment-assigned-only, worker, read-only
+                    and read-assigned-only.</td></tr>
+            <tr><td><b>Organizations and teams</b></td>
+                <td>Multi-tenancy, and boards can be limited to members of the same
+                    organization or team.</td></tr>
+            <tr><td><b>Import</b></td>
+                <td>Trello (JSON and ZIP), WeKan JSON, CSV / TSV, Excel, Jira and
+                    Kanboard, with mapping of imported members to real accounts.</td></tr>
+            <tr><td><b>Export</b></td>
+                <td>JSON with or without attachments, Excel, CSV (comma or semicolon),
+                    TSV, and card dependencies as JSON or SVG.</td></tr>
+            <tr><td><b>File storage</b></td>
+                <td>Attachments and avatars on filesystem, GridFS, S3 / MinIO, Azure
+                    Blob Storage or Google Cloud Storage; move them between storages,
+                    and repair files whose recorded location no longer matches.</td></tr>
+            <tr><td><b>Sign-in</b></td>
+                <td>Password, LDAP, CAS, OIDC / OAuth2 and Sandstorm; invitation codes;
+                    switches for self-registration and forgot-password.</td></tr>
+            <tr><td><b>Admin Panel</b></td>
+                <td>Settings (registration, e-mail, accounts, table visibility,
+                    announcement, accessibility, layout, webhooks), People, Attachments
+                    and storage, Features, Translation, Problems, Info and Reports.</td></tr>
+            <tr><td><b>Notifications</b></td>
+                <td>Watch, track or mute a board, a notifications drawer, and
+                    e-mail.</td></tr>
+            <tr><td><b>Databases</b></td>
+                <td>MongoDB or FerretDB v1 (SQLite), migration between them, and backup
+                    and restore.</td></tr>
+            <tr><td><b>Platforms</b></td>
+                <td>Docker, Snap, Sandstorm and from source; installable as a PWA, with
+                    separate phone and desktop layouts.</td></tr>
+            <tr><td><b>Languages</b></td>
+                <td>English plus 142 translations, maintained at
+                    <a href="https://explore.transifex.com/wekan/wekan/">Transifex</a>.</td></tr>
+            <tr><td><b>API</b></td>
+                <td><a href="https://wekan.fi/api/">REST API</a> and a
+                    <a href="https://raw.githubusercontent.com/wekan/wekan/refs/heads/main/api.py">Python client</a>.</td></tr>
+            <tr><td><b>Look and feel</b></td>
+                <td>Board colours and themes, fonts, interface density, zoom, drag
+                    handles, and right-to-left languages.</td></tr>
+          </tbody>
+        </table>
+        </div>
+
+        <p>Lists are board-wide: the same lists (columns) appear in every swimlane, and
+        each card belongs to one list and one swimlane. An 8.x experiment with
+        per-swimlane lists (#4049) was reverted, because it duplicated columns per
+        swimlane and moved cards unexpectedly.</p>
+
+        <a name="security"></a><h2>Security</h2>
+        <p>How WeKan is kept secure, and where to look. To report a vulnerability, read
+        <a href="https://github.com/wekan/wekan/blob/main/SECURITY.md">SECURITY.md</a>
+        first — please report privately, not as a public issue.</p>
+
+        <div class="table-responsive">
+        <table class="table table-sm table-striped table-bordered">
+          <thead>
+            <tr><th style="width: 22%">Area</th><th>What is in place</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><b>Access control</b></td>
+                <td>Nine per-board roles, private and public boards, and an option to
+                    allow board members only from the same organization or team.</td></tr>
+            <tr><td><b>Sign-in protection</b></td>
+                <td>Account lockout after repeated failed attempts
+                    (<a href="https://github.com/wekan/wekan/blob/main/docs/Security/brute-force-protection.md">brute-force protection</a>),
+                    and a guard that stops a stale local password from being used for an
+                    account that signs in through LDAP.</td></tr>
+            <tr><td><b>Registration control</b></td>
+                <td>Disable self-registration, require invitation codes, and disable
+                    forgot-password.</td></tr>
+            <tr><td><b>Untrusted content</b></td>
+                <td>Card and comment content is sanitized before it is shown, and only
+                    safe URL schemes are accepted for avatars and for automatically
+                    linked text.</td></tr>
+            <tr><td><b>Logging</b></td>
+                <td>A security log and an event log, both readable in the Admin
+                    Panel.</td></tr>
+            <tr><td><b>Responsible disclosure</b></td>
+                <td>48 named vulnerabilities are fixed and credited in the
+                    <a href="../hall-of-fame/">Hall of Fame</a>, each with the reporter,
+                    the cause and the fix.</td></tr>
+            <tr><td><b>Automated scanning</b></td>
+                <td>GitHub CodeQL code scanning, Dependabot alerts and secret scanning,
+                    with a
+                    <a href="https://github.com/wekan/wekan/tree/main/docs/Security/gh">script</a>
+                    that dumps every open and closed alert for review.</td></tr>
+            <tr><td><b>Development sandbox</b></td>
+                <td>The editor used to develop WeKan runs Flatpak-sandboxed;
+                    <a href="https://github.com/wekan/wekan/tree/main/docs/Security/Sandboxes">how it is set up</a>
+                    is documented.</td></tr>
+          </tbody>
+        </table>
+        </div>
+
+        <a name="fixes"></a><h2>Fixes</h2>
+        <p>Where fixes are recorded, and what happens to a bug that is not fixed yet.</p>
+
+        <div class="table-responsive">
+        <table class="table table-sm table-striped table-bordered">
+          <thead>
+            <tr><th style="width: 22%">You want</th><th>Where to look</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><b>What changed in a release</b></td>
+                <td><a href="https://github.com/wekan/wekan/blob/main/CHANGELOG.md">ChangeLog</a>
+                    — every release lists its new features, dependency updates and bug
+                    fixes, each linked to the commit that made the change. Also as an
+                    <a href="https://github.com/wekan/wekan/releases.atom">RSS feed</a>
+                    and at
+                    <a href="https://github.com/wekan/wekan/releases">Releases</a>.</td></tr>
+            <tr><td><b>Security fixes</b></td>
+                <td><a href="../hall-of-fame/">Hall of Fame</a> for named
+                    vulnerabilities, and the CRITICAL SECURITY sections at the top of a
+                    release in the ChangeLog.</td></tr>
+            <tr><td><b>A bug that is not fixed yet</b></td>
+                <td>The
+                    <a href="https://github.com/wekan/wekan/blob/main/CHANGELOG.md#todo-later">TODO Later</a>
+                    list at the top of the ChangeLog. Every issue looked at but not
+                    fixed is recorded there with the reason — needs infrastructure to
+                    reproduce, needs the running app, already correct in current code, is
+                    a feature request, or needs a decision — so whoever picks it up next
+                    knows where it stopped.</td></tr>
+            <tr><td><b>To report a bug</b></td>
+                <td><a href="https://github.com/wekan/wekan/issues">GitHub issues</a>.
+                    For a vulnerability use
+                    <a href="https://github.com/wekan/wekan/blob/main/SECURITY.md">private disclosure</a>
+                    instead.</td></tr>
+            <tr><td><b>To know a fix stays fixed</b></td>
+                <td>Fixes are landed with regression tests: 207 Node test suites and 45
+                    Playwright browser specs in
+                    <a href="https://github.com/wekan/wekan/tree/main/tests">tests/</a>,
+                    of which 24 guard security behaviour — including named ones such as
+                    ChecklistBleed, CloneBleed, DnsBleed and ProxyBleed — so a fixed
+                    vulnerability cannot come back unnoticed.</td></tr>
+          </tbody>
+        </table>
+        </div>
         <a name="spreadsheet-vs-kanban"></a><h2>Spreadsheet vs Kanban</h2>
         <img src="spreadsheet_vs_kanban.png" width="100%" height="auto">
 
