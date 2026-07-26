@@ -1,0 +1,156 @@
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <title>WeKan — Hall of Fame / ZipBleed</title>
+  <link rel="icon" href="../../wekan-favicon.png">
+  <link rel="stylesheet" type="text/css" href="../../css/main.css">
+  <link rel="stylesheet" href="../../font-awesome/css/font-awesome.min.css">
+</head>
+
+<body>
+
+  <img vAlign="center" src="../hof.svg" alt="Hall of Fame image from https://openclipart.org/detail/120343/trophy"
+    width="300px" height="auto" />
+  <br />
+
+  <div class="action-buttons">
+    <a class="button" href="https://wekan.fi/hall-of-fame">Back to Hall of Fame Contents</a>
+    <a class="button" href="https://wekan.fi">Back to Wekan Website</a>
+  </div>
+
+  <div class="hof">
+    <h1 class="hof">Contents / ZipBleed</h1>
+
+    <table border="1" margin="0" padding="10px" width="100%">
+      <tr>
+        <th width="10%">CVE</th>
+        <th width="10%">Vulnerability name</th>
+        <th width="10%">Date</th>
+        <th width="20%">
+          <a href="https://github.com/wekan/wekan/blob/main/SECURITY.md" style="color: red;">Responsible Security Disclosure</a>
+          by
+        </th>
+        <th width="40%">Vulnerabilities</th>
+      </tr>
+
+      <tr>
+        <td valign="top">
+          -
+          <br /> <br />
+        </td>
+        <td valign="top"><b>ZipBleed</b> <h2><i class="fa fa-file-archive-o" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></h2></td>
+        <td valign="top">2026-07-25</td>
+        <td valign="top">
+          <b>xet7</b> (found and fix)<br />
+          <img src="../GoldStar.png" width="30px" height="auto" /><br />
+          Found while reviewing the open dependency pull requests.
+        </td>
+        <td valign="top">
+          <ul>
+            <li>1. <i class="fa fa-file-archive-o" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i> ZipBleed — arbitrary file write when restoring a backup archive (CWE-22 Improper Limitation of a Pathname to a Restricted Directory, "zip-slip")</li>
+            <li>Affected the WeKan backup restore (<code>server/methods/backup.js</code>)</li>
+            <li>Fixed at
+               <a href="https://github.com/wekan/wekan/blob/main/CHANGELOG.md#upcoming-wekan--release">upcoming WeKan release</a>
+            </li>
+          </ul>
+        </td>
+      </tr>
+
+    </table>
+  </div>
+
+  <br />
+  <br />
+
+  <div class="hof">
+    <h2 class="hof">Details</h2>
+
+    <h3>1. ZipBleed — a restored backup archive could write outside the files directory (CWE-22)</h3>
+    <p>
+      Admin Panel → Attachments → Backup can restore a WeKan backup: a zip archive holding
+      <code>&lt;stamp&gt;/attachments/…</code>, <code>&lt;stamp&gt;/avatars/…</code> and
+      <code>&lt;stamp&gt;/data/&lt;collection&gt;.ndjson</code>. The restore streamed each entry
+      to disk under the matching directory:
+    </p>
+    <pre>
+// vulnerable — the entry chooses its own destination
+for (const entry of directory.files) {
+  if (entry.type !== 'File') continue;
+  const rel = entry.path.split('/').slice(1);   // drop the &lt;stamp&gt; top folder
+  const kind = rel[0];
+  if (kind !== 'attachments' &amp;&amp; kind !== 'avatars') continue;
+  const destPath = path.join(
+    kind === 'attachments' ? attachmentsDir() : avatarsDir(), ...rel.slice(1));
+  fs.mkdirSync(path.dirname(destPath), { recursive: true });
+  entry.stream().pipe(fs.createWriteStream(destPath));
+}
+    </pre>
+    <p>
+      A zip entry carries its own path, chosen by whoever built the archive, and
+      <code>path.join()</code> <b>resolves</b> <code>..</code> segments rather than rejecting
+      them. The only check here is on the FIRST segment, so an entry named
+    </p>
+    <pre>
+2026-07-25_12-00-00/attachments/../../../../etc/cron.d/wekan
+    </pre>
+    <p>
+      satisfies it — its first segment really is <code>attachments</code> — and then joins its
+      way clean out of the files directory. With
+      <code>attachmentsDir() = /data/files/attachments</code>, that entry resolves to
+      <code>/etc/cron.d/wekan</code>, and the entry's contents are streamed there. A crafted
+      <code>backup.zip</code> could therefore drop a new file or overwrite an existing one
+      anywhere the WeKan process could write. This is the long-known "zip-slip" pattern, the
+      same class as the <code>unzipper</code> advisory
+      <a href="https://github.com/advisories/GHSA-884w-698f-927f">GHSA-884w-698f-927f</a> — but
+      in WeKan's own code, not in the library: WeKan runs <code>unzipper</code> 0.12.x, which is
+      not affected by that advisory.
+    </p>
+    <p>
+      <code>restoreBackup</code> is behind <code>requireAdmin()</code>, so an admin has to run
+      the restore. That is not much of a barrier here, because it is also exactly how a hostile
+      archive arrives: it is offered as a backup to restore, at the one moment nobody inspects
+      the file they were handed. Nothing in the archive is visible before it is unpacked.
+    </p>
+    <p>
+      <b>Fix:</b> resolve each entry to an absolute path and require it to sit under the
+      directory it belongs in. Comparing against the base plus a separator matters — a bare
+      <code>startsWith(base)</code> would also accept a sibling directory whose name merely
+      begins with the same letters, such as <code>/data/files/attachments-evil</code>.
+    </p>
+    <pre>
+// fixed — models/lib/backupPaths.js
+function safeEntryPath(baseDir, segments) {
+  if (!baseDir) return null;
+  const parts = (Array.isArray(segments) ? segments : []).filter(
+    s =&gt; typeof s === 'string' &amp;&amp; s !== '');
+  if (!parts.length) return null;
+  const base = path.resolve(baseDir);
+  const dest = path.resolve(base, ...parts);
+  if (dest === base) return null;
+  return dest.startsWith(base + path.sep) ? dest : null;
+}
+    </pre>
+    <p>
+      The data half of an archive names the Mongo collection to restore into, and that name came
+      from the entry too, so it is now constrained to a plain <code>[A-Za-z0-9_-]+</code> name.
+      That also keeps a restore out of the database's internal <code>system.*</code>
+      collections, which are excluded from backups in the first place.
+    </p>
+    <p>
+      A refused entry is skipped and reported to the server log rather than thrown on, so one
+      hostile entry in an otherwise good archive cannot abort a genuine restore.
+    </p>
+    <p>
+      <code>tests/zipbleed.test.cjs</code> pins this: the exact traversal above is refused, a
+      plain entry still restores where it belongs, absolute segments and prefix-matching
+      siblings are refused, and the restore really calls both guards. One of its assertions
+      reproduces what the old code did with the attack path — <code>path.join</code> returning
+      <code>/etc/cron.d/wekan</code> — so the test states the danger rather than only the
+      remedy.
+    </p>
+  </div>
+
+</body>
+
+</html>

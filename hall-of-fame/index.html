@@ -41,6 +41,29 @@
           -
           <br /> <br />
         </td>
+        <td valign="top"><b>ZipBleed</b> <h2><i class="fa fa-file-archive-o" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></h2></td>
+        <td valign="top">2026-07-25</td>
+        <td valign="top">
+          <b>xet7</b> (found and fix)<br />
+          <img src="GoldStar.png" width="30px" height="auto" /><br />
+          Found while reviewing the open dependency pull requests.
+        </td>
+        <td valign="top">
+          <ul>
+            <li><i class="fa fa-file-archive-o" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i> ZipBleed &mdash; restoring a backup archive wrote entries wherever the archive told it to. A zip entry carries its own path and <code>path.join()</code> RESOLVES <code>..</code> segments instead of rejecting them, and the restore in <code>server/methods/backup.js</code> checked only that an entry's first path segment was <code>attachments</code> or <code>avatars</code>. An entry named <code>2026-07-25_12-00-00/attachments/../../../../etc/cron.d/wekan</code> passed that check &mdash; its first segment really is <code>attachments</code> &mdash; and joined its way out of the files directory, so a crafted <code>backup.zip</code> could drop or overwrite a file anywhere the WeKan process could write (CWE-22 Improper Limitation of a Pathname to a Restricted Directory, "zip-slip")</li>
+            <li>Reachable by an admin restoring an archive (<code>restoreBackup</code> is behind <code>requireAdmin()</code>), which is how a hostile archive arrives: offered as a backup to restore, at the moment nobody inspects the file they were handed</li>
+            <li>Fixed by resolving each entry to an absolute path and requiring it to sit under the directory it belongs in, compared against the base plus a separator so a sibling directory with a matching prefix (<code>/data/files/attachments-evil</code>) is refused too; the collection name in the data half of an archive is constrained to a plain name, which also keeps a restore out of the database's internal <code>system.*</code> collections</li>
+            <li>Fixed at <a href="https://github.com/wekan/wekan/blob/main/CHANGELOG.md#upcoming-wekan--release">upcoming WeKan release</a></li>
+            <li><a href="zipbleed/">More details</a></li>
+          </ul>
+        </td>
+      </tr>
+
+      <tr>
+        <td valign="top">
+          -
+          <br /> <br />
+        </td>
         <td valign="top"><b>ExportBleed</b> <h2><i class="fa fa-download" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></h2></td>
         <td valign="top">2026-07-22</td>
         <td valign="top">

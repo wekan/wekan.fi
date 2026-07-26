@@ -170,9 +170,12 @@
                 <td>Password, LDAP, CAS, OIDC / OAuth2 and Sandstorm; invitation codes;
                     switches for self-registration and forgot-password.</td></tr>
             <tr><td><b>Admin Panel</b></td>
-                <td>Settings (registration, e-mail, accounts, table visibility,
-                    announcement, accessibility, layout, webhooks), People, Attachments
-                    and storage, Features, Translation, Problems, Info and Reports.</td></tr>
+                <td>Four sections. <b>Settings</b> — version, visibility, announcement,
+                    accessibility, translation, PWA and global webhooks. <b>People</b> —
+                    login, e-mail, domains, organizations, teams, users, locked users,
+                    roles and shared templates. <b>Attachments</b> — backup, the storage
+                    backends and moving files between them. <b>Problems</b> — instance
+                    health and the report tables.</td></tr>
             <tr><td><b>Notifications</b></td>
                 <td>Watch, track or mute a board, a notifications drawer, and
                     e-mail.</td></tr>
@@ -212,16 +215,19 @@
           </thead>
           <tbody>
             <tr><td><b>Access control</b></td>
-                <td>Nine per-board roles, private and public boards, and an option to
-                    allow board members only from the same organization or team.</td></tr>
+                <td>Nine per-board roles, private and public boards, and two options —
+                    one in Admin Panel / People / Organizations, one in / Teams — to allow
+                    board members only from the same organization, or team, as whoever
+                    adds them.</td></tr>
             <tr><td><b>Sign-in protection</b></td>
                 <td>Account lockout after repeated failed attempts
                     (<a href="https://github.com/wekan/wekan/blob/main/docs/Security/brute-force-protection.md">brute-force protection</a>),
                     and a guard that stops a stale local password from being used for an
                     account that signs in through LDAP.</td></tr>
             <tr><td><b>Registration control</b></td>
-                <td>Disable self-registration, require invitation codes, and disable
-                    forgot-password.</td></tr>
+                <td>At Admin Panel / People / Login: turn off self-registration (WeKan is
+                    then invite-only), forgot-password, username change and self delete of
+                    an account.</td></tr>
             <tr><td><b>Untrusted content</b></td>
                 <td>Card and comment content is sanitized before it is shown, and only
                     safe URL schemes are accepted for avatars and for automatically
