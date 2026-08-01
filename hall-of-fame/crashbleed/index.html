@@ -1,0 +1,161 @@
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <title>WeKan — Hall of Fame / CrashBleed</title>
+  <link rel="icon" href="../../wekan-favicon.png">
+  <link rel="stylesheet" type="text/css" href="../../css/main.css">
+  <link rel="stylesheet" href="../../font-awesome/css/font-awesome.min.css">
+</head>
+
+<body>
+
+  <img vAlign="center" src="../hof.svg" alt="Hall of Fame image from https://openclipart.org/detail/120343/trophy"
+    width="300px" height="auto" />
+  <br />
+
+  <div class="action-buttons">
+    <a class="button" href="https://wekan.fi/hall-of-fame">Back to Hall of Fame Contents</a>
+    <a class="button" href="https://wekan.fi">Back to Wekan Website</a>
+  </div>
+
+  <div class="hof">
+    <h1 class="hof">Contents / CrashBleed</h1>
+
+    <table border="1" margin="0" padding="10px" width="100%">
+      <tr>
+        <th width="10%">CVE</th>
+        <th width="10%">Vulnerability name</th>
+        <th width="10%">Date</th>
+        <th width="20%">
+          <a href="https://github.com/wekan/wekan/blob/main/SECURITY.md" style="color: red;">Responsible Security Disclosure</a>
+          by
+        </th>
+        <th width="40%">Vulnerabilities</th>
+      </tr>
+
+      <tr>
+        <td valign="top">
+          <a href="https://github.com/wekan/wekan/security/advisories/GHSA-3gcg-g6rf-w2rx">CVE-2026-68901 GHSA-3gcg-g6rf-w2rx</a>
+          <br /> <br />
+        </td>
+        <td valign="top"><b>CrashBleed</b> <h2><i class="fa fa-bomb" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></h2></td>
+        <td valign="top">2026-07-26</td>
+        <td valign="top">
+          <b>laijunyue</b> and <b>xet7</b><br />
+          <img src="../GoldStar.png" width="30px" height="auto" />
+          <img src="../GoldStar.png" width="30px" height="auto" /><br />
+          Coordinated disclosure via GitHub Security Advisory.
+        </td>
+        <td valign="top">
+          <ul>
+            <li><i class="fa fa-bomb" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i> CrashBleed — remote denial of service: an invalid <code>authToken</code> on a board export endpoint crashed the whole server (CVE-2026-68901 GHSA-3gcg-g6rf-w2rx, CWE-476)</li>
+            <li>Reachable by anyone who can obtain a private board id, which on an open-registration instance means anyone at all</li>
+            <li>Affected Wekan v10.37 and earlier</li>
+            <li>Fixed at
+              <a href="https://github.com/wekan/wekan/blob/main/CHANGELOG.md#v1038-2026-07-26-wekan--release">Wekan v10.38 2026-07-26</a>
+            </li>
+          </ul>
+        </td>
+      </tr>
+
+    </table>
+  </div>
+
+  <br />
+  <br />
+
+  <div class="hof">
+    <table border="1" margin="0" padding="10px" width="100%">
+      <tr>
+        <th width="40%">Where</th>
+        <th width="60%">Details</th>
+      </tr>
+      <tr>
+        <td vAlign="top"><b>Affected code</b></td>
+        <td vAlign="top">
+          The board export REST endpoints: three handlers in <code>models/export.js</code> and one in
+          <code>models/exportExcel.js</code>.
+        </td>
+      </tr>
+      <tr>
+        <td vAlign="top"><b>Root cause</b></td>
+        <td vAlign="top">
+          The export endpoints look a user up by the login token in <code>?authToken=</code>. A token
+          that matches nothing makes that lookup answer <code>undefined</code>, and the next line
+          dereferenced it:
+          <br /><br />
+          <code>user._id.toString()</code>
+          <br /><br />
+          which throws a <code>TypeError</code> out of an <code>async</code> route handler with no
+          <code>try/catch</code>. That escapes as an unhandled promise rejection, which this app turns
+          into a full process crash — so one crafted GET against a private board id took the server
+          down for every user, not just for the request that made it.
+          <br /><br />
+          It was an <b>incomplete fix</b>. <code>models/exportPDF.js</code> and
+          <code>models/exportExcelCard.js</code> already had the <code>if (!user)</code> guard; four
+          other handlers were missed, which is exactly the kind of gap that survives a review done
+          file by file.
+        </td>
+      </tr>
+      <tr>
+        <td vAlign="top"><b>Fix</b></td>
+        <td vAlign="top">
+          Fixed on <b>both</b> levels, because either alone leaves the other half of the problem.
+          <br /><br />
+          Every token lookup in the export models is now followed by that guard — 401
+          <i>Invalid token</i> and return — including the two handlers that did not crash, because
+          they hand the user to <code>canExport()</code> instead of dereferencing it. A handler that
+          happens not to crash today is one edit away from crashing tomorrow.
+          <br /><br />
+          And every export route body is wrapped in <code>safeRoute()</code>
+          (<code>server/apiMiddleware.js</code>), which awaits the handler, answers 500 once and logs
+          the request that failed. A throw from any other cause is now one broken request instead of
+          an outage.
+          <br /><br />
+          <code>tests/exportTokenGuard.test.cjs</code> finds every token lookup in the export models
+          and requires a guard on each, rather than checking the four known places by hand — the bug
+          was a missed site, so the guard has to be about all sites rather than about these.
+        </td>
+      </tr>
+    </table>
+  </div>
+
+  <br />
+  <br />
+
+  <div class="hof">
+    <table border="1" margin="0" padding="10px" width="100%">
+      <tr>
+        <th width="5%">Timeline</th>
+        <th width="60%">Details</th>
+      </tr>
+      <tr>
+        <td vAlign="top"><a name="3GCG"></a><b>2026-07-26</b></td>
+        <td vAlign="top">Report received from laijunyue via GitHub Security Advisory.</td>
+      </tr>
+      <tr>
+        <td vAlign="top"><b>2026-07-26</b></td>
+        <td vAlign="top">
+          Fixed at
+          <a href="https://github.com/wekan/wekan/blob/main/CHANGELOG.md#v1038-2026-07-26-wekan--release">Wekan v10.38 2026-07-26</a>.
+        </td>
+      </tr>
+    </table>
+  </div>
+
+  <br />
+  <br />
+
+  <div class="action-buttons">
+    <a class="button" href="https://wekan.fi/hall-of-fame">Back to Hall of Fame Contents</a>
+    <a class="button" href="https://wekan.fi">Back to Wekan Website</a>
+  </div>
+
+  <h1>
+    <br />
+  </h1>
+
+</body>
+
+</html>

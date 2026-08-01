@@ -36,7 +36,7 @@
 
       <tr>
         <td valign="top">
-          <a href="https://github.com/wekan/wekan/security/advisories/GHSA-66m2-4wfr-c45p">GHSA-66m2-4wfr-c45p</a>
+          <a href="https://github.com/wekan/wekan/security/advisories/GHSA-66m2-4wfr-c45p">CVE-2026-68558 GHSA-66m2-4wfr-c45p</a>
           <br /> <br />
         </td>
         <td valign="top"><b>DnsBleed</b> <h2><i class="fa fa-globe" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></h2></td>
@@ -71,7 +71,7 @@
   <div class="hof">
     <h2 class="hof">Details</h2>
 
-    <h3>SSRF filter bypass via DNS-resolving hostname in outgoing webhooks (GHSA-66m2-4wfr-c45p, CWE-918)</h3>
+    <h3>SSRF filter bypass via DNS-resolving hostname in outgoing webhooks (CVE-2026-68558 GHSA-66m2-4wfr-c45p, CWE-918)</h3>
     <p>
       Wekan's outgoing-webhook (board <b>Integrations</b>) URLs are validated by a synchronous validator in
       <code>models/integrations.js</code> that blocks private / loopback / link-local addresses by regex-matching the
@@ -146,7 +146,7 @@
       </tr>
       <tr>
         <td vAlign="top"><a name="DNS"></a><b>2026-07-01</b></td>
-        <td vAlign="top">Reported by 4n207 (GHSA-66m2-4wfr-c45p) and fixed at the upcoming WeKan release.</td>
+        <td vAlign="top">Reported by 4n207 (CVE-2026-68558 GHSA-66m2-4wfr-c45p) and fixed at the upcoming WeKan release.</td>
       </tr>
     </table>
   </div>

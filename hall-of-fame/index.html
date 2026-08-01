@@ -88,6 +88,42 @@
 
       <tr>
         <td valign="top">
+          <a href="https://github.com/wekan/wekan/security/advisories/GHSA-3gcg-g6rf-w2rx">CVE-2026-68901 GHSA-3gcg-g6rf-w2rx</a>
+          <br /> <br />
+        </td>
+        <td class="icon" valign="top"><h2><i class="fa fa-bomb" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></h2></td>
+        <td valign="top"><b>CrashBleed</b></td>
+        <td valign="top">2026-07-26</td>
+        <td class="by" valign="top">
+          <b><a href="https://github.com/laijunyue">laijunyue</a></b> and <b><a href="https://github.com/xet7">xet7</a></b>
+        </td>
+        <td class="stars" valign="top">
+          <img src="GoldStar.png" width="30px" height="auto" /> <img src="GoldStar.png" width="30px" height="auto" />
+        </td>
+        <td valign="top">
+          <details>
+          <summary>Process</summary>
+
+          Coordinated disclosure via GitHub Security Advisory GHSA-3gcg-g6rf-w2rx.
+          </details>
+        </td>
+        <td valign="top">
+          <details>
+          <summary>Details</summary>
+
+          <ul>
+            <li><i class="fa fa-bomb" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i> CrashBleed &mdash; remote denial of service: an invalid <code>authToken</code> on a board export endpoint crashed the whole server. The board export REST endpoints look a user up by the login token in <code>?authToken=</code>. A token that matches nothing makes that lookup answer <code>undefined</code>, and the next line dereferenced it &mdash; <code>user._id.toString()</code> &mdash; throwing a TypeError out of an async route handler with no <code>try/catch</code>. That escapes as an unhandled promise rejection, which this app turns into a full process crash, so one crafted GET against a private board id took the server down for every user. Reachable by anyone who can obtain a private board id, which on an open-registration instance means anyone at all (CVE-2026-68901 GHSA-3gcg-g6rf-w2rx, CWE-476)</li>
+            <li>It was an <b>incomplete fix</b>: <code>models/exportPDF.js</code> and <code>models/exportExcelCard.js</code> already had the <code>if (!user)</code> guard; three handlers in <code>models/export.js</code> and one in <code>models/exportExcel.js</code> were missed</li>
+            <li>Fixed on both levels: every token lookup in the export models is now followed by that guard &mdash; 401 &ldquo;Invalid token&rdquo; and return &mdash; including the two handlers that did not crash because they hand the user to <code>canExport()</code> instead of dereferencing it; and every export route body is wrapped in <code>safeRoute()</code> (<code>server/apiMiddleware.js</code>), which awaits the handler, answers 500 once and logs the request that failed, so a throw from any other cause is one broken request instead of an outage</li>
+            <li>Affected Wekan v10.37 and earlier; fixed at <a href="https://github.com/wekan/wekan/blob/main/CHANGELOG.md#v1038-2026-07-26-wekan--release">Wekan v10.38 2026-07-26</a></li>
+            <li><a href="crashbleed/">More details</a></li>
+          </ul>
+          </details>
+        </td>
+      </tr>
+
+      <tr>
+        <td valign="top">
           -
           <br /> <br />
         </td>
@@ -124,7 +160,7 @@
 
       <tr>
         <td valign="top">
-          -
+          <a href="https://github.com/wekan/wekan/security/advisories/GHSA-8r5p-4q9j-f5jx">CVE-2026-68900 GHSA-8r5p-4q9j-f5jx</a>
           <br /> <br />
         </td>
         <td class="icon" valign="top"><h2><i class="fa fa-download" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></h2></td>
@@ -548,7 +584,7 @@
 
       <tr>
         <td valign="top">
-          <a href="https://github.com/wekan/wekan/security/advisories/GHSA-jhph-whx8-wq6p">GHSA-jhph-whx8-wq6p</a>
+          <a href="https://github.com/wekan/wekan/security/advisories/GHSA-jhph-whx8-wq6p">CVE-2026-68899 GHSA-jhph-whx8-wq6p</a>
           <br /> <br />
         </td>
         <td class="icon" valign="top"><h2><i class="fa fa-file-image-o" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></h2></td>
@@ -572,7 +608,7 @@
           <summary>Details</summary>
 
           <ul>
-            <li><i class="fa fa-file-image-o" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i> MimeBleed — file-upload MIME-type validation bypass leading to stored XSS (GHSA-jhph-whx8-wq6p, CWE-434). WeKan's upload validation (<code>models/fileValidation.js</code>) detects a file's real MIME type by running the Unix <code>file</code> command. On minimal Docker/Alpine images where <code>file</code> is not installed, <code>detectMimeFromFile()</code> silently returned <code>undefined</code> and the code fell back to the CLIENT-supplied <code>fileObj.type</code>. An authenticated board member (with <code>WITH_API=true</code>) could upload an HTML file containing JavaScript while setting <code>fileType: "image/png"</code>: the spoofed type is not on the dangerous-MIME deny-list, so the dangerous-content scan was skipped and the file was stored, giving stored XSS served under the WeKan origin (session theft, actions as the victim, including admin)</li>
+            <li><i class="fa fa-file-image-o" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i> MimeBleed — file-upload MIME-type validation bypass leading to stored XSS (CVE-2026-68899 GHSA-jhph-whx8-wq6p, CWE-434). WeKan's upload validation (<code>models/fileValidation.js</code>) detects a file's real MIME type by running the Unix <code>file</code> command. On minimal Docker/Alpine images where <code>file</code> is not installed, <code>detectMimeFromFile()</code> silently returned <code>undefined</code> and the code fell back to the CLIENT-supplied <code>fileObj.type</code>. An authenticated board member (with <code>WITH_API=true</code>) could upload an HTML file containing JavaScript while setting <code>fileType: "image/png"</code>: the spoofed type is not on the dangerous-MIME deny-list, so the dangerous-content scan was skipped and the file was stored, giving stored XSS served under the WeKan origin (session theft, actions as the victim, including admin)</li>
             <li>CVSS:3.1 8.3 High (AV:N/AC:L/PR:L/UI:R/S:C/C:H/I:H/A:N)</li>
             <li>Fixed so the client-supplied type can never gate the safety scan: when content-based detection via <code>file</code> is unavailable, WeKan falls back to a dependency-free JS content sniff (<code>looksLikeDangerousMarkup()</code>) that inspects the real bytes for HTML/SVG/XML/<code>&lt;script&gt;</code> signatures and forces the dangerous-content scan regardless of the claimed MIME, so a spoofed <code>image/png</code> that is really HTML+JS is rejected. The sniff only matches definitive markup, so genuine binary uploads (real PNG/JPEG/PDF, including large ones) are unaffected. WeKan also logs a one-time warning when <code>file</code> is missing (previously silent)</li>
             <li>Affected container deployments without the <code>file</code> binary and <code>WITH_API=true</code>; fixed at the upcoming WeKan release</li>
@@ -584,7 +620,7 @@
 
       <tr>
         <td valign="top">
-          <a href="https://github.com/wekan/wekan/security/advisories/GHSA-xm8x-c8wg-jhmf">GHSA-xm8x-c8wg-jhmf</a>
+          <a href="https://github.com/wekan/wekan/security/advisories/GHSA-xm8x-c8wg-jhmf">CVE-2026-68561 GHSA-xm8x-c8wg-jhmf</a>
           <br /> <br />
         </td>
         <td class="icon" valign="top"><h2><i class="fa fa-sort" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></h2></td>
@@ -608,7 +644,7 @@
           <summary>Details</summary>
 
           <ul>
-            <li><i class="fa fa-sort" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i> SortBleed — broken access control / privilege escalation: a low-privilege (comment-only / read-only) board member could escalate to board admin and take over a private board via the board <code>sort</code> collection-allow rule (CVE requested, GHSA-xm8x-c8wg-jhmf, CWE-863, CWE-269). To support drag-to-reorder, a second <code>Boards.allow({ update })</code> rule returned <code>true</code> for any board member whenever the update touched the <code>sort</code> field. Meteor evaluates allow rules with OR semantics and does not scope an approving rule to the field that satisfied it: once any allow callback approves and no deny rejects, the ENTIRE modifier is applied. Because <code>canUpdateBoardSort</code> only checked that <code>sort</code> was AMONG the modified fields (not the only one), a comment-only / read-only member could smuggle arbitrary board mutations into the same <code>$set</code> as <code>sort</code> in one DDP <code>Boards.update</code> call — <code>{$set: {sort: 99, members: [...self as admin...], permission: 'public', title: '...'}}</code> — making themselves admin, flipping the private board to public, renaming it, and evicting the legitimate owner. The last-admin deny rule did not help because it only inspected <code>$pull</code>. Same allow-rule field-conflation class as <a href="boardbleed/">BoardBleed</a> (CVE-2026-55234), but on the Board document itself</li>
+            <li><i class="fa fa-sort" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i> SortBleed — broken access control / privilege escalation: a low-privilege (comment-only / read-only) board member could escalate to board admin and take over a private board via the board <code>sort</code> collection-allow rule (CVE-2026-68561 GHSA-xm8x-c8wg-jhmf, CWE-863, CWE-269). To support drag-to-reorder, a second <code>Boards.allow({ update })</code> rule returned <code>true</code> for any board member whenever the update touched the <code>sort</code> field. Meteor evaluates allow rules with OR semantics and does not scope an approving rule to the field that satisfied it: once any allow callback approves and no deny rejects, the ENTIRE modifier is applied. Because <code>canUpdateBoardSort</code> only checked that <code>sort</code> was AMONG the modified fields (not the only one), a comment-only / read-only member could smuggle arbitrary board mutations into the same <code>$set</code> as <code>sort</code> in one DDP <code>Boards.update</code> call — <code>{$set: {sort: 99, members: [...self as admin...], permission: 'public', title: '...'}}</code> — making themselves admin, flipping the private board to public, renaming it, and evicting the legitimate owner. The last-admin deny rule did not help because it only inspected <code>$pull</code>. Same allow-rule field-conflation class as <a href="boardbleed/">BoardBleed</a> (CVE-2026-55234), but on the Board document itself</li>
             <li>CVSS:3.1 8.8 High (AV:N/AC:L/PR:L/UI:N/S:U/C:H/I:H/A:H)</li>
             <li>Fixed by restricting <code>canUpdateBoardSort</code> (<code>server/lib/utils.js</code>) so the sort-reorder rule approves an update ONLY when <code>sort</code> is the sole modified field (<code>fieldNames</code> is exactly <code>['sort']</code>). Defense in depth: the last-admin deny rule (<code>server/permissions/boards.js</code>) now also rejects a <code>$set</code> rewrite of the <code>members</code> array that would drop the last active admin. The legitimate All Boards drag-reorder is unaffected — it persists order per-user in <code>profile.boardSortIndex</code>, not in the board document</li>
             <li>Affected Wekan v9.85 and earlier through the current release; fixed at the upcoming WeKan release</li>
@@ -620,7 +656,7 @@
 
       <tr>
         <td valign="top">
-          <a href="https://github.com/wekan/wekan/security/advisories/GHSA-x3xm-pxrv-jg7p">GHSA-x3xm-pxrv-jg7p</a>
+          <a href="https://github.com/wekan/wekan/security/advisories/GHSA-x3xm-pxrv-jg7p">CVE-2026-68560 GHSA-x3xm-pxrv-jg7p</a>
           <br /> <br />
         </td>
         <td class="icon" valign="top"><h2><i class="fa fa-terminal" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></h2></td>
@@ -644,7 +680,7 @@
           <summary>Details</summary>
 
           <ul>
-            <li><i class="fa fa-terminal" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i> ScannerBleed — shell injection (RCE) via a malicious upload filename in the external antivirus scanner command path. In <code>models/fileValidation.js</code>, when an admin-configured external scanner command line with a <code>{file}</code> placeholder is set, the uploaded file path was interpolated and run through <code>asyncExec</code> (<code>promisify(exec)</code>), which spawns <code>/bin/sh -c</code> and interprets all shell metacharacters. Wrapping the path in double quotes is not a shell boundary — inside double quotes the shell still expands <code>$(...)</code>, backticks and <code>\</code> — so a filename like <code>$(touch /tmp/pwn).png</code> or <code>a`id`.png</code> executed as the Wekan server process. Any authenticated user who can upload an attachment could trigger it. Same RCE class as <a href="avatarbleed/">AvatarBleed</a> (CVE-2026-52891), but in a code path that was never covered by that fix (GHSA-x3xm-pxrv-jg7p, CWE-78)</li>
+            <li><i class="fa fa-terminal" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i> ScannerBleed — shell injection (RCE) via a malicious upload filename in the external antivirus scanner command path. In <code>models/fileValidation.js</code>, when an admin-configured external scanner command line with a <code>{file}</code> placeholder is set, the uploaded file path was interpolated and run through <code>asyncExec</code> (<code>promisify(exec)</code>), which spawns <code>/bin/sh -c</code> and interprets all shell metacharacters. Wrapping the path in double quotes is not a shell boundary — inside double quotes the shell still expands <code>$(...)</code>, backticks and <code>\</code> — so a filename like <code>$(touch /tmp/pwn).png</code> or <code>a`id`.png</code> executed as the Wekan server process. Any authenticated user who can upload an attachment could trigger it. Same RCE class as <a href="avatarbleed/">AvatarBleed</a> (CVE-2026-52891), but in a code path that was never covered by that fix (CVE-2026-68560 GHSA-x3xm-pxrv-jg7p, CWE-78)</li>
             <li>CVSS:3.1 9.9 Critical (AV:N/AC:L/PR:L/UI:N/S:C/C:H/I:H/A:H)</li>
             <li>Unlike the sibling MIME-detection path (<code>detectMimeFromFile</code>, which already uses <code>execFile</code> with no shell) and unlike the AvatarBleed fix (which strips non-alphanumeric characters), this scanner path had zero sanitization. Fixed by POSIX single-quote-escaping the interpolated file path via a new <code>shellQuote()</code> helper — inside single quotes the shell interprets no metacharacters, so a malicious filename can no longer inject commands, while the admin's command line and the exact on-disk path are preserved</li>
             <li>Affected Wekan v9.06 and earlier through the current release; fixed at the upcoming WeKan release</li>
@@ -656,7 +692,7 @@
 
       <tr>
         <td valign="top">
-          <a href="https://github.com/wekan/wekan/security/advisories/GHSA-mwq8-ccpm-r533">GHSA-mwq8-ccpm-r533</a>
+          <a href="https://github.com/wekan/wekan/security/advisories/GHSA-mwq8-ccpm-r533">CVE-2026-68559 GHSA-mwq8-ccpm-r533</a>
           <br /> <br />
         </td>
         <td class="icon" valign="top"><h2><i class="fa fa-file-excel-o" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></h2></td>
@@ -680,7 +716,7 @@
           <summary>Details</summary>
 
           <ul>
-            <li><i class="fa fa-file-excel-o" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i> ExcelBleed — broken access control in the Excel-export route (<code>GET /api/boards/:boardId/exportExcel</code>): <code>models/exportExcel.js</code> called its guard <code>exporterExcel.canExport(user)</code> <b>without <code>await</code></b>. Because <code>canExport</code> is <code>async</code> it returns an always-truthy Promise, so <code>if (exporterExcel.canExport(user) || impersonateDone)</code> was always true and the export ran regardless of the guard's real result. Any authenticated user could download the full contents of any private board they are not a member of (card titles + descriptions, lists, swimlanes, members, metadata). Same un-awaited async-auth bug class as <a href="bflableed/">BFLABleed</a>, <a href="clonebleed/">CloneBleed</a> and <a href="tokenbleed/">TokenBleed</a> (GHSA-mwq8-ccpm-r533, CWE-862, CWE-639)</li>
+            <li><i class="fa fa-file-excel-o" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i> ExcelBleed — broken access control in the Excel-export route (<code>GET /api/boards/:boardId/exportExcel</code>): <code>models/exportExcel.js</code> called its guard <code>exporterExcel.canExport(user)</code> <b>without <code>await</code></b>. Because <code>canExport</code> is <code>async</code> it returns an always-truthy Promise, so <code>if (exporterExcel.canExport(user) || impersonateDone)</code> was always true and the export ran regardless of the guard's real result. Any authenticated user could download the full contents of any private board they are not a member of (card titles + descriptions, lists, swimlanes, members, metadata). Same un-awaited async-auth bug class as <a href="bflableed/">BFLABleed</a>, <a href="clonebleed/">CloneBleed</a> and <a href="tokenbleed/">TokenBleed</a> (CVE-2026-68559 GHSA-mwq8-ccpm-r533, CWE-862, CWE-639)</li>
             <li>CVSS:3.1 Moderate (AV:N/AC:L/PR:L/UI:N/S:U/C:H/I:N/A:N)</li>
             <li>The Excel-export route was the lone remaining un-awaited <code>canExport</code> call site; the JSON export route (<code>/export</code>) was correctly awaited and returned 403 to the same non-member. Fixed by adding <code>await</code>, matching every other export route (<code>export.js</code>, <code>exportPDF.js</code>, <code>exportExcelCard.js</code>, <code>import.js</code>)</li>
             <li>Affected Wekan v9.57.0 and earlier; fixed at the upcoming WeKan release</li>
@@ -692,7 +728,7 @@
 
       <tr>
         <td valign="top">
-          <a href="https://github.com/wekan/wekan/security/advisories/GHSA-66m2-4wfr-c45p">GHSA-66m2-4wfr-c45p</a>
+          <a href="https://github.com/wekan/wekan/security/advisories/GHSA-66m2-4wfr-c45p">CVE-2026-68558 GHSA-66m2-4wfr-c45p</a>
           <br /> <br />
         </td>
         <td class="icon" valign="top"><h2><i class="fa fa-globe" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></h2></td>
@@ -716,7 +752,7 @@
           <summary>Details</summary>
 
           <ul>
-            <li><i class="fa fa-globe" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i> DnsBleed — the synchronous outgoing-webhook (board <b>Integrations</b>) URL validator in <code>models/integrations.js</code> blocks private/loopback/link-local IPs by regex-matching the URL <b>hostname string</b> and never resolves DNS, so a public hostname that resolves to a blocked address (e.g. <code>169-254-169-254.nip.io</code> → <code>169.254.169.254</code>, or any attacker A/AAAA record → internal IP) passes the blocklist. Incomplete-fix follow-up to <a href="webhookbleed/">WebhookBleed</a> / <a href="integrationbleed/">IntegrationBleed RebindBleed</a> (GHSA-66m2-4wfr-c45p, CWE-918)</li>
+            <li><i class="fa fa-globe" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i> DnsBleed — the synchronous outgoing-webhook (board <b>Integrations</b>) URL validator in <code>models/integrations.js</code> blocks private/loopback/link-local IPs by regex-matching the URL <b>hostname string</b> and never resolves DNS, so a public hostname that resolves to a blocked address (e.g. <code>169-254-169-254.nip.io</code> → <code>169.254.169.254</code>, or any attacker A/AAAA record → internal IP) passes the blocklist. Incomplete-fix follow-up to <a href="webhookbleed/">WebhookBleed</a> / <a href="integrationbleed/">IntegrationBleed RebindBleed</a> (CVE-2026-68558 GHSA-66m2-4wfr-c45p, CWE-918)</li>
             <li>CVSS:3.1 High (AV:N/AC:L/PR:L/UI:N/S:C/C:H/I:L/A:N)</li>
             <li>The reported PoC was already blocked at delivery by the RebindBleed <code>fetchSafe</code> guard and at REST input by <code>validateAttachmentUrl()</code>; this release completes the fix by making <code>fetchSafe</code> resolve <b>both</b> address families and validate through the single shared <code>isIpBlocked</code> block-list, removing the block-list drift the advisory points at</li>
             <li>Affected Wekan v8.36 and later; fixed at the upcoming WeKan release</li>
