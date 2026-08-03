@@ -88,6 +88,80 @@
 
       <tr>
         <td valign="top">
+          <a href="https://github.com/wekan/wekan/security/advisories/GHSA-j9p2-jm73-p549">GHSA-j9p2-jm73-p549</a>
+          <br /> <br />
+        </td>
+        <td class="icon" valign="top"><h2><i class="fa fa-arrow-circle-right" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></h2></td>
+        <td valign="top"><b>FollowBleed</b></td>
+        <td valign="top">2026-08-03</td>
+        <td class="by" valign="top">
+          <b><a href="https://github.com/RandomGenerator">RandomGenerator</a></b> and <b><a href="https://github.com/xet7">xet7</a></b>
+        </td>
+        <td class="stars" valign="top">
+          <img src="GoldStar.png" width="30px" height="auto" />
+        </td>
+        <td valign="top">
+          <details>
+          <summary>Process</summary>
+
+          Coordinated disclosure via GitHub Security Advisory GHSA-j9p2-jm73-p549.
+          </details>
+        </td>
+        <td valign="top">
+          <details>
+          <summary>Details</summary>
+
+          <ul>
+            <li><i class="fa fa-arrow-circle-right" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i> FollowBleed &mdash; a redirect walked the import downloads past the SSRF guard. The live Trello import (<code>server/trelloApiImport.js</code>) DID validate the attachment URL with <code>validateAttachmentUrl()</code> &mdash; the fix that closed <a href="../livebleed/">LiveBleed</a> / CVE-2026-30844 &mdash; and then downloaded it with the platform <code>fetch()</code>, which FOLLOWS REDIRECTS. So the guard only ever saw the request, and the target gets to answer: a public URL passes validation, that host replies <code>302 Location: http://127.0.0.1:18080/secret</code>, and the loopback response body is stored as the imported attachment and read back through WeKan. Non-blind SSRF against loopback services, internal admin panels, cloud metadata and anything else reachable from the container (CWE-918 Server-Side Request Forgery)</li>
+            <li>A guard on the URL alone cannot hold, because the target gets to answer and an answer can name a new URL. <code>fetchSafe()</code> (<code>server/lib/ssrfGuard.js</code>) now guards EVERY HOP: <code>maxRedirects</code> defaults to 0, which refuses any 3xx outright as before &mdash; right for outgoing webhooks and avatar downloads, because a legitimate one never redirects &mdash; and a caller that must follow one passes a small number, each hop going through the same protocol allowlist, blocked-range check and DNS pinning as the original URL before a packet is sent to it. Credentials are dropped on a cross-origin redirect, so following Trello's 302 to S3 cannot hand the API key and token to whoever the redirect names</li>
+            <li>Refusing every redirect was not an option: Trello's own attachment endpoint answers with a 302 to a signed S3 URL, so that would have meant importing no attachments at all</li>
+            <li>The OFFLINE importers had the same hole and were not in the report: they handed the validated URL to Meteor-Files' <code>Attachments.loadAsync()</code>, which downloads with the platform <code>fetch()</code> too, so a pasted Trello or WeKan board export reached <code>127.0.0.1</code> by exactly the same 302. They download through the guard now</li>
+            <li>Fixed at <a href="https://github.com/wekan/wekan/blob/main/CHANGELOG.md#upcoming-wekan--release">upcoming WeKan release</a></li>
+            <li><a href="followbleed/">More details</a></li>
+          </ul>
+          </details>
+        </td>
+      </tr>
+
+      <tr>
+        <td valign="top">
+          <a href="https://github.com/wekan/wekan/security/advisories/GHSA-c5xr-mg26-vq5w">GHSA-c5xr-mg26-vq5w</a>
+          <br /> <br />
+        </td>
+        <td class="icon" valign="top"><h2><i class="fa fa-exchange" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></h2></td>
+        <td valign="top"><b>TransitBleed</b></td>
+        <td valign="top">2026-08-03</td>
+        <td class="by" valign="top">
+          <b><a href="https://github.com/tonghuaroot">tonghuaroot</a></b> and <b><a href="https://github.com/xet7">xet7</a></b>
+        </td>
+        <td class="stars" valign="top">
+          <img src="GoldStar.png" width="30px" height="auto" />
+        </td>
+        <td valign="top">
+          <details>
+          <summary>Process</summary>
+
+          Coordinated disclosure via GitHub Security Advisory GHSA-c5xr-mg26-vq5w.
+          </details>
+        </td>
+        <td valign="top">
+          <details>
+          <summary>Details</summary>
+
+          <ul>
+            <li><i class="fa fa-exchange" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i> TransitBleed &mdash; IPv6 transition addresses walked straight through the SSRF block-list. <code>isIpBlocked()</code> in <code>models/lib/attachmentUrlValidation.js</code> is the ONE block-list behind both halves of the defence &mdash; the input-time validator and the delivery-time guard <code>fetchSafe()</code> &mdash; and its IPv6 half classified an address by its SPELLING: <code>startsWith('::ffff:')</code>, <code>startsWith('2001:db8')</code>, and the first hextet parsed out of the string. IPv6 has several standard ways to write &ldquo;this packet goes to an IPv4 address&rdquo; and none of them looks like <code>::ffff:</code> (CWE-918 Server-Side Request Forgery)</li>
+            <li>The forms that passed: <code>2002:a9fe:a9fe::</code> &mdash; 6to4 (RFC 3056) &rarr; <code>169.254.169.254</code>; <code>64:ff9b::c0a8:101</code> &mdash; NAT64 (RFC 6052) &rarr; <code>192.168.1.1</code>; <code>2001:0:…</code> &mdash; Teredo (RFC 4380), the IPv4 stored as the complement of the low 32 bits; and even <code>0:0:0:0:0:ffff:7f00:1</code>, a plain IPv4-mapped <code>127.0.0.1</code> merely spelled out. On a host with a 6to4 relay or a NAT64 gateway &mdash; ordinary in cloud and Kubernetes networks &mdash; the packet arrives at that IPv4 address, so <code>http://[2002:a9fe:a9fe::]/latest/meta-data/</code> read cloud metadata through the guard whose whole job was to stop it</li>
+            <li>Fixed by EXPANDING the address to its 16 bytes once and reading those bytes, so notation cannot change the answer, and extracting the embedded IPv4 from every transition form to re-check it with the IPv4 rules: 6to4, NAT64 (the well-known prefix and the RFC 8215 local-use one), Teredo through both its server and its obfuscated client address, IPv4-mapped, IPv4-translated, IPv4-compatible, and ISATAP under any routing prefix rather than only the link-local one. The deprecated <code>fec0::/10</code> site-local range is blocked too</li>
+            <li>A transition address wrapping a PUBLIC IPv4 is still allowed, and the tests pin that as carefully as they pin the bypasses: a guard that blocks everything is a guard somebody switches off</li>
+            <li>Fixed at <a href="https://github.com/wekan/wekan/blob/main/CHANGELOG.md#upcoming-wekan--release">upcoming WeKan release</a></li>
+            <li><a href="transitbleed/">More details</a></li>
+          </ul>
+          </details>
+        </td>
+      </tr>
+
+      <tr>
+        <td valign="top">
           <a href="https://github.com/wekan/wekan/security/advisories/GHSA-3gcg-g6rf-w2rx">CVE-2026-68901 GHSA-3gcg-g6rf-w2rx</a>
           <br /> <br />
         </td>

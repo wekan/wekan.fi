@@ -1,0 +1,182 @@
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <title>WeKan — Hall of Fame / FollowBleed</title>
+  <link rel="icon" href="../../wekan-favicon.png">
+  <link rel="stylesheet" type="text/css" href="../../css/main.css">
+  <link rel="stylesheet" href="../../font-awesome/css/font-awesome.min.css">
+</head>
+
+<body>
+
+  <img vAlign="center" src="../hof.svg" alt="Hall of Fame image from https://openclipart.org/detail/120343/trophy"
+    width="300px" height="auto" />
+  <br />
+
+  <div class="action-buttons">
+    <a class="button" href="https://wekan.fi/hall-of-fame">Back to Hall of Fame Contents</a>
+    <a class="button" href="https://wekan.fi">Back to Wekan Website</a>
+  </div>
+
+  <div class="hof">
+    <h1 class="hof">Contents / FollowBleed</h1>
+
+    <table border="1" margin="0" padding="10px" width="100%">
+      <tr>
+        <th width="10%">CVE</th>
+        <th width="10%">Vulnerability name</th>
+        <th width="10%">Date</th>
+        <th width="20%">
+          <a href="https://github.com/wekan/wekan/blob/main/SECURITY.md" style="color: red;">Responsible Security Disclosure</a>
+          by
+        </th>
+        <th width="40%">Vulnerabilities</th>
+      </tr>
+
+      <tr>
+        <td valign="top">
+          <a href="https://github.com/wekan/wekan/security/advisories/GHSA-j9p2-jm73-p549">GHSA-j9p2-jm73-p549</a>
+          <br /> <br />
+        </td>
+        <td valign="top"><b>FollowBleed</b> <h2><i class="fa fa-arrow-circle-right" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></h2></td>
+        <td valign="top">2026-08-03</td>
+        <td valign="top">
+          <b><a href="https://github.com/RandomGenerator">RandomGenerator</a></b> and <b><a href="https://github.com/xet7">xet7</a></b><br />
+          <img src="../GoldStar.png" width="30px" height="auto" /><br />
+          Coordinated disclosure via GitHub Security Advisory GHSA-j9p2-jm73-p549.
+        </td>
+        <td valign="top">
+          <ul>
+            <li><i class="fa fa-arrow-circle-right" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i> FollowBleed &mdash; the import downloads validated the URL and then fetched it with something that follows redirects, so a public URL could answer <code>302 Location: http://127.0.0.1:…</code> and the loopback body became the imported attachment (CWE-918 Server-Side Request Forgery)</li>
+            <li>Affected the live Trello import (<code>server/trelloApiImport.js</code>) and, unreported, the offline Trello and WeKan importers</li>
+            <li>A bypass of the fix that closed <a href="../livebleed/">LiveBleed</a> / CVE-2026-30844</li>
+            <li>Fixed at
+               <a href="https://github.com/wekan/wekan/blob/main/CHANGELOG.md#upcoming-wekan--release">upcoming WeKan release</a>
+            </li>
+          </ul>
+        </td>
+      </tr>
+
+    </table>
+  </div>
+
+  <br />
+  <br />
+
+  <div class="hof">
+    <h2 class="hof">Details</h2>
+
+    <h3>FollowBleed — a redirect walked the import downloads past the SSRF guard (CWE-918)</h3>
+    <p>
+      WeKan can import a board from Trello, and an attachment on a Trello card carries a URL.
+      Whoever owns that board chooses it, WeKan fetches it server-side, and the response is
+      stored as an imported attachment that can be read back through WeKan. That is why an
+      unguarded fetch here is a <b>non-blind</b> SSRF: the attacker does not merely cause the
+      request, they get to read what came back.
+    </p>
+    <p>
+      This was found once already and fixed as <a href="../livebleed/">LiveBleed</a> /
+      CVE-2026-30844: every live-import download was gated on
+      <code>validateAttachmentUrl()</code>, which parses the URL, resolves the hostname and
+      refuses loopback, private, link-local and cloud-metadata addresses. The URL really was
+      validated. The <b>download</b> was not:
+    </p>
+    <pre>
+// vulnerable — the URL is checked, the request is not
+const validation = await validateAttachmentUrl(url);
+if (!validation.valid) return null;
+
+const res = await fetch(url, {                 // &lt;-- follows redirects
+  headers: { Authorization: authHeader(key, token) },
+});
+const buffer = Buffer.from(await res.arrayBuffer());
+    </pre>
+    <p>
+      The platform <code>fetch()</code> follows redirects by default. So the guard only ever
+      saw the <b>request</b>, and the target gets to <b>answer</b>:
+    </p>
+    <ol>
+      <li>the attacker puts <code>http://&lt;public-host&gt;/attachment.txt</code> on a Trello card</li>
+      <li><code>validateAttachmentUrl()</code> resolves it, sees a public IP, allows it</li>
+      <li>that host answers <code>302 Location: http://127.0.0.1:18080/secret</code></li>
+      <li><code>fetch()</code> follows, and the loopback body is stored as the attachment</li>
+    </ol>
+    <p>
+      The reporter demonstrated exactly this against WeKan v10.53 in a Docker lab, with a
+      redirector on a Docker-only network and a loopback-only service inside WeKan's own network
+      namespace; the imported attachment came back holding the loopback service's response. The
+      same path reaches internal HTTP admin panels, cloud metadata endpoints, internal APIs and
+      anything else only exposed inside the container or network namespace.
+    </p>
+    <p>
+      An SSRF-hardened fetch already existed in <code>server/lib/ssrfGuard.js</code> &mdash;
+      written for <a href="../dnsbleed/">DnsBleed</a>, resolving DNS once, pinning the connection
+      to the validated IP and refusing redirects &mdash; but the live-import sinks did not use
+      it.
+    </p>
+    <p>
+      <b>Fix:</b> a guard on the URL alone cannot hold, because the target gets to answer and an
+      answer can name a new URL. So <code>fetchSafe()</code> validates <b>every hop</b>.
+      <code>maxRedirects</code> is how many redirects a caller is willing to follow, and it
+      defaults to <code>0</code> &mdash; any 3xx refused outright, exactly as before, which is
+      right for outgoing webhooks and avatar downloads because a legitimate one never redirects.
+      A caller that must follow one passes a small number, and each hop goes through the same
+      protocol allowlist, blocked-range check and DNS pinning as the original URL before a packet
+      is sent to it.
+    </p>
+    <pre>
+// fixed — server/lib/ssrfGuard.js
+for (let hop = 0; ; hop += 1) {
+  const { parsed, resolvedIp } = await validateAndResolve(currentUrl);
+  const res = await requestOnce(parsed, resolvedIp, currentOptions);
+
+  if (!(res.statusCode &gt;= 300 &amp;&amp; res.statusCode &lt; 400)) return readResponse(res);
+
+  res.destroy();                                  // never followed silently
+  if (maxRedirects === 0) throw new Error('SSRF_GUARD: Redirects are not allowed');
+  if (hop &gt;= maxRedirects) throw new Error('SSRF_GUARD: Too many redirects');
+  currentUrl = new URL(res.headers.location, parsed.href).href;   // re-validated above
+}
+    </pre>
+    <p>
+      Credentials are dropped when a redirect crosses to another origin, so following Trello's
+      302 to a signed S3 URL cannot hand the Trello API key and token to whoever the redirect
+      names.
+    </p>
+    <p>
+      Refusing every redirect was not an option here. Trello's own attachment endpoint answers
+      with a 302 to a signed S3 URL, so a blanket refusal would have meant importing no
+      attachments at all &mdash; and a guard that breaks the feature is a guard somebody
+      switches off.
+    </p>
+    <p>
+      <b>The offline importers had the same hole</b> and were not part of the report. They
+      handed the validated URL to Meteor-Files' <code>Attachments.loadAsync()</code>, which
+      downloads with the platform <code>fetch()</code> too, so a pasted Trello or WeKan board
+      export reached <code>127.0.0.1</code> by exactly the same 302.
+      <code>models/lib/importAttachmentDownload.js</code> validates, downloads through
+      <code>fetchSafe</code> with every hop checked, and hands back the bytes, which are stored
+      with the same call both importers already used for an attachment that arrived inline.
+    </p>
+    <p>
+      <code>tests/followbleed.test.cjs</code> replays the reported attack against a stubbed
+      transport &mdash; a public host that 302s to <code>127.0.0.1</code> &mdash; and asserts
+      that the second hop is <b>never sent</b>, so the test states the danger and not only the
+      remedy. It also covers a redirect to a hostname that resolves to a private IP, to the
+      metadata address, to a non-<code>http</code> scheme, a relative <code>Location</code>, the
+      chain limit, credential stripping across origins, 303/307 method handling, and that a
+      legitimate public-to-public redirect is still followed with each hop pinned.
+    </p>
+    <p>
+      Reported privately by <b><a href="https://github.com/RandomGenerator">RandomGenerator</a></b>
+      via GitHub Security Advisory
+      <a href="https://github.com/wekan/wekan/security/advisories/GHSA-j9p2-jm73-p549">GHSA-j9p2-jm73-p549</a>,
+      reproduced against tag <code>v10.53</code>. Fixed at the
+      <a href="https://github.com/wekan/wekan/blob/main/CHANGELOG.md#upcoming-wekan--release">upcoming WeKan release</a>.
+    </p>
+  </div>
+
+</body>
+
+</html>
