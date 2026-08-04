@@ -88,6 +88,43 @@
 
       <tr>
         <td valign="top">
+          <a href="https://github.com/wekan/wekan/security/advisories/GHSA-2g94-9x3m-hv37">GHSA-2g94-9x3m-hv37</a>
+          <br /> <br />
+        </td>
+        <td class="icon" valign="top"><h2><i class="fa fa-unlock-alt" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></h2></td>
+        <td valign="top"><b>LockoutBleed</b></td>
+        <td valign="top">2026-08-04</td>
+        <td class="by" valign="top">
+          <b><a href="https://github.com/NinjaGPT">NinjaGPT</a></b> and <b><a href="https://github.com/xet7">xet7</a></b>
+        </td>
+        <td class="stars" valign="top">
+          <img src="GoldStar.png" width="30px" height="auto" />
+        </td>
+        <td valign="top">
+          <details>
+          <summary>Process</summary>
+
+          Coordinated disclosure via GitHub Security Advisory GHSA-2g94-9x3m-hv37.
+          </details>
+        </td>
+        <td valign="top">
+          <details>
+          <summary>Details</summary>
+
+          <ul>
+            <li><i class="fa fa-unlock-alt" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i> LockoutBleed &mdash; user enumeration chained with unthrottled password brute-force into account takeover. The bundled <code>wekan-accounts-lockout</code> (default 3 failures &rarr; 60 s lockout) was completely inert: its two <code>Accounts.validateLoginAttempt</code> hooks decided whether an attempt failed by comparing the error's REASON STRING (<code>reason !== 'Incorrect password'</code> for a known user, <code>!== 'User not found'</code> for an unknown one), but Meteor's <code>ambiguousErrorMessages</code> (on by default) rewrites every credential failure to one generic sentence BEFORE those hooks run. The literals never matched, both hooks returned early, the counter never incremented, and no account ever locked &mdash; unlimited unthrottled guessing (CWE-307 Improper Restriction of Excessive Authentication Attempts)</li>
+            <li>The same login path leaked WHICH ACCOUNTS EXIST by timing: accounts-password runs a bcrypt comparison (~50 ms) only for a user that exists and has a local password, and returns in ~2 ms otherwise. The distributions do not overlap, so an unauthenticated attacker classifies any username or email as real or not with near-100% accuracy, regardless of the uniform error text (CWE-208 Observable Timing Discrepancy / CWE-204). The REST <code>POST /users/login</code> twin was worse: it threw a distinct <em>&ldquo;User with that username or email address not found.&rdquo;</em> for a missing user and never went through the lockout hooks at all</li>
+            <li>Fixed by deciding lockout from the attempt's STRUCTURAL fields instead of a localized Meteor-internal string (new <code>packages/wekan-accounts-lockout/src/loginFailureDecision.js</code>), so any genuine password failure is counted and the lockout fires &mdash; while the benign <code>no-2fa-code</code> step (password already correct, second factor still to come) is never counted, so 2FA users are not locked out of their own sign-in</li>
+            <li>The enumeration timing is equalised with one DUMMY BCRYPT COMPARISON against a fixed cost-10 hash whenever the real path would skip bcrypt (<code>server/lib/loginTimingDefense.js</code>), wired into the DDP <code>login</code> method by a normalization handler that runs ahead of the built-in one and never authenticates (<code>server/loginTimingNormalization.js</code>). The REST endpoint now answers missing-user and wrong-password IDENTICALLY, runs the same equaliser, and THROTTLES failed attempts per client address (<code>server/lib/loginAttemptThrottle.js</code>) &mdash; only failures count and a success clears the counter</li>
+            <li>Fixed at <a href="https://github.com/wekan/wekan/blob/main/CHANGELOG.md#upcoming-wekan--release">upcoming WeKan release</a></li>
+            <li><a href="lockoutbleed/">More details</a></li>
+          </ul>
+          </details>
+        </td>
+      </tr>
+
+      <tr>
+        <td valign="top">
           <a href="https://github.com/wekan/wekan/security/advisories/GHSA-j9p2-jm73-p549">GHSA-j9p2-jm73-p549</a>
           <br /> <br />
         </td>

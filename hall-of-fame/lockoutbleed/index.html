@@ -1,0 +1,175 @@
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <title>WeKan — Hall of Fame / LockoutBleed</title>
+  <link rel="icon" href="../../wekan-favicon.png">
+  <link rel="stylesheet" type="text/css" href="../../css/main.css">
+  <link rel="stylesheet" href="../../font-awesome/css/font-awesome.min.css">
+</head>
+
+<body>
+
+  <img vAlign="center" src="../hof.svg" alt="Hall of Fame image from https://openclipart.org/detail/120343/trophy"
+    width="300px" height="auto" />
+  <br />
+
+  <div class="action-buttons">
+    <a class="button" href="https://wekan.fi/hall-of-fame">Back to Hall of Fame Contents</a>
+    <a class="button" href="https://wekan.fi">Back to Wekan Website</a>
+  </div>
+
+  <div class="hof">
+    <h1 class="hof">Contents / LockoutBleed</h1>
+
+    <table border="1" margin="0" padding="10px" width="100%">
+      <tr>
+        <th width="10%">CVE</th>
+        <th width="10%">Vulnerability name</th>
+        <th width="10%">Date</th>
+        <th width="20%">
+          <a href="https://github.com/wekan/wekan/blob/main/SECURITY.md" style="color: red;">Responsible Security Disclosure</a>
+          by
+        </th>
+        <th width="40%">Vulnerabilities</th>
+      </tr>
+
+      <tr>
+        <td valign="top">
+          <a href="https://github.com/wekan/wekan/security/advisories/GHSA-2g94-9x3m-hv37">GHSA-2g94-9x3m-hv37</a>
+          <br /> <br />
+        </td>
+        <td valign="top"><b>LockoutBleed</b> <h2><i class="fa fa-unlock-alt" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></h2></td>
+        <td valign="top">2026-08-04</td>
+        <td valign="top">
+          <b><a href="https://github.com/NinjaGPT">NinjaGPT</a></b> and <b><a href="https://github.com/xet7">xet7</a></b><br />
+          <img src="../GoldStar.png" width="30px" height="auto" /><br />
+          Coordinated disclosure via GitHub Security Advisory GHSA-2g94-9x3m-hv37.
+        </td>
+        <td valign="top">
+          <ul>
+            <li><i class="fa fa-unlock-alt" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i> LockoutBleed &mdash; the bundled brute-force lockout never fired, so passwords could be guessed without limit (CWE-307 Improper Restriction of Excessive Authentication Attempts)</li>
+            <li>Chained with user enumeration: a login for a real user runs bcrypt (~50 ms) while a missing one returns in ~2 ms, a timing oracle that reveals which usernames and emails exist (CWE-208 Observable Timing Discrepancy)</li>
+            <li>Affected the DDP <code>login</code> method and the REST <code>POST /users/login</code> endpoint (which also named the missing user outright and had no lockout at all)</li>
+            <li>Fixed at
+               <a href="https://github.com/wekan/wekan/blob/main/CHANGELOG.md#upcoming-wekan--release">upcoming WeKan release</a>
+            </li>
+          </ul>
+        </td>
+      </tr>
+
+    </table>
+  </div>
+
+  <br />
+  <br />
+
+  <div class="hof">
+    <h2 class="hof">Details</h2>
+
+    <h3>LockoutBleed — the shipped brute-force lockout never fired (CWE-307)</h3>
+    <p>
+      WeKan bundles <code>wekan-accounts-lockout</code> to stop password guessing: by default,
+      three failed logins lock the account for sixty seconds. It had been doing nothing at all.
+      Both of its <code>Accounts.validateLoginAttempt</code> hooks decided whether an attempt
+      was a failure by comparing the error's <b>reason string</b> &mdash;
+      <code>loginInfo.error.reason !== 'Incorrect password'</code> for a known user,
+      <code>!== 'User not found'</code> for an unknown one &mdash; and returned early otherwise.
+    </p>
+    <p>
+      That reason never arrives. Meteor's <code>accounts-base</code> ships
+      <code>ambiguousErrorMessages</code> defaulting to <b>true</b>, so its
+      <code>_handleError</code> rewrites every credential failure &mdash; wrong password, no
+      such user, no password set &mdash; to one generic sentence <em>before</em> any
+      validateLoginAttempt hook runs:
+    </p>
+    <pre>
+// meteor/accounts-base — accounts_server.js
+_handleError = (msg, throwError = true, errorCode = 403) => {
+  const isErrorAmbiguous = this._options.ambiguousErrorMessages ?? true;
+  const error = new Meteor.Error(
+    errorCode,
+    isErrorAmbiguous
+      ? 'Something went wrong. Please check your credentials.'   // &lt;-- the reason the hooks see
+      : msg,                                                     //     never 'Incorrect password'
+  );
+  ...
+};
+    </pre>
+    <p>
+      So the literals never matched, both hooks returned early, the failure counter was never
+      incremented, and no account ever locked. The report confirmed it dynamically: the lockout
+      collection stayed empty and unlimited failed logins were accepted &mdash; no CAPTCHA, no
+      rate limit, no lockout.
+    </p>
+    <p>
+      The fix decides from the attempt's <b>structural fields</b> instead of a localized,
+      Meteor-internal string WeKan does not control (new
+      <code>packages/wekan-accounts-lockout/src/loginFailureDecision.js</code>): a password
+      login of a known user that carries an error is a countable failure; a password login with
+      no matched user that carries an error is a countable unknown-user failure. The one error
+      deliberately <b>not</b> counted is <code>no-2fa-code</code> &mdash; accounts-2fa throws it
+      <em>after</em> the password already checked out, to ask for the second factor, so it is
+      the normal first leg of every two-factor sign-in and counting it would lock out
+      legitimate 2FA users. A <em>wrong</em> second factor (<code>invalid-2fa-code</code>) still
+      counts, because there the password was already correct.
+    </p>
+
+    <h3>User enumeration by bcrypt timing (CWE-208)</h3>
+    <p>
+      The accounts-password login path runs a bcrypt comparison (~50 ms) only when the user
+      exists and has a local password. For a missing user &mdash; or an LDAP/OIDC-only user with
+      no local password &mdash; it throws immediately (~2 ms) with no bcrypt work. The two
+      response-time distributions do not overlap, so an unauthenticated attacker can tell
+      whether any given username or email exists with near-100% reliability, no matter how
+      uniform the error <b>text</b> is. With enumeration free and guessing unthrottled, any
+      account with a weak, guessable or breached password &mdash; including an administrator's
+      &mdash; could be taken over, a successful login returning a full resume login token.
+    </p>
+    <p>
+      The standard mitigation is applied: whenever the real path would skip bcrypt, one
+      <b>dummy bcrypt comparison against a fixed cost-10 hash</b> is performed so the
+      missing-user path costs about the same as a real check (new
+      <code>server/lib/loginTimingDefense.js</code>). On the DDP <code>login</code> method a
+      timing-normalization login handler runs ahead of the built-in password handler, looks the
+      user up, and &mdash; when there is no local password to check &mdash; burns the
+      compensating time before falling through; it never authenticates
+      (<code>server/loginTimingNormalization.js</code>).
+    </p>
+
+    <h3>The REST twin was worse</h3>
+    <p>
+      <code>POST /users/login</code> in <code>server/apiAuthRoutes.js</code> checks the password
+      directly with <code>Accounts._checkPasswordAsync</code> and never runs the DDP lockout
+      hooks, so on its own it had no brute-force protection at all &mdash; and it enumerated by
+      <b>message</b>, throwing a distinct <em>&ldquo;User with that username or email address
+      not found.&rdquo;</em> for a missing user while a wrong password threw the ambiguous one.
+      It now fails missing-user and wrong-password with the <b>same uniform error</b>, runs the
+      same dummy-bcrypt timing equaliser for a missing or password-less account, and throttles
+      failed attempts per client address (new <code>server/lib/loginAttemptThrottle.js</code>,
+      default 10 failures / 60 s &rarr; 60 s lockout). Only failures count and a success clears
+      the client's counter, so correct-credential clients are never impeded;
+      <code>X-Forwarded-For</code> is honoured only when <code>HTTP_FORWARDED_COUNT</code>
+      declares the proxy depth, so the header cannot be spoofed to dodge the throttle.
+    </p>
+    <p>
+      Four plain-Node unit suites pin each half: <code>tests/loginFailureDecision.test.cjs</code>
+      (the ambiguous reason is counted, success still enforces an active lock,
+      <code>no-2fa-code</code> never locks anyone), <code>tests/loginTimingDefense.test.cjs</code>,
+      <code>tests/loginAttemptThrottle.test.cjs</code> (the time-injected throttle and the key
+      resolver), and <code>tests/loginBruteForceEnumerationWiring.test.cjs</code> (the fragile
+      reason-string guards stay gone and the REST endpoint keeps its uniform error, timing
+      equaliser and throttle).
+    </p>
+    <p>
+      Reported by <b><a href="https://github.com/NinjaGPT">NinjaGPT</a></b> via GitHub Security
+      Advisory
+      <a href="https://github.com/wekan/wekan/security/advisories/GHSA-2g94-9x3m-hv37">GHSA-2g94-9x3m-hv37</a>,
+      reproduced against <code>v8.35</code>. Fixed at the
+      <a href="https://github.com/wekan/wekan/blob/main/CHANGELOG.md#upcoming-wekan--release">upcoming WeKan release</a>.
+    </p>
+  </div>
+
+</body>
+
+</html>
