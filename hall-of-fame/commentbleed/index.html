@@ -1,0 +1,152 @@
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <title>WeKan — Hall of Fame / CommentBleed</title>
+  <link rel="icon" href="../../wekan-favicon.png">
+  <link rel="stylesheet" type="text/css" href="../../css/main.css">
+  <link rel="stylesheet" href="../../font-awesome/css/font-awesome.min.css">
+</head>
+
+<body>
+
+  <img vAlign="center" src="../hof.svg" alt="Hall of Fame image from https://openclipart.org/detail/120343/trophy"
+    width="300px" height="auto" />
+  <br />
+
+  <div class="action-buttons">
+    <a class="button" href="https://wekan.fi/hall-of-fame">Back to Hall of Fame Contents</a>
+    <a class="button" href="https://wekan.fi">Back to Wekan Website</a>
+  </div>
+
+  <div class="hof">
+    <h1 class="hof">Contents / CommentBleed</h1>
+
+    <table border="1" margin="0" padding="10px" width="100%">
+      <tr>
+        <th width="10%">CVE</th>
+        <th width="10%">Vulnerability name</th>
+        <th width="10%">Date</th>
+        <th width="20%">
+          <a href="https://github.com/wekan/wekan/blob/main/SECURITY.md" style="color: red;">Responsible Security Disclosure</a>
+          by
+        </th>
+        <th width="40%">Vulnerabilities</th>
+      </tr>
+
+      <tr>
+        <td valign="top">
+          <a href="https://github.com/wekan/wekan/security/advisories/GHSA-pqr4-rxgp-hv2m">GHSA-pqr4-rxgp-hv2m</a>
+          <br /> <br />
+        </td>
+        <td valign="top"><b>CommentBleed</b> <h2><i class="fa fa-comment" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></h2></td>
+        <td valign="top">2026-08-09</td>
+        <td valign="top">
+          <b><a href="https://github.com/Alpastx">Alpastx</a></b> and <b><a href="https://github.com/xet7">xet7</a></b><br />
+          <img src="../GoldStar.png" width="30px" height="auto" /><br />
+          Coordinated disclosure via GitHub Security Advisory GHSA-pqr4-rxgp-hv2m.
+        </td>
+        <td valign="top">
+          <ul>
+            <li><i class="fa fa-comment" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i> CommentBleed &mdash; the REST comment DELETE endpoint checked board MEMBERSHIP only, so any normal member could delete any other user's comment (CWE-639 Authorization Bypass Through User-Controlled Key, CWE-863 Incorrect Authorization)</li>
+            <li>The author-or-admin rule, and the board's <code>restrictCommentEditing</code> setting, lived in a collection hook keyed off the Meteor userId &mdash; which an HTTP request does not carry, so the hook took its "server-internal, trust it" path and allowed the deletion</li>
+            <li>Broken object-level authorization on a collaborative board: harassment and evidence destruction, while the same deletion over DDP was correctly refused</li>
+            <li>Fixed at
+               <a href="https://github.com/wekan/wekan/blob/main/CHANGELOG.md#upcoming-wekan--release">upcoming WeKan release</a>
+            </li>
+          </ul>
+        </td>
+      </tr>
+
+    </table>
+  </div>
+
+  <br />
+  <br />
+
+  <div class="hof">
+    <h2 class="hof">Details</h2>
+
+    <h3>CommentBleed — the rule was there, and the REST path never reached it (CWE-639, CWE-863)</h3>
+    <p>
+      Deleting a comment in WeKan is author-or-board-admin, and a board that switches on
+      <code>restrictCommentEditing</code> takes even the admin's ability away, leaving only the
+      author. That policy is real, it is tested, and over DDP it works.
+    </p>
+    <p>
+      It was enforced in a <code>CardComments</code> collection hook, which decides from the
+      <b>Meteor userId</b> of the invocation. Genuine server-internal work &mdash; copying a board,
+      cleanup, migrations &mdash; runs with no authenticated user, so the hook began:
+    </p>
+    <pre>
+// models/cardComments.js
+if (!userId) {
+  return;      // server-internal operation: not a user action, do not block it
+}
+    </pre>
+    <p>
+      An HTTP request is not a server-internal operation, but it does not carry a Meteor userId
+      into the invocation context either. The REST handler had only the board-level check:
+    </p>
+    <pre>
+// server/models/cardComments.js — before
+await Authentication.checkBoardAccess(req.userId, paramBoardId);
+await CardComments.removeAsync({ _id: paramCommentId, cardId: paramCardId, boardId: paramBoardId });
+    </pre>
+    <p>
+      <code>checkBoardAccess</code> answers "is this person a member of this board" &mdash; a
+      perfectly good question, and the wrong one for "may this person delete THIS comment". The
+      removal then reached the collection with no userId, the hook took its trusted path, and the
+      comment was gone. HTTP 200, somebody else's comment deleted, on a board with
+      <code>restrictCommentEditing</code> switched on, by a member who over DDP would have been
+      refused.
+    </p>
+    <p>
+      Both users only need to be ordinary members of the same board, and the API token of a normal
+      account is enough. On a shared board that is harassment, and the destruction of a record
+      somebody may be relying on.
+    </p>
+
+    <h3>The fix: ask the question where the answer is known</h3>
+    <p>
+      The repair is not to teach the hook about HTTP callers &mdash; a hook cannot see an identity
+      that was never put in the context. It is for the handler, which DOES know who is calling, to
+      apply the rule itself:
+    </p>
+    <ul>
+      <li>load the comment, and answer <b>404</b> when there is none &mdash; a delete of a
+        nonexistent comment must not report success;</li>
+      <li>apply the same author-or-admin / <code>restrictCommentEditing</code> rule, with
+        <code>req.userId</code>, <b>before</b> removing anything;</li>
+      <li>answer <b>403</b> when it says no.</li>
+    </ul>
+    <p>
+      That rule is now an exported function (<code>assertCanMutateComment</code>) which the
+      collection hooks and the REST handler both call, so DDP and HTTP cannot enforce different
+      things &mdash; which is the actual bug, in one sentence. The pure decision underneath it
+      (<code>canEditComment</code>) is unchanged, and so is DDP behaviour.
+    </p>
+    <p>
+      The <code>if (!userId)</code> path stays, because the internal callers it was written for are
+      real and would break without it. What changed is that a REST request no longer arrives there
+      anonymously.
+    </p>
+    <p>
+      <code>tests/restCommentDeleteAcl.test.cjs</code> pins that the handler loads the comment,
+      that a missing one is a 404, that the ACL runs BEFORE the removal, that board membership
+      alone is no longer sufficient, that the hooks still call the same function, and &mdash; so a
+      future comment-edit route cannot repeat this &mdash; that no REST <code>PUT</code> for
+      comments exists without the same check.
+    </p>
+    <p>
+      Reported by <b><a href="https://github.com/Alpastx">Alpastx</a></b> via GitHub Security
+      Advisory
+      <a href="https://github.com/wekan/wekan/security/advisories/GHSA-pqr4-rxgp-hv2m">GHSA-pqr4-rxgp-hv2m</a>,
+      confirmed against <code>v10.73.0</code> with <code>WITH_API=true</code>. Fixed at the
+      <a href="https://github.com/wekan/wekan/blob/main/CHANGELOG.md#upcoming-wekan--release">upcoming WeKan release</a>.
+    </p>
+  </div>
+
+</body>
+
+</html>

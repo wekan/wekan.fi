@@ -1,0 +1,154 @@
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <title>WeKan — Hall of Fame / RevokeBleed</title>
+  <link rel="icon" href="../../wekan-favicon.png">
+  <link rel="stylesheet" type="text/css" href="../../css/main.css">
+  <link rel="stylesheet" href="../../font-awesome/css/font-awesome.min.css">
+</head>
+
+<body>
+
+  <img vAlign="center" src="../hof.svg" alt="Hall of Fame image from https://openclipart.org/detail/120343/trophy"
+    width="300px" height="auto" />
+  <br />
+
+  <div class="action-buttons">
+    <a class="button" href="https://wekan.fi/hall-of-fame">Back to Hall of Fame Contents</a>
+    <a class="button" href="https://wekan.fi">Back to Wekan Website</a>
+  </div>
+
+  <div class="hof">
+    <h1 class="hof">Contents / RevokeBleed</h1>
+
+    <table border="1" margin="0" padding="10px" width="100%">
+      <tr>
+        <th width="10%">CVE</th>
+        <th width="10%">Vulnerability name</th>
+        <th width="10%">Date</th>
+        <th width="20%">
+          <a href="https://github.com/wekan/wekan/blob/main/SECURITY.md" style="color: red;">Responsible Security Disclosure</a>
+          by
+        </th>
+        <th width="40%">Vulnerabilities</th>
+      </tr>
+
+      <tr>
+        <td valign="top">
+          <a href="https://github.com/wekan/wekan/security/advisories/GHSA-gwc4-fw7p-gw58">GHSA-gwc4-fw7p-gw58</a>
+          <br /> <br />
+        </td>
+        <td valign="top"><b>RevokeBleed</b> <h2><i class="fa fa-ban" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></h2></td>
+        <td valign="top">2026-08-09</td>
+        <td valign="top">
+          <b><a href="https://github.com/Alpastx">Alpastx</a></b> and <b><a href="https://github.com/xet7">xet7</a></b><br />
+          <img src="../GoldStar.png" width="30px" height="auto" /><br />
+          Coordinated disclosure via GitHub Security Advisory GHSA-gwc4-fw7p-gw58.
+        </td>
+        <td valign="top">
+          <ul>
+            <li><i class="fa fa-ban" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i> RevokeBleed &mdash; revoking a board share with an organization, a team or an email domain did not revoke access to the board's DATA (CWE-639 Authorization Bypass Through User-Controlled Key, CWE-863 Incorrect Authorization)</li>
+            <li>The board disappeared from All Boards, which honours <code>isActive</code>, while the <code>board</code> publication matched shares with a dotted selector that ignores it &mdash; so a revoked user who still knew the boardId received the whole private board</li>
+            <li>Affected <code>server/publications/boards.js</code>, the publication that sends the board with its lists, swimlanes, cards, comments and attachments</li>
+            <li>Fixed at
+               <a href="https://github.com/wekan/wekan/blob/main/CHANGELOG.md#upcoming-wekan--release">upcoming WeKan release</a>
+            </li>
+          </ul>
+        </td>
+      </tr>
+
+    </table>
+  </div>
+
+  <br />
+  <br />
+
+  <div class="hof">
+    <h2 class="hof">Details</h2>
+
+    <h3>RevokeBleed — the revoke switch the data publication never looked at (CWE-639, CWE-863)</h3>
+    <p>
+      A WeKan board can be shared with an organization, a team, or everybody holding an email
+      address in a given domain. Each share is an entry in an array on the board
+      (<code>orgs</code>, <code>teams</code>, <code>domains</code>), and each entry carries an
+      <code>isActive</code> flag. Setting that flag to <code>false</code> is how a board admin
+      REVOKES the share. It is the whole revoke mechanism.
+    </p>
+    <p>
+      The All Boards list asked the question correctly, with <code>$elemMatch</code>, which
+      matches ONE array element against ALL of the given conditions at once:
+    </p>
+    <pre>
+// models/boards.js — Boards.userBoards
+{ orgs: { $elemMatch: { orgId: { $in: user.orgIds() }, isActive: true } } },
+    </pre>
+    <p>
+      The <code>board</code> publication &mdash; the one that actually sends the board document
+      and its lists, swimlanes, cards, comments and attachments &mdash; had its own copy of the
+      same question, and the copy was written with dotted paths:
+    </p>
+    <pre>
+// server/publications/boards.js — before
+$or.push({ 'orgs.orgId':      { $in: orgsIds } });
+$or.push({ 'teams.teamId':    { $in: teamsIds } });
+$or.push({ 'domains.domain':  { $in: emailDomains } });
+    </pre>
+    <p>
+      A dotted path matches if ANY element of the array has that value in that field, and says
+      nothing whatever about that element's other fields. So <code>isActive</code> was never
+      consulted here: the board vanished from the revoked user's All Boards, which is what the
+      admin saw and believed, while a subscription by boardId still returned everything.
+    </p>
+
+    <h3>What that looked like</h3>
+    <p>
+      A board admin shares private board B with organization O, a member of O opens B and their
+      browser remembers the URL, and the admin later revokes O's share. B leaves that user's board
+      list. Opening the bookmark &mdash; or calling
+      <code>Meteor.subscribe('board', boardId, false)</code> &mdash; still delivered the board
+      document and its children, and the private card content could be read as before. The same
+      applied to team shares and to domain shares. Whoever had once been given access kept it, for
+      as long as they remembered one id.
+    </p>
+
+    <h3>The fix: one builder, both callers</h3>
+    <p>
+      The two selectors were two copies of one rule, and they disagreed. There is one copy now:
+      <code>models/lib/boardVisibilitySelectors.js</code> builds the <code>$or</code> that answers
+      "which boards may this user see", and both <code>Boards.userBoards</code> and the
+      <code>board</code> publication call it. Every share kind is matched with
+      <code>$elemMatch</code> requiring <code>isActive: true</code>, so a share counts only while
+      it is active, everywhere.
+    </p>
+    <p>
+      The one clause that is not a relationship to the user &mdash;
+      <code>{ permission: 'public' }</code>, which means "anybody may open this" &mdash; is still
+      optional: the boards LIST includes it, because a public board is meant to be discoverable,
+      and the search over all boards drops it with <code>includePublic: false</code>, so a common
+      word does not answer with strangers' cards.
+    </p>
+    <p>
+      Because the same builder is now the single answer to that question, the check that
+      <a href="../parentbleed/">ParentBleed</a> added for cross-board parent cards inherits it too:
+      a revoked share does not make another board's cards visible there either.
+    </p>
+    <p>
+      <code>tests/boardShareRevokeBypass.test.cjs</code> pins each share kind's selector shape,
+      that NO clause anywhere matches a share without requiring <code>isActive</code>, that the
+      three dotted selectors are not produced at all, that an anonymous caller reaches public
+      boards and nothing else, and that junk in the id lists is dropped rather than handed to
+      Mongo.
+    </p>
+    <p>
+      Reported by <b><a href="https://github.com/Alpastx">Alpastx</a></b> via GitHub Security
+      Advisory
+      <a href="https://github.com/wekan/wekan/security/advisories/GHSA-gwc4-fw7p-gw58">GHSA-gwc4-fw7p-gw58</a>,
+      confirmed against <code>v10.73.0</code>. Fixed at the
+      <a href="https://github.com/wekan/wekan/blob/main/CHANGELOG.md#upcoming-wekan--release">upcoming WeKan release</a>.
+    </p>
+  </div>
+
+</body>
+
+</html>

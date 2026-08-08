@@ -1,0 +1,148 @@
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <title>WeKan — Hall of Fame / ParentBleed</title>
+  <link rel="icon" href="../../wekan-favicon.png">
+  <link rel="stylesheet" type="text/css" href="../../css/main.css">
+  <link rel="stylesheet" href="../../font-awesome/css/font-awesome.min.css">
+</head>
+
+<body>
+
+  <img vAlign="center" src="../hof.svg" alt="Hall of Fame image from https://openclipart.org/detail/120343/trophy"
+    width="300px" height="auto" />
+  <br />
+
+  <div class="action-buttons">
+    <a class="button" href="https://wekan.fi/hall-of-fame">Back to Hall of Fame Contents</a>
+    <a class="button" href="https://wekan.fi">Back to Wekan Website</a>
+  </div>
+
+  <div class="hof">
+    <h1 class="hof">Contents / ParentBleed</h1>
+
+    <table border="1" margin="0" padding="10px" width="100%">
+      <tr>
+        <th width="10%">CVE</th>
+        <th width="10%">Vulnerability name</th>
+        <th width="10%">Date</th>
+        <th width="20%">
+          <a href="https://github.com/wekan/wekan/blob/main/SECURITY.md" style="color: red;">Responsible Security Disclosure</a>
+          by
+        </th>
+        <th width="40%">Vulnerabilities</th>
+      </tr>
+
+      <tr>
+        <td valign="top">
+          <a href="https://github.com/wekan/wekan/security/advisories/GHSA-jvv9-498p-hxrg">GHSA-jvv9-498p-hxrg</a>
+          <br /> <br />
+        </td>
+        <td valign="top"><b>ParentBleed</b> <h2><i class="fa fa-sitemap" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></h2></td>
+        <td valign="top">2026-08-09</td>
+        <td valign="top">
+          <b><a href="https://github.com/Alpastx">Alpastx</a></b> and <b><a href="https://github.com/xet7">xet7</a></b><br />
+          <img src="../GoldStar.png" width="30px" height="auto" /><br />
+          Coordinated disclosure via GitHub Security Advisory GHSA-jvv9-498p-hxrg.
+        </td>
+        <td valign="top">
+          <ul>
+            <li><i class="fa fa-sitemap" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i> ParentBleed &mdash; a card's <code>parentId</code> could name a card on ANOTHER board, authorized only against the child board's write access (CWE-862 Missing Authorization)</li>
+            <li>The board publication then walked the whole ancestor chain and sent the complete ancestor card DOCUMENTS to every subscriber of the child board, with no check that any of them may see the parent's board (CWE-200 Exposure of Sensitive Information)</li>
+            <li>One card id therefore bridged a private board's cards &mdash; titles, descriptions, custom fields &mdash; into another board's DDP feed</li>
+            <li>Fixed at
+               <a href="https://github.com/wekan/wekan/blob/main/CHANGELOG.md#upcoming-wekan--release">upcoming WeKan release</a>
+            </li>
+          </ul>
+        </td>
+      </tr>
+
+    </table>
+  </div>
+
+  <br />
+  <br />
+
+  <div class="hof">
+    <h2 class="hof">Details</h2>
+
+    <h3>ParentBleed — a subtask's path led out of the board (CWE-200, CWE-862)</h3>
+    <p>
+      A WeKan card can be a subtask of another card, which it records as
+      <code>parentId</code>. Subtasks are allowed to live on a different board from their parent
+      &mdash; that is what the Subtasks board setting is for &mdash; so <code>parentId</code> may
+      legitimately name a card elsewhere.
+    </p>
+    <p>
+      Setting it was authorized only against the CHILD board. If you could write on board B, you
+      could set any card id at all as a parent, and nothing asked whether you were allowed to see
+      the board that id belongs to.
+    </p>
+    <p>
+      That would have been an untidy write on its own. What made it a disclosure is the read side.
+      When the <em>prefix-with-full-path</em> subtask setting is on, a subtask is rendered with its
+      complete ancestor path, so the board publication walks the chain to the top and publishes
+      what it finds. It published the ANCESTOR CARD DOCUMENTS, whole, to every subscriber of the
+      child board:
+    </p>
+    <pre>
+// server/publications/boards.js — before
+const ancestorIds = await collectAncestorIds(parentIds, ...);
+return await ReactiveCache.getCards({ _id: { $in: ancestorIds } }, {}, true);
+    </pre>
+    <p>
+      No membership check, no visibility check &mdash; the ids came from the child board's cards,
+      and everything they pointed at was sent. So: create a card on shared board B, PUT
+      <code>{ "parentId": "&lt;a card on private board A&gt;" }</code>, and every member of B
+      &mdash; including people with no part in A &mdash; receives A's card with its title,
+      description and custom fields over DDP. The attacker needs write access on B and one card id
+      from A, which dual membership hands them.
+    </p>
+
+    <h3>The fix: both ends, because either alone is half a fix</h3>
+    <p>
+      <b>The write</b> refuses a parent whose board the actor cannot see. That is one question, and
+      it is asked in one place (<code>server/lib/visibleBoardIds.js</code>) using the same
+      selectors as the board publication and All Boards &mdash; so an ACTIVE organization, team or
+      domain share counts, and one revoked by <a href="../revokebleed/">RevokeBleed</a>'s flag does
+      not. It is enforced on the REST card create, on the REST card update (the <code>PUT</code>
+      the report used), and over DDP by a deny rule covering insert as well as update, beside the
+      cross-board MOVE deny that <a href="../boardbleed/">the earlier board-move advisory</a>
+      added. A parent card that does not exist is refused too; clearing or omitting a parent is
+      untouched.
+    </p>
+    <p>
+      <b>The publication</b> sends only the ancestors whose board the subscriber may see. The board
+      being published is its own answer &mdash; it is already going to that subscriber &mdash; so
+      an ordinary same-board subtask path renders exactly as before. An ancestor on a board the
+      subscriber cannot see is simply not sent, and a chain that yields nothing publishes nothing.
+    </p>
+    <p>
+      Both halves matter. Fixing only the write would leave every <code>parentId</code> already in
+      the database publishing whatever it points at; fixing only the publication would leave the
+      cross-board reference there to be found by the next feature that reads ancestors.
+    </p>
+    <p>
+      This is not a new kind of check for WeKan &mdash; it is the check the linked-card path
+      already made. Creating a linked card requires read access to the SOURCE card's board, and has
+      since that feature was added. <code>parentId</code> simply never got the same treatment.
+    </p>
+    <p>
+      <code>tests/crossBoardParentCardLeak.test.cjs</code> pins the filtered cursor, that the
+      unfiltered publish of every ancestor is gone, that an empty result publishes nothing, that
+      both REST paths validate BEFORE they write, that the deny rule covers insert as well as
+      update, and that clearing a parent and the pre-existing cross-board move deny still work.
+    </p>
+    <p>
+      Reported by <b><a href="https://github.com/Alpastx">Alpastx</a></b> via GitHub Security
+      Advisory
+      <a href="https://github.com/wekan/wekan/security/advisories/GHSA-jvv9-498p-hxrg">GHSA-jvv9-498p-hxrg</a>,
+      confirmed against <code>v10.73.0</code>. Fixed at the
+      <a href="https://github.com/wekan/wekan/blob/main/CHANGELOG.md#upcoming-wekan--release">upcoming WeKan release</a>.
+    </p>
+  </div>
+
+</body>
+
+</html>

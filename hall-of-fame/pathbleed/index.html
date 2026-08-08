@@ -1,0 +1,174 @@
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <title>WeKan — Hall of Fame / PathBleed</title>
+  <link rel="icon" href="../../wekan-favicon.png">
+  <link rel="stylesheet" type="text/css" href="../../css/main.css">
+  <link rel="stylesheet" href="../../font-awesome/css/font-awesome.min.css">
+</head>
+
+<body>
+
+  <img vAlign="center" src="../hof.svg" alt="Hall of Fame image from https://openclipart.org/detail/120343/trophy"
+    width="300px" height="auto" />
+  <br />
+
+  <div class="action-buttons">
+    <a class="button" href="https://wekan.fi/hall-of-fame">Back to Hall of Fame Contents</a>
+    <a class="button" href="https://wekan.fi">Back to Wekan Website</a>
+  </div>
+
+  <div class="hof">
+    <h1 class="hof">Contents / PathBleed</h1>
+
+    <table border="1" margin="0" padding="10px" width="100%">
+      <tr>
+        <th width="10%">CVE</th>
+        <th width="10%">Vulnerability name</th>
+        <th width="10%">Date</th>
+        <th width="20%">
+          <a href="https://github.com/wekan/wekan/blob/main/SECURITY.md" style="color: red;">Responsible Security Disclosure</a>
+          by
+        </th>
+        <th width="40%">Vulnerabilities</th>
+      </tr>
+
+      <tr>
+        <td valign="top">
+          <a href="https://github.com/wekan/wekan/security/advisories/GHSA-4mxf-m8pq-xc9p">GHSA-4mxf-m8pq-xc9p</a>
+          <br /> <br />
+        </td>
+        <td valign="top"><b>PathBleed</b> <h2><i class="fa fa-folder-open" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></h2></td>
+        <td valign="top">2026-08-09</td>
+        <td valign="top">
+          <b><a href="https://github.com/Alpastx">Alpastx</a></b> and <b><a href="https://github.com/xet7">xet7</a></b><br />
+          <img src="../GoldStar.png" width="30px" height="auto" />
+          <img src="../GoldStar.png" width="30px" height="auto" /><br />
+          Coordinated disclosure via GitHub Security Advisory GHSA-4mxf-m8pq-xc9p.
+        </td>
+        <td valign="top">
+          <ul>
+            <li><i class="fa fa-folder-open" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i> PathBleed &mdash; an avatar's owner could write the ON-DISK PATH of their own avatar, because the guard attachments have was never copied to avatars (CWE-22 Path Traversal, CWE-73 External Control of File Name or Path)</li>
+            <li>Board export then read that path and embedded the bytes as base64 in <code>profile.avatarFile</code>, so any authenticated user who can own an avatar and export a board could read any file the WeKan process can read</li>
+            <li>Affected <code>server/permissions/avatars.js</code> (the write) and <code>models/exporter.js</code> (the read); attachments were already guarded, which is what made the gap invisible</li>
+            <li>Fixed at
+               <a href="https://github.com/wekan/wekan/blob/main/CHANGELOG.md#upcoming-wekan--release">upcoming WeKan release</a>
+            </li>
+          </ul>
+        </td>
+      </tr>
+
+    </table>
+  </div>
+
+  <br />
+  <br />
+
+  <div class="hof">
+    <h2 class="hof">Details</h2>
+
+    <h3>PathBleed — the guard attachments had, avatars did not (CWE-22, CWE-73)</h3>
+    <p>
+      WeKan stores an uploaded file with <code>ostrio:files</code>, which keeps the location of
+      the bytes on disk in the document itself, as
+      <code>versions.&lt;name&gt;.path</code>. That is server-managed metadata: the server writes
+      it when it stores the file, and a client has no reason ever to set or change it.
+    </p>
+    <p>
+      Attachments knew that. Their allow rule refused an insert carrying
+      <code>versions.*.path</code> or <code>versions.*.storage</code>, refused any update touching
+      the <code>versions</code> subtree, and restricted updates to a whitelist of fields.
+      Avatars did not. The whole avatar update rule was one line:
+    </p>
+    <pre>
+// server/permissions/avatars.js — before
+Avatars.allow({
+  async insert(userId, doc) { ... },
+  update: isOwner,          // &lt;-- being the owner let you write ANY field
+  remove: isOwner,
+  fetch: ['userId'],
+});
+    </pre>
+    <p>
+      Being the owner of your own avatar is a reasonable thing to require. It is not a reasonable
+      thing to be sufficient: <code>isOwner</code> says WHOSE document may be changed and nothing
+      about WHICH FIELDS, so the owner could set <code>versions.original.path</code> to any path
+      they liked.
+    </p>
+
+    <h3>Why that was a file read: board export</h3>
+    <p>
+      For every board member whose avatar is a local WeKan file, board export embeds the picture
+      itself, so a board round-trips through export and import with everyone's avatar intact,
+      without reaching out to an identity provider (which is also what makes it work inside a
+      Sandstorm grain). It does that by opening
+      <code>versions.original.path</code> and base64-encoding what it finds:
+    </p>
+    <pre>
+// models/exporter.js — before
+const readStream = fs.createReadStream(doc.versions.original.path);
+    </pre>
+    <p>
+      So the attack was three ordinary steps: upload an avatar, update your own avatar document to
+      point <code>versions.original.path</code> at <code>/etc/passwd</code> (or at anything else
+      the WeKan process can read, including everything under <code>WRITABLE_PATH</code>), then
+      export any board you are a member of and decode <code>users[].profile.avatarFile</code> out
+      of the JSON. Arbitrary file read as the WeKan OS user, available to any authenticated
+      account. The CDN download path was separately guarded &mdash; export was not.
+    </p>
+
+    <h3>The fix: both halves, and each rule in one place</h3>
+    <p>
+      The reason avatars had no guard is that attachments' guard was written INSIDE
+      <code>server/permissions/attachments.js</code>. A rule that exists in one file protects one
+      collection. Both halves of the fix are therefore shared modules that both callers import.
+    </p>
+    <p>
+      <b>The write.</b> <code>models/lib/fileVersionFields.js</code> holds the three checks &mdash;
+      does this insert carry server-managed version metadata, does this update touch the
+      <code>versions</code> subtree at all, does it stay inside the field whitelist &mdash; and
+      <em>both</em> <code>server/permissions/avatars.js</code> and
+      <code>server/permissions/attachments.js</code> import them. Avatars keep the ownership check
+      and add the field checks on top. The update test is deliberately broader than the insert
+      test: an update arrives as a list of changed field names, and naming
+      <code>versions.original</code> carries the path along with the rest of the sub-object, so it
+      is the same attack as spelling out <code>versions.original.path</code>.
+    </p>
+    <p>
+      <b>The read.</b> Blocking the write is not enough on its own, because a path can be poisoned
+      other ways &mdash; a document written before this fix, a restored backup, a bad migration.
+      So nothing is read from a stored path unless the path RESOLVES to somewhere inside WeKan's
+      own storage (<code>models/lib/storagePathContainment.js</code>). Resolving is the point:
+      <code>/data/files/avatars/../../etc/passwd</code> is not inside
+      <code>/data/files/avatars</code>, and comparing the relative path also means
+      <code>/data/files/avatars-evil</code> is not inside it either, which a plain
+      <code>startsWith</code> would have accepted. The check sits at
+      <code>getBase64Data</code> &mdash; the one place export turns a stored path into bytes, for
+      attachments and avatars alike &mdash; as well as at both avatar call sites.
+    </p>
+    <p>
+      The DOWNLOAD path in <code>models/lib/fileStoreStrategy.js</code> had always checked
+      containment this way; its private copy of the function is gone and it uses the shared one, so
+      the download and the export now ask the same question. That is the same class of mistake the
+      advisory is about, removed rather than repeated.
+    </p>
+    <p>
+      <code>tests/avatarVersionPathTraversal.test.cjs</code> pins the payload being refused on
+      insert and on update, that an ordinary upload and a rename are still allowed, that
+      <code>..</code>-escapes are resolved rather than string-matched, that a sibling directory
+      sharing the root's prefix is not inside it, that the storage root itself is not a file to
+      read, and that no unguarded read of a stored version path remains in the exporter.
+    </p>
+    <p>
+      Reported by <b><a href="https://github.com/Alpastx">Alpastx</a></b> via GitHub Security
+      Advisory
+      <a href="https://github.com/wekan/wekan/security/advisories/GHSA-4mxf-m8pq-xc9p">GHSA-4mxf-m8pq-xc9p</a>,
+      confirmed against <code>v10.73.0</code>. Fixed at the
+      <a href="https://github.com/wekan/wekan/blob/main/CHANGELOG.md#upcoming-wekan--release">upcoming WeKan release</a>.
+    </p>
+  </div>
+
+</body>
+
+</html>

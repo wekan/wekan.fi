@@ -88,6 +88,151 @@
 
       <tr>
         <td valign="top">
+          <a href="https://github.com/wekan/wekan/security/advisories/GHSA-4mxf-m8pq-xc9p">GHSA-4mxf-m8pq-xc9p</a>
+          <br /> <br />
+        </td>
+        <td class="icon" valign="top"><h2><i class="fa fa-folder-open" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></h2></td>
+        <td valign="top"><b>PathBleed</b></td>
+        <td valign="top">2026-08-09</td>
+        <td class="by" valign="top">
+          <b><a href="https://github.com/Alpastx">Alpastx</a></b> and <b><a href="https://github.com/xet7">xet7</a></b>
+        </td>
+        <td class="stars" valign="top">
+          <img src="GoldStar.png" width="30px" height="auto" />
+          <img src="GoldStar.png" width="30px" height="auto" />
+        </td>
+        <td valign="top">
+          <details>
+          <summary>Process</summary>
+
+          Coordinated disclosure via GitHub Security Advisory GHSA-4mxf-m8pq-xc9p.
+          </details>
+        </td>
+        <td valign="top">
+          <details>
+          <summary>Details</summary>
+
+          <ul>
+            <li><i class="fa fa-folder-open" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i> PathBleed &mdash; an avatar's owner could write the ON-DISK PATH of their own avatar. Attachments refused client-supplied <code>versions.*.path</code>; avatars did not, because that guard was written inside the attachment permission file and never copied. The whole avatar update rule was <code>update: isOwner</code>, which says WHOSE document may change and nothing about WHICH FIELDS (CWE-22 Path Traversal, CWE-73 External Control of File Name or Path)</li>
+            <li>Board export then read it: for every member whose avatar is a local WeKan file the exporter opens <code>versions.original.path</code> and embeds the bytes as base64 in <code>profile.avatarFile</code>. Point your own avatar at <code>/etc/passwd</code> &mdash; or anything under <code>WRITABLE_PATH</code> &mdash; export a board you are a member of, decode the JSON: arbitrary file read as the WeKan OS user, from any account that can own an avatar. The CDN download path was separately guarded; export was not</li>
+            <li>Fixed at both ends. The WRITE: the three guards now live in <code>models/lib/fileVersionFields.js</code> and BOTH permission files import them, so avatars refuse a versions payload on insert, refuse any update touching the <code>versions</code> subtree, and keep to the same field whitelist &mdash; ownership still required, no longer sufficient. The READ: nothing is read from a stored path unless it RESOLVES inside WeKan's own storage (<code>models/lib/storagePathContainment.js</code>), which also holds for a path poisoned by an old document, a restored backup or a bad migration. The download path's private copy of that check is gone, so download and export ask the same question</li>
+            <li>Fixed at <a href="https://github.com/wekan/wekan/blob/main/CHANGELOG.md#upcoming-wekan--release">upcoming WeKan release</a></li>
+            <li><a href="pathbleed/">More details</a></li>
+          </ul>
+          </details>
+        </td>
+      </tr>
+
+      <tr>
+        <td valign="top">
+          <a href="https://github.com/wekan/wekan/security/advisories/GHSA-jvv9-498p-hxrg">GHSA-jvv9-498p-hxrg</a>
+          <br /> <br />
+        </td>
+        <td class="icon" valign="top"><h2><i class="fa fa-sitemap" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></h2></td>
+        <td valign="top"><b>ParentBleed</b></td>
+        <td valign="top">2026-08-09</td>
+        <td class="by" valign="top">
+          <b><a href="https://github.com/Alpastx">Alpastx</a></b> and <b><a href="https://github.com/xet7">xet7</a></b>
+        </td>
+        <td class="stars" valign="top">
+          <img src="GoldStar.png" width="30px" height="auto" />
+        </td>
+        <td valign="top">
+          <details>
+          <summary>Process</summary>
+
+          Coordinated disclosure via GitHub Security Advisory GHSA-jvv9-498p-hxrg.
+          </details>
+        </td>
+        <td valign="top">
+          <details>
+          <summary>Details</summary>
+
+          <ul>
+            <li><i class="fa fa-sitemap" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i> ParentBleed &mdash; a card's <code>parentId</code> may name a card on ANOTHER board, and setting it was authorized only against the CHILD board's write access. Nothing asked whether the person setting it, or the people subscribed to the child board, were allowed to see the other board (CWE-862 Missing Authorization)</li>
+            <li>The board publication walks the whole ancestor chain, because the prefix-with-full-path subtask setting renders a subtask's complete path, and it published the complete ancestor card DOCUMENTS to every subscriber of the child board. Write access on shared board B plus one card id from private board A therefore delivered A's card &mdash; title, description, custom fields &mdash; over DDP to people with no part in A (CWE-200 Exposure of Sensitive Information)</li>
+            <li>Fixed at both ends. The WRITE refuses a parent whose board the actor cannot see, asked in one place with the same selectors the publication and All Boards use &mdash; so an ACTIVE org/team/domain share counts and a revoked one does not &mdash; enforced on REST create, REST update and a DDP deny rule covering insert as well as update. The PUBLICATION sends only the ancestors whose board the subscriber may see; the board being published is its own answer, so an ordinary same-board subtask path is unchanged. It is the read check the linked-card path already made, applied to the field that lacked it</li>
+            <li>Fixed at <a href="https://github.com/wekan/wekan/blob/main/CHANGELOG.md#upcoming-wekan--release">upcoming WeKan release</a></li>
+            <li><a href="parentbleed/">More details</a></li>
+          </ul>
+          </details>
+        </td>
+      </tr>
+
+      <tr>
+        <td valign="top">
+          <a href="https://github.com/wekan/wekan/security/advisories/GHSA-gwc4-fw7p-gw58">GHSA-gwc4-fw7p-gw58</a>
+          <br /> <br />
+        </td>
+        <td class="icon" valign="top"><h2><i class="fa fa-ban" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></h2></td>
+        <td valign="top"><b>RevokeBleed</b></td>
+        <td valign="top">2026-08-09</td>
+        <td class="by" valign="top">
+          <b><a href="https://github.com/Alpastx">Alpastx</a></b> and <b><a href="https://github.com/xet7">xet7</a></b>
+        </td>
+        <td class="stars" valign="top">
+          <img src="GoldStar.png" width="30px" height="auto" />
+        </td>
+        <td valign="top">
+          <details>
+          <summary>Process</summary>
+
+          Coordinated disclosure via GitHub Security Advisory GHSA-gwc4-fw7p-gw58.
+          </details>
+        </td>
+        <td valign="top">
+          <details>
+          <summary>Details</summary>
+
+          <ul>
+            <li><i class="fa fa-ban" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i> RevokeBleed &mdash; <code>isActive: false</code> is how a board admin REVOKES a share with an organization, a team or an email domain, and the <code>board</code> publication never looked at it. All Boards asked correctly, with <code>$elemMatch</code>; the publication had its own copy written as <code>'orgs.orgId': { $in: [...] }</code>, and a dotted path matches an array element without saying anything about that element's other fields (CWE-639 Authorization Bypass Through User-Controlled Key, CWE-863 Incorrect Authorization)</li>
+            <li>So the board vanished from the revoked user's All Boards &mdash; which is what the admin saw and believed &mdash; while a subscription by a boardId they still remembered returned the whole private board: document, lists, swimlanes, cards, comments, attachments. A revoke the primary data publication does not honour is not a revoke. The same applied to team and domain shares</li>
+            <li>Fixed by writing the rule once: <code>models/lib/boardVisibilitySelectors.js</code> builds the <code>$or</code>, both <code>Boards.userBoards</code> and the <code>board</code> publication call it, and every share kind is matched with <code>$elemMatch</code> requiring <code>isActive: true</code>. The one clause that is not a relationship to the user &mdash; <code>{ permission: 'public' }</code> &mdash; stays optional, so the boards list still shows public boards and the search over all boards still excludes them</li>
+            <li>Fixed at <a href="https://github.com/wekan/wekan/blob/main/CHANGELOG.md#upcoming-wekan--release">upcoming WeKan release</a></li>
+            <li><a href="revokebleed/">More details</a></li>
+          </ul>
+          </details>
+        </td>
+      </tr>
+
+      <tr>
+        <td valign="top">
+          <a href="https://github.com/wekan/wekan/security/advisories/GHSA-pqr4-rxgp-hv2m">GHSA-pqr4-rxgp-hv2m</a>
+          <br /> <br />
+        </td>
+        <td class="icon" valign="top"><h2><i class="fa fa-comment" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></h2></td>
+        <td valign="top"><b>CommentBleed</b></td>
+        <td valign="top">2026-08-09</td>
+        <td class="by" valign="top">
+          <b><a href="https://github.com/Alpastx">Alpastx</a></b> and <b><a href="https://github.com/xet7">xet7</a></b>
+        </td>
+        <td class="stars" valign="top">
+          <img src="GoldStar.png" width="30px" height="auto" />
+        </td>
+        <td valign="top">
+          <details>
+          <summary>Process</summary>
+
+          Coordinated disclosure via GitHub Security Advisory GHSA-pqr4-rxgp-hv2m.
+          </details>
+        </td>
+        <td valign="top">
+          <details>
+          <summary>Details</summary>
+
+          <ul>
+            <li><i class="fa fa-comment" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i> CommentBleed &mdash; <code>DELETE /api/boards/:boardId/cards/:cardId/comments/:commentId</code> checked board MEMBERSHIP only, so any normal member could delete any other user's comment on the board (CWE-639 Authorization Bypass Through User-Controlled Key, CWE-863 Incorrect Authorization)</li>
+            <li>The author-or-admin rule, and the board's <code>restrictCommentEditing</code> setting, were enforced in a collection hook that decides from the Meteor userId &mdash; with an early return for the genuine server-internal callers (board copy, cleanup, migrations) that run with no user. An HTTP request is not one of those, but carries no Meteor userId either, so the removal landed on that trusted path: HTTP 200, somebody else's comment gone, on a restricted board, while the same deletion over DDP was correctly refused</li>
+            <li>Fixed by asking the question where the answer is known: the handler loads the comment (404 when there is none) and applies the same rule itself, with <code>req.userId</code>, before removing anything, answering 403 when it says no. That rule is now an exported function the hooks and the handler both call, so DDP and HTTP cannot enforce different things. The no-userId path stays, documented for the internal callers it was written for</li>
+            <li>Fixed at <a href="https://github.com/wekan/wekan/blob/main/CHANGELOG.md#upcoming-wekan--release">upcoming WeKan release</a></li>
+            <li><a href="commentbleed/">More details</a></li>
+          </ul>
+          </details>
+        </td>
+      </tr>
+
+      <tr>
+        <td valign="top">
           -
           <br /> <br />
         </td>
