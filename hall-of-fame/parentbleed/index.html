@@ -123,6 +123,24 @@ return await ReactiveCache.getCards({ _id: { $in: ancestorIds } }, {}, true);
       the database publishing whatever it points at; fixing only the publication would leave the
       cross-board reference there to be found by the next feature that reads ancestors.
     </p>
+    <h3>The same hole, five cursors further</h3>
+    <p>
+      The report named the ancestor cursor. The LINKED-CARD cursors beside it had the identical
+      bug and a wider blast radius: five of them, publishing the linked card, its comments, its
+      attachments, its checklists and its checklist items. A <code>cardType-linkedCard</code>
+      names a card by id exactly as <code>parentId</code> does, and that card may live on any
+      board. Creating one requires read access to that board &mdash; but the person who created it
+      is not the person the publication is sending to, so every subscriber of the board carrying
+      the linked card was getting the source card's full document and all of its children,
+      whether or not they may see the board it lives on.
+    </p>
+    <p>
+      They take the same answer: a linked card whose source board the subscriber cannot see is
+      not sent. The five cursors repeated the same fifteen-line preamble verbatim; they share one
+      helper now, memoized per board, which is also what stops the sixth from being written
+      without the check.
+    </p>
+
     <p>
       This is not a new kind of check for WeKan &mdash; it is the check the linked-card path
       already made. Creating a linked card requires read access to the SOURCE card's board, and has

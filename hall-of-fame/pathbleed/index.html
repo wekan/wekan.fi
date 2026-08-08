@@ -154,6 +154,13 @@ const readStream = fs.createReadStream(doc.versions.original.path);
       advisory is about, removed rather than repeated.
     </p>
     <p>
+      One place was still reading a stored path with nothing but an <code>existsSync</code>: the
+      STREAMING attachment export. That is not the reported hole &mdash; the attachment allow rule
+      refuses a client-supplied path &mdash; but a path is only as trustworthy as every way it
+      could have been written, so it takes the same check. There is now no read of a stored path
+      in the export that is not contained.
+    </p>
+    <p>
       <code>tests/avatarVersionPathTraversal.test.cjs</code> pins the payload being refused on
       insert and on update, that an ordinary upload and a rename are still allowed, that
       <code>..</code>-escapes are resolved rather than string-matched, that a sibling directory
