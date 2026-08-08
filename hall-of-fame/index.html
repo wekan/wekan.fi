@@ -88,6 +88,43 @@
 
       <tr>
         <td valign="top">
+          -
+          <br /> <br />
+        </td>
+        <td class="icon" valign="top"><h2><i class="fa fa-asterisk" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></h2></td>
+        <td valign="top"><b>PatternBleed</b></td>
+        <td valign="top">2026-08-08</td>
+        <td class="by" valign="top">
+          <b>GitHub CodeQL</b> (code scanning alert #431) and <b><a href="https://github.com/xet7">xet7</a></b>
+        </td>
+        <td class="stars" valign="top">
+          <img src="GoldStar.png" width="30px" height="auto" /> <img src="GoldStar.png" width="30px" height="auto" />
+        </td>
+        <td valign="top">
+          <details>
+          <summary>Process</summary>
+
+          Automated code scanning flagged the identity (no-op) replacement.
+          </details>
+        </td>
+        <td valign="top">
+          <details>
+          <summary>Details</summary>
+
+          <ul>
+            <li><i class="fa fa-asterisk" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i> PatternBleed &mdash; an escape that escaped nothing. A platform name was interpolated into a regular expression through <code>p.replace('-', '-')</code>, which replaces a hyphen with a hyphen: it reads as &ldquo;escape this before putting it in a pattern&rdquo; and does nothing at all, so the value went in raw (CWE-116 Improper Encoding or Escaping of Output)</li>
+            <li>GitHub CodeQL code scanning alert #431, rule <code>js/identity-replacement</code>, severity Medium</li>
+            <li>Nothing failed, because a hyphen outside a character class needs no escaping &mdash; but the guard it looked like was not there, and a platform name carrying a <code>.</code> or a <code>+</code> would have matched the wrong row or thrown. Test-only code (<code>tests/releaseNodeSources.test.cjs</code>) over a hardcoded list, so no runtime exposure</li>
+            <li>Fixed by escaping the value for real, with the same <code>escapeRegExp</code> the other guards in <code>tests/</code> use. Being the SECOND finding of this rule after <a href="identitybleed/">IdentityBleed</a> (alert #424), the fix also adds <code>tests/noIdentityReplacement.test.cjs</code>, which catches the whole class in WeKan's own test run rather than after a push</li>
+            <li>Fixed at <a href="https://github.com/wekan/wekan/blob/main/CHANGELOG.md#upcoming-wekan--release">upcoming WeKan release</a></li>
+            <li><a href="patternbleed/">More details</a></li>
+          </ul>
+          </details>
+        </td>
+      </tr>
+
+      <tr>
+        <td valign="top">
           <a href="https://github.com/wekan/wekan/security/advisories/GHSA-2g94-9x3m-hv37">GHSA-2g94-9x3m-hv37</a>
           <br /> <br />
         </td>

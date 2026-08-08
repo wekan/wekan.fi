@@ -1,0 +1,142 @@
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <title>WeKan — Hall of Fame / PatternBleed</title>
+  <link rel="icon" href="../../wekan-favicon.png">
+  <link rel="stylesheet" type="text/css" href="../../css/main.css">
+  <link rel="stylesheet" href="../../font-awesome/css/font-awesome.min.css">
+</head>
+
+<body>
+
+  <img vAlign="center" src="../hof.svg" alt="Hall of Fame image from https://openclipart.org/detail/120343/trophy"
+    width="300px" height="auto" />
+  <br />
+
+  <div class="action-buttons">
+    <a class="button" href="https://wekan.fi/hall-of-fame">Back to Hall of Fame Contents</a>
+    <a class="button" href="https://wekan.fi">Back to Wekan Website</a>
+  </div>
+
+  <div class="hof">
+    <h1 class="hof">Contents / PatternBleed</h1>
+
+    <table border="1" margin="0" padding="10px" width="100%">
+      <tr>
+        <th width="10%">CVE</th>
+        <th width="10%">Vulnerability name</th>
+        <th width="10%">Date</th>
+        <th width="20%">
+          <a href="https://github.com/wekan/wekan/blob/main/SECURITY.md" style="color: red;">Responsible Security Disclosure</a>
+          by
+        </th>
+        <th width="40%">Vulnerabilities</th>
+      </tr>
+
+      <tr>
+        <td valign="top">
+          -
+          <br /> <br />
+        </td>
+        <td valign="top"><b>PatternBleed</b> <h2><i class="fa fa-asterisk" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></h2></td>
+        <td valign="top">2026-08-08</td>
+        <td valign="top">
+          <b>GitHub CodeQL</b> (code scanning alert #431) and <b>xet7</b> (fix)<br />
+          <img src="../GoldStar.png" width="30px" height="auto" />
+          <img src="../GoldStar.png" width="30px" height="auto" /><br />
+          Automated code scanning flagged the identity (no-op) replacement.
+        </td>
+        <td valign="top">
+          <ul>
+            <li>1. <i class="fa fa-asterisk" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i> PatternBleed — an escape that escaped nothing: a value went into a regular expression through a no-op <code>replace</code> (CWE-116 Improper Encoding or Escaping of Output)</li>
+            <li>GitHub CodeQL code scanning alert #431, rule <code>js/identity-replacement</code>, severity Medium</li>
+            <li>Affected only the WeKan test suite (<code>tests/releaseNodeSources.test.cjs</code>)</li>
+            <li>Second finding of this rule after <a href="../identitybleed/">IdentityBleed</a> (alert #424), so the fix also adds a guard that catches the whole class in WeKan's own test run</li>
+            <li>Fixed at
+               <a href="https://github.com/wekan/wekan/blob/main/CHANGELOG.md#upcoming-wekan--release">upcoming WeKan release</a>
+            </li>
+          </ul>
+        </td>
+      </tr>
+
+    </table>
+  </div>
+
+  <br />
+  <br />
+
+  <div class="hof">
+    <h2 class="hof">Details</h2>
+
+    <h3>1. PatternBleed — an escape that escaped nothing (CWE-116)</h3>
+    <p>
+      A test that checks every platform WeKan builds has a row in the Node.js source-resolver
+      mapping table (<code>tests/releaseNodeSources.test.cjs</code>) built one regular expression
+      per platform name:
+    </p>
+    <pre>
+// vulnerable — replace('-', '-') is a no-op, so nothing is escaped
+const re = new RegExp(`^\s*${p.replace('-', '-')}\)\s+nodename=`, 'm');
+    </pre>
+    <p>
+      <code>p.replace('-', '-')</code> replaces a hyphen with a hyphen, so it returns the string
+      unchanged. GitHub CodeQL reports this as <code>js/identity-replacement</code>: replacing a
+      value with itself is almost always a mistake. Its usual cause is a mistyped backslash escape
+      — <code>'\"'</code> in a string literal is simply <code>'"'</code>, so
+      <code>replace(/"/g, '\"')</code> is an identity replacement where <code>'\\"'</code> was
+      meant.
+    </p>
+    <p>
+      What makes this one worth a name rather than a shrug is the position it sat in. It reads as
+      <i>escape this value before interpolating it into a pattern</i>, and it is the only thing
+      standing between a platform name and a <code>new RegExp</code>. The escaping was not merely
+      wrong, it was absent — while looking present. Nothing failed, because the platform names in
+      that list contain only hyphens and a hyphen needs no escaping outside a character class; a
+      name containing <code>.</code>, <code>+</code> or <code>(</code> would have matched the wrong
+      row, or thrown. There was <b>no runtime exposure</b>: this is test-only code, and the values
+      are a hardcoded list, not user input.
+    </p>
+    <p>
+      <b>Fix:</b> escape the value for real, with the same helper the other guards in
+      <code>tests/</code> use:
+    </p>
+    <pre>
+// fixed — a real escape of every regex metacharacter
+const escapeRegExp = str =&gt; str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&amp;');
+const re = new RegExp(`^\s*${escapeRegExp(p)}\)\s+nodename=`, 'm');
+    </pre>
+
+    <h3>The second time, so the class is guarded rather than the instance</h3>
+    <p>
+      This is the second <code>js/identity-replacement</code> finding in WeKan, after
+      <a href="../identitybleed/">IdentityBleed</a> (alert #424) seventeen days earlier. Code
+      scanning finds these after a push, in a web interface, and reports them one at a time. So the
+      fix also adds <code>tests/noIdentityReplacement.test.cjs</code>, which scans WeKan's own
+      JavaScript for the shape and fails in the ordinary test run, in seconds.
+    </p>
+    <p>
+      Three details decide whether such a guard is worth having:
+    </p>
+    <ul>
+      <li>It compares the two sides of the <code>replace</code> as <b>values</b>, not as source
+        text. <code>'\"'</code> <i>is</i> <code>'"'</code> — the whole point of CodeQL's own
+        example — so a text comparison would call them different and miss the very mistake the
+        guard exists for.</li>
+      <li>The two quote styles are separate alternatives rather than one character class excluding
+        both, because <code>replace('"', '\"')</code> puts a double quote inside a single-quoted
+        literal: the first version of the pattern could not match CodeQL's example at all, which
+        was found by testing the pattern against that line rather than trusting it.</li>
+      <li>Comments are stripped and the guard skips its own file, because this fix and the file it
+        was written for both quote the offending line in order to explain it — and a guard that
+        reports the sentence describing a bug as the bug is a guard that gets switched off.</li>
+    </ul>
+    <p>
+      Verified in both directions: the repository is clean under the guard, and the same scan run
+      against the previous commit reports the offending line.
+    </p>
+  </div>
+
+</body>
+
+</html>
