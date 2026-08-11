@@ -1,0 +1,201 @@
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <title>WeKan — Hall of Fame / WhereBleed</title>
+  <link rel="icon" href="../../wekan-favicon.png">
+  <link rel="stylesheet" type="text/css" href="../../css/main.css">
+  <link rel="stylesheet" href="../../font-awesome/css/font-awesome.min.css">
+</head>
+
+<body>
+
+  <img vAlign="center" src="../hof.svg" alt="Hall of Fame image from https://openclipart.org/detail/120343/trophy"
+    width="300px" height="auto" />
+  <br />
+
+  <div class="action-buttons">
+    <a class="button" href="https://wekan.fi/hall-of-fame">Back to Hall of Fame Contents</a>
+    <a class="button" href="https://wekan.fi">Back to Wekan Website</a>
+  </div>
+
+  <div class="hof">
+    <h1 class="hof">Contents / WhereBleed</h1>
+
+    <table border="1" margin="0" padding="10px" width="100%">
+      <tr>
+        <th width="10%">CVE</th>
+        <th width="10%">Vulnerability name</th>
+        <th width="10%">Date</th>
+        <th width="20%">
+          <a href="https://github.com/wekan/wekan/blob/main/SECURITY.md" style="color: red;">Responsible Security Disclosure</a>
+          by
+        </th>
+        <th width="40%">Vulnerabilities</th>
+      </tr>
+
+      <tr>
+        <td valign="top">
+          <a href="https://github.com/wekan/wekan/security/advisories/GHSA-phm4-4v26-j2vq">GHSA-phm4-4v26-j2vq</a>
+          <br /> <br />
+        </td>
+        <td valign="top"><b>WhereBleed</b> <h2><i class="fa fa-database" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></h2></td>
+        <td valign="top">2026-08-11</td>
+        <td valign="top">
+          <b><a href="https://github.com/TungNGo02">TungNGo02</a></b> and <b><a href="https://github.com/xet7">xet7</a></b><br />
+          <img src="../GoldStar.png" width="30px" height="auto" />
+          <img src="../GoldStar.png" width="30px" height="auto" /><br />
+          Coordinated disclosure via GitHub Security Advisory GHSA-phm4-4v26-j2vq.
+        </td>
+        <td valign="top">
+          <ul>
+            <li><i class="fa fa-database" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i> WhereBleed &mdash; eight Admin Panel handlers took a MongoDB query selector from the client and validated only its TYPE, which is not validation: a selector is executable data, and <code>$where</code> makes the database run the caller's JavaScript (CWE-943, CVSS 5.8)</li>
+            <li>A blocking payload such as <code>{ $where: 'while(true){}' }</code> pins a database worker for as long as the caller likes and is repeatable &mdash; denial of service for every tenant on the instance</li>
+            <li>Affected the <code>people</code>, <code>org</code>, <code>team</code> and <code>translation</code> publications and their <code>*CollectionCount</code> / <code>getPeoplePageIds</code> methods; the card-window publication already had the guard the eight were missing</li>
+            <li>Fixed at
+               <a href="https://github.com/wekan/wekan/blob/main/CHANGELOG.md#upcoming-wekan--release">upcoming WeKan release</a>
+            </li>
+          </ul>
+        </td>
+      </tr>
+
+    </table>
+  </div>
+
+  <br />
+  <br />
+
+  <div class="hof">
+    <h2 class="hof">Details</h2>
+
+    <h3>WhereBleed — a type check is not a validation (CWE-943)</h3>
+    <p>
+      The Admin Panel's People, Org, Team and Translation panes each let an administrator
+      search and page through a table. The client sends the query it wants run, and the
+      publication behind it checked that query like this:
+    </p>
+    <pre>
+// server/publications/people.js — before
+Meteor.publish('people', async function(query, limit, skip = 0) {
+  check(query, Match.OneOf(Object, null));   // the TYPE, and nothing else
+  ...
+  ret = await ReactiveCache.getUsers(tenantAdmin.peopleScopeSelector(user, query), { ... });
+});
+    </pre>
+    <p>
+      <code>check(query, Match.OneOf(Object, null))</code> asks whether the thing is an
+      object. It is. That is the whole of the validation, and it is not enough, because a
+      MongoDB selector is not data that gets compared &mdash; it is data that gets
+      <em>executed</em>. The <code>$where</code> operator takes a string of JavaScript and
+      the database runs it, once for every document it scans.
+    </p>
+
+    <h3>What that buys the caller</h3>
+    <p>
+      Two things, and the reporter demonstrated both against
+      <code>ghcr.io/wekan/wekan:v10.81</code> on a real MongoDB 7 backend
+      (<code>docker-compose-mongodb-v7.yml</code>), over an ordinary DDP connection:
+    </p>
+    <ul>
+      <li>
+        <b>Availability.</b> <code>Meteor.subscribe('team', { $where: 'while(true){}' }, 25, 0)</code>
+        makes MongoDB evaluate an infinite loop per document scanned, pinning a worker
+        thread for as long as the caller wants. It can be sent again immediately. That is
+        denial of service for the whole instance &mdash; every tenant, every board &mdash;
+        from one account.
+      </li>
+      <li>
+        <b>Confidentiality.</b> <code>{ $where: 'sleep(2000) || true' }</code> made the
+        <code>people</code> subscription become ready in 2.03s and return the document;
+        the same subscription with <code>{ $where: 'false' }</code> became ready in 0.00s
+        and the same, otherwise-always-matching document was <em>not</em> returned. The
+        timing rules out coincidence and the pair proves the string is evaluated as
+        JavaScript with the caller controlling which documents come back &mdash; a
+        document-inclusion oracle.
+      </li>
+    </ul>
+
+    <h3>Why it is worth fixing even though it needs an admin</h3>
+    <p>
+      Reaching any of this requires an authenticated session that can open the Admin Panel,
+      so no ordinary board member and no unauthenticated visitor can touch it. What raises
+      it above "an administrator can inconvenience their own site" is multitenancy: the
+      People and Org surfaces are open to a <b>per-tenant Global Admin</b>, a role that is
+      supposed to be confined to one Organization. Those two publications scope the caller
+      by <em>merging</em> the restriction with the query:
+    </p>
+    <pre>
+// models/lib/tenantAdmin.js
+function peopleScopeSelector(user, query) {
+  if (isSiteAdmin(user)) return isPlainObject(query) ? { ...query } : {};
+  ...
+  return andQuery(query, { 'orgs.orgId': { $in: ids } });   // $and — nothing is removed
+}
+    </pre>
+    <p>
+      Merging under <code>$and</code> correctly stops a crafted query from arguing its way
+      out of the tenant restriction &mdash; but it never removes anything from the query
+      either, so the <code>$where</code> travels straight through it. A role scoped to one
+      Organization could therefore affect the entire instance, which is more than that role
+      is meant to be able to do.
+    </p>
+
+    <h3>The part that stings: the defence was already here</h3>
+    <p>
+      WeKan already had a purpose-built check for exactly this class of bug &mdash;
+      <code>classifySelector</code> in <code>models/lib/injectionDetect.js</code> and
+      <code>hasWhere</code> in <code>models/lib/mongoSelectorSafety.js</code>, both with
+      unit tests, both wired into the windowed card publication
+      (<code>server/publications/cardsWindow.js</code>) through a small local helper. Eight
+      sibling handlers accepting the identical shape of client-supplied selector were never
+      wired into it. The protection existed, was trusted, and was applied to one of nine
+      places.
+    </p>
+    <p>
+      So the fix adds no new detection logic at all. That publication's helper moved,
+      unchanged, into <code>server/lib/selectorGuard.js</code>, and all nine call sites now
+      share the one copy &mdash; leaving a second copy behind would have been the same
+      mistake set up to happen again:
+    </p>
+    <pre>
+// server/publications/people.js — after
+import { safeSelector } from '/server/lib/selectorGuard';
+...
+const safeQuery = safeSelector(query, 'people');
+ret = await ReactiveCache.getUsers(tenantAdmin.peopleScopeSelector(user, safeQuery), { ... });
+    </pre>
+    <p>
+      A refused selector becomes <code>{ _id: { $in: [] } }</code> &mdash; valid, cheap, and
+      matching nothing &mdash; which is the refusal the card window already used in
+      production. An administrator who sends something dangerous gets an empty table rather
+      than an exception mid-page, and the attempt is recorded with who sent it and from
+      where. Nothing an Admin Panel pane really sends is affected: none of its searches,
+      filters, regexes, <code>$or</code>/<code>$and</code>/<code>$in</code>/<code>$elemMatch</code>
+      or date ranges contains an execution operator.
+    </p>
+
+    <h3>Which databases this reached</h3>
+    <p>
+      WeKan's default database is FerretDB, which rejects <code>$where</code> itself, so on
+      a default install the attack degrades to a rejected query. WeKan also ships and
+      documents a real-MongoDB deployment, and that is where the impact above was
+      reproduced. MongoDB 7 separately refuses <code>$where</code> inside the aggregation
+      pipeline the four count methods use &mdash; but that is an engine-level restriction on
+      one operator in one call path, not something the application does, and
+      <code>$function</code> and <code>$accumulator</code> are legitimate aggregation
+      operators there. The count methods are guarded like everything else rather than left
+      relying on it.
+    </p>
+    <p>
+      Reported by <b><a href="https://github.com/TungNGo02">TungNGo02</a></b> via GitHub
+      Security Advisory
+      <a href="https://github.com/wekan/wekan/security/advisories/GHSA-phm4-4v26-j2vq">GHSA-phm4-4v26-j2vq</a>,
+      confirmed against <code>v10.81</code>, with a recommended patch included in the report.
+      Fixed at the
+      <a href="https://github.com/wekan/wekan/blob/main/CHANGELOG.md#upcoming-wekan--release">upcoming WeKan release</a>.
+    </p>
+  </div>
+
+</body>
+
+</html>

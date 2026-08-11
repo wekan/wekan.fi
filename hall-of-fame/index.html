@@ -88,6 +88,45 @@
 
       <tr>
         <td valign="top">
+          <a href="https://github.com/wekan/wekan/security/advisories/GHSA-phm4-4v26-j2vq">GHSA-phm4-4v26-j2vq</a>
+          <br /> <br />
+        </td>
+        <td class="icon" valign="top"><h2><i class="fa fa-database" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></h2></td>
+        <td valign="top"><b>WhereBleed</b></td>
+        <td valign="top">2026-08-11</td>
+        <td class="by" valign="top">
+          <b><a href="https://github.com/TungNGo02">TungNGo02</a></b> and <b><a href="https://github.com/xet7">xet7</a></b>
+        </td>
+        <td class="stars" valign="top">
+          <img src="GoldStar.png" width="30px" height="auto" />
+          <img src="GoldStar.png" width="30px" height="auto" />
+        </td>
+        <td valign="top">
+          <details>
+          <summary>Process</summary>
+
+          Coordinated disclosure via GitHub Security Advisory GHSA-phm4-4v26-j2vq.
+          </details>
+        </td>
+        <td valign="top">
+          <details>
+          <summary>Details</summary>
+
+          <ul>
+            <li><i class="fa fa-database" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i> WhereBleed &mdash; eight Admin Panel handlers took a MongoDB query selector from the client and validated only its TYPE: <code>check(query, Match.OneOf(Object, null))</code>. That is not validation, because a selector is executable data &mdash; <code>$where</code> makes the database run the caller's JavaScript once per document scanned (CWE-943 Improper Neutralization of Special Elements in Data Query Logic, CVSS 5.8)</li>
+            <li>The surfaces: the <code>people</code>, <code>org</code>, <code>team</code> and <code>translation</code> publications and their companion <code>*CollectionCount</code> / <code>getPeoplePageIds</code> methods. <code>Meteor.subscribe('team', { $where: 'while(true){}' }, 25, 0)</code> pins a database worker for as long as the caller likes and is repeatable &mdash; denial of service for every tenant on the instance. Demonstrated on v10.81 against a real MongoDB 7: <code>$where: 'sleep(2000) || true'</code> made the subscription take 2.03s and return the document, <code>$where: 'false'</code> returned nothing in 0.00s, which is the caller deciding in JavaScript which documents come back</li>
+            <li>It needs an authenticated admin session, so no board member or visitor can reach it. It matters at this severity because the people and org surfaces are open to a PER-TENANT Global Admin &mdash; a role meant to be confined to one Organization &mdash; and those two wrap the caller's selector as <code>{ $and: [query, restriction] }</code> rather than stripping execution operators out of it, so merging the tenant restriction never removed the <code>$where</code></li>
+            <li>What makes this one particular is that the defence was ALREADY in the codebase. <code>classifySelector</code> and <code>hasWhere</code> were written for exactly this class, are unit-tested, and were wired into the card-window publication; the eight siblings simply never called them. So the fix adds no new detection logic &mdash; that publication's own helper moved unchanged into <code>server/lib/selectorGuard.js</code> and all nine call sites share the one copy, because a second copy would be the same bug set up to happen again. Each refuses with the "match nothing" selector the card window already used in production, so a refused request returns an empty result rather than throwing at an admin mid-page, and ordinary searches, filters and paging are unaffected</li>
+            <li>FerretDB, WeKan's default database, rejects <code>$where</code> itself, so this degrades to a rejected query there; the supported MongoDB path is where it was reproduced</li>
+            <li>Fixed at <a href="https://github.com/wekan/wekan/blob/main/CHANGELOG.md#upcoming-wekan--release">upcoming WeKan release</a></li>
+            <li><a href="wherebleed/">More details</a></li>
+          </ul>
+          </details>
+        </td>
+      </tr>
+
+      <tr>
+        <td valign="top">
           <a href="https://github.com/wekan/wekan/security/advisories/GHSA-4mxf-m8pq-xc9p">GHSA-4mxf-m8pq-xc9p</a>
           <br /> <br />
         </td>
