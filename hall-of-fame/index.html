@@ -88,6 +88,44 @@
 
       <tr>
         <td valign="top">
+          <a href="https://github.com/wekan/wekan/security/advisories/GHSA-6p5m-f9p2-wqm5">GHSA-6p5m-f9p2-wqm5</a>
+          <br /> <br />
+        </td>
+        <td class="icon" valign="top"><h2><i class="fa fa-id-card-o" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></h2></td>
+        <td valign="top"><b>PassBleed</b></td>
+        <td valign="top">2026-08-11</td>
+        <td class="by" valign="top">
+          <b><a href="https://github.com/TWPaMWang">TWPaMWang</a></b> and <b><a href="https://github.com/xet7">xet7</a></b>
+        </td>
+        <td class="stars" valign="top">
+          <img src="GoldStar.png" width="30px" height="auto" />
+          <img src="GoldStar.png" width="30px" height="auto" />
+        </td>
+        <td valign="top">
+          <details>
+          <summary>Process</summary>
+
+          Coordinated disclosure via GitHub Security Advisory GHSA-6p5m-f9p2-wqm5.
+          </details>
+        </td>
+        <td valign="top">
+          <details>
+          <summary>Details</summary>
+
+          <ul>
+            <li><i class="fa fa-id-card-o" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i> PassBleed &mdash; the single-card Excel export authorised against one identifier and read its data using another. <code>GET /api/boards/:boardId/lists/:listId/cards/:cardId/exportExcel</code> checked whether the caller could see the board in <code>:boardId</code>, then resolved the card by <code>:cardId</code> alone, with nothing tying the two together (CWE-639 Authorization Bypass Through User-Controlled Key, CVSS 6.5)</li>
+            <li>So <code>:boardId</code> became a reusable ACCESS PASS and <code>:cardId</code> alone decided what came back. The pass is self-service: <code>POST /api/boards</code> takes <code>permission</code> straight from the request body, so any authenticated user could mint their own PUBLIC board, name it as <code>:boardId</code>, and pass the id of a card in somebody else's private board. <code>:listId</code> was never used in a query at all and could be any string</li>
+            <li>The workbook that came back carried the victim card's title, full description, members and assignees, every comment with its author, checklists and checklist items, subtask titles, attachment metadata &mdash; and, because image attachments are read through <code>getReadStream()</code> and embedded with <code>workbook.addImage</code>, the attachment BYTES. One board could be reused while <code>:cardId</code> was substituted freely, which made it a scriptable bulk read rather than a single disclosure</li>
+            <li>The same route shape for PDF had always been right: <code>ExporterCardPDF</code> resolves <code>getCard({ _id, boardId, listId })</code> and returns 404 for a cross-board id. That control in the same codebase is what shows this was an omission rather than a decision, and it is the fix &mdash; the Excel exporter now uses the same constrained lookup, so a card outside the authorised board does not resolve at all and the checklist, subtask, comment and attachment fan-out keyed on that card id can reach nothing. The route binds the two identifiers as well, before either branch builds, including the public branch that skips authentication entirely</li>
+            <li>Fixed at <a href="https://github.com/wekan/wekan/blob/main/CHANGELOG.md#upcoming-wekan--release">upcoming WeKan release</a></li>
+            <li><a href="passbleed/">More details</a></li>
+          </ul>
+          </details>
+        </td>
+      </tr>
+
+      <tr>
+        <td valign="top">
           <a href="https://github.com/wekan/wekan/security/advisories/GHSA-phm4-4v26-j2vq">GHSA-phm4-4v26-j2vq</a>
           <br /> <br />
         </td>
