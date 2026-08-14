@@ -102,41 +102,41 @@
         <td valign="top">Newest<br />
         <code>sudo snap list</code>
         </td>
-        <td valign="top">Already newest.<br />Automatic updates.<br /><br />
-
-        <p><b>If there are missing cards</b><br />
-           Upgrade to 10.92 or newer. Then:<br />
-           <code>sudo snap refresh wekan</code><br /><br />
-           <code>sudo snap stop wekan</code><br /><br />
-           <code>sudo cp -a /var/snap/wekan/common /root/wekan-common-backup-$(date +%F)</code><br /><br />
-           <code>sudo snap run wekan.database-compare</code><br /><br />
-           <code>sudo snap run wekan.database-merge</code><br /><br />
-           <code>sudo snap start wekan</code><br /><br />
-        </p>
-
-        <p><b>Please Change to Stable</b></p>
-
-        <p>
-        <code>sudo snap refresh wekan --channel=latest/stable --amend</code><br /><br />
-          On first start after upgrading from old WeKan 6, it automatically migrates the
-          MongoDB data and attachments/avatars to FerretDB (SQLite). Migration progress shows
-          at the WeKan web address, and a migration interrupted by a snap refresh or reboot
-          resumes where it left off. The original MongoDB data is never modified or deleted.<br /><br />
-          Watch migration and database logs:<br />
-          <code>sudo snap logs -f wekan.mongodb</code><br /><br />
-          Retry or force a fresh MongoDB &rarr; FerretDB migration:<br />
-          <code>sudo snap run wekan.migrate</code><br /><br />
-          Choose which database WeKan runs on (mongodb also pauses auto-migration,
-          ferretdb switches to the migrated FerretDB):<br />
-          <code>sudo snap run wekan.database mongodb</code><br />
-          <code>sudo snap run wekan.database ferretdb</code><br /><br />
-          Maintenance page on/off: while on, users see an "under maintenance" page (HTTP 503),
-          and you can start <code>sudo snap start wekan.mongodb</code> or
-          <code>sudo snap start wekan.ferretdb</code> by hand to reach the data over the
-          MongoDB wire protocol on port 27019 (one at a time, they share the port):<br />
-          <code>sudo snap run wekan.maintenance on</code><br />
-          <code>sudo snap run wekan.maintenance off</code><br /><br />
-          <a href="https://github.com/wekan/wekan/blob/main/docs/Backup/Backup.md">More upgrade info</a>
+        <td valign="top">
+          <p>Already newest.<br />Automatic updates.<br /><br /></p>
+          <h3>If there are missing cards</h3><br />
+          <p>Upgrade to 10.92 or newer. Then:</p>
+          <p>
+            <code>sudo snap refresh wekan</code><br /><br />
+            <code>sudo snap stop wekan</code><br /><br />
+            <code>sudo cp -a /var/snap/wekan/common /root/wekan-common-backup-$(date +%F)</code><br /><br />
+            <code>sudo snap run wekan.database-compare</code><br /><br />
+            <code>sudo snap run wekan.database-merge</code><br /><br />
+            <code>sudo snap start wekan</code><br /><br />
+          </p>
+          <h3>Please Change to Stable</h3>
+          <p>
+            <code>sudo snap refresh wekan --channel=latest/stable --amend</code><br /><br />
+            On first start after upgrading from old WeKan 6, it automatically migrates the
+            MongoDB data and attachments/avatars to FerretDB (SQLite). Migration progress shows
+            at the WeKan web address, and a migration interrupted by a snap refresh or reboot
+            resumes where it left off. The original MongoDB data is never modified or deleted.<br /><br />
+            Watch migration and database logs:<br />
+            <code>sudo snap logs -f wekan.mongodb</code><br /><br />
+            Retry or force a fresh MongoDB &rarr; FerretDB migration:<br />
+            <code>sudo snap run wekan.migrate</code><br /><br />
+            Choose which database WeKan runs on (mongodb also pauses auto-migration,
+            ferretdb switches to the migrated FerretDB):<br />
+            <code>sudo snap run wekan.database mongodb</code><br />
+            <code>sudo snap run wekan.database ferretdb</code><br /><br />
+            Maintenance page on/off: while on, users see an "under maintenance" page (HTTP 503),
+            and you can start <code>sudo snap start wekan.mongodb</code> or
+            <code>sudo snap start wekan.ferretdb</code> by hand to reach the data over the
+            MongoDB wire protocol on port 27019 (one at a time, they share the port):<br />
+            <code>sudo snap run wekan.maintenance on</code><br />
+            <code>sudo snap run wekan.maintenance off</code><br /><br />
+            <a href="https://github.com/wekan/wekan/blob/main/docs/Backup/Backup.md">More upgrade info</a>
+          </p>
         </td>
       </tr>
       <tr>
