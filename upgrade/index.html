@@ -102,7 +102,31 @@
         <td valign="top">Newest<br />
         <code>sudo snap list</code>
         </td>
-        <td valign="top">Already newest.<br />Automatic updates.<br />Please Change to Stable:<br />
+        <td valign="top">Already newest.<br />Automatic updates.<br /><br />
+
+       <b>If there are missing cards</b> 
+
+<p>Upgrade to 10.92 or newer</p>
+
+<p>
+<pre>
+sudo snap refresh wekan
+
+sudo snap stop wekan
+
+sudo cp -a /var/snap/wekan/common /root/wekan-common-backup-$(date +%F)
+
+sudo snap run wekan.database-compare
+
+sudo snap run wekan.database-merge
+
+sudo snap start wekan
+</pre>
+</p>
+
+<p><b>Please Change to Stable</b></p>
+
+        <p>
         <code>sudo snap refresh wekan --channel=latest/stable --amend</code><br /><br />
           On first start after upgrading from old WeKan 6, it automatically migrates the
           MongoDB data and attachments/avatars to FerretDB (SQLite). Migration progress shows
