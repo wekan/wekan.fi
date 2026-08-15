@@ -1,0 +1,116 @@
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <title>WeKan — Hall of Fame / StaleBleed</title>
+  <link rel="icon" href="../../wekan-favicon.png">
+  <link rel="stylesheet" type="text/css" href="../../css/main.css">
+  <link rel="stylesheet" href="../../font-awesome/css/font-awesome.min.css">
+</head>
+
+<body>
+
+  <img vAlign="center" src="../hof.svg" alt="Hall of Fame image from https://openclipart.org/detail/120343/trophy"
+    width="300px" height="auto" />
+  <br />
+
+  <div class="action-buttons">
+    <a class="button" href="https://wekan.fi/hall-of-fame">Back to Hall of Fame Contents</a>
+    <a class="button" href="https://wekan.fi">Back to Wekan Website</a>
+  </div>
+
+  <div class="hof">
+    <h1 class="hof">Contents / StaleBleed</h1>
+
+    <table border="1" margin="0" padding="10px" width="100%">
+      <tr>
+        <th width="10%">CVE</th>
+        <th width="10%">Vulnerability name</th>
+        <th width="10%">Date</th>
+        <th width="20%">
+          <a href="https://github.com/wekan/wekan/blob/main/SECURITY.md" style="color: red;">Responsible Security Disclosure</a>
+          by
+        </th>
+        <th width="40%">Vulnerabilities</th>
+      </tr>
+
+      <tr>
+        <td valign="top">
+          <a href="https://github.com/wekan/wekan/security/advisories/GHSA-r8r3-23vr-8jh6">GHSA-r8r3-23vr-8jh6</a>
+          <br /> <br />
+        </td>
+        <td valign="top"><b>StaleBleed</b> <h2><i class="fa fa-user-times" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></h2></td>
+        <td valign="top">2026-08-15</td>
+        <td valign="top">
+          <b><a href="https://github.com/ybsun0215">ybsun0215</a></b> and <b><a href="https://github.com/xet7">xet7</a></b><br />
+          <img src="../GoldStar.png" width="30px" height="auto" />
+          <img src="../GoldStar.png" width="30px" height="auto" /><br />
+          Coordinated disclosure via GitHub Security Advisory GHSA-r8r3-23vr-8jh6.
+        </td>
+        <td valign="top">
+          <ul>
+            <li><i class="fa fa-user-times" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i> StaleBleed &mdash; the board listing matched <code>'members.userId'</code> with a dotted path, which ignores the membership's <code>isActive</code> flag, so a removed member kept seeing the board's id and title indefinitely (CWE-863 Incorrect Authorization)</li>
+            <li>Removing a board member does not delete their entry: it sets <code>isActive: false</code> and <code>isAdmin: false</code> and keeps it. A query that matches the entry without reading that flag therefore matches revoked members exactly as it matches current ones</li>
+            <li>Reading the board itself was already refused, so the exposure is the board's id and its title &mdash; but the id is the part that matters, because it is what every other endpoint in the API is addressed by, and the title is often the thing a private board is private about</li>
+            <li>This is the same class as GHSA-gwc4-fw7p-gw58 (org, team and domain shares, fixed in 10.74), whose fix introduced one builder for board visibility with the header note <em>"A share entry counts only while it is active, everywhere"</em>. This listing endpoint predates that consolidation and was never converted</li>
+            <li>It uses <code>$elemMatch</code> now, so the userId and the active flag have to be true of the SAME entry &mdash; which is what a revoke means everywhere else in WeKan</li>
+            <li>Fixed at
+               <a href="https://github.com/wekan/wekan/blob/main/CHANGELOG.md#upcoming-wekan--release">upcoming WeKan release</a></li>
+          </ul>
+        </td>
+      </tr>
+
+    </table>
+  </div>
+
+  <br />
+  <br />
+
+  <div class="hof">
+    <h2 class="hof">Details</h2>
+
+    <h3>StaleBleed — a revoke the listing did not honour (CWE-863)</h3>
+    <p>
+      A user can list the boards they are a member of:
+    </p>
+    <pre>
+GET /api/users/{userId}/boards
+    </pre>
+    <p>
+      The selector matched the membership array with a dotted path:
+    </p>
+    <pre>
+// server/models/boards.js — before
+const boards = await ReactiveCache.getBoards(
+  {
+    archived: false,
+    'members.userId': paramUserId,   // ignores members.$.isActive
+  },
+  ...
+    </pre>
+    <p>
+      A dotted match asks "does any entry have this userId?". It cannot ask "does any entry have this userId AND is active", because in Mongo those two conditions on a dotted path may be satisfied by DIFFERENT entries of the array. That is what <code>$elemMatch</code> is for, and it is what the rest of WeKan uses.
+    </p>
+    <p>
+      The fix:
+    </p>
+    <pre>
+// server/models/boards.js — after
+members: { $elemMatch: { userId: paramUserId, isActive: true } },
+    </pre>
+    <p>
+      <code>tests/restApiIdorBatch.test.cjs</code> pins the <code>$elemMatch</code> form and that the dotted match does not return.
+    </p>
+  </div>
+
+  <br />
+  <br />
+
+  <div class="action-buttons">
+    <a class="button" href="https://wekan.fi/hall-of-fame">Back to Hall of Fame Contents</a>
+    <a class="button" href="https://wekan.fi">Back to Wekan Website</a>
+  </div>
+
+</body>
+
+</html>

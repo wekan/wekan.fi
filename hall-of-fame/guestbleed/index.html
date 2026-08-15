@@ -1,0 +1,128 @@
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <title>WeKan — Hall of Fame / GuestBleed</title>
+  <link rel="icon" href="../../wekan-favicon.png">
+  <link rel="stylesheet" type="text/css" href="../../css/main.css">
+  <link rel="stylesheet" href="../../font-awesome/css/font-awesome.min.css">
+</head>
+
+<body>
+
+  <img vAlign="center" src="../hof.svg" alt="Hall of Fame image from https://openclipart.org/detail/120343/trophy"
+    width="300px" height="auto" />
+  <br />
+
+  <div class="action-buttons">
+    <a class="button" href="https://wekan.fi/hall-of-fame">Back to Hall of Fame Contents</a>
+    <a class="button" href="https://wekan.fi">Back to Wekan Website</a>
+  </div>
+
+  <div class="hof">
+    <h1 class="hof">Contents / GuestBleed</h1>
+
+    <table border="1" margin="0" padding="10px" width="100%">
+      <tr>
+        <th width="10%">CVE</th>
+        <th width="10%">Vulnerability name</th>
+        <th width="10%">Date</th>
+        <th width="20%">
+          <a href="https://github.com/wekan/wekan/blob/main/SECURITY.md" style="color: red;">Responsible Security Disclosure</a>
+          by
+        </th>
+        <th width="40%">Vulnerabilities</th>
+      </tr>
+
+      <tr>
+        <td valign="top">
+          <a href="https://github.com/wekan/wekan/security/advisories/GHSA-whxm-pxgj-7wqv">GHSA-whxm-pxgj-7wqv</a>
+          <br /> <br />
+        </td>
+        <td valign="top"><b>GuestBleed</b> <h2><i class="fa fa-user-plus" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></h2></td>
+        <td valign="top">2026-08-15</td>
+        <td valign="top">
+          <b><a href="https://github.com/ybsun0215">ybsun0215</a></b> and <b><a href="https://github.com/xet7">xet7</a></b><br />
+          <img src="../GoldStar.png" width="30px" height="auto" />
+          <img src="../GoldStar.png" width="30px" height="auto" /><br />
+          Coordinated disclosure via GitHub Security Advisory GHSA-whxm-pxgj-7wqv.
+        </td>
+        <td valign="top">
+          <ul>
+            <li><i class="fa fa-user-plus" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i> GuestBleed &mdash; the <code>members</code> and <code>assignees</code> ARRAYS on card create and card update were stored exactly as given, so a member of a private board could put any user id on a card, and <code>GET /api/user/cards</code> then fed that outsider the private board's card titles, ids and dates (CWE-639)</li>
+            <li>Two paths combine. Nothing validated that the ids in the arrays belong to the card's board, and the listing endpoint answered by CARD membership without re-checking access to the card's BOARD &mdash; so being named on a card was enough to read from a board that refuses to open</li>
+            <li>The outsider's direct read of the board stayed Forbidden the whole time, which is what made this quiet: every ordinary check still said no, while the "my cards" feed kept answering. It is continuous, not a single disclosure &mdash; the feed follows the card</li>
+            <li>The invariant already existed and was documented on the merge endpoint <code>POST .../cards/{cardId}/members/{memberId}</code>, which has refused a non-member with 400 since issue #5998. The array form on POST and PUT bypassed it, for both members and assignees</li>
+            <li>Both halves are fixed: every id in either array is checked with the same <code>canAssignCardMember</code> the merge endpoint uses, on single create, bulk create and update alike; and the listing filters by the boards the caller is an active member of, so a card placed before this release stops answering too</li>
+            <li>Fixed at
+               <a href="https://github.com/wekan/wekan/blob/main/CHANGELOG.md#upcoming-wekan--release">upcoming WeKan release</a></li>
+          </ul>
+        </td>
+      </tr>
+
+    </table>
+  </div>
+
+  <br />
+  <br />
+
+  <div class="hof">
+    <h2 class="hof">Details</h2>
+
+    <h3>GuestBleed — named on a card, reading from a board (CWE-639)</h3>
+    <p>
+      A card can be created or updated with arrays of members and assignees:
+    </p>
+    <pre>
+POST /api/boards/{boardId}/lists/{listId}/cards      { "members": ["<any user id>"] }
+PUT  /api/boards/{boardId}/lists/{listId}/cards/{id}  { "assignees": ["<any user id>"] }
+    </pre>
+    <p>
+      They were persisted as given:
+    </p>
+    <pre>
+// server/models/cards.js — before
+const members = req.body.members !== undefined ? coerceRestArrayParam(req.body.members) : undefined;
+...
+members,   // stored as-is
+    </pre>
+    <p>
+      And the "my cards" feed answered by card membership alone:
+    </p>
+    <pre>
+// server/models/cards.js — before
+const selector = { archived: false, $or: [{ members: userId }, { assignees: userId }] };
+const cards = await ReactiveCache.getCards(selector, { sort: { dueAt: 1 } });
+    </pre>
+    <p>
+      Neither is wrong on its own. Together they are a channel: a member of a private board writes an outsider's id onto a card, and the outsider's own feed then returns that card's title, its board, list and swimlane ids, its dates and its co-members &mdash; for as long as the id stays on the card.
+    </p>
+    <p>
+      The rule the merge endpoint already enforced now covers the array shapes as well:
+    </p>
+    <pre>
+// server/models/cards.js — after
+async function assignableOnBoard(board, ids) {
+  const out = [];
+  for (const id of Array.isArray(ids) ? ids : []) {
+    if (canAssignCardMember(board, id)) out.push(id);
+  }
+  return out;
+}
+    </pre>
+    <p>
+      An id that may not be assigned is dropped rather than refused, so a bulk edit does not fail over one stale id and the caller sees what was kept. The listing is filtered by board visibility as well, because fixing only the write path would leave every card placed before the release still answering. <code>tests/restApiIdorBatch.test.cjs</code> pins both.
+    </p>
+  </div>
+
+  <br />
+  <br />
+
+  <div class="action-buttons">
+    <a class="button" href="https://wekan.fi/hall-of-fame">Back to Hall of Fame Contents</a>
+    <a class="button" href="https://wekan.fi">Back to Wekan Website</a>
+  </div>
+
+</body>
+
+</html>

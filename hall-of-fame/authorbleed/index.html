@@ -1,0 +1,118 @@
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <title>WeKan — Hall of Fame / AuthorBleed</title>
+  <link rel="icon" href="../../wekan-favicon.png">
+  <link rel="stylesheet" type="text/css" href="../../css/main.css">
+  <link rel="stylesheet" href="../../font-awesome/css/font-awesome.min.css">
+</head>
+
+<body>
+
+  <img vAlign="center" src="../hof.svg" alt="Hall of Fame image from https://openclipart.org/detail/120343/trophy"
+    width="300px" height="auto" />
+  <br />
+
+  <div class="action-buttons">
+    <a class="button" href="https://wekan.fi/hall-of-fame">Back to Hall of Fame Contents</a>
+    <a class="button" href="https://wekan.fi">Back to Wekan Website</a>
+  </div>
+
+  <div class="hof">
+    <h1 class="hof">Contents / AuthorBleed</h1>
+
+    <table border="1" margin="0" padding="10px" width="100%">
+      <tr>
+        <th width="10%">CVE</th>
+        <th width="10%">Vulnerability name</th>
+        <th width="10%">Date</th>
+        <th width="20%">
+          <a href="https://github.com/wekan/wekan/blob/main/SECURITY.md" style="color: red;">Responsible Security Disclosure</a>
+          by
+        </th>
+        <th width="40%">Vulnerabilities</th>
+      </tr>
+
+      <tr>
+        <td valign="top">
+          <a href="https://github.com/wekan/wekan/security/advisories/GHSA-6jr3-42jf-vhm5">GHSA-6jr3-42jf-vhm5</a>
+          <br /> <br />
+        </td>
+        <td valign="top"><b>AuthorBleed</b> <h2><i class="fa fa-pencil" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></h2></td>
+        <td valign="top">2026-08-15</td>
+        <td valign="top">
+          <b><a href="https://github.com/ybsun0215">ybsun0215</a></b> and <b><a href="https://github.com/xet7">xet7</a></b><br />
+          <img src="../GoldStar.png" width="30px" height="auto" />
+          <img src="../GoldStar.png" width="30px" height="auto" /><br />
+          Coordinated disclosure via GitHub Security Advisory GHSA-6jr3-42jf-vhm5.
+        </td>
+        <td valign="top">
+          <ul>
+            <li><i class="fa fa-pencil" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i> AuthorBleed &mdash; six server paths took the actor's identity from the request body's <code>authorId</code> field, checking only that such a user exists, so a board member could record card creations, card deletions and custom fields as somebody else (CWE-345 Insufficient Verification of Data Authenticity)</li>
+            <li>The board's own history is the thing at stake. "victim created this card" and "victim deleted this card" became attacker-controlled sentences, on any board the caller may write to, and the card document itself recorded the forged <code>userId</code> as its creator</li>
+            <li>The six: single card create, bulk card create, linked-card create, single card delete, bulk card delete, and custom-field create</li>
+            <li>WeKan had already accepted this exact class as a vulnerability and fixed it for card comments in 8.19, and again for the card PUT handler &mdash; whose inline note still reads <em>"use req.userId consistently (it previously read req.body.authorId here)"</em>. These six paths were missed, which makes it an incomplete fix rather than a new decision</li>
+            <li>All six read <code>req.userId</code> now &mdash; the session the request authenticated as, which is the only identity the server can vouch for. The parameter does appear in historical API documentation, but that documentation predates the 8.19 fix of the same pattern</li>
+            <li>Fixed at
+               <a href="https://github.com/wekan/wekan/blob/main/CHANGELOG.md#upcoming-wekan--release">upcoming WeKan release</a></li>
+          </ul>
+        </td>
+      </tr>
+
+    </table>
+  </div>
+
+  <br />
+  <br />
+
+  <div class="hof">
+    <h2 class="hof">Details</h2>
+
+    <h3>AuthorBleed — attribution taken from the request body (CWE-345)</h3>
+    <p>
+      Six paths recorded who did something from a field the caller sends:
+    </p>
+    <pre>
+POST   /api/boards/{boardId}/lists/{listId}/cards            (single, and the linked form)
+POST   /api/boards/{boardId}/lists/{listId}/cards/bulk
+DELETE /api/boards/{boardId}/lists/{listId}/cards/{cardId}
+DELETE /api/boards/{boardId}/cards/bulk
+POST   /api/boards/{boardId}/custom-fields
+    </pre>
+    <p>
+      The check was that the named user exists &mdash; not that it is the caller:
+    </p>
+    <pre>
+// server/models/cards.js — before
+const checkUser = await ReactiveCache.getUser(req.body.authorId); // existence only
+...
+userId: req.body.authorId,                    // recorded as the card's creator
+await cardCreation(req.body.authorId, card);  // and in the activity feed
+    </pre>
+    <p>
+      An existence check is not an authentication check. It confirms that the name in the envelope belongs to somebody; it says nothing about who wrote the letter.
+    </p>
+    <p>
+      For comparison, the comment endpoint fixed in 8.19 uses the session:
+    </p>
+    <pre>
+// server/models/cardComments.js
+userId: req.userId,
+    </pre>
+    <p>
+      Every one of the six does the same now. <code>tests/restApiIdorBatch.test.cjs</code> pins each path by what it records, and that no card or custom-field path reads <code>authorId</code> from the body again.
+    </p>
+  </div>
+
+  <br />
+  <br />
+
+  <div class="action-buttons">
+    <a class="button" href="https://wekan.fi/hall-of-fame">Back to Hall of Fame Contents</a>
+    <a class="button" href="https://wekan.fi">Back to Wekan Website</a>
+  </div>
+
+</body>
+
+</html>

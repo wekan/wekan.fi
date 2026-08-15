@@ -1,0 +1,131 @@
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <title>WeKan — Hall of Fame / PurgeBleed</title>
+  <link rel="icon" href="../../wekan-favicon.png">
+  <link rel="stylesheet" type="text/css" href="../../css/main.css">
+  <link rel="stylesheet" href="../../font-awesome/css/font-awesome.min.css">
+</head>
+
+<body>
+
+  <img vAlign="center" src="../hof.svg" alt="Hall of Fame image from https://openclipart.org/detail/120343/trophy"
+    width="300px" height="auto" />
+  <br />
+
+  <div class="action-buttons">
+    <a class="button" href="https://wekan.fi/hall-of-fame">Back to Hall of Fame Contents</a>
+    <a class="button" href="https://wekan.fi">Back to Wekan Website</a>
+  </div>
+
+  <div class="hof">
+    <h1 class="hof">Contents / PurgeBleed</h1>
+
+    <table border="1" margin="0" padding="10px" width="100%">
+      <tr>
+        <th width="10%">CVE</th>
+        <th width="10%">Vulnerability name</th>
+        <th width="10%">Date</th>
+        <th width="20%">
+          <a href="https://github.com/wekan/wekan/blob/main/SECURITY.md" style="color: red;">Responsible Security Disclosure</a>
+          by
+        </th>
+        <th width="40%">Vulnerabilities</th>
+      </tr>
+
+      <tr>
+        <td valign="top">
+          <a href="https://github.com/wekan/wekan/security/advisories/GHSA-8cqr-x6m5-v4w6">GHSA-8cqr-x6m5-v4w6</a>
+          <br /> <br />
+        </td>
+        <td valign="top"><b>PurgeBleed</b> <h2><i class="fa fa-trash" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></h2></td>
+        <td valign="top">2026-08-15</td>
+        <td valign="top">
+          <b><a href="https://github.com/ybsun0215">ybsun0215</a></b> and <b><a href="https://github.com/xet7">xet7</a></b><br />
+          <img src="../GoldStar.png" width="30px" height="auto" />
+          <img src="../GoldStar.png" width="30px" height="auto" /><br />
+          Coordinated disclosure via GitHub Security Advisory GHSA-8cqr-x6m5-v4w6.
+        </td>
+        <td valign="top">
+          <ul>
+            <li><i class="fa fa-trash" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i> PurgeBleed &mdash; the single-card DELETE authorised the caller on the board in <code>:boardId</code> and then fetched the card by <code>:cardId</code> ALONE, so the child-removal it runs first erased the checklists, checklist items, comments, activity history and subcard tree of any card in the instance (CWE-639 Authorization Bypass Through User-Controlled Key, CWE-862 Missing Authorization)</li>
+            <li>The destruction happens BEFORE the card is removed, so the unconstrained lookup is the whole vulnerability: <code>cardRemover</code> erases everything keyed on whatever card id came back. The removal that follows uses a triple key &mdash; <code>{_id, listId, boardId}</code> &mdash; so a foreign card was never actually removed, which is why the card SHELL survived and made the damage easy to miss</li>
+            <li>The endpoint answered HTTP 200 with the card id either way, so nothing in the response said that a caller had just destroyed the contents of a card on a board they cannot read. Deletion is irreversible, and the attack is repeatable for every foreign card id an attacker learns</li>
+            <li>Any authenticated user with write access to ONE board &mdash; their own is enough &mdash; could reach every board on the instance. All deployments with <code>WITH_API=true</code> are affected</li>
+            <li>The bulk endpoint <code>DELETE .../cards/bulk</code> had always constrained its lookup with <code>getCard({ _id, boardId })</code>. The single-card path is the sibling that was missed, the same shape as PassBleed (GHSA-6p5m-f9p2-wqm5) and the REST-side sibling of GHSA-gm7v-pc38-53jr. It uses the constrained lookup now, so a card outside the authorised board simply does not resolve</li>
+            <li>Fixed at
+               <a href="https://github.com/wekan/wekan/blob/main/CHANGELOG.md#upcoming-wekan--release">upcoming WeKan release</a></li>
+          </ul>
+        </td>
+      </tr>
+
+    </table>
+  </div>
+
+  <br />
+  <br />
+
+  <div class="hof">
+    <h2 class="hof">Details</h2>
+
+    <h3>PurgeBleed — authorised on the board, acting on any card (CWE-639, CWE-862)</h3>
+    <p>
+      WeKan can delete a single card over the REST API:
+    </p>
+    <pre>
+DELETE /api/boards/:boardId/lists/:listId/cards/:cardId
+    </pre>
+    <p>
+      Three identifiers, all supplied by the caller. The handler used the first to decide whether the request was allowed, and the third to decide what to act on:
+    </p>
+    <pre>
+// server/models/cards.js — before
+await Authentication.checkBoardWriteAccess(req.userId, paramBoardId); // authorises the URL's board
+const card = await ReactiveCache.getCard(paramCardId);                // ANY board's card
+if (card) {
+  await cardRemover(req.body.authorId, card);                         // destroys the children
+}
+await Cards.direct.removeAsync({                                       // triple key: no match
+  _id: paramCardId, listId: paramListId, boardId: paramBoardId,
+});
+    </pre>
+    <p>
+      <code>cardRemover</code> removes strictly by card id, with no board constraint at all:
+    </p>
+    <pre>
+await ChecklistItems.direct.removeAsync({ cardId: doc._id });
+await Checklists.direct.removeAsync({ cardId: doc._id });
+await CardComments.direct.removeAsync({ cardId: doc._id });
+await Activities.direct.removeAsync({ cardId: doc._id });
+await Cards.removeAsync({ parentId: doc._id });   // subcard cascade
+    </pre>
+    <p>
+      So the order is what makes this severe. The children are destroyed against the card the bare lookup returned; the card itself is then removed against a selector that a foreign card can never match. The victim keeps an empty card and a 200, and the attacker keeps their access.
+    </p>
+    <p>
+      The fix constrains the lookup the way the bulk endpoint always did, so the card must be on the board the caller was authorised for:
+    </p>
+    <pre>
+// server/models/cards.js — after
+const card = await ReactiveCache.getCard({
+  _id: paramCardId,
+  boardId: paramBoardId,
+});
+    </pre>
+    <p>
+      A card on another board is not found, <code>cardRemover</code> is not reached, and nothing is destroyed. <code>tests/restApiIdorBatch.test.cjs</code> pins the constrained lookup, that the bare one does not come back, and that the bulk endpoint still has its own.
+    </p>
+  </div>
+
+  <br />
+  <br />
+
+  <div class="action-buttons">
+    <a class="button" href="https://wekan.fi/hall-of-fame">Back to Hall of Fame Contents</a>
+    <a class="button" href="https://wekan.fi">Back to Wekan Website</a>
+  </div>
+
+</body>
+
+</html>

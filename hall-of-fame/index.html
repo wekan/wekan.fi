@@ -88,6 +88,201 @@
 
       <tr>
         <td valign="top">
+          <a href="https://github.com/wekan/wekan/security/advisories/GHSA-8cqr-x6m5-v4w6">GHSA-8cqr-x6m5-v4w6</a>
+          <br /> <br />
+        </td>
+        <td class="icon" valign="top"><h2><i class="fa fa-trash" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></h2></td>
+        <td valign="top"><b>PurgeBleed</b></td>
+        <td valign="top">2026-08-15</td>
+        <td class="by" valign="top">
+          <b><a href="https://github.com/ybsun0215">ybsun0215</a></b> and <b><a href="https://github.com/xet7">xet7</a></b>
+        </td>
+        <td class="stars" valign="top">
+          <img src="GoldStar.png" width="30px" height="auto" />
+          <img src="GoldStar.png" width="30px" height="auto" />
+        </td>
+        <td valign="top">
+          <details>
+          <summary>Process</summary>
+
+          Coordinated disclosure via GitHub Security Advisory GHSA-8cqr-x6m5-v4w6.
+          </details>
+        </td>
+        <td valign="top">
+          <details>
+          <summary>Details</summary>
+
+          <ul>
+            <li><i class="fa fa-trash" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i> PurgeBleed &mdash; the single-card DELETE authorised the caller on the board in <code>:boardId</code> and then fetched the card by <code>:cardId</code> ALONE, so the child-removal it runs first erased the checklists, checklist items, comments, activity history and subcard tree of any card in the instance (CWE-639 Authorization Bypass Through User-Controlled Key, CWE-862 Missing Authorization)</li>
+            <li>The destruction happens BEFORE the card is removed, so the unconstrained lookup is the whole vulnerability: <code>cardRemover</code> erases everything keyed on whatever card id came back. The removal that follows uses a triple key &mdash; <code>{_id, listId, boardId}</code> &mdash; so a foreign card was never actually removed, which is why the card SHELL survived and made the damage easy to miss</li>
+            <li>The endpoint answered HTTP 200 with the card id either way, so nothing in the response said that a caller had just destroyed the contents of a card on a board they cannot read. Deletion is irreversible, and the attack is repeatable for every foreign card id an attacker learns</li>
+            <li>Any authenticated user with write access to ONE board &mdash; their own is enough &mdash; could reach every board on the instance. All deployments with <code>WITH_API=true</code> are affected</li>
+            <li>The bulk endpoint <code>DELETE .../cards/bulk</code> had always constrained its lookup with <code>getCard({ _id, boardId })</code>. The single-card path is the sibling that was missed, the same shape as PassBleed (GHSA-6p5m-f9p2-wqm5) and the REST-side sibling of GHSA-gm7v-pc38-53jr. It uses the constrained lookup now, so a card outside the authorised board simply does not resolve</li>
+            <li>Fixed at <a href="https://github.com/wekan/wekan/blob/main/CHANGELOG.md#upcoming-wekan--release">upcoming WeKan release</a></li>
+            <li><a href="purgebleed/">More details</a></li>
+          </ul>
+          </details>
+        </td>
+      </tr>
+
+      <tr>
+        <td valign="top">
+          <a href="https://github.com/wekan/wekan/security/advisories/GHSA-6qpx-x7vr-p9w6">GHSA-6qpx-x7vr-p9w6</a>
+          <br /> <br />
+        </td>
+        <td class="icon" valign="top"><h2><i class="fa fa-key" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></h2></td>
+        <td valign="top"><b>HashBleed</b></td>
+        <td valign="top">2026-08-15</td>
+        <td class="by" valign="top">
+          <b><a href="https://github.com/ybsun0215">ybsun0215</a></b> and <b><a href="https://github.com/xet7">xet7</a></b>
+        </td>
+        <td class="stars" valign="top">
+          <img src="GoldStar.png" width="30px" height="auto" />
+          <img src="GoldStar.png" width="30px" height="auto" />
+        </td>
+        <td valign="top">
+          <details>
+          <summary>Process</summary>
+
+          Coordinated disclosure via GitHub Security Advisory GHSA-6qpx-x7vr-p9w6.
+          </details>
+        </td>
+        <td valign="top">
+          <details>
+          <summary>Details</summary>
+
+          <ul>
+            <li><i class="fa fa-key" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i> HashBleed &mdash; <code>GET /api/users/{userId}</code> and <code>PUT /api/users/{userId}</code> serialised the whole Meteor user document, so every answer carried <code>services.password.bcrypt</code> and the hash of every live session token (CWE-200 Exposure of Sensitive Information)</li>
+            <li>The authorisation was never the problem: both endpoints are admin-only and stayed that way. The PAYLOAD was. Walking the ids that <code>GET /api/users</code> returns harvested the offline crackable password hash and the session-token hashes of every account on the instance</li>
+            <li>A password hash is an offline attack that does not touch the server, and it survives long after the export. The session material is <code>services.resume.loginTokens[]</code>, one entry per live session with the time it began</li>
+            <li>The two sibling endpoints in the same file show what was intended: <code>GET /api/users</code> projects down to <code>_id</code> and <code>username</code>, and <code>GET /api/user</code>, the self view, runs <code>delete data.services</code> before answering. Nothing in the code, the CHANGELOG or the documentation ever said the subtree was meant to be exposed</li>
+            <li>One helper strips <code>services</code> and <code>sessionData</code> now, and both endpoints answer through it &mdash; the PUT as well, which returned the same unprojected document after every action branch</li>
+            <li>Fixed at <a href="https://github.com/wekan/wekan/blob/main/CHANGELOG.md#upcoming-wekan--release">upcoming WeKan release</a></li>
+            <li><a href="hashbleed/">More details</a></li>
+          </ul>
+          </details>
+        </td>
+      </tr>
+
+      <tr>
+        <td valign="top">
+          <a href="https://github.com/wekan/wekan/security/advisories/GHSA-whxm-pxgj-7wqv">GHSA-whxm-pxgj-7wqv</a>
+          <br /> <br />
+        </td>
+        <td class="icon" valign="top"><h2><i class="fa fa-user-plus" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></h2></td>
+        <td valign="top"><b>GuestBleed</b></td>
+        <td valign="top">2026-08-15</td>
+        <td class="by" valign="top">
+          <b><a href="https://github.com/ybsun0215">ybsun0215</a></b> and <b><a href="https://github.com/xet7">xet7</a></b>
+        </td>
+        <td class="stars" valign="top">
+          <img src="GoldStar.png" width="30px" height="auto" />
+          <img src="GoldStar.png" width="30px" height="auto" />
+        </td>
+        <td valign="top">
+          <details>
+          <summary>Process</summary>
+
+          Coordinated disclosure via GitHub Security Advisory GHSA-whxm-pxgj-7wqv.
+          </details>
+        </td>
+        <td valign="top">
+          <details>
+          <summary>Details</summary>
+
+          <ul>
+            <li><i class="fa fa-user-plus" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i> GuestBleed &mdash; the <code>members</code> and <code>assignees</code> ARRAYS on card create and card update were stored exactly as given, so a member of a private board could put any user id on a card, and <code>GET /api/user/cards</code> then fed that outsider the private board's card titles, ids and dates (CWE-639)</li>
+            <li>Two paths combine. Nothing validated that the ids in the arrays belong to the card's board, and the listing endpoint answered by CARD membership without re-checking access to the card's BOARD &mdash; so being named on a card was enough to read from a board that refuses to open</li>
+            <li>The outsider's direct read of the board stayed Forbidden the whole time, which is what made this quiet: every ordinary check still said no, while the "my cards" feed kept answering. It is continuous, not a single disclosure &mdash; the feed follows the card</li>
+            <li>The invariant already existed and was documented on the merge endpoint <code>POST .../cards/{cardId}/members/{memberId}</code>, which has refused a non-member with 400 since issue #5998. The array form on POST and PUT bypassed it, for both members and assignees</li>
+            <li>Both halves are fixed: every id in either array is checked with the same <code>canAssignCardMember</code> the merge endpoint uses, on single create, bulk create and update alike; and the listing filters by the boards the caller is an active member of, so a card placed before this release stops answering too</li>
+            <li>Fixed at <a href="https://github.com/wekan/wekan/blob/main/CHANGELOG.md#upcoming-wekan--release">upcoming WeKan release</a></li>
+            <li><a href="guestbleed/">More details</a></li>
+          </ul>
+          </details>
+        </td>
+      </tr>
+
+      <tr>
+        <td valign="top">
+          <a href="https://github.com/wekan/wekan/security/advisories/GHSA-r8r3-23vr-8jh6">GHSA-r8r3-23vr-8jh6</a>
+          <br /> <br />
+        </td>
+        <td class="icon" valign="top"><h2><i class="fa fa-user-times" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></h2></td>
+        <td valign="top"><b>StaleBleed</b></td>
+        <td valign="top">2026-08-15</td>
+        <td class="by" valign="top">
+          <b><a href="https://github.com/ybsun0215">ybsun0215</a></b> and <b><a href="https://github.com/xet7">xet7</a></b>
+        </td>
+        <td class="stars" valign="top">
+          <img src="GoldStar.png" width="30px" height="auto" />
+          <img src="GoldStar.png" width="30px" height="auto" />
+        </td>
+        <td valign="top">
+          <details>
+          <summary>Process</summary>
+
+          Coordinated disclosure via GitHub Security Advisory GHSA-r8r3-23vr-8jh6.
+          </details>
+        </td>
+        <td valign="top">
+          <details>
+          <summary>Details</summary>
+
+          <ul>
+            <li><i class="fa fa-user-times" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i> StaleBleed &mdash; the board listing matched <code>'members.userId'</code> with a dotted path, which ignores the membership's <code>isActive</code> flag, so a removed member kept seeing the board's id and title indefinitely (CWE-863 Incorrect Authorization)</li>
+            <li>Removing a board member does not delete their entry: it sets <code>isActive: false</code> and <code>isAdmin: false</code> and keeps it. A query that matches the entry without reading that flag therefore matches revoked members exactly as it matches current ones</li>
+            <li>Reading the board itself was already refused, so the exposure is the board's id and its title &mdash; but the id is the part that matters, because it is what every other endpoint in the API is addressed by, and the title is often the thing a private board is private about</li>
+            <li>This is the same class as GHSA-gwc4-fw7p-gw58 (org, team and domain shares, fixed in 10.74), whose fix introduced one builder for board visibility with the header note <em>"A share entry counts only while it is active, everywhere"</em>. This listing endpoint predates that consolidation and was never converted</li>
+            <li>It uses <code>$elemMatch</code> now, so the userId and the active flag have to be true of the SAME entry &mdash; which is what a revoke means everywhere else in WeKan</li>
+            <li>Fixed at <a href="https://github.com/wekan/wekan/blob/main/CHANGELOG.md#upcoming-wekan--release">upcoming WeKan release</a></li>
+            <li><a href="stalebleed/">More details</a></li>
+          </ul>
+          </details>
+        </td>
+      </tr>
+
+      <tr>
+        <td valign="top">
+          <a href="https://github.com/wekan/wekan/security/advisories/GHSA-6jr3-42jf-vhm5">GHSA-6jr3-42jf-vhm5</a>
+          <br /> <br />
+        </td>
+        <td class="icon" valign="top"><h2><i class="fa fa-pencil" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></h2></td>
+        <td valign="top"><b>AuthorBleed</b></td>
+        <td valign="top">2026-08-15</td>
+        <td class="by" valign="top">
+          <b><a href="https://github.com/ybsun0215">ybsun0215</a></b> and <b><a href="https://github.com/xet7">xet7</a></b>
+        </td>
+        <td class="stars" valign="top">
+          <img src="GoldStar.png" width="30px" height="auto" />
+          <img src="GoldStar.png" width="30px" height="auto" />
+        </td>
+        <td valign="top">
+          <details>
+          <summary>Process</summary>
+
+          Coordinated disclosure via GitHub Security Advisory GHSA-6jr3-42jf-vhm5.
+          </details>
+        </td>
+        <td valign="top">
+          <details>
+          <summary>Details</summary>
+
+          <ul>
+            <li><i class="fa fa-pencil" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i> AuthorBleed &mdash; six server paths took the actor's identity from the request body's <code>authorId</code> field, checking only that such a user exists, so a board member could record card creations, card deletions and custom fields as somebody else (CWE-345 Insufficient Verification of Data Authenticity)</li>
+            <li>The board's own history is the thing at stake. "victim created this card" and "victim deleted this card" became attacker-controlled sentences, on any board the caller may write to, and the card document itself recorded the forged <code>userId</code> as its creator</li>
+            <li>The six: single card create, bulk card create, linked-card create, single card delete, bulk card delete, and custom-field create</li>
+            <li>WeKan had already accepted this exact class as a vulnerability and fixed it for card comments in 8.19, and again for the card PUT handler &mdash; whose inline note still reads <em>"use req.userId consistently (it previously read req.body.authorId here)"</em>. These six paths were missed, which makes it an incomplete fix rather than a new decision</li>
+            <li>All six read <code>req.userId</code> now &mdash; the session the request authenticated as, which is the only identity the server can vouch for. The parameter does appear in historical API documentation, but that documentation predates the 8.19 fix of the same pattern</li>
+            <li>Fixed at <a href="https://github.com/wekan/wekan/blob/main/CHANGELOG.md#upcoming-wekan--release">upcoming WeKan release</a></li>
+            <li><a href="authorbleed/">More details</a></li>
+          </ul>
+          </details>
+        </td>
+      </tr>
+
+      <tr>
+        <td valign="top">
           <a href="https://github.com/wekan/wekan/security/advisories/GHSA-6p5m-f9p2-wqm5">GHSA-6p5m-f9p2-wqm5</a>
           <br /> <br />
         </td>
