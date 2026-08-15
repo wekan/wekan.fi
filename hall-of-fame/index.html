@@ -88,6 +88,45 @@
 
       <tr>
         <td valign="top">
+          &mdash;
+          <br /> <br />
+        </td>
+        <td class="icon" valign="top"><h2><i class="fa fa-user-plus" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></h2></td>
+        <td valign="top"><b>SignupBleed</b></td>
+        <td valign="top">2026-08-16</td>
+        <td class="by" valign="top">
+          <b><a href="https://github.com/AhmedLukman">AhmedLukman</a></b> and <b><a href="https://github.com/xet7">xet7</a></b>
+        </td>
+        <td class="stars" valign="top">
+          <img src="GoldStar.png" width="30px" height="auto" />
+          <img src="GoldStar.png" width="30px" height="auto" />
+        </td>
+        <td valign="top">
+          <details>
+          <summary>Process</summary>
+
+          Found while reviewing a pull request about the opposite symptom.
+          </details>
+        </td>
+        <td valign="top">
+          <details>
+          <summary>Details</summary>
+
+          <ul>
+            <li><i class="fa fa-user-plus" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i> SignupBleed &mdash; with registration turned OFF in the Admin Panel, <code>POST /users/register</code> created accounts anyway and handed back a login token, because its guard read a Meteor option WeKan never sets (CWE-862 Missing Authorization)</li>
+            <li>The Admin Panel switch closed the sign-up FORM and nothing else. A closed instance answered the REST endpoint exactly as an open one did, so anybody who could reach the port could make an account on it</li>
+            <li>The guard read <code>Accounts._options.forbidClientAccountCreation</code>. WeKan's only <code>Accounts.config()</code> call sets <code>loginExpirationInDays</code> and nothing else; <code>forbidClientAccountCreation: disableRegistration</code> is passed to <code>AccountsTemplates.configure()</code>, which is the useraccounts package's own options object; and that value is assigned from an async <code>Meteor.call('isDisableRegistration')</code> callback that fires after <code>configure()</code> has already run. Three near-misses, and the condition was always false</li>
+            <li>No credentials were exposed and no existing data was reachable: the fault is that an instance whose administrator had closed registration kept accepting new accounts. Affects deployments with <code>WITH_API=true</code></li>
+            <li>The endpoint now reads <code>getCurrentSetting().disableRegistration</code>, the same field the sign-up form's own Meteor method reads, so the form and the API cannot disagree. A refusal is recorded and shows in Admin Panel / Problems &mdash; every call that reaches it is an attempt, because the administrator has turned registration off</li>
+            <li>Fixed at <a href="https://github.com/wekan/wekan/blob/main/CHANGELOG.md#upcoming-wekan--release">upcoming WeKan release</a></li>
+            <li><a href="signupbleed/">More details</a></li>
+          </ul>
+          </details>
+        </td>
+      </tr>
+
+      <tr>
+        <td valign="top">
           <a href="https://github.com/wekan/wekan/security/advisories/GHSA-8cqr-x6m5-v4w6">GHSA-8cqr-x6m5-v4w6</a>
           <br /> <br />
         </td>

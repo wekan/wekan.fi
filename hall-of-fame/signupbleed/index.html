@@ -1,0 +1,136 @@
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <title>WeKan — Hall of Fame / SignupBleed</title>
+  <link rel="icon" href="../../wekan-favicon.png">
+  <link rel="stylesheet" type="text/css" href="../../css/main.css">
+  <link rel="stylesheet" href="../../font-awesome/css/font-awesome.min.css">
+</head>
+
+<body>
+
+  <img vAlign="center" src="../hof.svg" alt="Hall of Fame image from https://openclipart.org/detail/120343/trophy"
+    width="300px" height="auto" />
+  <br />
+
+  <div class="action-buttons">
+    <a class="button" href="https://wekan.fi/hall-of-fame">Back to Hall of Fame Contents</a>
+    <a class="button" href="https://wekan.fi">Back to Wekan Website</a>
+  </div>
+
+  <div class="hof">
+    <h1 class="hof">Contents / SignupBleed</h1>
+
+    <table border="1" margin="0" padding="10px" width="100%">
+      <tr>
+        <th width="10%">CVE</th>
+        <th width="10%">Vulnerability name</th>
+        <th width="10%">Date</th>
+        <th width="20%">
+          <a href="https://github.com/wekan/wekan/blob/main/SECURITY.md" style="color: red;">Responsible Security Disclosure</a>
+          by
+        </th>
+        <th width="40%">Vulnerabilities</th>
+      </tr>
+
+      <tr>
+        <td valign="top">
+          &mdash;
+          <br /> <br />
+        </td>
+        <td valign="top"><b>SignupBleed</b> <h2><i class="fa fa-user-plus" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></h2></td>
+        <td valign="top">2026-08-16</td>
+        <td valign="top">
+          <b><a href="https://github.com/AhmedLukman">AhmedLukman</a></b> and <b><a href="https://github.com/xet7">xet7</a></b><br />
+          <img src="../GoldStar.png" width="30px" height="auto" /><br />
+          Found while reviewing a pull request about the opposite symptom.
+        </td>
+        <td valign="top">
+          <ul>
+            <li><i class="fa fa-user-plus" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i> SignupBleed &mdash; with registration turned OFF in the Admin Panel, <code>POST /users/register</code> created accounts anyway and handed back a login token, because its guard read a Meteor option WeKan never sets (CWE-862 Missing Authorization)</li>
+            <li>The Admin Panel switch closed the sign-up FORM and nothing else. A closed instance answered the REST endpoint exactly as an open one did, so anybody who could reach the port could make an account on it</li>
+            <li>The guard read <code>Accounts._options.forbidClientAccountCreation</code>. WeKan's only <code>Accounts.config()</code> call sets <code>loginExpirationInDays</code> and nothing else; <code>forbidClientAccountCreation: disableRegistration</code> is passed to <code>AccountsTemplates.configure()</code>, which is the useraccounts package's own options object; and that value is assigned from an async <code>Meteor.call('isDisableRegistration')</code> callback that fires after <code>configure()</code> has already run. Three near-misses, and the condition was always false</li>
+            <li>No credentials were exposed and no existing data was reachable: the fault is that an instance whose administrator had closed registration kept accepting new accounts. What those accounts can then see is whatever a new account can see on that deployment. Affects deployments with <code>WITH_API=true</code></li>
+            <li>The endpoint now reads <code>getCurrentSetting().disableRegistration</code>, the same field the sign-up form's own Meteor method reads, so the form and the API cannot disagree. A refusal is recorded and shows in Admin Panel / Problems &mdash; every call that reaches it is an attempt, because the administrator has turned registration off</li>
+            <li>Fixed at
+               <a href="https://github.com/wekan/wekan/blob/main/CHANGELOG.md#upcoming-wekan--release">upcoming WeKan release</a></li>
+          </ul>
+        </td>
+      </tr>
+
+    </table>
+  </div>
+
+  <br />
+  <br />
+
+  <div class="hof">
+    <h2 class="hof">Details</h2>
+
+    <h3>SignupBleed — the switch that closed the form and nothing else (CWE-862)</h3>
+    <p>
+      WeKan's Admin Panel has a <b>Registration</b> setting. Turning it off is how an administrator says that nobody else may join this instance. It closed the sign-up form. It did not close the REST endpoint behind it:
+    </p>
+    <pre>
+POST /users/register
+    </pre>
+    <p>
+      The endpoint did have a guard, and the guard looked exactly right:
+    </p>
+    <pre>
+// server/apiAuthRoutes.js — before
+if (Accounts._options.forbidClientAccountCreation) {
+  sendJsonResult(res, { code: 403 });
+  return;
+}
+    </pre>
+    <p>
+      Nothing in WeKan ever sets that option. Three separate things each nearly set it, and none of them does:
+    </p>
+    <ul>
+      <li>The only <code>Accounts.config()</code> call in the tree, in <code>server/accounts-common.js</code>, sets <code>loginExpirationInDays</code> and nothing else.</li>
+      <li><code>forbidClientAccountCreation: disableRegistration</code> in <code>config/accounts.js</code> is passed to <code>AccountsTemplates.configure()</code> &mdash; the useraccounts package's own options object, not Meteor's <code>Accounts</code>.</li>
+      <li>That <code>disableRegistration</code> is only assigned inside an async <code>Meteor.call('isDisableRegistration', …)</code> callback, which fires <i>after</i> <code>configure()</code> has already run. The file records this a few lines above, for a different reason.</li>
+    </ul>
+    <p>
+      So the condition was always false, and the endpoint had never refused anyone. It read as though it worked, which is why it lasted: the option is named exactly for the job it was not doing.
+    </p>
+    <p>
+      The fix reads the setting from where the setting lives &mdash; the same field the sign-up form's own Meteor method reads, so the form and the API can no longer disagree about whether the door is open:
+    </p>
+    <pre>
+// server/apiAuthRoutes.js — after
+const setting = await ReactiveCache.getCurrentSetting();
+if (setting?.disableRegistration === true) {
+  require('/server/lib/securityLog').record({
+    key: 'authz.register', action: 'blocked', source: 'POST /users/register',
+    detail: 'refused account creation while registration is disabled',
+  });
+  sendJsonResult(res, { code: 403 });
+  return;
+}
+    </pre>
+    <p>
+      The optional chain matters: an instance with no Settings document yet still allows registration, rather than locking itself out on first run. The refusal is recorded because every call that reaches it is an attempt &mdash; once the administrator has turned registration off there is no legitimate caller, so the log cannot drown Admin Panel / Problems in ordinary traffic.
+    </p>
+    <p>
+      <code>tests/restRegisterRespectsSetting.test.cjs</code> pins nine facts, four of them negative, on an endpoint that had no tests at all: that the setting is read where the Meteor method reads it, that the dead option is not consulted again <i>and</i> is still set nowhere &mdash; so a later change cannot quietly reintroduce two sources of truth that disagree &mdash; that an enabled instance still creates the user and answers with its token, and that a missing Settings document does not refuse everybody.
+    </p>
+    <h3>How it was found</h3>
+    <p>
+      <a href="https://github.com/wekan/wekan/pull/6598">Pull request #6598</a> by <b><a href="https://github.com/AhmedLukman">AhmedLukman</a></b> changed this guard to read WeKan's setting. It was filed against <a href="https://github.com/wekan/wekan/issues/4774">issue #4774</a>, a <i>403 Forbidden</i> from this endpoint that nobody had been able to reproduce &mdash; and which this line cannot produce, because it never returned 403 at all. Looking into why turned up the opposite fault, and a more serious one. The pull request was closed and the fix written with a security log entry and the tests; the finding is the reporter's.
+    </p>
+  </div>
+
+  <br />
+  <br />
+
+  <div class="action-buttons">
+    <a class="button" href="https://wekan.fi/hall-of-fame">Back to Hall of Fame Contents</a>
+    <a class="button" href="https://wekan.fi">Back to Wekan Website</a>
+  </div>
+
+</body>
+
+</html>
