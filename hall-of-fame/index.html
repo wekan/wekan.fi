@@ -88,6 +88,48 @@
 
       <tr>
         <td valign="top">
+          <a href="https://github.com/wekan/wekan/security/advisories/GHSA-rf3w-rj48-jxcc">GHSA-rf3w-rj48-jxcc</a>
+          <br /> <br />
+        </td>
+        <td class="icon" valign="top"><h2><i class="fa fa-lock" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></h2></td>
+        <td valign="top"><b>JamBleed</b></td>
+        <td valign="top">2026-08-16</td>
+        <td class="by" valign="top">
+          <b><a href="https://github.com/daniais">daniais</a></b> and <b><a href="https://github.com/xet7">xet7</a></b>
+        </td>
+        <td class="stars" valign="top">
+          <img src="GoldStar.png" width="30px" height="auto" />
+          <img src="GoldStar.png" width="30px" height="auto" />
+          <img src="GoldStar.png" width="30px" height="auto" />
+          <img src="GoldStar.png" width="30px" height="auto" />
+        </td>
+        <td valign="top">
+          <details>
+          <summary>Process</summary>
+
+          Coordinated disclosure through a GitHub security advisory, with a lab reproduction on v10.91, an A/B harness against a patched build, a CVSS assessment the reporter marked as preliminary and offered for independent review, and a 90-day window offered rather than assumed.
+          </details>
+        </td>
+        <td valign="top">
+          <details>
+          <summary>Details</summary>
+
+          <ul>
+            <li><i class="fa fa-lock" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i> JamBleed &mdash; the brute-force lockout counted an attacker's failed logins against the VICTIM'S ACCOUNT rather than against the address they came from, so anyone who knew a username could lock its owner out of login from every address, repeatably (CWE-307 Improper Restriction of Excessive Authentication Attempts)</li>
+            <li>Usernames are public in normal WeKan use &mdash; board and card members are listed &mdash; so choosing a target was trivial, and an administrator was as easy to lock out as anyone else. Walking the member list locks out an entire instance</li>
+            <li>A CORRECT password was refused while the lock held, and counted as a further failure on the way. The old code allowed an attempt only when there was no error AND no lock, so the owner typing the right password fell through to the same refusal as the attacker</li>
+            <li>Affected from v10.59, and not before: the flat counter is much older, but until the LockoutBleed fix (GHSA-2g94-9x3m-hv37) the hooks gated on English error strings that Meteor's <code>ambiguousErrorMessages</code> had already rewritten, so the counter never moved and no account ever locked. Making the lockout work is what made this reachable</li>
+            <li>No confidentiality or integrity impact: nothing is disclosed and nothing is modified. The loss is the availability of authentication for a chosen user, sustained for as long as the attacker keeps going</li>
+            <li>The counter is per (user, source address) now, keyed by a SHA-256 prefix so a locked account carries no list of the addresses that attacked it, and a correct password is allowed FIRST &mdash; before anything reads the lock &mdash; and clears the state behind it. Hammering during a lock no longer extends it</li>
+            <li>Fixed at <a href="https://github.com/wekan/wekan/blob/main/CHANGELOG.md#upcoming-wekan--release">upcoming WeKan release</a></li>
+            <li><a href="jambleed/">More details</a></li>
+          </ul>
+          </details>
+        </td>
+      </tr>
+
+      <tr>
+        <td valign="top">
           &mdash;
           <br /> <br />
         </td>

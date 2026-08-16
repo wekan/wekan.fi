@@ -1,0 +1,158 @@
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <title>WeKan &mdash; Hall of Fame / JamBleed</title>
+  <link rel="icon" href="../../wekan-favicon.png">
+  <link rel="stylesheet" type="text/css" href="../../css/main.css">
+  <link rel="stylesheet" href="../../font-awesome/css/font-awesome.min.css">
+</head>
+
+<body>
+
+  <img vAlign="center" src="../hof.svg" alt="Hall of Fame image from https://openclipart.org/detail/120343/trophy"
+    width="300px" height="auto" />
+  <br />
+
+  <div class="action-buttons">
+    <a class="button" href="https://wekan.fi/hall-of-fame">Back to Hall of Fame Contents</a>
+    <a class="button" href="https://wekan.fi">Back to Wekan Website</a>
+  </div>
+
+  <div class="hof">
+    <h1 class="hof">Contents / JamBleed</h1>
+
+    <table border="1" margin="0" padding="10px" width="100%">
+      <tr>
+        <th width="10%">CVE</th>
+        <th width="10%">Vulnerability name</th>
+        <th width="10%">Date</th>
+        <th width="20%">
+          <a href="https://github.com/wekan/wekan/blob/main/SECURITY.md" style="color: red;">Responsible Security Disclosure</a>
+          by
+        </th>
+        <th width="40%">Vulnerabilities</th>
+      </tr>
+
+      <tr>
+        <td valign="top">
+          <a href="https://github.com/wekan/wekan/security/advisories/GHSA-rf3w-rj48-jxcc">GHSA-rf3w-rj48-jxcc</a>
+          <br /> <br />
+        </td>
+        <td valign="top"><b>JamBleed</b> <h2><i class="fa fa-lock" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></h2></td>
+        <td valign="top">2026-08-16</td>
+        <td valign="top">
+          <b><a href="https://github.com/daniais">daniais</a></b> and <b><a href="https://github.com/xet7">xet7</a></b><br />
+          <img src="../GoldStar.png" width="30px" height="auto" />
+          <img src="../GoldStar.png" width="30px" height="auto" />
+          <img src="../GoldStar.png" width="30px" height="auto" />
+          <img src="../GoldStar.png" width="30px" height="auto" /><br />
+          Coordinated disclosure through a GitHub security advisory.
+        </td>
+        <td valign="top">
+          <ul>
+            <li><i class="fa fa-lock" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i> JamBleed &mdash; the brute-force lockout counted an attacker's failed logins against the VICTIM'S ACCOUNT rather than against the address they came from, so anyone who knew a username could lock its owner out of login from every address, repeatably (CWE-307)</li>
+            <li>A correct password was refused while the lock held, and counted as a further failure on the way</li>
+            <li>Affected v10.59 and newer. No confidentiality or integrity impact; the loss is the availability of authentication for a chosen user</li>
+            <li>Fixed at
+               <a href="https://github.com/wekan/wekan/blob/main/CHANGELOG.md#upcoming-wekan--release">upcoming WeKan release</a></li>
+          </ul>
+        </td>
+      </tr>
+
+    </table>
+  </div>
+
+  <br />
+  <br />
+
+  <div class="hof">
+    <h2 class="hof">Details</h2>
+
+    <h3>JamBleed &mdash; the lock that the attacker closes and the owner cannot open (CWE-307)</h3>
+    <p>
+      A brute-force lockout exists to stop somebody guessing a password. WeKan's counted the guesses against the wrong party. <code>wekan-accounts-lockout</code> kept ONE counter per user:
+    </p>
+    <pre>
+services.accounts-lockout.failedAttempts
+    </pre>
+    <p>
+      with no notion of where the attempts came from. Three wrong passwords &mdash; the default <code>failuresBeforeLockout</code> &mdash; and the account was locked <b>from every address</b>, for the lockout period, repeatably. An attacker who knew a username could hold a target out of their own account for as long as they cared to keep going.
+    </p>
+    <p>
+      Usernames are not a secret in WeKan: board and card members are listed to everyone who can see the board. Choosing a target was trivial, an administrator was as easy to lock out as anyone else, and walking the member list locks out an entire instance. The reporter demonstrated it on a clean v10.91 lab instance:
+    </p>
+    <pre>
+attacker IP A : Incorrect / Incorrect / Too many attempts
+victim  IP B  : (correct password) Too many attempts   &lt;- locked from every IP
+    </pre>
+
+    <h3>The second fault, which is the one that hurts</h3>
+    <p>
+      That last line is not only the global counter. The hook allowed a login attempt through when there was no error <i>and</i> no lock:
+    </p>
+    <pre>
+// packages/wekan-accounts-lockout/src/knownUser.js &mdash; before
+const unlockTime = KnownUser.unlockTime(loginInfo.user);
+if (loginInfo.error === undefined &amp;&amp; unlockTime === 0) {
+  return loginInfo.allowed;
+}
+    </pre>
+    <p>
+      So during a lock the real owner, typing the <b>right</b> password, fell through to the same <code>Too many attempts</code> refusal as the attacker &mdash; and incremented the counter that was locking them out on the way past. A lock is meant to stop guessing. Somebody who did not have to guess has proved they are not the attacker.
+    </p>
+
+    <h3>Why v10.59 and not earlier</h3>
+    <p>
+      The flat counter has existed since 2022, but until v10.59 the lockout was inert: its hooks gated on the English strings <code>Incorrect password</code> and <code>User not found</code>, which Meteor's <code>ambiguousErrorMessages</code> rewrites before the hooks run. The counter never moved and no account ever locked. The <a href="https://github.com/wekan/wekan/security/advisories/GHSA-2g94-9x3m-hv37">LockoutBleed</a> fix in v10.59 made the lockout count real password failures again &mdash; which is what made this reachable.
+    </p>
+    <p>
+      That is worth stating plainly rather than burying: <b>a fix that turns on a mechanism inherits whatever that mechanism gets wrong.</b> Repairing the brute-force protection was correct, and it exposed a design fault that had been sitting inert underneath it for three years.
+    </p>
+
+    <h3>The fix</h3>
+    <p>
+      The counter is per <b>(user, source address)</b>. An attacker locks out the address they are attacking from, which is the address that should be locked, and the person whose account it is keeps logging in from theirs.
+    </p>
+    <pre>
+services.accounts-lockout.byAddress.&lt;sha256-prefix&gt;.{failedAttempts, unlockTime, ...}
+    </pre>
+    <p>
+      The address comes from <code>X-Forwarded-For</code> under <code>HTTP_FORWARDED_COUNT</code> &mdash; the same rule the REST login throttle uses, so a lockout and a throttle cannot disagree about who somebody is &mdash; and only the position <code>hops</code> from the right is read, so a forged header cannot pick its own bucket and hand an attacker a fresh counter for every attempt. The key is hashed for two reasons: an IPv4 address is all dots and cannot be a Mongo field name at all, and a locked account should not accumulate a list of the addresses that attacked it, which is a record of who was where that WeKan has no reason to keep.
+    </p>
+    <p>
+      And a correct password is allowed <b>first</b>, before anything reads the lock, clearing the state behind it:
+    </p>
+    <pre>
+// after
+if (!hadError) {
+  return { action: 'allow', clearScope: true };
+}
+    </pre>
+    <p>
+      It clears the pre-fix flat fields too, so an account left locked by the old global counter is freed by its owner's next correct login rather than by a wait with no visible end. Hammering during a lock no longer extends it either &mdash; otherwise the denial of service returns inside the mechanism meant to stop it.
+    </p>
+    <p>
+      A lockout firing is recorded and shows in <b>Admin Panel &rarr; Problems</b>, so an administrator can see that somebody tried. On the lock only, not on every refused attempt during one: an attacker could otherwise fill that page by holding down a key.
+    </p>
+    <p>
+      The decision now lives in a pure module, so <code>tests/lockoutPerSourceAddress.test.cjs</code> reproduces the reported attack as arithmetic rather than through a running server &mdash; nineteen tests covering the attack itself, the correct password during a lock, that the lock still fires and still expires, the forwarded-header rules, that malformed state reads as <i>nothing yet</i> rather than throwing (a lockout that threw on an unexpected document would lock everybody out of a database that had one), and that every construction of the lockout passes the reporter, since there are two and a settings reload that dropped it would stop recording attempts while the guard kept working.
+    </p>
+
+    <h3>How it was reported</h3>
+    <p>
+      <b><a href="https://github.com/daniais">daniais</a></b> reported it through a GitHub security advisory with a lab reproduction on v10.91, an A/B harness comparing the original against a patched build, a suggested fix direction, and a CVSS assessment they marked as preliminary and offered for independent review. They offered a 90-day disclosure window rather than assuming one. Nothing was published before the fix.
+    </p>
+  </div>
+
+  <br />
+  <br />
+
+  <div class="action-buttons">
+    <a class="button" href="https://wekan.fi/hall-of-fame">Back to Hall of Fame Contents</a>
+    <a class="button" href="https://wekan.fi">Back to Wekan Website</a>
+  </div>
+
+</body>
+
+</html>
