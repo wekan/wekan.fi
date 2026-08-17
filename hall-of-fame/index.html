@@ -88,6 +88,43 @@
 
       <tr>
         <td valign="top">
+          -
+          <br /> <br />
+        </td>
+        <td class="icon" valign="top"><h2><i class="fa fa-road" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></h2></td>
+        <td valign="top"><b>RouteBleed</b></td>
+        <td valign="top">2026-08-17</td>
+        <td class="by" valign="top">
+          <b>GitHub CodeQL</b> (code scanning alert #434) and <b><a href="https://github.com/xet7">xet7</a></b>
+        </td>
+        <td class="stars" valign="top">
+          <img src="GoldStar.png" width="30px" height="auto" /> <img src="GoldStar.png" width="30px" height="auto" />
+        </td>
+        <td valign="top">
+          <details>
+          <summary>Process</summary>
+
+          Automated code scanning flagged incomplete regular-expression escaping.
+          </details>
+        </td>
+        <td valign="top">
+          <details>
+          <summary>Details</summary>
+
+          <ul>
+            <li><i class="fa fa-road" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i> RouteBleed &mdash; a board-export regression test interpolated a route path into a dynamic regular expression after escaping only forward slashes. Backslashes and every other regular-expression metacharacter remained active, so the generated pattern could mean something different from the literal route it was meant to find (CWE-20 Improper Input Validation, CWE-80 Improper Neutralization of Script-Related HTML Tags in a Web Page, CWE-116 Improper Encoding or Escaping of Output)</li>
+            <li>GitHub CodeQL code scanning alert #434, rule <code>js/incomplete-sanitization</code>, severity High</li>
+            <li>The affected code runs only in <code>tests/boardExportScope.test.cjs</code> over hardcoded export paths. It is not shipped application code and accepts no request or user input, so there was no runtime exposure and no attributable attempt to record in Admin Panel &rarr; Problems</li>
+            <li>Fixed by removing the dynamic <code>RegExp</code> and checking for the exact route literal with <code>String.prototype.includes()</code>. A repository guard rejects the reported slash-only escape shape everywhere, and its negative case includes a backslash and the complete regular-expression metacharacter set</li>
+            <li>Fixed at <a href="https://github.com/wekan/wekan/blob/main/CHANGELOG.md#upcoming-wekan--release">upcoming WeKan release</a></li>
+            <li><a href="routebleed/">More details</a></li>
+          </ul>
+          </details>
+        </td>
+      </tr>
+
+      <tr>
+        <td valign="top">
           <a href="https://github.com/wekan/wekan/security/advisories/GHSA-rf3w-rj48-jxcc">GHSA-rf3w-rj48-jxcc</a>
           <br /> <br />
         </td>

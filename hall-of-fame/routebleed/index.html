@@ -1,0 +1,117 @@
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <title>WeKan — Hall of Fame / RouteBleed</title>
+  <link rel="icon" href="../../wekan-favicon.png">
+  <link rel="stylesheet" type="text/css" href="../../css/main.css">
+  <link rel="stylesheet" href="../../font-awesome/css/font-awesome.min.css">
+</head>
+
+<body>
+
+  <img vAlign="center" src="../hof.svg" alt="Hall of Fame image from https://openclipart.org/detail/120343/trophy"
+    width="300px" height="auto" />
+  <br />
+
+  <div class="action-buttons">
+    <a class="button" href="https://wekan.fi/hall-of-fame">Back to Hall of Fame Contents</a>
+    <a class="button" href="https://wekan.fi">Back to Wekan Website</a>
+  </div>
+
+  <div class="hof">
+    <h1 class="hof">Contents / RouteBleed</h1>
+
+    <table border="1" margin="0" padding="10px" width="100%">
+      <tr>
+        <th width="10%">CVE</th>
+        <th width="10%">Vulnerability name</th>
+        <th width="10%">Date</th>
+        <th width="20%">
+          <a href="https://github.com/wekan/wekan/blob/main/SECURITY.md" style="color: red;">Responsible Security Disclosure</a>
+          by
+        </th>
+        <th width="40%">Vulnerabilities</th>
+      </tr>
+
+      <tr>
+        <td valign="top">
+          -
+          <br /> <br />
+        </td>
+        <td valign="top"><b>RouteBleed</b> <h2><i class="fa fa-road" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></h2></td>
+        <td valign="top">2026-08-17</td>
+        <td valign="top">
+          <b>GitHub CodeQL</b> (code scanning alert #434) and <b>xet7</b> (fix)<br />
+          <img src="../GoldStar.png" width="30px" height="auto" />
+          <img src="../GoldStar.png" width="30px" height="auto" /><br />
+          Automated code scanning flagged incomplete regular-expression escaping.
+        </td>
+        <td valign="top">
+          <ul>
+            <li>1. <i class="fa fa-road" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i> RouteBleed — incomplete string escaping while matching a board-export route (CWE-20, CWE-80, CWE-116)</li>
+            <li>GitHub CodeQL code scanning alert #434, rule <code>js/incomplete-sanitization</code>, severity High</li>
+            <li>Affected only the WeKan test suite (<code>tests/boardExportScope.test.cjs</code>), with no runtime or user-input exposure</li>
+            <li>Fixed at
+               <a href="https://github.com/wekan/wekan/blob/main/CHANGELOG.md#upcoming-wekan--release">upcoming WeKan release</a>
+            </li>
+          </ul>
+        </td>
+      </tr>
+
+    </table>
+  </div>
+
+  <br />
+  <br />
+
+  <div class="hof">
+    <h2 class="hof">Details</h2>
+
+    <h3>1. RouteBleed — incomplete route-pattern escaping (CWE-20, CWE-80, CWE-116)</h3>
+    <p>
+      The board export scope regression test reads every export path offered by the UI and checks
+      that a matching server route parses the selected fields. It built a regular expression from
+      each route path and attempted to escape the path first:
+    </p>
+    <pre>
+// vulnerable — escapes forward slashes only
+const route = new RegExp(`'/api/boards/:boardId/${p.replace(/\//g, '\\/')}'`);
+    </pre>
+    <p>
+      Forward slash has no special meaning inside a regular expression created with the
+      <code>RegExp</code> constructor. Meanwhile the characters that do have special meaning —
+      <code>. * + ? ^ $ { } ( ) | [ ] \</code> — remained unescaped. In particular, a backslash
+      in the input can change how the character after it is interpreted. The resulting pattern can
+      therefore match a different route, fail to match the intended route, or fail to compile.
+    </p>
+    <p>
+      This was test-only code operating on a hardcoded table of export paths. It is not included in
+      a WeKan server or browser bundle, and no request or user-controlled value reaches it. There
+      was consequently no runtime attack surface and no denied operation to record in Admin Panel
+      &rarr; Problems. The security value of the fix is correctness: a route coverage test must not
+      report coverage for a route that is not really present.
+    </p>
+    <p>
+      <b>Fix:</b> remove the regular expression. The test wants an exact JavaScript route literal,
+      so it now builds that literal and uses <code>server.includes(route)</code>. This follows
+      CodeQL's safest recommendation: design the comparison so sanitization is unnecessary.
+    </p>
+    <pre>
+// fixed — literal text is compared as literal text
+const route = `'/api/boards/:boardId/${p}'`;
+server.includes(route);
+    </pre>
+    <p>
+      Positive coverage verifies an exact route containing backslashes and regular-expression
+      metacharacters is found. The negative case changes one literal dot-position character and
+      proves it no longer matches. A repository-wide source guard also rejects the exact
+      slash-only escaping shape from alert #434 and proves it catches the vulnerable construction
+      while allowing the complete metacharacter escape used where a dynamic pattern is genuinely
+      required.
+    </p>
+  </div>
+
+</body>
+
+</html>
