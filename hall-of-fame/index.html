@@ -88,6 +88,37 @@
 
       <tr>
         <td valign="top">
+          <a href="https://github.com/wekan/wekan/security/advisories/GHSA-p4cq-83j9-7g73">GHSA-p4cq-83j9-7g73</a>
+        </td>
+        <td class="icon" valign="top"><h2><i class="fa fa-building" aria-hidden="true"></i> <i class="fa fa-users" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></h2></td>
+        <td valign="top"><b>TenantBleed</b></td>
+        <td valign="top">2026-08-21</td>
+        <td class="by" valign="top">
+          <b><a href="https://github.com/Char0n1507">Char0n1507</a></b> and <b><a href="https://github.com/xet7">xet7</a></b>
+        </td>
+        <td class="stars" valign="top">
+          <img src="GoldStar.png" width="30px" height="auto" />
+          <img src="GoldStar.png" width="30px" height="auto" />
+          <img src="GoldStar.png" width="30px" height="auto" />
+          <img src="GoldStar.png" width="30px" height="auto" />
+        </td>
+        <td valign="top"><details><summary>Process</summary>
+
+          Coordinated disclosure through a GitHub security advisory, with insert, update and remove reproduced on both collections.
+          </details></td>
+        <td valign="top"><details><summary>Details</summary>
+
+          <ul>
+            <li><i class="fa fa-building" aria-hidden="true"></i> <i class="fa fa-users" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i> TenantBleed &mdash; authenticated users could mutate self-ID Organization and Team configuration because a matching document id was treated as administrative authority (CWE-563, CWE-862)</li>
+            <li>All six DDP collection operations now share one site-admin-only decision; denied attempts appear in Admin Panel &rarr; Problems</li>
+            <li>Fixed at <a href="https://github.com/wekan/wekan/blob/main/CHANGELOG.md#upcoming-wekan--release">upcoming WeKan release</a></li>
+            <li><a href="tenantbleed/">More details</a></li>
+          </ul>
+          </details></td>
+      </tr>
+
+      <tr>
+        <td valign="top">
           <a href="https://github.com/wekan/wekan/security/advisories/GHSA-f396-42fx-vr88">GHSA-f396-42fx-vr88</a>
         </td>
         <td class="icon" valign="top"><h2><i class="fa fa-user" aria-hidden="true"></i> <i class="fa fa-pencil" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></h2></td>
