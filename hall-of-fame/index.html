@@ -88,6 +88,44 @@
 
       <tr>
         <td valign="top">
+          <a href="https://github.com/wekan/wekan/security/advisories/GHSA-fpm6-r5fg-2mrg">GHSA-fpm6-r5fg-2mrg</a>
+        </td>
+        <td class="icon" valign="top"><h2><i class="fa fa-calendar" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></h2></td>
+        <td valign="top"><b>CalendarBleed</b></td>
+        <td valign="top">2026-08-21</td>
+        <td class="by" valign="top">
+          <b><a href="https://github.com/Char0n1507">Char0n1507</a></b> and <b><a href="https://github.com/xet7">xet7</a></b>
+        </td>
+        <td class="stars" valign="top">
+          <img src="GoldStar.png" width="30px" height="auto" />
+          <img src="GoldStar.png" width="30px" height="auto" />
+          <img src="GoldStar.png" width="30px" height="auto" />
+          <img src="GoldStar.png" width="30px" height="auto" />
+        </td>
+        <td valign="top">
+          <details>
+          <summary>Process</summary>
+
+          Coordinated disclosure through a GitHub security advisory, with a working v11.06 reproduction and the canonical authorization helper identified.
+          </details>
+        </td>
+        <td valign="top">
+          <details>
+          <summary>Details</summary>
+
+          <ul>
+            <li><i class="fa fa-calendar" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i> CalendarBleed &mdash; Comment Only, Only Assigned Comment and Worker members could create arbitrary cards by calling the iCalendar import Meteor method, because it excluded read-only flags instead of requiring the canonical write capability (CWE-863 Incorrect Authorization)</li>
+            <li>Moderate intra-board integrity impact; no cross-board access, confidentiality impact or administrator escalation was observed</li>
+            <li>The DDP method now uses the same shared write-access decision as its REST sibling, with regression coverage for all five non-writing roles and all four writing roles</li>
+            <li>Fixed at <a href="https://github.com/wekan/wekan/blob/main/CHANGELOG.md#upcoming-wekan--release">upcoming WeKan release</a></li>
+            <li><a href="calendarbleed/">More details</a></li>
+          </ul>
+          </details>
+        </td>
+      </tr>
+
+      <tr>
+        <td valign="top">
           -
           <br /> <br />
         </td>
