@@ -2,7 +2,7 @@
 
 <head>
   <meta charset="UTF-8">
-  <title>WeKan — Hall of Fame / CalendarBleed</title>
+  <title>WeKan — Hall of Fame / AssignedBleed</title>
   <link rel="icon" href="../../wekan-favicon.png">
   <link rel="stylesheet" type="text/css" href="../../css/main.css">
   <link rel="stylesheet" href="../../font-awesome/css/font-awesome.min.css">
@@ -19,7 +19,7 @@
   </div>
 
   <div class="hof">
-    <h1 class="hof">Contents / CalendarBleed</h1>
+    <h1 class="hof">Contents / AssignedBleed</h1>
 
     <table border="1" margin="0" padding="10px" width="100%">
       <tr>
@@ -30,8 +30,8 @@
         <th width="40%">Vulnerabilities</th>
       </tr>
       <tr>
-        <td valign="top"><a href="https://github.com/wekan/wekan/security/advisories/GHSA-fpm6-r5fg-2mrg">GHSA-fpm6-r5fg-2mrg</a></td>
-        <td valign="top"><b>CalendarBleed</b> <h2><i class="fa fa-calendar" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></h2></td>
+        <td valign="top"><a href="https://github.com/wekan/wekan/security/advisories/GHSA-f396-42fx-vr88">GHSA-f396-42fx-vr88</a></td>
+        <td valign="top"><b>AssignedBleed</b> <h2><i class="fa fa-user" aria-hidden="true"></i> <i class="fa fa-pencil" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></h2></td>
         <td valign="top">2026-08-21</td>
         <td valign="top">
           <b><a href="https://github.com/Char0n1507">Char0n1507</a></b> and
@@ -40,11 +40,11 @@
           <img src="../GoldStar.png" width="30px" height="auto" />
           <img src="../GoldStar.png" width="30px" height="auto" />
           <img src="../GoldStar.png" width="30px" height="auto" /><br />
-          Coordinated disclosure with a working reproduction and suggested remediation.
+          Coordinated disclosure with a working reproduction and root-cause analysis.
         </td>
         <td valign="top">
           <ul>
-            <li>Comment-only members could create arbitrary cards through the iCalendar Meteor method (CWE-863 Incorrect Authorization)</li>
+            <li>Only Assigned Comment members could modify unassigned cards through the REST API (CWE-863 Incorrect Authorization)</li>
             <li>Affected WeKan v11.06.0 and earlier</li>
             <li>Severity: Moderate; intra-board integrity impact, with no cross-board access or confidentiality impact observed</li>
             <li>Fixed at <a href="https://github.com/wekan/wekan/blob/main/CHANGELOG.md#upcoming-wekan--release">upcoming WeKan release</a></li>
@@ -57,37 +57,34 @@
   <div class="hof">
     <h2 class="hof">Details</h2>
 
-    <h3>CalendarBleed — a card-creating method used a read-level role check (CWE-863)</h3>
+    <h3>AssignedBleed — one missing role flag bypassed REST write authorization (CWE-863)</h3>
     <p>
-      The authenticated Meteor/DDP method <code>importIcsToBoard(boardId, listId,
-      swimlaneId, icsText)</code> turns iCalendar events into cards. It verified
-      board visibility and membership, then rejected only members for whom
-      <code>Board.hasReadOnly()</code> returned true. Comment Only, Only Assigned
-      Comment and Worker are non-writing roles but are not read-only flags, so they
-      passed that check and reached card insertion.
+      The shared REST helper <code>Authentication.checkBoardWriteAccess()</code>
+      decided write access with a handwritten list of excluded member flags. It
+      excluded Comment Only, Worker and both read-only roles, but omitted
+      <code>isCommentAssignedOnly</code>. The canonical board-role table gives
+      Only Assigned Comment <code>write: false</code>, yet every mutation route
+      using the REST helper treated that member as a writer.
     </p>
     <p>
-      A Comment Only member reproduced the issue against WeKan v11.06 by invoking
-      the method through a normal authenticated browser DDP session. A one-event
-      calendar created a real card on the board and returned its id. The impact is
-      unauthorized content injection inside a board the caller already belongs to;
-      the report found no cross-board access, confidentiality loss or administrator
-      escalation.
+      The issue was reproduced against WeKan v11.06 by having an authenticated
+      Only Assigned Comment member send <code>PUT
+      /api/boards/:boardId/lists/:listId/cards/:cardId</code> for an unassigned
+      card. The endpoint returned HTTP 200 and persisted the supplied title. A
+      Comment Only member was correctly refused as a control.
     </p>
     <p>
-      <b>Fix:</b> the DDP method now calls
-      <code>allowIsBoardMemberWithWriteAccess()</code>, the canonical role-capability
-      decision already used by the REST ICS endpoint. Comment Only, Only Assigned
-      Comment, Worker, Read Only and Only Assigned Read are refused. Board Admin,
-      Normal, Normal Assigned Only and No Comments retain import access because the
-      role table grants them the <code>write</code> capability.
+      <b>Fix:</b> the shared REST helper now calls
+      <code>allowIsBoardMemberWithWriteAccess()</code>, the same canonical
+      capability decision used by DDP permissions and the client. This protects
+      every card mutation route and every other REST write route using the helper.
+      Both parallel attachment API implementations now use it as well.
     </p>
     <p>
-      Regression tests verify the shared authorization is applied before import,
-      cover every denied and allowed role, and prevent the bespoke membership or
-      <code>hasReadOnly()</code> checks from returning. Denied attempts are
-      rate-limited, attributed and visible in Admin Panel &rarr; Problems under
-      CalendarBleed.
+      Comment Only, Only Assigned Comment, Worker, Read Only and Only Assigned
+      Read are denied. Board Admin, Normal, Normal Assigned Only and No Comments
+      retain access. Denied attempts are rate-limited, attributed and visible in
+      Admin Panel &rarr; Problems under AssignedBleed.
     </p>
   </div>
 
@@ -96,7 +93,7 @@
       <tr><th width="15%">Timeline</th><th width="70%">Details</th></tr>
       <tr>
         <td valign="top"><b>2026-08-21</b></td>
-        <td valign="top">Report received from Char0n1507 through GitHub Security Advisory <a href="https://github.com/wekan/wekan/security/advisories/GHSA-fpm6-r5fg-2mrg">GHSA-fpm6-r5fg-2mrg</a>.</td>
+        <td valign="top">Report received from Char0n1507 through GitHub Security Advisory <a href="https://github.com/wekan/wekan/security/advisories/GHSA-f396-42fx-vr88">GHSA-f396-42fx-vr88</a>.</td>
       </tr>
       <tr>
         <td valign="top"><b>2026-08-21</b></td>

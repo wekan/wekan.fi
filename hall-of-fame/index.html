@@ -88,6 +88,44 @@
 
       <tr>
         <td valign="top">
+          <a href="https://github.com/wekan/wekan/security/advisories/GHSA-f396-42fx-vr88">GHSA-f396-42fx-vr88</a>
+        </td>
+        <td class="icon" valign="top"><h2><i class="fa fa-user" aria-hidden="true"></i> <i class="fa fa-pencil" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></h2></td>
+        <td valign="top"><b>AssignedBleed</b></td>
+        <td valign="top">2026-08-21</td>
+        <td class="by" valign="top">
+          <b><a href="https://github.com/Char0n1507">Char0n1507</a></b> and <b><a href="https://github.com/xet7">xet7</a></b>
+        </td>
+        <td class="stars" valign="top">
+          <img src="GoldStar.png" width="30px" height="auto" />
+          <img src="GoldStar.png" width="30px" height="auto" />
+          <img src="GoldStar.png" width="30px" height="auto" />
+          <img src="GoldStar.png" width="30px" height="auto" />
+        </td>
+        <td valign="top">
+          <details>
+          <summary>Process</summary>
+
+          Coordinated disclosure through a GitHub security advisory, with a working v11.06 reproduction and root-cause analysis of the missing role flag.
+          </details>
+        </td>
+        <td valign="top">
+          <details>
+          <summary>Details</summary>
+
+          <ul>
+            <li><i class="fa fa-user" aria-hidden="true"></i> <i class="fa fa-pencil" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i> AssignedBleed &mdash; Only Assigned Comment members could modify unassigned cards through REST because the shared write check omitted their role flag instead of consulting the canonical capability table (CWE-863 Incorrect Authorization)</li>
+            <li>Moderate intra-board integrity impact; no cross-board access, confidentiality impact or administrator escalation was observed</li>
+            <li>The shared REST and attachment write checks now use the canonical capability decision; denied attempts appear in Admin Panel &rarr; Problems</li>
+            <li>Fixed at <a href="https://github.com/wekan/wekan/blob/main/CHANGELOG.md#upcoming-wekan--release">upcoming WeKan release</a></li>
+            <li><a href="assignedbleed/">More details</a></li>
+          </ul>
+          </details>
+        </td>
+      </tr>
+
+      <tr>
+        <td valign="top">
           <a href="https://github.com/wekan/wekan/security/advisories/GHSA-fpm6-r5fg-2mrg">GHSA-fpm6-r5fg-2mrg</a>
         </td>
         <td class="icon" valign="top"><h2><i class="fa fa-calendar" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></h2></td>
