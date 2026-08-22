@@ -1,0 +1,85 @@
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <title>WeKan — Hall of Fame / ChecklistWriteBleed</title>
+  <link rel="icon" href="../../wekan-favicon.png">
+  <link rel="stylesheet" type="text/css" href="../../css/main.css">
+  <link rel="stylesheet" href="../../font-awesome/css/font-awesome.min.css">
+</head>
+
+<body>
+
+  <img vAlign="center" src="../hof.svg" alt="Hall of Fame image from https://openclipart.org/detail/120343/trophy"
+    width="300px" height="auto" />
+
+  <div class="action-buttons">
+    <a class="button" href="https://wekan.fi/hall-of-fame">Back to Hall of Fame Contents</a>
+    <a class="button" href="https://wekan.fi">Back to Wekan Website</a>
+  </div>
+
+  <div class="hof">
+    <h1 class="hof">Contents / ChecklistWriteBleed</h1>
+
+    <table border="1" margin="0" padding="10px" width="100%">
+      <tr>
+        <th width="10%">CVE</th>
+        <th width="10%">Vulnerability name</th>
+        <th width="10%">Date</th>
+        <th width="20%"><a href="https://github.com/wekan/wekan/blob/main/SECURITY.md" style="color: red;">Responsible Security Disclosure</a> by</th>
+        <th width="40%">Vulnerabilities</th>
+      </tr>
+      <tr>
+        <td valign="top"><a href="https://github.com/wekan/wekan/security/advisories/GHSA-5r4m-5xx6-96jf">GHSA-5r4m-5xx6-96jf</a></td>
+        <td valign="top"><b>ChecklistWriteBleed</b> <h2><i class="fa fa-user" aria-hidden="true"></i> <i class="fa fa-pencil" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></h2></td>
+        <td valign="top">2026-08-22</td>
+        <td valign="top">
+          <b><a href="https://github.com/Char0n1507">Char0n1507</a></b> and
+          <b><a href="https://github.com/xet7">xet7</a></b><br />
+          <img src="../GoldStar.png" width="30px" height="auto" />
+          <img src="../GoldStar.png" width="30px" height="auto" />
+          <img src="../GoldStar.png" width="30px" height="auto" />
+          <img src="../GoldStar.png" width="30px" height="auto" /><br />
+          Coordinated disclosure with a working reproduction and root-cause analysis.
+        </td>
+        <td valign="top">
+          <ul>
+            <li>Read-only board members could create, edit and delete checklists and checklist items through REST (CWE-863 Incorrect Authorization)</li>
+            <li>Affected WeKan v11.07 and earlier</li>
+            <li>Severity: High; board-integrity impact within boards visible to the attacker</li>
+            <li>Fixed at <a href="https://github.com/wekan/wekan/blob/main/CHANGELOG.md#upcoming-wekan--release">upcoming WeKan release</a></li>
+          </ul>
+        </td>
+      </tr>
+    </table>
+  </div>
+
+  <div class="hof">
+    <h2 class="hof">Details</h2>
+    <h3>ChecklistWriteBleed — read access was mistaken for write access (CWE-863)</h3>
+    <p>Checklist and checklist-item mutation routes checked only whether the caller could view the board. An authenticated read-only member could therefore create, edit or delete checklist content.</p>
+    <p><b>Fix:</b> every checklist and checklist-item mutation now requires the canonical board write capability. GET routes retain read access. Positive and negative regression tests pin the distinction.</p>
+  </div>
+
+  <div class="hof">
+    <table border="1" margin="0" padding="10px" width="100%">
+      <tr><th width="15%">Timeline</th><th width="70%">Details</th></tr>
+      <tr>
+        <td valign="top"><b>2026-08-22</b></td>
+        <td valign="top">Report received from Char0n1507 through GitHub Security Advisory <a href="https://github.com/wekan/wekan/security/advisories/GHSA-5r4m-5xx6-96jf">GHSA-5r4m-5xx6-96jf</a>.</td>
+      </tr>
+      <tr>
+        <td valign="top"><b>2026-08-22</b></td>
+        <td valign="top">Fixed for the <a href="https://github.com/wekan/wekan/blob/main/CHANGELOG.md#upcoming-wekan--release">upcoming WeKan release</a>.</td>
+      </tr>
+    </table>
+  </div>
+
+  <div class="action-buttons">
+    <a class="button" href="https://wekan.fi/hall-of-fame">Back to Hall of Fame Contents</a>
+    <a class="button" href="https://wekan.fi">Back to Wekan Website</a>
+  </div>
+
+</body>
+
+</html>
