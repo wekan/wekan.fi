@@ -58,7 +58,7 @@
     <h2 class="hof">Details</h2>
     <h3>ImportBleed — board import accepted a connection with no identity (CWE-306)</h3>
     <p>The <code>importBoard</code> Meteor method checked its arguments and the import feature switch, but never required <code>this.userId</code>. A network client with no account, login token or session could therefore reach import creators whose server-side work writes boards, lists, swimlanes, cards, activities and placeholder users directly to MongoDB.</p>
-    <p><b>Fix:</b> <code>importBoard</code> and its <code>importScoped</code> sibling now reject logged-out callers before argument processing, feature checks, parsers or creators can run. Scoped imports also carry the authenticated method user explicitly into the writer. Denied attempts are attributed by connection address and grouped as ImportBleed in Admin Panel / Problems. Source-level and logged-out browser regression tests pin both the early guards and the no-write outcome.</p>
+    <p><b>Fix:</b> <code>importBoard</code> and its <code>importScoped</code> sibling now complete Meteor’s mandatory type checks, then reject logged-out callers before feature checks, parsers or creators can run. Scoped imports also carry the authenticated method user explicitly into the writer. Denied attempts are attributed by connection address and grouped as ImportBleed in Admin Panel / Problems. Source-level and logged-out browser regression tests pin both the early guards and the no-write outcome.</p>
   </div>
 
   <div class="hof">
