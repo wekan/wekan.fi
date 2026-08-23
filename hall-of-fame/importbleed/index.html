@@ -1,0 +1,85 @@
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <title>WeKan — Hall of Fame / ImportBleed</title>
+  <link rel="icon" href="../../wekan-favicon.png">
+  <link rel="stylesheet" type="text/css" href="../../css/main.css">
+  <link rel="stylesheet" href="../../font-awesome/css/font-awesome.min.css">
+</head>
+
+<body>
+
+  <img vAlign="center" src="../hof.svg" alt="Hall of Fame image from https://openclipart.org/detail/120343/trophy"
+    width="300px" height="auto" />
+
+  <div class="action-buttons">
+    <a class="button" href="https://wekan.fi/hall-of-fame">Back to Hall of Fame Contents</a>
+    <a class="button" href="https://wekan.fi">Back to Wekan Website</a>
+  </div>
+
+  <div class="hof">
+    <h1 class="hof">Contents / ImportBleed</h1>
+
+    <table border="1" margin="0" padding="10px" width="100%">
+      <tr>
+        <th width="10%">CVE</th>
+        <th width="10%">Vulnerability name</th>
+        <th width="10%">Date</th>
+        <th width="20%"><a href="https://github.com/wekan/wekan/blob/main/SECURITY.md" style="color: red;">Responsible Security Disclosure</a> by</th>
+        <th width="40%">Vulnerabilities</th>
+      </tr>
+      <tr>
+        <td valign="top"><a href="https://github.com/wekan/wekan/security/advisories/GHSA-qp32-wqxw-wq3h">GHSA-qp32-wqxw-wq3h</a></td>
+        <td valign="top"><b>ImportBleed</b> <h2><i class="fa fa-upload" aria-hidden="true"></i> <i class="fa fa-database" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></h2></td>
+        <td valign="top">2026-08-23</td>
+        <td valign="top">
+          <b><a href="https://github.com/Char0n1507">Char0n1507</a></b> and
+          <b><a href="https://github.com/xet7">xet7</a></b><br />
+          <img src="../GoldStar.png" width="30px" height="auto" />
+          <img src="../GoldStar.png" width="30px" height="auto" />
+          <img src="../GoldStar.png" width="30px" height="auto" />
+          <img src="../GoldStar.png" width="30px" height="auto" /><br />
+          Coordinated disclosure with a working reproduction and full write-chain analysis.
+        </td>
+        <td valign="top">
+          <ul>
+            <li>A logged-out DDP client could import board data and placeholder users directly into the database (CWE-306 Missing Authentication for Critical Function)</li>
+            <li>Affected WeKan v11.09 and earlier</li>
+            <li>Severity: Critical; unauthenticated integrity and availability impact across a shared instance</li>
+            <li>Fixed at <a href="https://github.com/wekan/wekan/blob/main/CHANGELOG.md#upcoming-wekan--release">upcoming WeKan release</a></li>
+          </ul>
+        </td>
+      </tr>
+    </table>
+  </div>
+
+  <div class="hof">
+    <h2 class="hof">Details</h2>
+    <h3>ImportBleed — board import accepted a connection with no identity (CWE-306)</h3>
+    <p>The <code>importBoard</code> Meteor method checked its arguments and the import feature switch, but never required <code>this.userId</code>. A network client with no account, login token or session could therefore reach import creators whose server-side work writes boards, lists, swimlanes, cards, activities and placeholder users directly to MongoDB.</p>
+    <p><b>Fix:</b> <code>importBoard</code> and its <code>importScoped</code> sibling now reject logged-out callers before argument processing, feature checks, parsers or creators can run. Scoped imports also carry the authenticated method user explicitly into the writer. Denied attempts are attributed by connection address and grouped as ImportBleed in Admin Panel / Problems. Source-level and logged-out browser regression tests pin both the early guards and the no-write outcome.</p>
+  </div>
+
+  <div class="hof">
+    <table border="1" margin="0" padding="10px" width="100%">
+      <tr><th width="15%">Timeline</th><th width="70%">Details</th></tr>
+      <tr>
+        <td valign="top"><b>2026-08-23</b></td>
+        <td valign="top">Report received from Char0n1507 through GitHub Security Advisory <a href="https://github.com/wekan/wekan/security/advisories/GHSA-qp32-wqxw-wq3h">GHSA-qp32-wqxw-wq3h</a>.</td>
+      </tr>
+      <tr>
+        <td valign="top"><b>2026-08-23</b></td>
+        <td valign="top">Fixed for the <a href="https://github.com/wekan/wekan/blob/main/CHANGELOG.md#upcoming-wekan--release">upcoming WeKan release</a>.</td>
+      </tr>
+    </table>
+  </div>
+
+  <div class="action-buttons">
+    <a class="button" href="https://wekan.fi/hall-of-fame">Back to Hall of Fame Contents</a>
+    <a class="button" href="https://wekan.fi">Back to Wekan Website</a>
+  </div>
+
+</body>
+
+</html>
