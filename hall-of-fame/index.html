@@ -93,7 +93,7 @@
         <td class="by" valign="top"><b><a href="https://github.com/Char0n1507">Char0n1507</a></b>, <b><a href="https://github.com/Reload3d">Reload3d</a></b> and <b><a href="https://github.com/xet7">xet7</a></b></td>
         <td class="stars" valign="top"><img src="GoldStar.png" width="30px" height="auto" /><img src="GoldStar.png" width="30px" height="auto" /><img src="GoldStar.png" width="30px" height="auto" /><img src="GoldStar.png" width="30px" height="auto" /></td>
         <td valign="top"><details><summary>Process</summary>Two coordinated GitHub security advisories were validated together against both user-search DDP paths.</details></td>
-        <td valign="top"><details><summary>Details</summary><ul><li>User search disclosed private account metadata and evaluated attacker-controlled regular expressions (CWE-284, CWE-359, CWE-400, CWE-1333)</li><li><a href="usersearchbleed/">More details</a></li></ul></details></td>
+        <td valign="top"><details><summary>Details</summary><ul><li>User search disclosed private account metadata and evaluated attacker-controlled regular expressions (CWE-284, CWE-359, CWE-400, CWE-1333)</li><li>No Problems event is emitted because legitimate searches use the same path</li><li><a href="usersearchbleed/">More details</a></li></ul></details></td>
       </tr>
       <tr>
         <td valign="top"><a href="https://github.com/wekan/wekan/security/advisories/GHSA-c3ch-34g5-x3x7">GHSA-c3ch-34g5-x3x7</a></td>
@@ -102,7 +102,7 @@
         <td class="by" valign="top"><b><a href="https://github.com/Char0n1507">Char0n1507</a></b> and <b><a href="https://github.com/xet7">xet7</a></b></td>
         <td class="stars" valign="top"><img src="GoldStar.png" width="30px" height="auto" /><img src="GoldStar.png" width="30px" height="auto" /></td>
         <td valign="top"><details><summary>Process</summary>Coordinated disclosure through a GitHub security advisory, validated against the unauthenticated DDP publication.</details></td>
-        <td valign="top"><details><summary>Details</summary><ul><li>Logged-out clients could enumerate user profile and membership metadata (CWE-306, CWE-359)</li><li><a href="miniprofilebleed/">More details</a></li></ul></details></td>
+        <td valign="top"><details><summary>Details</summary><ul><li>Logged-out clients could enumerate user profile and membership metadata (CWE-306, CWE-359)</li><li>Denied attempts are summarized in Admin Panel &rarr; Problems</li><li><a href="miniprofilebleed/">More details</a></li></ul></details></td>
       </tr>
       <tr>
         <td valign="top"><a href="https://github.com/wekan/wekan/security/advisories/GHSA-5fc2-m4gw-j6qq">GHSA-5fc2-m4gw-j6qq</a></td>
@@ -111,7 +111,7 @@
         <td class="by" valign="top"><b><a href="https://github.com/Char0n1507">Char0n1507</a></b> and <b><a href="https://github.com/xet7">xet7</a></b></td>
         <td class="stars" valign="top"><img src="GoldStar.png" width="30px" height="auto" /><img src="GoldStar.png" width="30px" height="auto" /><img src="GoldStar.png" width="30px" height="auto" /><img src="GoldStar.png" width="30px" height="auto" /></td>
         <td valign="top"><details><summary>Process</summary>Coordinated disclosure through a GitHub security advisory, validated at insertion, method and model boundaries.</details></td>
-        <td valign="top"><details><summary>Details</summary><ul><li>Forged undo history could inject a card into another private board (CWE-284, CWE-639)</li><li><a href="positionhistorybleed/">More details</a></li></ul></details></td>
+        <td valign="top"><details><summary>Details</summary><ul><li>Forged undo history could inject a card into another private board (CWE-284, CWE-639)</li><li>Denied attempts are summarized in Admin Panel &rarr; Problems</li><li><a href="positionhistorybleed/">More details</a></li></ul></details></td>
       </tr>
       <tr>
         <td valign="top"><a href="https://github.com/wekan/wekan/security/advisories/GHSA-hvvr-j425-5xxm">GHSA-hvvr-j425-5xxm</a></td>
@@ -120,7 +120,7 @@
         <td class="by" valign="top"><b><a href="https://github.com/Char0n1507">Char0n1507</a></b> and <b><a href="https://github.com/xet7">xet7</a></b></td>
         <td class="stars" valign="top"><img src="GoldStar.png" width="30px" height="auto" /><img src="GoldStar.png" width="30px" height="auto" /><img src="GoldStar.png" width="30px" height="auto" /><img src="GoldStar.png" width="30px" height="auto" /></td>
         <td valign="top"><details><summary>Process</summary>Coordinated disclosure through a GitHub security advisory, validated across JSON, ZIP, Excel and PDF exports.</details></td>
-        <td valign="top"><details><summary>Details</summary><ul><li>Parent-only subtask queries could export private-board card data across board boundaries (CWE-200, CWE-639)</li><li><a href="subtaskexportbleed/">More details</a></li></ul></details></td>
+        <td valign="top"><details><summary>Details</summary><ul><li>Parent-only subtask queries could export private-board card data across board boundaries (CWE-200, CWE-639)</li><li>No Problems event is emitted because legitimate exports use the same path</li><li><a href="subtaskexportbleed/">More details</a></li></ul></details></td>
       </tr>
       <tr>
         <td valign="top"><a href="https://github.com/wekan/wekan/security/advisories/GHSA-5797-pjx8-9h6m">GHSA-5797-pjx8-9h6m</a></td>
@@ -129,7 +129,7 @@
         <td class="by" valign="top"><b><a href="https://github.com/Char0n1507">Char0n1507</a></b>, <b><a href="https://github.com/crypto-nidh">crypto-nidh</a></b> and <b><a href="https://github.com/xet7">xet7</a></b></td>
         <td class="stars" valign="top"><img src="GoldStar.png" width="30px" height="auto" /><img src="GoldStar.png" width="30px" height="auto" /></td>
         <td valign="top"><details><summary>Process</summary>Coordinated disclosure through a GitHub security advisory, compared with WeKan's explicit LDAP and OIDC merge controls.</details></td>
-        <td valign="top"><details><summary>Details</summary><ul><li>A matching CAS username could take over an existing non-CAS account without merge consent (CWE-287, CWE-863)</li><li><a href="casbleed/">More details</a></li></ul></details></td>
+        <td valign="top"><details><summary>Details</summary><ul><li>A matching CAS username could take over an existing non-CAS account without merge consent (CWE-287, CWE-863)</li><li>Denied attempts are summarized in Admin Panel &rarr; Problems</li><li><a href="casbleed/">More details</a></li></ul></details></td>
       </tr>
 
       <tr>

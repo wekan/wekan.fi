@@ -73,7 +73,9 @@
       validated CAS identity received an existing non-CAS account's session when
       its username matched. New CAS accounts are now marked explicitly, and a
       conflicting local account is rejected unless the administrator opts into
-      linking with <code>CAS_MERGE_EXISTING_USERS=true</code>. Fixed in
+      linking with <code>CAS_MERGE_EXISTING_USERS=true</code>.
+      Refused implicit-link attempts are bounded and summarized as CasBleed in
+      Admin Panel &rarr; Problems. Fixed in
       <a href="https://github.com/wekan/wekan/commit/4ce5cf6e1">the upcoming
       WeKan release</a> on 2026-08-25.
     </p>

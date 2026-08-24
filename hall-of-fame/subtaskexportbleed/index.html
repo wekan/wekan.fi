@@ -5,5 +5,5 @@
 <h2>Private card disclosure through cross-board subtask exports</h2>
 <p><a href="https://github.com/wekan/wekan/security/advisories/GHSA-hvvr-j425-5xxm">GHSA-hvvr-j425-5xxm</a> was reported by <a href="https://github.com/Char0n1507">Char0n1507</a>.</p>
 <p>Subtask export queries matched only a parent card identifier. A private-board card naming a card on another board could therefore appear in that board's JSON, ZIP, Excel or PDF export.</p>
-<p><b>Fix:</b> all six board and card export query paths now require the subtask to belong to the exported board. Fixed in the <a href="https://github.com/wekan/wekan/commit/4ce5cf6e1">upcoming WeKan release</a> on 2026-08-25.</p>
+<p><b>Fix:</b> all six board and card export query paths now require the subtask to belong to the exported board. This changes what a legitimate export can contain rather than denying an attributable request, so ordinary exports are not logged as attacks. Fixed in the <a href="https://github.com/wekan/wekan/commit/4ce5cf6e1">upcoming WeKan release</a> on 2026-08-25.</p>
 </div></body></html>

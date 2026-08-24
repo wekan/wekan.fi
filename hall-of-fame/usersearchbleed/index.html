@@ -5,5 +5,5 @@
 <h2>User directory disclosure and regular-expression denial of service</h2>
 <p>GitHub advisories <a href="https://github.com/wekan/wekan/security/advisories/GHSA-88mv-h439-rj8j">GHSA-88mv-h439-rj8j</a> and <a href="https://github.com/wekan/wekan/security/advisories/GHSA-9846-cj96-6hv5">GHSA-9846-cj96-6hv5</a>, reported by <a href="https://github.com/Char0n1507">Char0n1507</a> and <a href="https://github.com/Reload3d">Reload3d</a>.</p>
 <p>Authenticated clients could search all email addresses and receive administrator, disabled-account, authentication-provider, organization and team metadata. Raw search input also became a database regular expression in two DDP paths.</p>
-<p><b>Fix:</b> the general publication now returns only public identity fields. Both paths escape search text as literal input and are rate-limited. Fixed in the <a href="https://github.com/wekan/wekan/commit/4ce5cf6e1">upcoming WeKan release</a> on 2026-08-25.</p>
+<p><b>Fix:</b> the general publication now returns only public identity fields. Both paths escape search text as literal input and are rate-limited. These changes affect what legitimate responses carry and how ordinary punctuation is interpreted, so searches are not logged as attacks. Fixed in the <a href="https://github.com/wekan/wekan/commit/4ce5cf6e1">upcoming WeKan release</a> on 2026-08-25.</p>
 </div></body></html>
