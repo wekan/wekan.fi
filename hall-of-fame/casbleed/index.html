@@ -65,6 +65,19 @@
   <div class="hof">
     <h2 class="hof">Details</h2>
 
+    <h3>CasBleed — implicit matching-username account takeover (CWE-287, CWE-863)</h3>
+    <p>
+      <a href="https://github.com/wekan/wekan/security/advisories/GHSA-5797-pjx8-9h6m">GHSA-5797-pjx8-9h6m</a>,
+      reported by <a href="https://github.com/Char0n1507">Char0n1507</a> and
+      <a href="https://github.com/crypto-nidh">crypto-nidh</a>, showed that a
+      validated CAS identity received an existing non-CAS account's session when
+      its username matched. New CAS accounts are now marked explicitly, and a
+      conflicting local account is rejected unless the administrator opts into
+      linking with <code>CAS_MERGE_EXISTING_USERS=true</code>. Fixed in
+      <a href="https://github.com/wekan/wekan/commit/4ce5cf6e1">the upcoming
+      WeKan release</a> on 2026-08-25.
+    </p>
+
     <h3>CasBleed — CWE-362 Race Condition &rarr; Account Takeover</h3>
     <p>
       with CAS login enabled, <code>packages/wekan-accounts-cas/cas_server.js</code> stored validated CAS user data in a single module-global <code>_userData</code> shared across concurrent logins. Two logins racing could bind an attacker's credential token to a victim's user data, issuing the attacker a session for the victim's account (full admin if the victim was an admin). Fixed by binding the validated CAS user data PER credential token.

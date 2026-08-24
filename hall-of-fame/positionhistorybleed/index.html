@@ -1,0 +1,9 @@
+<html><head><meta charset="UTF-8"><title>WeKan — Hall of Fame / PositionHistoryBleed</title><link rel="stylesheet" type="text/css" href="../../css/main.css"></head>
+<body><img src="../hof.svg" alt="Hall of Fame trophy" width="300px" height="auto" />
+<div class="action-buttons"><a class="button" href="https://wekan.fi/hall-of-fame">Back to Hall of Fame Contents</a></div>
+<div class="hof"><h1 class="hof">Contents / PositionHistoryBleed</h1>
+<h2>Cross-board card injection through forged undo history</h2>
+<p><a href="https://github.com/wekan/wekan/security/advisories/GHSA-5fc2-m4gw-j6qq">GHSA-5fc2-m4gw-j6qq</a> was reported by <a href="https://github.com/Char0n1507">Char0n1507</a>.</p>
+<p>An authenticated user could store a history record naming another private board and then undo it, moving a controlled card into that board.</p>
+<p><b>Fix:</b> history insertion requires membership on every named board, and undo rechecks both the history board and destination membership immediately before the move. Fixed in the <a href="https://github.com/wekan/wekan/commit/4ce5cf6e1">upcoming WeKan release</a> on 2026-08-25.</p>
+</div></body></html>
