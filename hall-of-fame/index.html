@@ -87,6 +87,34 @@
       </tr>
 
       <tr>
+        <td valign="top"><a href="https://github.com/wekan/wekan/security/advisories/GHSA-xwv8-m73h-68vg">GHSA-xwv8-m73h-68vg</a></td>
+        <td class="icon" valign="top"><h2><i class="fa fa-id-badge" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></h2></td>
+        <td valign="top"><b>ClaimBleed</b></td><td valign="top">2026-08-26</td>
+        <td class="by" valign="top"><b><a href="https://github.com/crypto-nidh">crypto-nidh</a></b> and <b><a href="https://github.com/xet7">xet7</a></b></td>
+        <td class="stars" valign="top"><img src="GoldStar.png" width="30px" height="auto" /><img src="GoldStar.png" width="30px" height="auto" /></td>
+        <td valign="top"><details><summary>Process</summary>Coordinated disclosure through a GitHub security advisory, validated against trusted userinfo and attacker-controlled access-token claims.</details></td>
+        <td valign="top"><details><summary>Details</summary><ul><li>Whitelisted OIDC claims could replace account identity and service-owned token fields (CWE-863, CWE-566)</li><li>No Problems event is emitted because legitimate OIDC logins use the same claim-processing path</li><li><a href="claimbleed/">More details</a></li></ul></details></td>
+      </tr>
+      <tr>
+        <td valign="top"><a href="https://github.com/wekan/wekan/security/advisories/GHSA-5r3j-h65h-fg22">GHSA-5r3j-h65h-fg22</a></td>
+        <td class="icon" valign="top"><h2><i class="fa fa-users" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></h2></td>
+        <td valign="top"><b>MembershipBleed</b></td><td valign="top">2026-08-26</td>
+        <td class="by" valign="top"><b><a href="https://github.com/crypto-nidh">crypto-nidh</a></b> and <b><a href="https://github.com/xet7">xet7</a></b></td>
+        <td class="stars" valign="top"><img src="GoldStar.png" width="30px" height="auto" /><img src="GoldStar.png" width="30px" height="auto" /></td>
+        <td valign="top"><details><summary>Process</summary>Coordinated disclosure through a GitHub security advisory, reproduced against the unauthenticated DDP publication.</details></td>
+        <td valign="top"><details><summary>Details</summary><ul><li>Logged-out clients could enumerate authentication methods, teams and organizations (CWE-200)</li><li>Denied attempts are summarized in Admin Panel &rarr; Problems</li><li><a href="membershipbleed/">More details</a></li></ul></details></td>
+      </tr>
+      <tr>
+        <td valign="top"><a href="https://github.com/wekan/wekan/security/advisories/GHSA-9cgp-m28v-64xv">GHSA-9cgp-m28v-64xv</a></td>
+        <td class="icon" valign="top"><h2><i class="fa fa-envelope" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></h2></td>
+        <td valign="top"><b>ResetBleed</b></td><td valign="top">2026-08-26</td>
+        <td class="by" valign="top"><b><a href="https://github.com/crypto-nidh">crypto-nidh</a></b> and <b><a href="https://github.com/xet7">xet7</a></b></td>
+        <td class="stars" valign="top"><img src="GoldStar.png" width="30px" height="auto" /><img src="GoldStar.png" width="30px" height="auto" /></td>
+        <td valign="top"><details><summary>Process</summary>Coordinated disclosure through a GitHub security advisory, reproduced against Meteor's unauthenticated account-recovery methods.</details></td>
+        <td valign="top"><details><summary>Details</summary><ul><li>Unbounded password recovery and verification calls enabled email flooding and repeated token attempts (CWE-307, CWE-799)</li><li>Rate-limit denials are summarized in Admin Panel &rarr; Problems</li><li><a href="resetbleed/">More details</a></li></ul></details></td>
+      </tr>
+
+      <tr>
         <td valign="top"><a href="https://github.com/wekan/wekan/security/advisories/GHSA-88mv-h439-rj8j">GHSA-88mv-h439-rj8j</a><br /><a href="https://github.com/wekan/wekan/security/advisories/GHSA-9846-cj96-6hv5">GHSA-9846-cj96-6hv5</a></td>
         <td class="icon" valign="top"><h2><i class="fa fa-search" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></h2></td>
         <td valign="top"><b>UserSearchBleed</b></td><td valign="top">2026-08-25</td>

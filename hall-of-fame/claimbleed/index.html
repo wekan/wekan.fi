@@ -1,0 +1,9 @@
+<html><head><meta charset="UTF-8"><title>WeKan — Hall of Fame / ClaimBleed</title><link rel="stylesheet" type="text/css" href="../../css/main.css"></head>
+<body><img src="../hof.svg" alt="Hall of Fame trophy" width="300px" height="auto" />
+<div class="action-buttons"><a class="button" href="https://wekan.fi/hall-of-fame">Back to Hall of Fame Contents</a></div>
+<div class="hof"><h1 class="hof">Contents / ClaimBleed</h1>
+<h2>OIDC access-token identity overwrite</h2>
+<p><a href="https://github.com/wekan/wekan/security/advisories/GHSA-xwv8-m73h-68vg">GHSA-xwv8-m73h-68vg</a> was reported by <a href="https://github.com/crypto-nidh">crypto-nidh</a>.</p>
+<p>An administrator-configured OIDC claim whitelist could copy attacker-controlled access-token claims over the trusted userinfo id, username, email and other service-owned fields, potentially linking the attacker's login to a victim account.</p>
+<p><b>Fix:</b> whitelisted claims can add only non-reserved metadata. Identity, token, group and object-prototype fields remain owned by WeKan and trusted userinfo. No Problems event is emitted because legitimate OIDC logins use the same path. Fixed in the <a href="https://github.com/wekan/wekan/commit/12f2fddc2">upcoming WeKan release</a> on 2026-08-26.</p>
+</div></body></html>

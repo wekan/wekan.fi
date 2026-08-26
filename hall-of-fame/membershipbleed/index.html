@@ -1,0 +1,9 @@
+<html><head><meta charset="UTF-8"><title>WeKan — Hall of Fame / MembershipBleed</title><link rel="stylesheet" type="text/css" href="../../css/main.css"></head>
+<body><img src="../hof.svg" alt="Hall of Fame trophy" width="300px" height="auto" />
+<div class="action-buttons"><a class="button" href="https://wekan.fi/hall-of-fame">Back to Hall of Fame Contents</a></div>
+<div class="hof"><h1 class="hof">Contents / MembershipBleed</h1>
+<h2>Unauthenticated authentication and membership disclosure</h2>
+<p><a href="https://github.com/wekan/wekan/security/advisories/GHSA-5r3j-h65h-fg22">GHSA-5r3j-h65h-fg22</a> was reported by <a href="https://github.com/crypto-nidh">crypto-nidh</a>.</p>
+<p>A logged-out DDP client could query a known id, email or username and receive that account's authentication method, teams and organizations.</p>
+<p><b>Fix:</b> the publication now completes without querying unless the connection is authenticated. Denied attempts are bounded and summarized as MembershipBleed in Admin Panel &rarr; Problems with their source address. Fixed in the <a href="https://github.com/wekan/wekan/commit/12f2fddc2">upcoming WeKan release</a> on 2026-08-26.</p>
+</div></body></html>
