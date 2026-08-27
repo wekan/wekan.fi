@@ -1,0 +1,9 @@
+<html><head><meta charset="UTF-8"><title>WeKan — Hall of Fame / SessionBleed</title><link rel="stylesheet" type="text/css" href="../../css/main.css"></head>
+<body><img src="../hof.svg" alt="Hall of Fame trophy" width="300px" height="auto" />
+<div class="action-buttons"><a class="button" href="https://wekan.fi/hall-of-fame">Back to Hall of Fame Contents</a></div>
+<div class="hof"><h1 class="hof">Contents / SessionBleed</h1>
+<h2>Cross-user global-search pagination</h2>
+<p><a href="https://github.com/wekan/wekan/security/advisories/GHSA-5gcv-2hhj-7rg9">GHSA-5gcv-2hhj-7rg9</a> was reported by <a href="https://github.com/crypto-nidh">crypto-nidh</a>.</p>
+<p>A client with another user's global-search session ID could ask the pagination publications to rerun its stored selector and receive private card data without owning that session.</p>
+<p><b>Fix:</b> both publications now require authentication and load a session only by its owner and session ID together. Logged-out probes publish no cards and are bounded and summarized as SessionBleed in Admin Panel &rarr; Problems. Fixed in the <a href="https://github.com/wekan/wekan/commit/18bcbdd0d">upcoming WeKan release</a> on 2026-08-27.</p>
+</div></body></html>
