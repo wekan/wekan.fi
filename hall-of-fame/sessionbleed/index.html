@@ -5,5 +5,5 @@
 <h2>Cross-user global-search pagination</h2>
 <p><a href="https://github.com/wekan/wekan/security/advisories/GHSA-5gcv-2hhj-7rg9">GHSA-5gcv-2hhj-7rg9</a> was reported by <a href="https://github.com/crypto-nidh">crypto-nidh</a>.</p>
 <p>A client with another user's global-search session ID could ask the pagination publications to rerun its stored selector and receive private card data without owning that session.</p>
-<p><b>Fix:</b> both publications now require authentication and load a session only by its owner and session ID together. Logged-out probes publish no cards and are bounded and summarized as SessionBleed in Admin Panel &rarr; Problems. Fixed in the <a href="https://github.com/wekan/wekan/commit/18bcbdd0d">upcoming WeKan release</a> on 2026-08-27.</p>
+<p><b>Fix:</b> both publications now require authentication and load a session only by its owner and session ID together. Logged-out probes publish no cards and are bounded and summarized as SessionBleed in Admin Panel &rarr; Problems. Fixed in <a href="https://github.com/wekan/wekan/releases/tag/v11.16">WeKan v11.16</a> on 2026-08-27.</p>
 </div></body></html>
