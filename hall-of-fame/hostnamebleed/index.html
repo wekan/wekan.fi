@@ -1,0 +1,10 @@
+<html><head><meta charset="UTF-8"><title>WeKan — Hall of Fame / HostnameBleed</title><link rel="stylesheet" type="text/css" href="../../css/main.css"></head>
+<body><img src="../hof.svg" alt="Hall of Fame trophy" width="300px" height="auto" />
+<div class="action-buttons"><a class="button" href="https://wekan.fi/hall-of-fame">Back to Hall of Fame Contents</a></div>
+<div class="hof"><h1 class="hof">Contents / HostnameBleed</h1>
+<h2>Incomplete hostname regular expressions</h2>
+<p>GitHub CodeQL code scanning alerts #435 and #436 found that two hardcoded tenant-hostname examples in the Marathi translation regression test were passed directly to <code>RegExp</code>. The unescaped dots matched any character, so text such as <code>aXexampleXcom</code> could satisfy a check intended to require <code>a.example.com</code>.</p>
+<p>The affected code ran only in <code>tests/marathiTranslationProgress.test.cjs</code>. It was not part of a WeKan server or browser bundle, accepted no request or user input and denied no operation. There is consequently no attributable runtime attempt to record in Admin Panel &rarr; Problems.</p>
+<h2 class="hof">Details</h2>
+<p><b>Fix:</b> compare the required hostnames as exact strings with <code>includes()</code>. Positive and negative tests prove literal dots are required. A repository-wide guard recognizes a loop that feeds hostname-like literals into <code>RegExp</code> and confirms the reported shape exists nowhere else in tracked first-party JavaScript. Fixed for the upcoming WeKan release on 2026-08-27.</p>
+</div></body></html>

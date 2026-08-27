@@ -87,6 +87,28 @@
       </tr>
 
       <tr>
+        <td valign="top">-</td>
+        <td class="icon" valign="top"><h2><i class="fa fa-globe" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></h2></td>
+        <td valign="top"><b>HostnameBleed</b></td><td valign="top">2026-08-27</td>
+        <td class="by" valign="top"><b>GitHub CodeQL</b> (code scanning alerts #435 and #436) and <b><a href="https://github.com/xet7">xet7</a></b></td>
+        <td class="stars" valign="top"><img src="GoldStar.png" width="30px" height="auto" /> <img src="GoldStar.png" width="30px" height="auto" /></td>
+        <td valign="top">
+          <details>
+          <summary>Process</summary>
+
+          Automated code scanning flagged hostname examples used as incomplete regular expressions.
+          </details>
+        </td>
+        <td valign="top">
+          <details>
+          <summary>Details</summary>
+
+          <ul><li>Unescaped dots made two tenant-hostname translation assertions accept non-literal matches (CWE-20)</li><li>The affected code was test-only and had no runtime exposure or attributable Problems event</li><li>Exact literal comparisons and a repository-wide negative guard prevent recurrence</li><li><a href="hostnamebleed/">More details</a></li></ul>
+          </details>
+        </td>
+      </tr>
+
+      <tr>
         <td valign="top"><a href="https://github.com/wekan/wekan/security/advisories/GHSA-5gcv-2hhj-7rg9">GHSA-5gcv-2hhj-7rg9</a></td>
         <td class="icon" valign="top"><h2><i class="fa fa-search" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></h2></td>
         <td valign="top"><b>SessionBleed</b></td><td valign="top">2026-08-27</td>
