@@ -87,6 +87,72 @@
       </tr>
 
       <tr>
+        <td valign="top"><a href="https://github.com/wekan/wekan/security/advisories/GHSA-4mjm-vj9f-p629">GHSA-4mjm-vj9f-p629</a></td>
+        <td class="icon" valign="top"><h2><i class="fa fa-user-circle" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></h2></td>
+        <td valign="top"><b>AvatarMimeBleed</b></td><td valign="top">2026-08-28</td>
+        <td class="by" valign="top"><b><a href="https://github.com/crypto-nidh">crypto-nidh</a></b> and <b><a href="https://github.com/xet7">xet7</a></b></td>
+        <td class="stars" valign="top"><img src="GoldStar.png" width="30px" height="auto" /><img src="GoldStar.png" width="30px" height="auto" /></td>
+        <td valign="top">
+          <details>
+          <summary>Process</summary>
+
+          Coordinated disclosure through a GitHub security advisory, reproduced against both current and legacy avatar routes.
+          </details>
+        </td>
+        <td valign="top">
+          <details>
+          <summary>Details</summary>
+
+          <ul><li>Stored browser-executable avatar MIME types could render active content under the WeKan origin (CWE-79, CWE-434)</li><li>Dangerous types are now sandboxed opaque downloads with nosniff and frame denial</li><li>No Problems event is emitted because legitimate avatar views use the same response path</li><li><a href="avatarmimebleed/">More details</a></li></ul>
+          </details>
+        </td>
+      </tr>
+
+      <tr>
+        <td valign="top"><a href="https://github.com/wekan/wekan/security/advisories/GHSA-xcxp-hx9w-q5q9">GHSA-xcxp-hx9w-q5q9</a></td>
+        <td class="icon" valign="top"><h2><i class="fa fa-paperclip" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></h2></td>
+        <td valign="top"><b>LegacyAttachBleed</b></td><td valign="top">2026-08-28</td>
+        <td class="by" valign="top"><b><a href="https://github.com/crypto-nidh">crypto-nidh</a></b> and <b><a href="https://github.com/xet7">xet7</a></b></td>
+        <td class="stars" valign="top"><img src="GoldStar.png" width="30px" height="auto" /><img src="GoldStar.png" width="30px" height="auto" /></td>
+        <td valign="top">
+          <details>
+          <summary>Process</summary>
+
+          Coordinated disclosure through a GitHub security advisory, reproduced against the CollectionFS-compatible attachment route.
+          </details>
+        </td>
+        <td valign="top">
+          <details>
+          <summary>Details</summary>
+
+          <ul><li>Legacy HTML, XML and JavaScript attachments lacked the protections already applied to SVG files (CWE-79, CWE-693)</li><li>All browser-executable types now receive the same opaque, sandboxed download policy</li><li>No Problems event is emitted because legitimate legacy downloads use the same response path</li><li><a href="legacyattachbleed/">More details</a></li></ul>
+          </details>
+        </td>
+      </tr>
+
+      <tr>
+        <td valign="top"><a href="https://github.com/wekan/wekan/security/advisories/GHSA-2x89-6mq2-834r">GHSA-2x89-6mq2-834r</a></td>
+        <td class="icon" valign="top"><h2><i class="fa fa-columns" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></h2></td>
+        <td valign="top"><b>SwimlaneBleed</b></td><td valign="top">2026-08-28</td>
+        <td class="by" valign="top"><b><a href="https://github.com/crypto-nidh">crypto-nidh</a></b> and <b><a href="https://github.com/xet7">xet7</a></b></td>
+        <td class="stars" valign="top"><img src="GoldStar.png" width="30px" height="auto" /><img src="GoldStar.png" width="30px" height="auto" /></td>
+        <td valign="top">
+          <details>
+          <summary>Process</summary>
+
+          Coordinated disclosure through a GitHub security advisory, reproduced with a read-only board member calling the Meteor method directly.
+          </details>
+        </td>
+        <td valign="top">
+          <details>
+          <summary>Details</summary>
+
+          <ul><li>Read-only members could create a default swimlane through a method guarded only by read membership (CWE-862)</li><li>The method now requires the shared board write capability</li><li>Denied attempts are summarized in Admin Panel &rarr; Problems</li><li><a href="swimlanebleed/">More details</a></li></ul>
+          </details>
+        </td>
+      </tr>
+
+      <tr>
         <td valign="top">-</td>
         <td class="icon" valign="top"><h2><i class="fa fa-globe" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></h2></td>
         <td valign="top"><b>HostnameBleed</b></td><td valign="top">2026-08-27</td>

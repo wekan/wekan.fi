@@ -1,0 +1,9 @@
+<html><head><meta charset="UTF-8"><title>WeKan — Hall of Fame / SwimlaneBleed</title><link rel="stylesheet" type="text/css" href="../../css/main.css"></head>
+<body><img src="../hof.svg" alt="Hall of Fame trophy" width="300px" height="auto" />
+<div class="action-buttons"><a class="button" href="https://wekan.fi/hall-of-fame">Back to Hall of Fame Contents</a></div>
+<div class="hof"><h1 class="hof">Contents / SwimlaneBleed</h1>
+<h2>Read-only default-swimlane creation</h2>
+<p><a href="https://github.com/wekan/wekan/security/advisories/GHSA-2x89-6mq2-834r">GHSA-2x89-6mq2-834r</a> was reported by <a href="https://github.com/crypto-nidh">crypto-nidh</a>.</p>
+<p>The default-swimlane Meteor method checked only board membership before inserting a structural object, so read-only roles could bypass the collection write rules.</p>
+<p><b>Fix:</b> the method now requires the shared board write capability before insertion. Rejected attempts are bounded and summarized as SwimlaneBleed in Admin Panel &rarr; Problems. Fixed for the upcoming WeKan v11.21 release on 2026-08-28.</p>
+</div></body></html>
