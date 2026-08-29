@@ -1,0 +1,9 @@
+<html><head><meta charset="UTF-8"><title>WeKan — Hall of Fame / CookieTokenBleed</title><link rel="stylesheet" type="text/css" href="../../css/main.css"></head>
+<body><img src="../hof.svg" alt="Hall of Fame trophy" width="300px" height="auto" />
+<div class="action-buttons"><a class="button" href="https://wekan.fi/hall-of-fame">Back to Hall of Fame Contents</a></div>
+<div class="hof"><h1 class="hof">Contents / CookieTokenBleed</h1>
+<h2>JavaScript-readable persistent session token</h2>
+<p><a href="https://github.com/wekan/wekan/security/advisories/GHSA-8phm-9rqm-v9hc">GHSA-8phm-9rqm-v9hc</a> was reported by <a href="https://github.com/binary-lover">binary-lover</a>.</p>
+<p>WeKan mirrored Meteor's persistent resume token into a cookie from browser JavaScript for authenticated file requests. Such a cookie cannot use the HttpOnly attribute, and Meteor also retained the token in Local Storage, leaving persistent credentials readable to scripts running in the WeKan origin.</p>
+<p><b>Fix:</b> WeKan enables Meteor 3.5's native HttpOnly resume-cookie flow on client and server, disables persistent Web Storage credentials and removes the custom readable cookie synchronization. Header-login cookies also receive HttpOnly alongside SameSite and HTTPS Secure attributes. Fixed for the upcoming WeKan release on 2026-08-29.</p>
+</div></body></html>
