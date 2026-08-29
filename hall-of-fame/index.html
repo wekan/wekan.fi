@@ -87,6 +87,28 @@
       </tr>
 
       <tr>
+        <td valign="top"><a href="https://github.com/wekan/wekan/security/advisories/GHSA-9w4x-hf2r-hc9v">GHSA-9w4x-hf2r-hc9v</a></td>
+        <td class="icon" valign="top"><h2><i class="fa fa-cogs" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></h2></td>
+        <td valign="top"><b>RuleBleed</b></td><td valign="top">2026-08-29</td>
+        <td class="by" valign="top"><b><a href="https://github.com/crypto-nidh">crypto-nidh</a></b> and <b><a href="https://github.com/xet7">xet7</a></b></td>
+        <td class="stars" valign="top"><img src="GoldStar.png" width="30px" height="auto" /><img src="GoldStar.png" width="30px" height="auto" /></td>
+        <td valign="top">
+          <details>
+          <summary>Process</summary>
+
+          Coordinated disclosure through a GitHub security advisory, verified against DDP-created, scheduled and legacy automation paths.
+          </details>
+        </td>
+        <td valign="top">
+          <details>
+          <summary>Details</summary>
+
+          <ul><li>Server-side automation bypassed the collection cross-board deny hook (CWE-862, CWE-863)</li><li>Rule registration and execution now independently enforce destination write access</li><li>Authorization runs before destination list or swimlane lookup, removing the private-structure oracle</li><li>Denied attempts are summarized in Admin Panel &rarr; Problems</li><li><a href="rulebleed/">More details</a></li></ul>
+          </details>
+        </td>
+      </tr>
+
+      <tr>
         <td valign="top"><a href="https://github.com/wekan/wekan/security/advisories/GHSA-4mjm-vj9f-p629">GHSA-4mjm-vj9f-p629</a></td>
         <td class="icon" valign="top"><h2><i class="fa fa-user-circle" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></h2></td>
         <td valign="top"><b>AvatarMimeBleed</b></td><td valign="top">2026-08-28</td>

@@ -1,0 +1,9 @@
+<html><head><meta charset="UTF-8"><title>WeKan — Hall of Fame / RuleBleed</title><link rel="stylesheet" type="text/css" href="../../css/main.css"></head>
+<body><img src="../hof.svg" alt="Hall of Fame trophy" width="300px" height="auto" />
+<div class="action-buttons"><a class="button" href="https://wekan.fi/hall-of-fame">Back to Hall of Fame Contents</a></div>
+<div class="hof"><h1 class="hof">Contents / RuleBleed</h1>
+<h2>Automation-rule cross-board authorization bypass</h2>
+<p><a href="https://github.com/wekan/wekan/security/advisories/GHSA-9w4x-hf2r-hc9v">GHSA-9w4x-hf2r-hc9v</a> was reported by <a href="https://github.com/crypto-nidh">crypto-nidh</a>.</p>
+<p>Move, link and bulk-move automation actions execute on the server, outside the collection allow/deny callbacks. A user who could create a rule on their own board could therefore name an inaccessible private board as its destination and inject cards there. Destination list and swimlane matching also exposed a blind oracle for private board structure.</p>
+<p><b>Fix:</b> rule creation now requires write access to a different destination before storing any rule document. Execution checks again before looking up destination structure, protecting scheduled, legacy, imported and directly stored rules. Rejected attempts are bounded and summarized as RuleBleed in Admin Panel &rarr; Problems. Fixed for the upcoming WeKan v11.21 release on 2026-08-29.</p>
+</div></body></html>
