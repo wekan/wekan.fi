@@ -1,0 +1,9 @@
+<html><head><meta charset="UTF-8"><title>WeKan — Hall of Fame / MailTitleBleed</title><link rel="stylesheet" type="text/css" href="../../css/main.css"></head>
+<body><img src="../hof.svg" alt="Hall of Fame trophy" width="300px" height="auto" />
+<div class="action-buttons"><a class="button" href="https://wekan.fi/hall-of-fame">Back to Hall of Fame Contents</a></div>
+<div class="hof"><h1 class="hof">Contents / MailTitleBleed</h1>
+<h2>Stored active markup in notification email</h2>
+<p><a href="https://github.com/wekan/wekan/security/advisories/GHSA-hp9m-vff5-7pvw">GHSA-hp9m-vff5-7pvw</a> was reported by <a href="https://github.com/binary-lover">binary-lover</a>.</p>
+<p>Stored board, list and card titles and other activity values were interpolated into localized notification prose before it became an HTML email body. A writable member could place active markup in a title and have it delivered to another member's mail client.</p>
+<p><b>Fix:</b> the completed localized notification is escaped at the final HTML output boundary before plain-text newlines become line breaks. Notification subjects also discard newlines, preventing stored values from creating additional mail headers. Fixed for the upcoming WeKan release on 2026-08-29.</p>
+</div></body></html>

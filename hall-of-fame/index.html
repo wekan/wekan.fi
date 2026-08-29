@@ -87,6 +87,22 @@
       </tr>
 
       <tr>
+        <td valign="top"><a href="https://github.com/wekan/wekan/security/advisories/GHSA-hp9m-vff5-7pvw">GHSA-hp9m-vff5-7pvw</a></td>
+        <td class="icon" valign="top"><h2><i class="fa fa-envelope" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></h2></td>
+        <td valign="top"><b>MailTitleBleed</b></td><td valign="top">2026-08-29</td>
+        <td class="by" valign="top"><b><a href="https://github.com/binary-lover">binary-lover</a></b> and <b><a href="https://github.com/xet7">xet7</a></b></td>
+        <td class="stars" valign="top"><img src="GoldStar.png" width="30px" height="auto" /><img src="GoldStar.png" width="30px" height="auto" /></td>
+        <td valign="top"><details><summary>Process</summary>
+
+          Coordinated disclosure through a GitHub security advisory, traced from stored activity values through localization to HTML email delivery.
+          </details></td>
+        <td valign="top"><details><summary>Details</summary>
+
+          <ul><li>Stored activity titles could become active email markup (CWE-79)</li><li>The completed localized body is escaped at its final HTML boundary</li><li>Notification subjects discard header-injecting newlines</li><li><a href="mailtitlebleed/">More details</a></li></ul>
+          </details></td>
+      </tr>
+
+      <tr>
         <td valign="top"><a href="https://github.com/wekan/wekan/security/advisories/GHSA-33h9-rc5h-667p">GHSA-33h9-rc5h-667p</a></td>
         <td class="icon" valign="top"><h2><i class="fa fa-search" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></h2></td>
         <td valign="top"><b>SearchBleed</b></td><td valign="top">2026-08-29</td>
