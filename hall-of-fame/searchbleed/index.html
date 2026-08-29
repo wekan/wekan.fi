@@ -1,0 +1,9 @@
+<html><head><meta charset="UTF-8"><title>WeKan — Hall of Fame / SearchBleed</title><link rel="stylesheet" type="text/css" href="../../css/main.css"></head>
+<body><img src="../hof.svg" alt="Hall of Fame trophy" width="300px" height="auto" />
+<div class="action-buttons"><a class="button" href="https://wekan.fi/hall-of-fame">Back to Hall of Fame Contents</a></div>
+<div class="hof"><h1 class="hof">Contents / SearchBleed</h1>
+<h2>Global-search selector injection and authorization bypass</h2>
+<p><a href="https://github.com/wekan/wekan/security/advisories/GHSA-33h9-rc5h-667p">GHSA-33h9-rc5h-667p</a> was reported by <a href="https://github.com/crypto-nidh">crypto-nidh</a>.</p>
+<p>The global-search publication accepted a database selector from an authenticated client and used it instead of its normal board-scoped query. On MongoDB this could execute database operators, cause denial of service and expose an oracle over cards on inaccessible boards. Stored selectors could also be replayed by the pagination publications.</p>
+<p><b>Fix:</b> executable selectors are rejected through WeKan's shared NoSQL guard, while other selectors are conjoined with the caller's current authorized board IDs. The shared database path repeats both checks before initial or stored pagination selectors execute, protecting sessions created by older releases after upgrade. Fixed for the upcoming WeKan release on 2026-08-29.</p>
+</div></body></html>

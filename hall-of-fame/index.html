@@ -87,6 +87,28 @@
       </tr>
 
       <tr>
+        <td valign="top"><a href="https://github.com/wekan/wekan/security/advisories/GHSA-33h9-rc5h-667p">GHSA-33h9-rc5h-667p</a></td>
+        <td class="icon" valign="top"><h2><i class="fa fa-search" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></h2></td>
+        <td valign="top"><b>SearchBleed</b></td><td valign="top">2026-08-29</td>
+        <td class="by" valign="top"><b><a href="https://github.com/crypto-nidh">crypto-nidh</a></b> and <b><a href="https://github.com/xet7">xet7</a></b></td>
+        <td class="stars" valign="top"><img src="GoldStar.png" width="30px" height="auto" /><img src="GoldStar.png" width="30px" height="auto" /></td>
+        <td valign="top">
+          <details>
+          <summary>Process</summary>
+
+          Coordinated disclosure through a GitHub security advisory, reproduced against the global-search DDP publication and its stored pagination selectors.
+          </details>
+        </td>
+        <td valign="top">
+          <details>
+          <summary>Details</summary>
+
+          <ul><li>Authenticated clients could replace the server's board-scoped search selector (CWE-943)</li><li>Execution operators are rejected before database access</li><li>Initial and stored pagination selectors are constrained to current board access</li><li><a href="searchbleed/">More details</a></li></ul>
+          </details>
+        </td>
+      </tr>
+
+      <tr>
         <td valign="top"><a href="https://github.com/wekan/wekan/security/advisories/GHSA-9w4x-hf2r-hc9v">GHSA-9w4x-hf2r-hc9v</a></td>
         <td class="icon" valign="top"><h2><i class="fa fa-cogs" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></h2></td>
         <td valign="top"><b>RuleBleed</b></td><td valign="top">2026-08-29</td>
