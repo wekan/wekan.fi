@@ -1,0 +1,5 @@
+WeKan 11.30
+FerretDB 1.64.0
+Meteor 3.5.2-beta.0
+Node 24.20.0
+NPM 11.12.1
