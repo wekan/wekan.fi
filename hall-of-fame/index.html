@@ -87,6 +87,22 @@
       </tr>
 
       <tr>
+        <td valign="top"><a href="https://github.com/wekan/wekan/security/advisories/GHSA-rv5g-5p4g-3v89">GHSA-rv5g-5p4g-3v89</a></td>
+        <td class="icon" valign="top"><h2><i class="fa fa-file-image-o" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></h2></td>
+        <td valign="top"><b>MimeBleed follow-up</b></td><td valign="top">2026-09-01</td>
+        <td class="by" valign="top"><b><a href="https://github.com/avrlab233">avrlab233</a></b> and <b><a href="https://github.com/xet7">xet7</a></b></td>
+        <td class="stars" valign="top"><img src="GoldStar.png" width="30px" height="auto" /><img src="GoldStar.png" width="30px" height="auto" /></td>
+        <td valign="top"><details><summary>Process</summary>
+
+          Coordinated disclosure through a GitHub security advisory, reproduced against upload validation and the original Meteor-Files route on every storage backend.
+          </details></td>
+        <td valign="top"><details><summary>Details</summary>
+
+          <ul><li>A slash-separated unquoted event handler bypassed markup sniffing (CWE-79)</li><li>Filesystem uploads skipped migration-only validation</li><li>Executable stored metadata could be served inline by Meteor-Files</li><li>All storage paths now reject or sandbox active attachment content</li><li><a href="mimebleed/">More details</a></li></ul>
+          </details></td>
+      </tr>
+
+      <tr>
         <td valign="top"><a href="https://github.com/wekan/wekan/security/advisories/GHSA-8phm-9rqm-v9hc">GHSA-8phm-9rqm-v9hc</a></td>
         <td class="icon" valign="top"><h2><i class="fa fa-key" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></h2></td>
         <td valign="top"><b>CookieTokenBleed</b></td><td valign="top">2026-08-29</td>

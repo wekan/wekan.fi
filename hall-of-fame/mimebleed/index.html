@@ -37,12 +37,14 @@
       <tr>
         <td valign="top">
           <a href="https://github.com/wekan/wekan/security/advisories/GHSA-jhph-whx8-wq6p">CVE-2026-68899 GHSA-jhph-whx8-wq6p</a>
+          <br /><a href="https://github.com/wekan/wekan/security/advisories/GHSA-rv5g-5p4g-3v89">GHSA-rv5g-5p4g-3v89</a>
           <br /> <br />
         </td>
         <td valign="top"><b>MimeBleed</b> <h2><i class="fa fa-file-image-o" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></h2></td>
-        <td valign="top">2026-07-14</td>
+        <td valign="top">2026-07-14<br />2026-09-01 follow-up</td>
         <td valign="top">
           <b>HNUfwj</b> (coordinated disclosure) and <b>xet7</b> (fix)<br />
+          <b>avrlab233</b> (follow-up disclosure) and <b>xet7</b> (fix)<br />
           <img src="../GoldStar.png" width="30px" height="auto" />
           <img src="../GoldStar.png" width="30px" height="auto" />
           <img src="../GoldStar.png" width="30px" height="auto" />
@@ -55,6 +57,8 @@
             <li>1. <i class="fa fa-file-image-o" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i> MimeBleed — file-upload MIME-type validation bypass leading to stored XSS via a missing system binary fallback (CWE-434 Unrestricted Upload of File with Dangerous Type)</li>
             <li>CVSS:3.1 8.3 High (AV:N/AC:L/PR:L/UI:R/S:C/C:H/I:H/A:N)</li>
             <li>Affected container deployments without the <code>file</code> binary and <code>WITH_API=true</code></li>
+            <li>2. Follow-up stored XSS: slash-separated unquoted event handlers bypassed the markup sniff, filesystem uploads skipped migration-only validation, and executable metadata could reach the original Meteor-Files inline response (GHSA-rv5g-5p4g-3v89, CWE-79)</li>
+            <li>The follow-up fix validates every upload destination and forces HTML, SVG, XML and JavaScript metadata or filenames to sandboxed opaque downloads across filesystem, GridFS and cloud storage</li>
             <li>Fixed at
                <a href="https://github.com/wekan/wekan/blob/main/CHANGELOG.md#upcoming-wekan--release">upcoming WeKan release</a>
             </li>
@@ -70,6 +74,23 @@
 
   <div class="hof">
     <h2 class="hof">Details</h2>
+
+    <h3>2. MimeBleed follow-up — stored XSS through alternate HTML syntax and storage paths (CWE-79)</h3>
+    <p>
+      The payload <code>&lt;img/onerror=document.body.dataset.executed=&quot;yes&quot; src=x&gt;</code>
+      used valid slash-separated and unquoted HTML syntax that the earlier quoted-attribute check
+      missed. Files left on the filesystem also bypassed validation that was nested inside the
+      migration-only path. Finally, the original Meteor-Files route trusted stored MIME metadata
+      and could render active content inline.
+    </p>
+    <p>
+      WeKan now recognizes slash- or whitespace-separated event handlers and JavaScript URI
+      attributes, validates uploads before deciding whether to migrate them, and sends every
+      filesystem, GridFS and cloud download through one fail-closed response policy. Executable
+      types and filenames become <code>application/octet-stream</code> attachments with
+      <code>nosniff</code>, frame denial and a sandboxed CSP. Rejected uploads are summarized in
+      Admin Panel &rarr; Problems as MimeBleed events.
+    </p>
 
     <h3>1. MimeBleed — file-upload MIME-type validation bypass → stored XSS via missing system binary fallback (CWE-434)</h3>
     <p>
