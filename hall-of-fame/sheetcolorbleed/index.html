@@ -1,0 +1,27 @@
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>WeKan — Hall of Fame / SheetColorBleed</title>
+  <link rel="icon" href="../../wekan-favicon.png">
+  <link rel="stylesheet" type="text/css" href="../../css/main.css">
+  <link rel="stylesheet" href="../../font-awesome/css/font-awesome.min.css">
+</head>
+<body>
+  <img vAlign="center" src="../hof.svg" alt="Hall of Fame trophy" width="300px" height="auto" />
+  <div class="action-buttons">
+    <a class="button" href="https://wekan.fi/hall-of-fame">Back to Hall of Fame Contents</a>
+    <a class="button" href="https://wekan.fi">Back to WeKan Website</a>
+  </div>
+  <div class="hof">
+    <h1 class="hof">Contents / SheetColorBleed</h1>
+    <table border="1" margin="0" padding="10px" width="100%">
+      <tr><th width="20%">Where</th><th width="80%">Details</th></tr>
+      <tr><td valign="top"><b>Advisory</b></td><td valign="top"><a href="https://github.com/wekan/wekan/security/advisories/GHSA-crq2-phg8-4xvg">GHSA-crq2-phg8-4xvg</a>, responsibly reported by <a href="https://github.com/rbbjinioeq">rbbjinioeq</a>.</td></tr>
+      <tr><td valign="top"><b>Root cause</b></td><td valign="top">The XLSX parser accepted a non-hexadecimal <code>sheetPr/tabColor@rgb</code> value. The viewer interpolated that value into a complete <code>style.cssText</code> serialization, allowing semicolons in workbook data to begin additional CSS declarations.</td></tr>
+      <tr><td valign="top"><b>Impact</b></td><td valign="top">A board member could alter the attachment-preview presentation seen by another member and cause a CSS subresource request. No JavaScript execution, response reading, credential access or authenticated state change was demonstrated.</td></tr>
+      <tr><td valign="top"><b>Fix</b></td><td valign="top">The vendored viewer now accepts only canonical <code>#RRGGBB</code> values immediately before CSS serialization. Invalid, short, alpha, named and declaration-bearing values become no tab color.</td></tr>
+      <tr><td valign="top"><b>Regression coverage</b></td><td valign="top"><code>tests/xlsxTabColorCssInjection.test.cjs</code> checks a valid control and rejects the disclosure payload plus malformed boundary cases.</td></tr>
+    </table>
+  </div>
+</body>
+</html>

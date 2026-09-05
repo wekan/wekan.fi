@@ -87,6 +87,22 @@
       </tr>
 
       <tr>
+        <td valign="top"><a href="https://github.com/wekan/wekan/security/advisories/GHSA-crq2-phg8-4xvg">GHSA-crq2-phg8-4xvg</a></td>
+        <td class="icon" valign="top"><h2><i class="fa fa-table" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></h2></td>
+        <td valign="top"><b>SheetColorBleed</b></td><td valign="top">2026-09-05</td>
+        <td class="by" valign="top"><b><a href="https://github.com/rbbjinioeq">rbbjinioeq</a></b> and <b><a href="https://github.com/xet7">xet7</a></b></td>
+        <td class="stars" valign="top"><img src="GoldStar.png" width="30px" height="auto" /><img src="GoldStar.png" width="30px" height="auto" /></td>
+        <td valign="top"><details><summary>Process</summary>
+
+          Coordinated disclosure through a GitHub security advisory, reproduced against the vendored XLSX parser and sheet-tab CSS serialization.
+          </details></td>
+        <td valign="top"><details><summary>Details</summary>
+
+          <ul><li>An XLSX sheet tab color could append arbitrary CSS declarations in another member's authenticated preview (CWE-79, CWE-116)</li><li>Only canonical six-digit hexadecimal colors now reach the style serializer</li><li>Malformed, short, alpha and declaration-bearing values are discarded</li><li><a href="sheetcolorbleed/">More details</a></li></ul>
+          </details></td>
+      </tr>
+
+      <tr>
         <td valign="top"><a href="https://github.com/wekan/wekan/security/advisories/GHSA-rv5g-5p4g-3v89">GHSA-rv5g-5p4g-3v89</a></td>
         <td class="icon" valign="top"><h2><i class="fa fa-file-image-o" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></h2></td>
         <td valign="top"><b>MimeBleed follow-up</b></td><td valign="top">2026-09-01</td>
