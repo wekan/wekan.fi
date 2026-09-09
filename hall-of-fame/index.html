@@ -87,6 +87,94 @@
       </tr>
 
       <tr>
+        <td valign="top">-</td>
+        <td class="icon" valign="top"><h2><i class="fa fa-trash" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></h2></td>
+        <td valign="top"><b>WipeBleed</b></td>
+        <td valign="top">2026-09-09</td>
+        <td class="by" valign="top"><b><a href="https://github.com/xet7">xet7</a></b></td>
+        <td class="stars" valign="top"><img src="GoldStar.png" width="30px" height="auto" /><img src="GoldStar.png" width="30px" height="auto" /></td>
+        <td valign="top"><details><summary>Process</summary>
+
+          Found and fixed during an internal security review of Attachments/Avatars (ostrio:files) upload, download and removal authorization.
+          </details></td>
+        <td valign="top"><details><summary>Details</summary>
+
+          <ul>
+            <li><i class="fa fa-trash" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i> WipeBleed &mdash; ostrio:files' own <code>_FilesCollectionRemove_attachments</code>/<code>_FilesCollectionRemove_avatars</code> DDP methods bypass <code>Attachments.allow</code>/<code>Avatars.allow</code> entirely, so any anonymous connection could call one with selector <code>{}</code> and delete every attachment or avatar on the instance (CWE-862 Missing Authorization)</li>
+            <li>Both now require <code>this.userId</code> and check every matched file: attachments need the caller's board-write access, avatars need ownership or site-admin status</li>
+            <li>Fixed at <a href="https://github.com/wekan/wekan/blob/main/CHANGELOG.md#upcoming-wekan--release">upcoming WeKan release</a></li>
+            <li><a href="wipebleed/">More details</a></li>
+          </ul>
+          </details></td>
+      </tr>
+
+      <tr>
+        <td valign="top">-</td>
+        <td class="icon" valign="top"><h2><i class="fa fa-upload" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></h2></td>
+        <td valign="top"><b>UploadPathBleed</b></td>
+        <td valign="top">2026-09-09</td>
+        <td class="by" valign="top"><b><a href="https://github.com/xet7">xet7</a></b></td>
+        <td class="stars" valign="top"><img src="GoldStar.png" width="30px" height="auto" /><img src="GoldStar.png" width="30px" height="auto" /></td>
+        <td valign="top"><details><summary>Process</summary>
+
+          Found and fixed during an internal security review of Attachments/Avatars (ostrio:files) upload, download and removal authorization.
+          </details></td>
+        <td valign="top"><details><summary>Details</summary>
+
+          <ul>
+            <li><i class="fa fa-upload" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i> UploadPathBleed &mdash; the attachment upload <code>namingFunction</code> used a client-supplied <code>fileId</code> verbatim as the on-disk file name, and <code>sanitize()</code> was an identity function, so an anonymous upload with <code>fileId: "../../../../tmp/pwn"</code> could write attacker-controlled content anywhere the WeKan process can write (CWE-22 Path Traversal, CWE-434 Unrestricted Upload, CWE-306 Missing Authentication)</li>
+            <li><code>sanitize()</code> is restored to the same whitelist <code>models/avatars.js</code> already used, and <code>namingFunction</code> now also validates the fileId against the ObjectId shape WeKan itself generates</li>
+            <li>Fixed at <a href="https://github.com/wekan/wekan/blob/main/CHANGELOG.md#upcoming-wekan--release">upcoming WeKan release</a></li>
+            <li><a href="uploadpathbleed/">More details</a></li>
+          </ul>
+          </details></td>
+      </tr>
+
+      <tr>
+        <td valign="top">-</td>
+        <td class="icon" valign="top"><h2><i class="fa fa-user" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></h2></td>
+        <td valign="top"><b>PortraitBleed</b></td>
+        <td valign="top">2026-09-09</td>
+        <td class="by" valign="top"><b><a href="https://github.com/xet7">xet7</a></b></td>
+        <td class="stars" valign="top"><img src="GoldStar.png" width="30px" height="auto" /><img src="GoldStar.png" width="30px" height="auto" /></td>
+        <td valign="top"><details><summary>Process</summary>
+
+          Found and fixed during an internal security review of Attachments/Avatars (ostrio:files) upload, download and removal authorization.
+          </details></td>
+        <td valign="top"><details><summary>Details</summary>
+
+          <ul>
+            <li><i class="fa fa-user" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i> PortraitBleed &mdash; unlike Attachments, Avatars never set a <code>protected</code> callback, so ostrio:files' own library-native download route (whose default lets everything through when <code>protected</code> is unset) served any avatar to any anonymous caller, bypassing <code>isAuthorizedForAvatar</code> entirely (CWE-862 Missing Authorization, CWE-284 Improper Access Control)</li>
+            <li><code>Avatars.protected</code> now mirrors <code>Attachments.protected</code>: an authenticated caller may always view an avatar; an anonymous one only when the avatar's owner is a member of a public board</li>
+            <li>Fixed at <a href="https://github.com/wekan/wekan/blob/main/CHANGELOG.md#upcoming-wekan--release">upcoming WeKan release</a></li>
+            <li><a href="portraitbleed/">More details</a></li>
+          </ul>
+          </details></td>
+      </tr>
+
+      <tr>
+        <td valign="top">-</td>
+        <td class="icon" valign="top"><h2><i class="fa fa-archive" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></h2></td>
+        <td valign="top"><b>RelicAvatarBleed</b></td>
+        <td valign="top">2026-09-09</td>
+        <td class="by" valign="top"><b><a href="https://github.com/xet7">xet7</a></b></td>
+        <td class="stars" valign="top"><img src="GoldStar.png" width="30px" height="auto" /><img src="GoldStar.png" width="30px" height="auto" /></td>
+        <td valign="top"><details><summary>Process</summary>
+
+          Found and fixed during an internal security review of Attachments/Avatars (ostrio:files) upload, download and removal authorization.
+          </details></td>
+        <td valign="top"><details><summary>Details</summary>
+
+          <ul>
+            <li><i class="fa fa-archive" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i> RelicAvatarBleed &mdash; both legacy CollectionFS avatar fallback routes in <code>server/routes/avatarServer.js</code> streamed a migrated-in avatar to anyone who knew its old <code>cfs.avatars.filerecord</code> id, one of them with no authentication check at all (CWE-862 Missing Authorization)</li>
+            <li>Both routes now require a signed-in caller; the anonymous public-board redirect for already-migrated avatars is untouched</li>
+            <li>Fixed at <a href="https://github.com/wekan/wekan/blob/main/CHANGELOG.md#upcoming-wekan--release">upcoming WeKan release</a></li>
+            <li><a href="relicavatarbleed/">More details</a></li>
+          </ul>
+          </details></td>
+      </tr>
+
+      <tr>
         <td valign="top"><a href="https://github.com/wekan/wekan/security/advisories/GHSA-crq2-phg8-4xvg">GHSA-crq2-phg8-4xvg</a></td>
         <td class="icon" valign="top"><h2><i class="fa fa-table" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></h2></td>
         <td valign="top"><b>SheetColorBleed</b></td><td valign="top">2026-09-05</td>

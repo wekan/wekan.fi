@@ -1,0 +1,138 @@
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <title>WeKan — Hall of Fame / PortraitBleed</title>
+  <link rel="icon" href="../../wekan-favicon.png">
+  <link rel="stylesheet" type="text/css" href="../../css/main.css">
+  <link rel="stylesheet" href="../../font-awesome/css/font-awesome.min.css">
+</head>
+
+<body>
+
+  <img vAlign="center" src="../hof.svg" alt="Hall of Fame image from https://openclipart.org/detail/120343/trophy"
+    width="300px" height="auto" />
+  <br />
+
+  <div class="action-buttons">
+    <a class="button" href="https://wekan.fi/hall-of-fame">Back to Hall of Fame Contents</a>
+    <a class="button" href="https://wekan.fi">Back to Wekan Website</a>
+  </div>
+
+  <div class="hof">
+    <h1 class="hof">Contents / PortraitBleed</h1>
+
+    <table border="1" margin="0" padding="10px" width="100%">
+      <tr>
+        <th width="10%">CVE</th>
+        <th width="10%">Vulnerability name</th>
+        <th width="10%">Date</th>
+        <th width="20%">
+          <a href="https://github.com/wekan/wekan/blob/main/SECURITY.md" style="color: red;">Responsible Security Disclosure</a>
+          by
+        </th>
+        <th width="40%">Vulnerabilities</th>
+      </tr>
+
+      <tr>
+        <td valign="top">
+          -
+          <br /> <br />
+        </td>
+        <td valign="top"><b>PortraitBleed</b> <h2><i class="fa fa-user" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></h2></td>
+        <td valign="top">2026-09-09</td>
+        <td valign="top">
+          <b><a href="https://github.com/xet7">xet7</a></b><br />
+          <img src="../GoldStar.png" width="30px" height="auto" />
+          <img src="../GoldStar.png" width="30px" height="auto" /><br />
+          Found and fixed during an internal security review.
+        </td>
+        <td valign="top">
+          <ul>
+            <li><i class="fa fa-user" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i> PortraitBleed &mdash; unlike Attachments, Avatars never set a <code>protected</code> callback, so ostrio:files' own library-native download route (whose <code>_checkAccess</code> defaults to allowing everything when <code>protected</code> is unset) served any avatar to any anonymous caller, entirely bypassing WeKan's own <code>isAuthorizedForAvatar</code> check (CWE-862 Missing Authorization, CWE-284 Improper Access Control)</li>
+            <li><code>Avatars.protected</code> now mirrors <code>Attachments.protected</code>: an authenticated caller may always view an avatar; an anonymous one only when the avatar's owner is a member of a public board</li>
+            <li>Fixed at
+               <a href="https://github.com/wekan/wekan/blob/main/CHANGELOG.md#upcoming-wekan--release">upcoming WeKan release</a>
+            </li>
+          </ul>
+        </td>
+      </tr>
+
+    </table>
+  </div>
+
+  <br />
+  <br />
+
+  <div class="hof">
+    <h2 class="hof">Details</h2>
+
+    <h3>PortraitBleed — the one callback Attachments had that Avatars did not (CWE-862, CWE-284)</h3>
+    <p>
+      <code>ostrio:files</code>' own download route decides whether to serve a file through a callback named
+      <code>protected</code>. Its default, when a collection never sets one, is permissive:
+    </p>
+    <pre>
+// ostrio:files (conceptually) — _checkAccess
+if (this.protected) {
+  // only then does anything get checked
+}
+return true; // no `protected` set at all ⇒ every request passes
+    </pre>
+    <p>
+      <code>models/attachments.server.js</code> sets one:
+    </p>
+    <pre>
+Attachments.protected = async function (fileObj) {
+  if (!fileObj) return false;
+  const board = await Boards.findOneAsync(fileObj.meta.boardId);
+  if (!board) return false;
+  if (board.isPublic()) return true;
+  return board.hasMember(this.userId);
+};
+    </pre>
+    <p>
+      <code>models/avatars.server.js</code> had no equivalent at all. The library's own
+      globally-registered download middleware for the three-segment URL
+      <code>/cdn/storage/avatars/{id}/original/{name}</code> ran ahead of - and independently of - WeKan's own
+      authorized route in <code>server/routes/avatarServer.js</code> and its <code>isAuthorizedForAvatar</code>
+      check in <code>server/routes/universalFileServer.js</code>. Both of WeKan's own checks exist; neither one
+      is what a request to that URL actually goes through, because the library's own middleware answers first
+      and never calls <code>next()</code>.
+    </p>
+    <p>
+      So the exploit was one anonymous request, given only an avatar's id:
+    </p>
+    <pre>
+GET /cdn/storage/avatars/&lt;avatarId&gt;/original/&lt;avatarId&gt;.jpg
+    </pre>
+    <p>
+      Any visitor holding an avatar id - from a rendered avatar on a public board page, a miniprofile payload, or
+      simple enumeration - could download the full-size avatar of any user on the instance, private-board-only
+      members included, with a one-year public cache header on top.
+    </p>
+    <p>
+      <b>The fix.</b> <code>Avatars.protected</code> is added, mirroring <code>Attachments.protected</code>'s
+      shape as closely as the two collections' semantics allow: an authenticated caller
+      (<code>this.userId</code>) may always view an avatar, matching how avatars have always been treated as
+      visible to any logged-in user. An anonymous caller is allowed only when the avatar's owner is a member of
+      a board whose <code>permission</code> is <code>public</code> - the same rule
+      <code>avatarIsOnAPublicBoard</code> already applies for WeKan's own route, so an avatar shown on a public
+      board keeps working for a visitor who is not signed in, and nothing else does.
+    </p>
+    <p>
+      A denied anonymous request is recorded through the shared security log under a new
+      <code>authz.avatar-protected</code>/<code>PortraitBleed</code> catalog key, so Admin Panel &rarr; Problems
+      shows an attempt happened - logged only on the deny branch, never on an ordinary authenticated view.
+      <code>tests/attachmentAvatarSecurityAdvisories.test.cjs</code> pins the callback's shape and that it is
+      logged.
+    </p>
+    <p>
+      Found and fixed during an internal security review, confirmed against the current source. Fixed at the
+      <a href="https://github.com/wekan/wekan/blob/main/CHANGELOG.md#upcoming-wekan--release">upcoming WeKan release</a>.
+    </p>
+  </div>
+
+</body>
+
+</html>

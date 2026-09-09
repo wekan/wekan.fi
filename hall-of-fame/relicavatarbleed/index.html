@@ -1,0 +1,146 @@
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <title>WeKan — Hall of Fame / RelicAvatarBleed</title>
+  <link rel="icon" href="../../wekan-favicon.png">
+  <link rel="stylesheet" type="text/css" href="../../css/main.css">
+  <link rel="stylesheet" href="../../font-awesome/css/font-awesome.min.css">
+</head>
+
+<body>
+
+  <img vAlign="center" src="../hof.svg" alt="Hall of Fame image from https://openclipart.org/detail/120343/trophy"
+    width="300px" height="auto" />
+  <br />
+
+  <div class="action-buttons">
+    <a class="button" href="https://wekan.fi/hall-of-fame">Back to Hall of Fame Contents</a>
+    <a class="button" href="https://wekan.fi">Back to Wekan Website</a>
+  </div>
+
+  <div class="hof">
+    <h1 class="hof">Contents / RelicAvatarBleed</h1>
+
+    <table border="1" margin="0" padding="10px" width="100%">
+      <tr>
+        <th width="10%">CVE</th>
+        <th width="10%">Vulnerability name</th>
+        <th width="10%">Date</th>
+        <th width="20%">
+          <a href="https://github.com/wekan/wekan/blob/main/SECURITY.md" style="color: red;">Responsible Security Disclosure</a>
+          by
+        </th>
+        <th width="40%">Vulnerabilities</th>
+      </tr>
+
+      <tr>
+        <td valign="top">
+          -
+          <br /> <br />
+        </td>
+        <td valign="top"><b>RelicAvatarBleed</b> <h2><i class="fa fa-archive" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></h2></td>
+        <td valign="top">2026-09-09</td>
+        <td valign="top">
+          <b><a href="https://github.com/xet7">xet7</a></b><br />
+          <img src="../GoldStar.png" width="30px" height="auto" />
+          <img src="../GoldStar.png" width="30px" height="auto" /><br />
+          Found and fixed during an internal security review.
+        </td>
+        <td valign="top">
+          <ul>
+            <li><i class="fa fa-archive" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i> RelicAvatarBleed &mdash; <code>serveLegacyAvatar()</code> in <code>server/routes/avatarServer.js</code> streams an avatar from the legacy CollectionFS store with no authentication or authorization check at either of its two call sites; the <code>/cfs/files/avatars/:fileName</code> route had no check at all, and the <code>/cdn/storage/avatars/:fileName</code> fallback ran it before WeKan's own auth checks (CWE-862 Missing Authorization)</li>
+            <li>Both call sites now require a signed-in caller (<code>isLegacyAvatarAuthorized</code>) before reading the legacy store; the anonymous public-board redirect for already-migrated avatars on <code>/cfs/files/avatars</code> is untouched</li>
+            <li>Fixed at
+               <a href="https://github.com/wekan/wekan/blob/main/CHANGELOG.md#upcoming-wekan--release">upcoming WeKan release</a>
+            </li>
+          </ul>
+        </td>
+      </tr>
+
+    </table>
+  </div>
+
+  <br />
+  <br />
+
+  <div class="hof">
+    <h2 class="hof">Details</h2>
+
+    <h3>RelicAvatarBleed — a fallback route to a store nothing authorizes (CWE-862)</h3>
+    <p>
+      WeKan migrated its file storage from CollectionFS to <code>ostrio:files</code>. Some installs upgraded from
+      a version old enough to still carry avatar data in the legacy
+      <code>cfs.avatars.filerecord</code>/<code>cfs_gridfs.avatars</code> collections, and
+      <code>serveLegacyAvatar()</code> exists to read that data in place without migrating it:
+    </p>
+    <pre>
+// server/routes/avatarServer.js — before
+async function serveLegacyAvatar(fileId, req, res) {
+  const legacy = await getOldAttachmentData(fileId, 'avatars');   // no user context at all
+  if (!legacy) return false;
+  const stream = await getOldAttachmentStream(fileId, 'avatars');
+  ...
+  res.writeHead(200);
+  stream.pipe(res);                                               // served to anyone
+  return true;
+}
+    </pre>
+    <p>
+      Two routes called it. On <code>/cdn/storage/avatars/:fileName</code>, it ran as a fallback when the id was
+      not a current <code>Avatars</code> document - BEFORE the route's own
+      <code>getUserIdFromRequest</code>/<code>avatarIsOnAPublicBoard</code> check further down, so a legacy id
+      bypassed even the public-board restriction current avatars get. On
+      <code>/cfs/files/avatars/:fileName</code>, it was the PRIMARY path, called with no credential check
+      whatsoever:
+    </p>
+    <pre>
+// server/routes/avatarServer.js — before
+WebApp.handlers.use('/cfs/files/avatars/:fileName', async (req, res, next) => {
+  ...
+  if (await serveLegacyAvatar(fileId, req, res)) return;   // nothing gates this
+  ... // redirect to the new URL format otherwise
+});
+    </pre>
+    <p>
+      <code>getOldAttachmentData</code> (<code>models/lib/attachmentBackwardCompatibility.js</code>) looks the
+      record up by <code>_id</code> directly, with no user context - the lookup always succeeds for an anonymous
+      caller when the record exists. So the exploit was one anonymous request, given only an old file-record id
+      (ids that were embedded in historical <code>profile.avatarUrl</code> values of the form
+      <code>/cfs/files/avatars/&lt;id&gt;</code>):
+    </p>
+    <pre>
+GET /cfs/files/avatars/&lt;legacyFileRecordId&gt;
+    </pre>
+    <p>
+      returning the avatar bytes with a one-year public cache header, no login required - on any instance
+      migrated from WeKan older than 6.x that still has legacy avatar rows.
+    </p>
+    <p>
+      <b>The fix.</b> A new <code>isLegacyAvatarAuthorized(req)</code> helper requires a resolved
+      <code>getUserIdFromRequest(req)</code> - unlike current avatars, a legacy record carries no owner/board
+      link that can be safely checked for the public-board exemption
+      <code>avatarIsOnAPublicBoard</code> gives current avatars, so this is a deliberately NARROWER rule rather
+      than reusing that exemption on an unverifiable claim. Both call sites now check it before reading the
+      legacy store: the <code>/cdn/storage/avatars</code> fallback returns 401 for an unauthenticated caller
+      without ever revealing whether the id exists at all, and the <code>/cfs/files/avatars</code> route skips
+      straight to its existing redirect (itself authorized, since it lands back on
+      <code>/cdn/storage/avatars</code>) rather than reading the legacy store for an anonymous caller - so an
+      anonymous visitor to an already-migrated, public-board avatar's old URL still sees it normally, and only
+      the un-migrated legacy read now requires a login.
+    </p>
+    <p>
+      A denied attempt on the <code>/cdn/storage/avatars</code> fallback is recorded through the shared security
+      log under a new <code>authz.legacy-avatar</code>/<code>RelicAvatarBleed</code> catalog key.
+      <code>tests/attachmentAvatarSecurityAdvisories.test.cjs</code> pins both call sites and, as a negative
+      case, that the redirect fallback still works for an anonymous caller.
+    </p>
+    <p>
+      Found and fixed during an internal security review, confirmed against the current source. Fixed at the
+      <a href="https://github.com/wekan/wekan/blob/main/CHANGELOG.md#upcoming-wekan--release">upcoming WeKan release</a>.
+    </p>
+  </div>
+
+</body>
+
+</html>
