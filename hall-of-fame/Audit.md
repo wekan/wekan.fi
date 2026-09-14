@@ -169,5 +169,11 @@ Verified all 111 current index awards against this inventory, all 87 matching
 name/date detail rows, and all 829 GoldStar.png references to the shared image. Report
 subject matching was used for the fetched advisories; existing misplaced GHSA
 links have not been rewritten as part of this star-only change. Remaining
-historical/private report evidence and unmatched detail rows require follow-up.
-This local correction has not been published.
+historical/private report evidence and unmatched detail rows require follow-up,
+but follow-up is not planned.
+
+## Current focus
+
+Current focus is at fixing any new GitHub advisories ASAP.
+At the time this audit was done and fixes implemented to star count,
+all advisories have already been fixed.
