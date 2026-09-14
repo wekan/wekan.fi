@@ -1,0 +1,22 @@
+<html><head><meta charset="UTF-8"><title>WeKan — VisibilityBleed</title><link rel="stylesheet" href="../../css/main.css"></head><body>
+<h1>VisibilityBleed</h1><table class="hof" width="100%"><tr><th>CVE</th><th>Icon</th><th>Vulnerability name</th><th>Date</th><th>Responsible Security Disclosure by</th><th>Stars</th><th>Process</th><th>Vulnerabilities</th></tr>
+      <tr>
+        <td valign="top">-</td>
+        <td class="icon" valign="top"><h2><i class="fa fa-eye" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></h2></td>
+        <td valign="top"><b>VisibilityBleed</b></td>
+        <td valign="top">2026-09-14</td>
+        <td class="by" valign="top"><b>Wenhao Wu, Southeast University</b></td>
+        <td class="stars" valign="top"><img src="../GoldStar.png" width="30px" height="auto" /></td>
+        <td valign="top">
+
+          Responsible disclosure through a saved GitHub security advisory; sibling path found during remediation.
+        </td>
+        <td valign="top">
+
+          <ul><li>Server methods bypassed the private-only board visibility policy (CWE-863).</li>
+          <li>Board creation and card-to-board conversion now force private visibility when required, recording blocked overrides in Admin Panel Problems.</li>
+          <li><a href="../">More details</a></li></ul>
+        </td>
+      </tr>
+
+</table><h2 class="hof">Details</h2><p>The server-side createBoardWithInitialSwimlanes method accepted public visibility even when the instance allowed only private boards. A sibling card-to-board conversion inherited public visibility. Collection allow/deny does not protect these server inserts.</p><p>Both methods apply the instance policy before insertion. Blocked public overrides use the bounded security event summary in Admin Panel Problems; logging failures do not break enforcement.</p><p>Targeted policy and insert-inventory suites pass. Browser regression added and syntax-checked; live execution remains pending. No CVE has been assigned here.</p></body></html>

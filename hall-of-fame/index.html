@@ -88,6 +88,25 @@
 
       <tr>
         <td valign="top">-</td>
+        <td class="icon" valign="top"><h2><i class="fa fa-eye" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></h2></td>
+        <td valign="top"><b>VisibilityBleed</b></td>
+        <td valign="top">2026-09-14</td>
+        <td class="by" valign="top"><b>Wenhao Wu, Southeast University</b></td>
+        <td class="stars" valign="top"><img src="GoldStar.png" width="30px" height="auto" /></td>
+        <td valign="top"><details><summary>Process</summary>
+
+          Responsible disclosure through a saved GitHub security advisory; sibling path found during remediation.
+        </details></td>
+        <td valign="top"><details><summary>Details</summary>
+
+          <ul><li>Server methods bypassed the private-only board visibility policy (CWE-863).</li>
+          <li>Board creation and card-to-board conversion now force private visibility when required, recording blocked overrides in Admin Panel Problems.</li>
+          <li><a href="visibilitybleed/">More details</a></li></ul>
+        </details></td>
+      </tr>
+
+      <tr>
+        <td valign="top">-</td>
         <td class="icon" valign="top"><h2><i class="fa fa-trash" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></h2></td>
         <td valign="top"><b>WipeBleed</b></td>
         <td valign="top">2026-09-09</td>
