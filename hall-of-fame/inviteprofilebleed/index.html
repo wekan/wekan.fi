@@ -4,7 +4,7 @@
         <td valign="top"><b>InviteProfileBleed</b></td>
         <td valign="top">2026-09-14</td>
         <td class="by" valign="top"><b>Wenhao Wu, Southeast University</b></td>
-        <td class="stars" valign="top"><img src="../GoldStar.png" width="30px" height="auto" /></td>
+        <td class="stars" valign="top"><img src="../GoldStar.png" width="30px" height="auto" /><img src="../GoldStar.png" width="30px" height="auto" /><img src="../GoldStar.png" width="30px" height="auto" /><img src="../GoldStar.png" width="30px" height="auto" /><img src="../GoldStar.png" width="30px" height="auto" /></td>
         <td valign="top">Responsible disclosure through a saved GitHub security advisory; current code and sibling paths reviewed during remediation.</td>
         <td valign="top"><p>Removed members could forge profile.invitedBoards and call acceptInvite to reactivate their retained membership row. Client permission gates now protect that capability, including operator paths, parent replacement and rename destinations. Ordinary leaf preferences remain editable. Denied invitation changes appear as bounded Problems summaries; logging cannot break refusal.</p><p><a href="https://github.com/wekan/wekan/commit/055cf42d4">Source fix and regression coverage</a>. Targeted tests pass; live browser execution remains pending. No CVE is assigned here.</p></td>
       </tr>

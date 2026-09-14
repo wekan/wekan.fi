@@ -1,195 +1,173 @@
 # Hall of Fame star audit
 
-Audit date: **2026-09-14**. Scope: local index and all vulnerability
-`index.html` files. Stars measure **disclosure quality and contribution**,
-as specified by the maintainer; they do not measure vulnerability severity,
-CVSS, number of affected users or whether a CVE exists.
+Ranking adopted and star corrections applied locally: **2026-09-14**.
+The maintainer specifies **disclosure quality and contribution**, not severity.
+Source catalogue: [WeKan GitHub security advisories](https://github.com/wekan/wekan/security/advisories).
+The public REST catalogue returned **75 published advisories** on this date.
+Advisory bodies were inspected for report detail and explicit suggested fix /
+remediation prose. Later maintainer fixes do not themselves prove that the
+researcher suggested a fix. Private correspondence is not available here.
 
-The existing site and WeKan `SECURITY.md` do not define a 1–5 award rubric.
-Therefore existing awards cannot yet be certified as correctly calibrated.
-No award was changed by this audit. Missing public evidence does not prove
-that a researcher supplied a poor report: private reports may contain more.
+## Maintainer ranking
 
-## Proposed review scale
-
-This is an audit framework, pending maintainer adoption; it is not a claim
-that historical awards followed these thresholds.
-
-| Stars | Disclosure quality and contribution evidence |
+| Stars | Conditions |
 | ---: | --- |
-| 1 | A useful initial report or finding, with limited documented detail. |
-| 2 | A clear report identifying the affected behavior and impact. |
-| 3 | Reproducible steps or a PoC with sufficient context for remediation. |
-| 4 | Detailed, reproducible analysis with strong root-cause or validation evidence. |
-| 5 | Exceptional contribution: detailed report plus a useful fix, substantial remediation assistance, or thorough validated exploit/regression work. |
+| 5 | Researcher successfully submitted a GHSA advisory, provided details and suggested a fix. |
+| 4 | Researcher submitted a GHSA advisory with details; suggested fix is missing. |
+| 3 | No GHSA advisory; a suggested fix/contribution is present. |
+| 2 | No GHSA advisory and no suggested fix. |
+| 1 | Email report with no GHSA and no suggested fix, and researcher did not reply to a request for additional information. |
 
-Coordinated disclosure is recorded separately. Public versus private reporting
-must be considered with its actual chronology and applicable policy; no
-automatic penalty is inferred here. Maintainer remediation/test work must not
-be attributed to the reporter without evidence. Internal findings use the same
-contribution criteria. Awards belong to the documented contribution, not to
-how frightening the vulnerability description sounds.
+The specific two-star condition takes precedence over the general “no GHSA”
+three-star wording. One star requires all listed conditions; silence or an
+email alone is insufficient. Chat reports are not automatically email reports.
+Internal code/patch contributions without a GHSA use three stars where a fix
+is documented. A detailed PoC alone does not substitute for suggested fixes
+under this ranking. Suggested remediation can be prose; a patch is optional.
 
-## Findings
+## Corrections and limits
 
-All **111 index entries** have 1–5 stars: 25 one-star, 39 two-star,
-4 three-star, 23 four-star and 20 five-star entries. Image-path validation
-previously verified 578 references across 92 pages.
+The index contains **111 entries**; **95 displayed awards changed** and
+**86 linked detail pages changed**. Current index and matching dated detail
+rows were updated together, including legacy five-column rows. Repeated names
+and follow-ups are matched by date; older reports are not conflated with newer
+advisories. Unrelated cross-links do not receive another vulnerability's award.
 
-Matching-name comparison covered **92 index entries** with linked detail rows (including legacy five-column layouts). Remaining entries have no exact matching-name linked row; they remain unverified.
+**21 entries remain evidence-limited**, marked below. Two-star assignments in
+those rows reflect the available public evidence and require historical/private
+confirmation. No one-star award is inferred without an email and an unanswered
+additional-information request. InvisibleBleed's page describes a chat report
+and disappearance, which does not establish that condition. BruteBleed's CVE
+alone also does not establish email nonresponse. Older advisory links on the
+index can identify a different issue: matching uses report subject, rather than
+blindly treating an existing link as proof of a researcher's contribution.
 
-| Entry | Index stars | Detail page stars | Problem |
-| --- | ---: | --- | --- |
-| CasBleed | 2 | [casbleed/index.html](casbleed/index.html) — 1 | Display disagreement; confirm same date/report and intended award. |
-| OwnerBleed | 3 | [ownerbleed/index.html](ownerbleed/index.html) — 4 | Display disagreement; confirm same date/report and intended award. |
-| RoleBleed | 3 | [rolebleed/index.html](rolebleed/index.html) — 4 | Display disagreement; confirm same date/report and intended award. |
-| ErrorBleed | 3 | [errorbleed/index.html](errorbleed/index.html) — 4 | Display disagreement; confirm same date/report and intended award. |
-| CommentWriteBleed | 3 | [commentwritebleed/index.html](commentwritebleed/index.html) — 4 | Display disagreement; confirm same date/report and intended award. |
-| SignupBleed | 2 | [signupbleed/index.html](signupbleed/index.html) — 1 | Display disagreement; confirm same date/report and intended award. |
+Historical timeline entries may describe the old bonus at the time it was
+awarded; those records remain historical. The current award is the main
+contribution row. Private/unpublished advisories are not assumed absent solely
+because they are missing from the public catalogue.
 
-Follow-up entries may legitimately differ from an older award on a shared
-page (for example MimeBleed follow-up); those are not counted as matching-name
-inconsistencies. Related-vulnerability cross-links are also excluded. Reused
-names such as CasBleed/FileBleed need date/report-aware matching before a
-same-name discrepancy can be treated as an erroneous award.
+## Award inventory
 
-High-priority calibration review: OIDCBleed and ReadOnlyBleed have five
-stars with only “detailed report” in the Process summary, while several
-four-star entries have the same summary. Their private reports or full page
-evidence must establish the exceptional additional contribution. LDAPBleed
-has four stars and a supplied fix, with public reporting noted; verify the
-actual disclosure timeline and contribution rather than applying an inferred
-penalty. Recent one-star advisory entries deserve report-level review because
-the public summaries describe remediation, not the supplied report quality.
+| Entry | Date | Previous | Current | GHSA evidence | Reason / remaining review |
+| --- | --- | ---: | ---: | --- | --- |
+| SubtaskDepositBleed | 2026-09-14 | 1 | 5 | [GHSA-483r-px2x-cjcg](https://github.com/wekan/wekan/security/advisories/GHSA-483r-px2x-cjcg) | Published GHSA details and suggested remediation verified. |
+| LinkedWriteBleed | 2026-09-14 | 1 | 5 | [GHSA-jp39-3pf7-q5ww](https://github.com/wekan/wekan/security/advisories/GHSA-jp39-3pf7-q5ww) | Published GHSA details and suggested remediation verified. |
+| InvitationBoardBleed | 2026-09-14 | 1 | 5 | [GHSA-p9qq-frc9-qfhm](https://github.com/wekan/wekan/security/advisories/GHSA-p9qq-frc9-qfhm) | Published GHSA details and suggested remediation verified. |
+| InviteProfileBleed | 2026-09-14 | 1 | 5 | [GHSA-h2g5-h8g8-grxf](https://github.com/wekan/wekan/security/advisories/GHSA-h2g5-h8g8-grxf) | Published GHSA details and suggested remediation verified. |
+| RuleButtonBleed | 2026-09-14 | 1 | 5 | [GHSA-7c42-4mc2-99g2](https://github.com/wekan/wekan/security/advisories/GHSA-7c42-4mc2-99g2) | Published GHSA details and suggested remediation verified. |
+| ManageBoardBleed | 2026-09-14 | 1 | 5 | [GHSA-v368-jwmq-53h8](https://github.com/wekan/wekan/security/advisories/GHSA-v368-jwmq-53h8) | Published GHSA details and suggested remediation verified. |
+| CommentBoundaryBleed | 2026-09-14 | 1 | 5 | [GHSA-47xv-5hh2-x5c9](https://github.com/wekan/wekan/security/advisories/GHSA-47xv-5hh2-x5c9) | Published GHSA details and suggested remediation verified. |
+| MutationBleed | 2026-09-14 | 1 | 5 | [GHSA-8g7j-c3xh-36h7](https://github.com/wekan/wekan/security/advisories/GHSA-8g7j-c3xh-36h7) | Published GHSA details and suggested remediation verified. |
+| VisibilityBleed | 2026-09-14 | 1 | 5 | [GHSA-9qg3-jfch-jwqv](https://github.com/wekan/wekan/security/advisories/GHSA-9qg3-jfch-jwqv) | Published GHSA details and suggested remediation verified. |
+| WipeBleed | 2026-09-09 | 2 | 5 | [GHSA-xhc4-477v-jmg3](https://github.com/wekan/wekan/security/advisories/GHSA-xhc4-477v-jmg3) | Published GHSA details and suggested remediation verified. |
+| UploadPathBleed | 2026-09-09 | 2 | 5 | [GHSA-32gm-7gcp-w2c6](https://github.com/wekan/wekan/security/advisories/GHSA-32gm-7gcp-w2c6) | Published GHSA details and suggested remediation verified. |
+| PortraitBleed | 2026-09-09 | 2 | 5 | [GHSA-6h68-m988-228w](https://github.com/wekan/wekan/security/advisories/GHSA-6h68-m988-228w) | Published GHSA details and suggested remediation verified. |
+| RelicAvatarBleed | 2026-09-09 | 2 | 5 | [GHSA-49wg-hc9w-fw45](https://github.com/wekan/wekan/security/advisories/GHSA-49wg-hc9w-fw45) | Published GHSA details and suggested remediation verified. |
+| SheetColorBleed | 2026-09-05 | 2 | 5 | [GHSA-crq2-phg8-4xvg](https://github.com/wekan/wekan/security/advisories/GHSA-crq2-phg8-4xvg) | Published GHSA details and suggested remediation verified. |
+| MimeBleed follow-up | 2026-09-01 | 2 | 5 | [GHSA-rv5g-5p4g-3v89](https://github.com/wekan/wekan/security/advisories/GHSA-rv5g-5p4g-3v89) | Published GHSA details and suggested remediation verified. |
+| CookieTokenBleed | 2026-08-29 | 2 | 4 | [GHSA-8phm-9rqm-v9hc](https://github.com/wekan/wekan/security/advisories/GHSA-8phm-9rqm-v9hc) | Published GHSA details verified; no explicit suggested-fix section/prose found. Review implied advice separately. |
+| MailTitleBleed | 2026-08-29 | 2 | 4 | [GHSA-hp9m-vff5-7pvw](https://github.com/wekan/wekan/security/advisories/GHSA-hp9m-vff5-7pvw) | Published GHSA details verified; no explicit suggested-fix section/prose found. Review implied advice separately. |
+| SearchBleed | 2026-08-29 | 2 | 5 | [GHSA-33h9-rc5h-667p](https://github.com/wekan/wekan/security/advisories/GHSA-33h9-rc5h-667p) | Published GHSA details and suggested remediation verified. |
+| RuleBleed | 2026-08-29 | 2 | 5 | [GHSA-9w4x-hf2r-hc9v](https://github.com/wekan/wekan/security/advisories/GHSA-9w4x-hf2r-hc9v) | Published GHSA details and suggested remediation verified. |
+| AvatarMimeBleed | 2026-08-28 | 2 | 5 | [GHSA-4mjm-vj9f-p629](https://github.com/wekan/wekan/security/advisories/GHSA-4mjm-vj9f-p629) | Published GHSA details and suggested remediation verified. |
+| LegacyAttachBleed | 2026-08-28 | 2 | 5 | [GHSA-xcxp-hx9w-q5q9](https://github.com/wekan/wekan/security/advisories/GHSA-xcxp-hx9w-q5q9) | Published GHSA details and suggested remediation verified. |
+| SwimlaneBleed | 2026-08-28 | 2 | 5 | [GHSA-2x89-6mq2-834r](https://github.com/wekan/wekan/security/advisories/GHSA-2x89-6mq2-834r) | Published GHSA details and suggested remediation verified. |
+| HostnameBleed | 2026-08-27 | 2 | 3 | No matched published advisory | No matching GHSA; code review/patch contribution recorded (not a researcher advisory). |
+| SessionBleed | 2026-08-27 | 2 | 5 | [GHSA-5gcv-2hhj-7rg9](https://github.com/wekan/wekan/security/advisories/GHSA-5gcv-2hhj-7rg9) | Published GHSA details and suggested remediation verified. |
+| ClaimBleed | 2026-08-26 | 2 | 5 | [GHSA-xwv8-m73h-68vg](https://github.com/wekan/wekan/security/advisories/GHSA-xwv8-m73h-68vg) | Published GHSA details and suggested remediation verified. |
+| MembershipBleed | 2026-08-26 | 2 | 5 | [GHSA-5r3j-h65h-fg22](https://github.com/wekan/wekan/security/advisories/GHSA-5r3j-h65h-fg22) | Published GHSA details and suggested remediation verified. |
+| ResetBleed | 2026-08-26 | 2 | 5 | [GHSA-9cgp-m28v-64xv](https://github.com/wekan/wekan/security/advisories/GHSA-9cgp-m28v-64xv) | Published GHSA details and suggested remediation verified. |
+| UserSearchBleed | 2026-08-25 | 4 | 5 | [GHSA-88mv-h439-rj8j](https://github.com/wekan/wekan/security/advisories/GHSA-88mv-h439-rj8j), [GHSA-9846-cj96-6hv5](https://github.com/wekan/wekan/security/advisories/GHSA-9846-cj96-6hv5) | Published GHSA details and suggested remediation verified. |
+| MiniProfileBleed | 2026-08-25 | 2 | 5 | [GHSA-c3ch-34g5-x3x7](https://github.com/wekan/wekan/security/advisories/GHSA-c3ch-34g5-x3x7) | Published GHSA details and suggested remediation verified. |
+| PositionHistoryBleed | 2026-08-25 | 4 | 5 | [GHSA-5fc2-m4gw-j6qq](https://github.com/wekan/wekan/security/advisories/GHSA-5fc2-m4gw-j6qq) | Published GHSA details and suggested remediation verified. |
+| SubtaskExportBleed | 2026-08-25 | 4 | 5 | [GHSA-hvvr-j425-5xxm](https://github.com/wekan/wekan/security/advisories/GHSA-hvvr-j425-5xxm) | Published GHSA details and suggested remediation verified. |
+| CasBleed | 2026-08-25 | 2 | 5 | [GHSA-5797-pjx8-9h6m](https://github.com/wekan/wekan/security/advisories/GHSA-5797-pjx8-9h6m) | Published GHSA details and suggested remediation verified. |
+| ImportBleed | 2026-08-23 | 4 | 5 | [GHSA-qp32-wqxw-wq3h](https://github.com/wekan/wekan/security/advisories/GHSA-qp32-wqxw-wq3h) | Published GHSA details and suggested remediation verified. |
+| ChecklistWriteBleed | 2026-08-22 | 4 | 5 | [GHSA-cp24-5m9m-wm97](https://github.com/wekan/wekan/security/advisories/GHSA-cp24-5m9m-wm97) | Published GHSA details and suggested remediation verified. |
+| TokenAuditBleed | 2026-08-22 | 4 | 5 | [GHSA-5r57-9vj7-c64f](https://github.com/wekan/wekan/security/advisories/GHSA-5r57-9vj7-c64f) | Published GHSA details and suggested remediation verified. |
+| OwnerBleed | 2026-08-22 | 3 | 5 | [GHSA-6jvj-85q3-6q2m](https://github.com/wekan/wekan/security/advisories/GHSA-6jvj-85q3-6q2m) | Published GHSA details and suggested remediation verified. |
+| RoleBleed | 2026-08-22 | 3 | 5 | [GHSA-qf5c-63jx-mpv4](https://github.com/wekan/wekan/security/advisories/GHSA-qf5c-63jx-mpv4) | Published GHSA details and suggested remediation verified. |
+| ErrorBleed | 2026-08-22 | 3 | 5 | [GHSA-h59p-76c3-8345](https://github.com/wekan/wekan/security/advisories/GHSA-h59p-76c3-8345) | Published GHSA details and suggested remediation verified. |
+| CommentWriteBleed | 2026-08-22 | 3 | 5 | [GHSA-5r4m-5xx6-96jf](https://github.com/wekan/wekan/security/advisories/GHSA-5r4m-5xx6-96jf) | Published GHSA details and suggested remediation verified. |
+| TenantBleed | 2026-08-21 | 4 | 5 | [GHSA-p4cq-83j9-7g73](https://github.com/wekan/wekan/security/advisories/GHSA-p4cq-83j9-7g73) | Published GHSA details and suggested remediation verified. |
+| AssignedBleed | 2026-08-21 | 4 | 5 | [GHSA-f396-42fx-vr88](https://github.com/wekan/wekan/security/advisories/GHSA-f396-42fx-vr88) | Published GHSA details and suggested remediation verified. |
+| CalendarBleed | 2026-08-21 | 4 | 5 | [GHSA-fpm6-r5fg-2mrg](https://github.com/wekan/wekan/security/advisories/GHSA-fpm6-r5fg-2mrg) | Published GHSA details and suggested remediation verified. |
+| RouteBleed | 2026-08-17 | 2 | 3 | No matched published advisory | No matching GHSA; code review/patch contribution recorded (not a researcher advisory). |
+| JamBleed | 2026-08-16 | 4 | 5 | [GHSA-rf3w-rj48-jxcc](https://github.com/wekan/wekan/security/advisories/GHSA-rf3w-rj48-jxcc) | Published GHSA details and suggested remediation verified. |
+| SignupBleed | 2026-08-16 | 2 | 3 | No matched published advisory | No matching GHSA; code review/patch contribution recorded (not a researcher advisory). |
+| PurgeBleed | 2026-08-15 | 2 | 5 | [GHSA-8cqr-x6m5-v4w6](https://github.com/wekan/wekan/security/advisories/GHSA-8cqr-x6m5-v4w6) | Published GHSA details and suggested remediation verified. |
+| HashBleed | 2026-08-15 | 2 | 5 | [GHSA-6qpx-x7vr-p9w6](https://github.com/wekan/wekan/security/advisories/GHSA-6qpx-x7vr-p9w6) | Published GHSA details and suggested remediation verified. |
+| GuestBleed | 2026-08-15 | 2 | 5 | [GHSA-whxm-pxgj-7wqv](https://github.com/wekan/wekan/security/advisories/GHSA-whxm-pxgj-7wqv) | Published GHSA details and suggested remediation verified. |
+| StaleBleed | 2026-08-15 | 2 | 5 | [GHSA-r8r3-23vr-8jh6](https://github.com/wekan/wekan/security/advisories/GHSA-r8r3-23vr-8jh6) | Published GHSA details and suggested remediation verified. |
+| AuthorBleed | 2026-08-15 | 2 | 5 | [GHSA-6jr3-42jf-vhm5](https://github.com/wekan/wekan/security/advisories/GHSA-6jr3-42jf-vhm5) | Published GHSA details and suggested remediation verified. |
+| PassBleed | 2026-08-11 | 2 | 5 | [GHSA-6p5m-f9p2-wqm5](https://github.com/wekan/wekan/security/advisories/GHSA-6p5m-f9p2-wqm5) | Published GHSA details and suggested remediation verified. |
+| WhereBleed | 2026-08-11 | 2 | 5 | [GHSA-phm4-4v26-j2vq](https://github.com/wekan/wekan/security/advisories/GHSA-phm4-4v26-j2vq) | Published GHSA details and suggested remediation verified. |
+| PathBleed | 2026-08-09 | 2 | 5 | [GHSA-4mxf-m8pq-xc9p](https://github.com/wekan/wekan/security/advisories/GHSA-4mxf-m8pq-xc9p) | Published GHSA details and suggested remediation verified. |
+| ParentBleed | 2026-08-09 | 1 | 5 | [GHSA-jvv9-498p-hxrg](https://github.com/wekan/wekan/security/advisories/GHSA-jvv9-498p-hxrg) | Published GHSA details and suggested remediation verified. |
+| RevokeBleed | 2026-08-09 | 1 | 5 | [GHSA-gwc4-fw7p-gw58](https://github.com/wekan/wekan/security/advisories/GHSA-gwc4-fw7p-gw58) | Published GHSA details and suggested remediation verified. |
+| CommentBleed | 2026-08-09 | 1 | 5 | [GHSA-pqr4-rxgp-hv2m](https://github.com/wekan/wekan/security/advisories/GHSA-pqr4-rxgp-hv2m) | Published GHSA details and suggested remediation verified. |
+| PatternBleed | 2026-08-08 | 2 | 3 | No matched published advisory | No matching GHSA; code review/patch contribution recorded (not a researcher advisory). |
+| LockoutBleed | 2026-08-04 | 1 | 5 | [GHSA-2g94-9x3m-hv37](https://github.com/wekan/wekan/security/advisories/GHSA-2g94-9x3m-hv37) | Published GHSA details and suggested remediation verified. |
+| FollowBleed | 2026-08-03 | 1 | 5 | [GHSA-j9p2-jm73-p549](https://github.com/wekan/wekan/security/advisories/GHSA-j9p2-jm73-p549) | Published GHSA details and suggested remediation verified. |
+| TransitBleed | 2026-08-03 | 1 | 5 | [GHSA-c5xr-mg26-vq5w](https://github.com/wekan/wekan/security/advisories/GHSA-c5xr-mg26-vq5w) | Published GHSA details and suggested remediation verified. |
+| CrashBleed | 2026-07-26 | 2 | 5 | [GHSA-3gcg-g6rf-w2rx](https://github.com/wekan/wekan/security/advisories/GHSA-3gcg-g6rf-w2rx) | Published GHSA details and suggested remediation verified. |
+| ZipBleed | 2026-07-25 | 1 | 3 | No matched published advisory | No matching GHSA; code review/patch contribution recorded (not a researcher advisory). |
+| ExportBleed | 2026-07-22 | 1 | 5 | [GHSA-8r5p-4q9j-f5jx](https://github.com/wekan/wekan/security/advisories/GHSA-8r5p-4q9j-f5jx) | Published GHSA details and suggested remediation verified. |
+| RedirectBleed | 2026-07-19 | 1 | 2 | No matched published advisory | No matching GHSA and no researcher-suggested fix documented; private/historical evidence may change this. **Evidence-limited.** |
+| SourceBleed | 2026-07-19 | 1 | 2 | No matched published advisory | No matching GHSA and no researcher-suggested fix documented; private/historical evidence may change this. **Evidence-limited.** |
+| LiveBleed | 2026-07-19 | 1 | 2 | No matched published advisory | No matching GHSA and no researcher-suggested fix documented; private/historical evidence may change this. **Evidence-limited.** |
+| CasBleed | 2026-07-19 | 1 | 2 | No matched published advisory | No matching GHSA and no researcher-suggested fix documented; private/historical evidence may change this. **Evidence-limited.** |
+| MetricsBleed | 2026-07-19 | 1 | 2 | No matched published advisory | No matching GHSA and no researcher-suggested fix documented; private/historical evidence may change this. **Evidence-limited.** |
+| ImpersonateBleed | 2026-07-19 | 1 | 2 | No matched published advisory | No matching GHSA and no researcher-suggested fix documented; private/historical evidence may change this. **Evidence-limited.** |
+| InviteBleed | 2026-07-19 | 1 | 2 | No matched published advisory | No matching GHSA and no researcher-suggested fix documented; private/historical evidence may change this. **Evidence-limited.** |
+| SpliceBleed | 2026-07-22 | 2 | 3 | No matched published advisory | No matching GHSA; code review/patch contribution recorded (not a researcher advisory). |
+| IdentityBleed | 2026-07-22 | 2 | 3 | No matched published advisory | No matching GHSA; code review/patch contribution recorded (not a researcher advisory). |
+| EscapeBleed | 2026-07-17 | 2 | 3 | No matched published advisory | No matching GHSA; code review/patch contribution recorded (not a researcher advisory). |
+| RandomBleed | 2026-07-17 | 2 | 3 | No matched published advisory | No matching GHSA; code review/patch contribution recorded (not a researcher advisory). |
+| MimeBleed | 2026-07-14 | 5 | 4 | [GHSA-jhph-whx8-wq6p](https://github.com/wekan/wekan/security/advisories/GHSA-jhph-whx8-wq6p) | Published GHSA details verified; no explicit suggested-fix section/prose found. Review implied advice separately. |
+| SortBleed | 2026-07-13 | 5 | 5 | [GHSA-xm8x-c8wg-jhmf](https://github.com/wekan/wekan/security/advisories/GHSA-xm8x-c8wg-jhmf) | Published GHSA details and suggested remediation verified. |
+| ScannerBleed | 2026-07-05 | 5 | 5 | [GHSA-x3xm-pxrv-jg7p](https://github.com/wekan/wekan/security/advisories/GHSA-x3xm-pxrv-jg7p) | Published GHSA details and suggested remediation verified. |
+| ExcelBleed | 2026-07-05 | 5 | 5 | [GHSA-mwq8-ccpm-r533](https://github.com/wekan/wekan/security/advisories/GHSA-mwq8-ccpm-r533) | Published GHSA details and suggested remediation verified. |
+| DnsBleed | 2026-07-01 | 5 | 5 | [GHSA-66m2-4wfr-c45p](https://github.com/wekan/wekan/security/advisories/GHSA-66m2-4wfr-c45p) | Published GHSA details and suggested remediation verified. |
+| ChecklistBleed | 2026-06-20 | 5 | 5 | [GHSA-gv8h-5p3p-6hx7](https://github.com/wekan/wekan/security/advisories/GHSA-gv8h-5p3p-6hx7) | Published GHSA details and suggested remediation verified. |
+| InputBleed | 2026-06-18 | 2 | 3 | No matched published advisory | No matching GHSA; code review/patch contribution recorded (not a researcher advisory). |
+| ProxyBleed | 2026-06-15 | 5 | 5 | [GHSA-jggc-qvfc-jr6x](https://github.com/wekan/wekan/security/advisories/GHSA-jggc-qvfc-jr6x) | Published GHSA details and suggested remediation verified. |
+| BoardBleed | 2026-06-11 | 5 | 4 | [GHSA-gm7v-pc38-53jr](https://github.com/wekan/wekan/security/advisories/GHSA-gm7v-pc38-53jr) | Published GHSA details verified; no explicit suggested-fix section/prose found. Review implied advice separately. |
+| TokenBleed | 2026-06-10 | 5 | 5 | [GHSA-cv95-8h7c-2ffq](https://github.com/wekan/wekan/security/advisories/GHSA-cv95-8h7c-2ffq) | Published GHSA details and suggested remediation verified. |
+| CloneBleed | 2026-06-04 | 5 | 5 | [GHSA-qfqv-42qw-vvwh](https://github.com/wekan/wekan/security/advisories/GHSA-qfqv-42qw-vvwh) | Published GHSA details and suggested remediation verified. |
+| OIDCBleed | 2026-05-31 | 5 | 5 | [GHSA-mp7g-hj5q-gxhq](https://github.com/wekan/wekan/security/advisories/GHSA-mp7g-hj5q-gxhq) | Published GHSA details and suggested remediation verified. |
+| ReadOnlyBleed | 2026-05-31 | 5 | 5 | [GHSA-6733-4wgq-8xvr](https://github.com/wekan/wekan/security/advisories/GHSA-6733-4wgq-8xvr) | Published GHSA details and suggested remediation verified. |
+| WebhookBleed | 2026-05-31 | 4 | 4 | No matched published advisory | Advisory exists or is claimed but not matched to the published catalogue; retain pending verification. **Evidence-limited.** |
+| FileBleed | 2026-05-27 | 4 | 4 | [GHSA-g6vm-7757-pr88](https://github.com/wekan/wekan/security/advisories/GHSA-g6vm-7757-pr88) | Published GHSA details verified; no explicit suggested-fix section/prose found. Review implied advice separately. |
+| BFLABleed | 2026-05-19 | 5 | 5 | [GHSA-7w2h-g83c-jqrp](https://github.com/wekan/wekan/security/advisories/GHSA-7w2h-g83c-jqrp) | Published GHSA details and suggested remediation verified. |
+| AuthBleed | 2026-05-07 11:39 EET | 5 | 2 | No matched published advisory | No matching GHSA and no researcher-suggested fix documented; private/historical evidence may change this. **Evidence-limited.** |
+| AvatarBleed | 2026-05-03 13:57 EET | 5 | 5 | [GHSA-35j7-h385-2q9g](https://github.com/wekan/wekan/security/advisories/GHSA-35j7-h385-2q9g) | Published GHSA details and suggested remediation verified. |
+| IntegrationBleed | 2026-02-24 15:09 EET | 5 | 5 | [GHSA-hc3x-hq3m-663q](https://github.com/wekan/wekan/security/advisories/GHSA-hc3x-hq3m-663q) | Published GHSA details and suggested remediation verified. |
+| AnchorBleed | 2026-02-12 11:16 EET | 5 | 3 | No matched published advisory | No matching GHSA; supplied fix/contribution documented in Process. |
+| FloppyBleed | 2026-01-24 18:30 EET | 4 | 2 | No matched published advisory | No matching GHSA and no researcher-suggested fix documented; private/historical evidence may change this. **Evidence-limited.** |
+| SnowBleed | 2026-01-05 15:46 EET | 4 | 2 | No matched published advisory | No matching GHSA and no researcher-suggested fix documented; private/historical evidence may change this. **Evidence-limited.** |
+| MegaBleed | 2025-12-26 18:39 EET | 4 | 2 | No matched published advisory | No matching GHSA and no researcher-suggested fix documented; private/historical evidence may change this. **Evidence-limited.** |
+| SpaceBleed | 2025-11-02 03:29 EET | 4 | 2 | No matched published advisory | No matching GHSA and no researcher-suggested fix documented; private/historical evidence may change this. **Evidence-limited.** |
+| FieldBleed | JVN: 2021-2025 Many fixed. | 4 | 2 | No matched published advisory | No matching GHSA and no researcher-suggested fix documented; private/historical evidence may change this. **Evidence-limited.** |
+| SocialBleed | 2023-05-11 19.14 EET | 4 | 2 | No matched published advisory | No matching GHSA and no researcher-suggested fix documented; private/historical evidence may change this. **Evidence-limited.** |
+| AdminBleed | 2023-04-24 16.40 EET | 4 | 2 | No matched published advisory | No matching GHSA and no researcher-suggested fix documented; private/historical evidence may change this. **Evidence-limited.** |
+| InvisibleBleed | 2023-04-24 03.35 EET | 2 | 2 | No matched published advisory | No matching GHSA and no researcher-suggested fix documented; private/historical evidence may change this. **Evidence-limited.** |
+| ReactionBleed | 2023-02-28 12.36 EET | 5 | 3 | No matched published advisory | No matching GHSA; supplied fix/contribution documented in Process. |
+| FileBleed | 2023-02-16 17.35 EET | 4 | 2 | No matched published advisory | No matching GHSA and no researcher-suggested fix documented; private/historical evidence may change this. **Evidence-limited.** |
+| Emailbleed | 2021-01-26 12.42 EET | 4 | 2 | No matched published advisory | No matching GHSA and no researcher-suggested fix documented; private/historical evidence may change this. **Evidence-limited.** |
+| LDAPBleed | 2021-01-26 0:42 EET | 4 | 3 | No matched published advisory | No matching GHSA; supplied fix/contribution documented in Process. |
+| DUEBleed | 2021-01-11 EET | 2 | 3 | No matched published advisory | No matching GHSA; supplied fix/contribution documented in Process. |
+| BypassBleed | 2020-02-26 01:36 EET | 5 | 3 | No matched published advisory | No matching GHSA; supplied fix/contribution documented in Process. |
+| UserBleed | 2018-06-12 | 5 | 3 | No matched published advisory | No matching GHSA; supplied fix/contribution documented in Process. |
+| BruteBleed | 2018-06-12 | 1 | 2 | No matched published advisory | No matching GHSA and no researcher-suggested fix documented; private/historical evidence may change this. **Evidence-limited.** |
+| FrameBleed | 2018-03-25 | 4 | 2 | No matched published advisory | No matching GHSA and no researcher-suggested fix documented; private/historical evidence may change this. **Evidence-limited.** |
 
-## Entry-by-entry evidence inventory
+## Verification and follow-up
 
-These are public Process summaries, not independent verification of private
-reports. “Review” means the award is not proven against an adopted rubric;
-it does not recommend reducing an award.
-
-| Entry | Stars | Documented Process evidence | Assessment |
-| --- | ---: | --- | --- |
-| SubtaskDepositBleed | 1 | Responsible disclosure through a saved GitHub security advisory; current code and sibling paths reviewed during remediation. | Review report-level evidence; current summary does not establish a calibrated award. |
-| LinkedWriteBleed | 1 | Responsible disclosure through a saved GitHub security advisory; current code and sibling paths reviewed during remediation. | Review report-level evidence; current summary does not establish a calibrated award. |
-| InvitationBoardBleed | 1 | Responsible disclosure through a saved GitHub security advisory; current code and sibling paths reviewed during remediation. | Review report-level evidence; current summary does not establish a calibrated award. |
-| InviteProfileBleed | 1 | Responsible disclosure through a saved GitHub security advisory; current code and sibling paths reviewed during remediation. | Review report-level evidence; current summary does not establish a calibrated award. |
-| RuleButtonBleed | 1 | Responsible disclosure through a saved GitHub security advisory; current code and sibling paths reviewed during remediation. | Review report-level evidence; current summary does not establish a calibrated award. |
-| ManageBoardBleed | 1 | Responsible disclosure through a saved GitHub security advisory; current code and sibling paths reviewed during remediation. | Review report-level evidence; current summary does not establish a calibrated award. |
-| CommentBoundaryBleed | 1 | Responsible disclosure through a saved GitHub security advisory; REST and DDP comment boundary paths reviewed during remediation. | Review report-level evidence; current summary does not establish a calibrated award. |
-| MutationBleed | 1 | Responsible disclosure through a saved GitHub security advisory; membership-only method guards and their siblings reviewed during remediation. | Review report-level evidence; current summary does not establish a calibrated award. |
-| VisibilityBleed | 1 | Responsible disclosure through a saved GitHub security advisory; sibling path found during remediation. | Review report-level evidence; current summary does not establish a calibrated award. |
-| WipeBleed | 2 | Found and fixed during an internal security review of Attachments/Avatars (ostrio:files) upload, download and removal authorization. | Review report-level evidence; current summary does not establish a calibrated award. |
-| UploadPathBleed | 2 | Found and fixed during an internal security review of Attachments/Avatars (ostrio:files) upload, download and removal authorization. | Review report-level evidence; current summary does not establish a calibrated award. |
-| PortraitBleed | 2 | Found and fixed during an internal security review of Attachments/Avatars (ostrio:files) upload, download and removal authorization. | Review report-level evidence; current summary does not establish a calibrated award. |
-| RelicAvatarBleed | 2 | Found and fixed during an internal security review of Attachments/Avatars (ostrio:files) upload, download and removal authorization. | Review report-level evidence; current summary does not establish a calibrated award. |
-| SheetColorBleed | 2 | Coordinated disclosure through a GitHub security advisory, reproduced against the vendored XLSX parser and sheet-tab CSS serialization. | Review report-level evidence; current summary does not establish a calibrated award. |
-| MimeBleed follow-up | 2 | Coordinated disclosure through a GitHub security advisory, reproduced against upload validation and the original Meteor-Files route on every storage backend. | Review report-level evidence; current summary does not establish a calibrated award. |
-| CookieTokenBleed | 2 | Coordinated disclosure through a GitHub security advisory, then verified against Meteor 3.5's maintained native HttpOnly resume-token flow. | Review report-level evidence; current summary does not establish a calibrated award. |
-| MailTitleBleed | 2 | Coordinated disclosure through a GitHub security advisory, traced from stored activity values through localization to HTML email delivery. | Review report-level evidence; current summary does not establish a calibrated award. |
-| SearchBleed | 2 | Coordinated disclosure through a GitHub security advisory, reproduced against the global-search DDP publication and its stored pagination selectors. | Review report-level evidence; current summary does not establish a calibrated award. |
-| RuleBleed | 2 | Coordinated disclosure through a GitHub security advisory, verified against DDP-created, scheduled and legacy automation paths. | Review report-level evidence; current summary does not establish a calibrated award. |
-| AvatarMimeBleed | 2 | Coordinated disclosure through a GitHub security advisory, reproduced against both current and legacy avatar routes. | Review report-level evidence; current summary does not establish a calibrated award. |
-| LegacyAttachBleed | 2 | Coordinated disclosure through a GitHub security advisory, reproduced against the CollectionFS-compatible attachment route. | Review report-level evidence; current summary does not establish a calibrated award. |
-| SwimlaneBleed | 2 | Coordinated disclosure through a GitHub security advisory, reproduced with a read-only board member calling the Meteor method directly. | Review report-level evidence; current summary does not establish a calibrated award. |
-| HostnameBleed | 2 | Automated code scanning flagged hostname examples used as incomplete regular expressions. | Review report-level evidence; current summary does not establish a calibrated award. |
-| SessionBleed | 2 | Coordinated disclosure through a GitHub security advisory, reproduced against the unauthenticated global-search pagination publications. | Review report-level evidence; current summary does not establish a calibrated award. |
-| ClaimBleed | 2 | Coordinated disclosure through a GitHub security advisory, validated against trusted userinfo and attacker-controlled access-token claims. | Review report-level evidence; current summary does not establish a calibrated award. |
-| MembershipBleed | 2 | Coordinated disclosure through a GitHub security advisory, reproduced against the unauthenticated DDP publication. | Review report-level evidence; current summary does not establish a calibrated award. |
-| ResetBleed | 2 | Coordinated disclosure through a GitHub security advisory, reproduced against Meteor's unauthenticated account-recovery methods. | Review report-level evidence; current summary does not establish a calibrated award. |
-| UserSearchBleed | 4 | Two coordinated GitHub security advisories were validated together against both user-search DDP paths. | Review report-level reproduction and analysis; summary alone does not certify 4. |
-| MiniProfileBleed | 2 | Coordinated disclosure through a GitHub security advisory, validated against the unauthenticated DDP publication. | Review report-level evidence; current summary does not establish a calibrated award. |
-| PositionHistoryBleed | 4 | Coordinated disclosure through a GitHub security advisory, validated at insertion, method and model boundaries. | Review report-level reproduction and analysis; summary alone does not certify 4. |
-| SubtaskExportBleed | 4 | Coordinated disclosure through a GitHub security advisory, validated across JSON, ZIP, Excel and PDF exports. | Review report-level reproduction and analysis; summary alone does not certify 4. |
-| CasBleed | 2 | Coordinated disclosure through a GitHub security advisory, compared with WeKan's explicit LDAP and OIDC merge controls. | Review report-level evidence; current summary does not establish a calibrated award. |
-| ImportBleed | 4 | Coordinated disclosure through a GitHub security advisory, validated against the current DDP import methods and their direct database write chain. | Review report-level reproduction and analysis; summary alone does not certify 4. |
-| ChecklistWriteBleed | 4 | Coordinated disclosure through a GitHub security advisory, validated against current REST handlers. | Review report-level reproduction and analysis; summary alone does not certify 4. |
-| TokenAuditBleed | 4 | Coordinated disclosure through a GitHub security advisory, validated against current REST handlers. | Review report-level reproduction and analysis; summary alone does not certify 4. |
-| OwnerBleed | 3 | Coordinated disclosure through a GitHub security advisory, validated against current REST handlers. | Review report-level evidence; current summary does not establish a calibrated award. |
-| RoleBleed | 3 | Coordinated disclosure through a GitHub security advisory, validated against current REST handlers. | Review report-level evidence; current summary does not establish a calibrated award. |
-| ErrorBleed | 3 | Coordinated disclosure through a GitHub security advisory, validated against current REST handlers. | Review report-level evidence; current summary does not establish a calibrated award. |
-| CommentWriteBleed | 3 | Coordinated disclosure through a GitHub security advisory, validated against current REST handlers. | Review report-level evidence; current summary does not establish a calibrated award. |
-| TenantBleed | 4 | Coordinated disclosure through a GitHub security advisory, with insert, update and remove reproduced on both collections. | Review report-level reproduction and analysis; summary alone does not certify 4. |
-| AssignedBleed | 4 | Coordinated disclosure through a GitHub security advisory, with a working v11.06 reproduction and root-cause analysis of the missing role flag. | Review report-level reproduction and analysis; summary alone does not certify 4. |
-| CalendarBleed | 4 | Coordinated disclosure through a GitHub security advisory, with a working v11.06 reproduction and the canonical authorization helper identified. | Review report-level reproduction and analysis; summary alone does not certify 4. |
-| RouteBleed | 2 | Automated code scanning flagged incomplete regular-expression escaping. | Review report-level evidence; current summary does not establish a calibrated award. |
-| JamBleed | 4 | Coordinated disclosure through a GitHub security advisory, with a lab reproduction on v10.91, an A/B harness against a patched build, a CVSS assessment the reporter marked as preliminary and offered for independent review, and a 90-day window offered rather than assumed. | Review report-level reproduction and analysis; summary alone does not certify 4. |
-| SignupBleed | 2 | Found while reviewing a pull request about the opposite symptom. | Review report-level evidence; current summary does not establish a calibrated award. |
-| PurgeBleed | 2 | Coordinated disclosure via GitHub Security Advisory GHSA-8cqr-x6m5-v4w6. | Review report-level evidence; current summary does not establish a calibrated award. |
-| HashBleed | 2 | Coordinated disclosure via GitHub Security Advisory GHSA-6qpx-x7vr-p9w6. | Review report-level evidence; current summary does not establish a calibrated award. |
-| GuestBleed | 2 | Coordinated disclosure via GitHub Security Advisory GHSA-whxm-pxgj-7wqv. | Review report-level evidence; current summary does not establish a calibrated award. |
-| StaleBleed | 2 | Coordinated disclosure via GitHub Security Advisory GHSA-r8r3-23vr-8jh6. | Review report-level evidence; current summary does not establish a calibrated award. |
-| AuthorBleed | 2 | Coordinated disclosure via GitHub Security Advisory GHSA-6jr3-42jf-vhm5. | Review report-level evidence; current summary does not establish a calibrated award. |
-| PassBleed | 2 | Coordinated disclosure via GitHub Security Advisory GHSA-6p5m-f9p2-wqm5. | Review report-level evidence; current summary does not establish a calibrated award. |
-| WhereBleed | 2 | Coordinated disclosure via GitHub Security Advisory GHSA-phm4-4v26-j2vq. | Review report-level evidence; current summary does not establish a calibrated award. |
-| PathBleed | 2 | Coordinated disclosure via GitHub Security Advisory GHSA-4mxf-m8pq-xc9p. | Review report-level evidence; current summary does not establish a calibrated award. |
-| ParentBleed | 1 | Coordinated disclosure via GitHub Security Advisory GHSA-jvv9-498p-hxrg. | Review report-level evidence; current summary does not establish a calibrated award. |
-| RevokeBleed | 1 | Coordinated disclosure via GitHub Security Advisory GHSA-gwc4-fw7p-gw58. | Review report-level evidence; current summary does not establish a calibrated award. |
-| CommentBleed | 1 | Coordinated disclosure via GitHub Security Advisory GHSA-pqr4-rxgp-hv2m. | Review report-level evidence; current summary does not establish a calibrated award. |
-| PatternBleed | 2 | Automated code scanning flagged the identity (no-op) replacement. | Review report-level evidence; current summary does not establish a calibrated award. |
-| LockoutBleed | 1 | Coordinated disclosure via GitHub Security Advisory GHSA-2g94-9x3m-hv37. | Review report-level evidence; current summary does not establish a calibrated award. |
-| FollowBleed | 1 | Coordinated disclosure via GitHub Security Advisory GHSA-j9p2-jm73-p549. | Review report-level evidence; current summary does not establish a calibrated award. |
-| TransitBleed | 1 | Coordinated disclosure via GitHub Security Advisory GHSA-c5xr-mg26-vq5w. | Review report-level evidence; current summary does not establish a calibrated award. |
-| CrashBleed | 2 | Coordinated disclosure via GitHub Security Advisory GHSA-3gcg-g6rf-w2rx. | Review report-level evidence; current summary does not establish a calibrated award. |
-| ZipBleed | 1 | Found while reviewing the open dependency pull requests. | Review report-level evidence; current summary does not establish a calibrated award. |
-| ExportBleed | 1 | Privately reported via GitHub Security Advisory GHSA-8r5p-4q9j-f5jx. | Review report-level evidence; current summary does not establish a calibrated award. |
-| RedirectBleed | 1 | Privately reported 8 issues reviewed against WeKan v9.95.0. | Review report-level evidence; current summary does not establish a calibrated award. |
-| SourceBleed | 1 | Privately reported 8 issues reviewed against WeKan v9.95.0. | Review report-level evidence; current summary does not establish a calibrated award. |
-| LiveBleed | 1 | Privately reported 8 issues reviewed against WeKan v9.95.0. | Review report-level evidence; current summary does not establish a calibrated award. |
-| CasBleed | 1 | Privately reported 8 issues reviewed against WeKan v9.95.0. | Review report-level evidence; current summary does not establish a calibrated award. |
-| MetricsBleed | 1 | Privately reported 8 issues reviewed against WeKan v9.95.0. | Review report-level evidence; current summary does not establish a calibrated award. |
-| ImpersonateBleed | 1 | Privately reported 8 issues reviewed against WeKan v9.95.0. | Review report-level evidence; current summary does not establish a calibrated award. |
-| InviteBleed | 1 | Privately reported 8 issues reviewed against WeKan v9.95.0. | Review report-level evidence; current summary does not establish a calibrated award. |
-| SpliceBleed | 2 | Automated code scanning flagged the incomplete multi-character sanitization. | Review report-level evidence; current summary does not establish a calibrated award. |
-| IdentityBleed | 2 | Automated code scanning flagged the identity (no-op) replacement. | Review report-level evidence; current summary does not establish a calibrated award. |
-| EscapeBleed | 2 | Automated code scanning flagged the incomplete escaping. | Review report-level evidence; current summary does not establish a calibrated award. |
-| RandomBleed | 2 | Automated code scanning flagged the biased randomness. | Review report-level evidence; current summary does not establish a calibrated award. |
-| MimeBleed | 5 | Did send detailed report with PoC! | Strong contribution stated; verify report/patch/validation before certifying 5. |
-| SortBleed | 5 | Did send detailed report with PoC! | Strong contribution stated; verify report/patch/validation before certifying 5. |
-| ScannerBleed | 5 | Did send detailed report with PoC! | Strong contribution stated; verify report/patch/validation before certifying 5. |
-| ExcelBleed | 5 | Did send detailed report with runtime-confirmed PoC! | Strong contribution stated; verify report/patch/validation before certifying 5. |
-| DnsBleed | 5 | Did send detailed report with PoC! | Strong contribution stated; verify report/patch/validation before certifying 5. |
-| ChecklistBleed | 5 | Did send detailed report with PoC! | Strong contribution stated; verify report/patch/validation before certifying 5. |
-| InputBleed | 2 | Automated code scanning flagged the incomplete sanitization. | Review report-level evidence; current summary does not establish a calibrated award. |
-| ProxyBleed | 5 | Did send detailed report with PoC! | Strong contribution stated; verify report/patch/validation before certifying 5. |
-| BoardBleed | 5 | Did send detailed report with PoC! | Strong contribution stated; verify report/patch/validation before certifying 5. |
-| TokenBleed | 5 | Did send detailed report with PoC! | Strong contribution stated; verify report/patch/validation before certifying 5. |
-| CloneBleed | 5 | Did send detailed report with full PoC! | Strong contribution stated; verify report/patch/validation before certifying 5. |
-| OIDCBleed | 5 | Did send detailed report! | Review: detailed report alone does not establish proposed exceptional contribution. |
-| ReadOnlyBleed | 5 | Did send detailed report! | Review: detailed report alone does not establish proposed exceptional contribution. |
-| WebhookBleed | 4 | Found and fixed by code review. | Review report-level reproduction and analysis; summary alone does not certify 4. |
-| FileBleed | 4 | Reported responsibly, fixed quickly. | Review report-level reproduction and analysis; summary alone does not certify 4. |
-| BFLABleed | 5 | Did send detailed report with full PoC and runtime verification! | Strong contribution stated; verify report/patch/validation before certifying 5. |
-| AuthBleed | 5 | Did send detailed report with full PoC and runtime verification! | Strong contribution stated; verify report/patch/validation before certifying 5. |
-| AvatarBleed | 5 | Did send detailed report and suggested fix! | Strong contribution stated; verify report/patch/validation before certifying 5. |
-| IntegrationBleed | 5 | Did send detailed report and fix! | Strong contribution stated; verify report/patch/validation before certifying 5. |
-| AnchorBleed | 5 | Did send detailed report and fix! | Strong contribution stated; verify report/patch/validation before certifying 5. |
-| FloppyBleed | 4 | Did send detailed report! | Review report-level reproduction and analysis; summary alone does not certify 4. |
-| SnowBleed | 4 | Did send detailed report! | Review report-level reproduction and analysis; summary alone does not certify 4. |
-| MegaBleed | 4 | Did send detailed report! | Review report-level reproduction and analysis; summary alone does not certify 4. |
-| SpaceBleed | 4 | Did send detailed report! | Review report-level reproduction and analysis; summary alone does not certify 4. |
-| FieldBleed | 4 | Did send detailed report! | Review report-level reproduction and analysis; summary alone does not certify 4. |
-| SocialBleed | 4 | Did send detailed report! | Review report-level reproduction and analysis; summary alone does not certify 4. |
-| AdminBleed | 4 | Did send detailed report! | Review report-level reproduction and analysis; summary alone does not certify 4. |
-| InvisibleBleed | 2 | Sent report and disappeared. | Review report-level evidence; current summary does not establish a calibrated award. |
-| ReactionBleed | 5 | Did send detailed report and fix! | Strong contribution stated; verify report/patch/validation before certifying 5. |
-| FileBleed | 4 | Did send detailed report! | Review report-level reproduction and analysis; summary alone does not certify 4. |
-| Emailbleed | 4 | Did send detailed report! | Review report-level reproduction and analysis; summary alone does not certify 4. |
-| LDAPBleed | 4 | Did send report and sent fix! Although, report was at public GitHub issue , not via Responsible Security Disclosure | Review report-level reproduction and analysis; summary alone does not certify 4. |
-| DUEBleed | 2 | Did not notice security issue originally when merging new feature from pull request. Did fix issue when finally noticed it at production at Wekan demo server. | Review report-level evidence; current summary does not establish a calibrated award. |
-| BypassBleed | 5 | Did send detailed report and helped fixing! | Strong contribution stated; verify report/patch/validation before certifying 5. |
-| UserBleed | 5 | Did send detailed report and fix! | Strong contribution stated; verify report/patch/validation before certifying 5. |
-| BruteBleed | 1 | Did not report to Wekan, was found later from CVE | Review report-level evidence; current summary does not establish a calibrated award. |
-| FrameBleed | 4 | Did send detailed report! | Review report-level reproduction and analysis; summary alone does not certify 4. |
-
-## Progress and remaining work
-
-Completed: exhaustive index award-range/count inventory; matching-name
-index/detail comparison; review of every Process summary; separation of
-severity from contribution; identification of unsupported calibration claims.
-
-Remaining: adopt a rubric, inspect original report/PoC/patch and correspondence
-for every contribution, distinguish repeated names and follow-ups by date,
-resolve display discrepancies, then record justified retained or adjusted
-awards with evidence. Public summaries alone cannot finish that review.
-No remote changes or award edits were made.
+Verified all 111 current index awards against this inventory, all 87 matching
+name/date detail rows, and all 829 GoldStar.png references to the shared image. Report
+subject matching was used for the fetched advisories; existing misplaced GHSA
+links have not been rewritten as part of this star-only change. Remaining
+historical/private report evidence and unmatched detail rows require follow-up.
+This local correction has not been published.
