@@ -1,7 +1,7 @@
-<html><head><meta charset="UTF-8"><title>WeKan — Hall of Fame / AvatarMimeBleed</title><link rel="stylesheet" type="text/css" href="../../css/main.css"></head>
+<html><head><meta charset="UTF-8"><title>WeKan — Hall of Fame / AvatarMimeBleed</title><link rel="stylesheet" type="text/css" href="../../css/main.css"><link rel="stylesheet" href="../../font-awesome/css/font-awesome.min.css"></head>
 <body><img src="../hof.svg" alt="Hall of Fame trophy" width="300px" height="auto" />
 <div class="action-buttons"><a class="button" href="https://wekan.fi/hall-of-fame">Back to Hall of Fame Contents</a></div>
-<div class="hof"><h1 class="hof">Contents / AvatarMimeBleed</h1>
+<div class="hof"><h1 class="hof">Contents / AvatarMimeBleed</h1><h2><span class="vulnerability-icons" role="img" aria-label="AvatarMimeBleed"><i class="fa fa-user-circle" style="color: black;" aria-hidden="true"></i> <i class="fa fa-file-code-o" style="color: black;" aria-hidden="true"></i> <i class="fa fa-code" style="color: black;" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></span> </h2>
 <h2>Stored active content through avatar MIME metadata</h2>
 <p><a href="https://github.com/wekan/wekan/security/advisories/GHSA-4mjm-vj9f-p629">GHSA-4mjm-vj9f-p629</a> was reported by <a href="https://github.com/crypto-nidh">crypto-nidh</a>.</p>
 <p>Current and CollectionFS-compatible avatar routes trusted the stored MIME type, allowing browser-executable content to be served under the WeKan origin.</p>

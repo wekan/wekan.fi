@@ -39,7 +39,7 @@
           <a href="https://github.com/wekan/wekan/security/advisories/GHSA-6qpx-x7vr-p9w6">GHSA-6qpx-x7vr-p9w6</a>
           <br /> <br />
         </td>
-        <td valign="top"><b>HashBleed</b> <h2><i class="fa fa-key" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></h2></td>
+        <td valign="top"><b>HashBleed</b> <h2><span class="vulnerability-icons" role="img" aria-label="HashBleed"><i class="fa fa-key" style="color: black;" aria-hidden="true"></i> <i class="fa fa-database" style="color: black;" aria-hidden="true"></i> <i class="fa fa-eye" style="color: black;" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></span> </h2></td>
         <td valign="top">2026-08-15</td>
         <td valign="top">
           <b><a href="https://github.com/ybsun0215">ybsun0215</a></b> and <b><a href="https://github.com/xet7">xet7</a></b><br />
@@ -49,7 +49,7 @@
         </td>
         <td valign="top">
           <ul>
-            <li><i class="fa fa-key" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i> HashBleed &mdash; <code>GET /api/users/{userId}</code> and <code>PUT /api/users/{userId}</code> serialised the whole Meteor user document, so every answer carried <code>services.password.bcrypt</code> and the hash of every live session token (CWE-200 Exposure of Sensitive Information)</li>
+            <li><span class="vulnerability-icons" role="img" aria-label="HashBleed"><i class="fa fa-key" style="color: black;" aria-hidden="true"></i> <i class="fa fa-database" style="color: black;" aria-hidden="true"></i> <i class="fa fa-eye" style="color: black;" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></span> HashBleed &mdash; <code>GET /api/users/{userId}</code> and <code>PUT /api/users/{userId}</code> serialised the whole Meteor user document, so every answer carried <code>services.password.bcrypt</code> and the hash of every live session token (CWE-200 Exposure of Sensitive Information)</li>
             <li>The authorisation was never the problem: both endpoints are admin-only and stayed that way. The PAYLOAD was. Walking the ids that <code>GET /api/users</code> returns harvested the offline crackable password hash and the session-token hashes of every account on the instance</li>
             <li>A password hash is an offline attack that does not touch the server, and it survives long after the export. The session material is <code>services.resume.loginTokens[]</code>, one entry per live session with the time it began</li>
             <li>The two sibling endpoints in the same file show what was intended: <code>GET /api/users</code> projects down to <code>_id</code> and <code>username</code>, and <code>GET /api/user</code>, the self view, runs <code>delete data.services</code> before answering. Nothing in the code, the CHANGELOG or the documentation ever said the subtree was meant to be exposed</li>

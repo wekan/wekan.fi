@@ -39,7 +39,7 @@
           -
           <br /> <br />
         </td>
-        <td valign="top"><b>LiveBleed</b> <h2><i class="fa fa-globe" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></h2></td>
+        <td valign="top"><b>LiveBleed</b> <h2><span class="vulnerability-icons" role="img" aria-label="LiveBleed"><i class="fa fa-upload" style="color: black;" aria-hidden="true"></i> <i class="fa fa-paperclip" style="color: black;" aria-hidden="true"></i> <i class="fa fa-server" style="color: black;" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></span> </h2></td>
         <td valign="top">2026-07-19</td>
         <td valign="top">
           <b>meifukun</b> (<a href="https://github.com/meifukun">GitHub</a>) and <b>xet7</b> (fix)<br />
@@ -48,7 +48,7 @@
         </td>
         <td valign="top">
           <ul>
-            <li><i class="fa fa-globe" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i> LiveBleed &mdash; the live Trello import (<code>server/trelloApiImport.js</code>) downloaded attacker-controlled Trello attachment / background / avatar URLs with bare <code>fetch()</code> &mdash; no SSRF guard, unlike the offline path &mdash; and stored the response as an imported attachment readable back through the attachment API, giving NON-BLIND SSRF (cloud metadata / internal services). Fixed by gating every live-import download with <code>validateAttachmentUrl()</code>, matching the offline import (CWE-918 Server-Side Request Forgery)</li>
+            <li><span class="vulnerability-icons" role="img" aria-label="LiveBleed"><i class="fa fa-upload" style="color: black;" aria-hidden="true"></i> <i class="fa fa-paperclip" style="color: black;" aria-hidden="true"></i> <i class="fa fa-server" style="color: black;" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></span> LiveBleed &mdash; the live Trello import (<code>server/trelloApiImport.js</code>) downloaded attacker-controlled Trello attachment / background / avatar URLs with bare <code>fetch()</code> &mdash; no SSRF guard, unlike the offline path &mdash; and stored the response as an imported attachment readable back through the attachment API, giving NON-BLIND SSRF (cloud metadata / internal services). Fixed by gating every live-import download with <code>validateAttachmentUrl()</code>, matching the offline import (CWE-918 Server-Side Request Forgery)</li>
             <li>Reported privately by meifukun (<a href="https://github.com/meifukun">https://github.com/meifukun</a>)</li>
             <li>Fixed at <a href="https://github.com/wekan/wekan/blob/main/CHANGELOG.md#upcoming-wekan--release">upcoming WeKan release</a></li>
             <li><a href="./">More details</a></li>

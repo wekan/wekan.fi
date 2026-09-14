@@ -39,7 +39,7 @@
           -
           <br /> <br />
         </td>
-        <td valign="top"><b>WipeBleed</b> <h2><i class="fa fa-trash" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></h2></td>
+        <td valign="top"><b>WipeBleed</b> <h2><span class="vulnerability-icons" role="img" aria-label="WipeBleed"><i class="fa fa-files-o" style="color: black;" aria-hidden="true"></i> <i class="fa fa-trash" style="color: black;" aria-hidden="true"></i> <i class="fa fa-unlock" style="color: black;" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></span> </h2></td>
         <td valign="top">2026-09-09</td>
         <td valign="top">
           <b><a href="https://github.com/xet7">xet7</a></b><br />
@@ -49,7 +49,7 @@
         </td>
         <td valign="top">
           <ul>
-            <li><i class="fa fa-trash" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i> WipeBleed &mdash; ostrio:files' own <code>_FilesCollectionRemove_attachments</code>/<code>_FilesCollectionRemove_avatars</code> DDP methods are gated only by <code>allowClientCode</code> and never route through <code>Attachments.allow</code>/<code>Avatars.allow</code>, so any anonymous DDP connection could call one with selector <code>{}</code> and delete every attachment or avatar on the instance (CWE-862 Missing Authorization)</li>
+            <li><span class="vulnerability-icons" role="img" aria-label="WipeBleed"><i class="fa fa-files-o" style="color: black;" aria-hidden="true"></i> <i class="fa fa-trash" style="color: black;" aria-hidden="true"></i> <i class="fa fa-unlock" style="color: black;" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></span> WipeBleed &mdash; ostrio:files' own <code>_FilesCollectionRemove_attachments</code>/<code>_FilesCollectionRemove_avatars</code> DDP methods are gated only by <code>allowClientCode</code> and never route through <code>Attachments.allow</code>/<code>Avatars.allow</code>, so any anonymous DDP connection could call one with selector <code>{}</code> and delete every attachment or avatar on the instance (CWE-862 Missing Authorization)</li>
             <li>Both collections now define <code>onBeforeRemove</code>, requiring <code>this.userId</code> and checking every matched file individually: attachments need the caller's board-write access, avatars need ownership of that avatar or site-admin status</li>
             <li>An empty or non-matching selector is refused outright rather than treated as "nothing to check"</li>
             <li>A blocked attempt is recorded through the shared security log (<code>authz.file-remove</code>), so Admin Panel &rarr; Problems shows it happened</li>

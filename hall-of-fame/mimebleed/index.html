@@ -40,7 +40,7 @@
           <br /><a href="https://github.com/wekan/wekan/security/advisories/GHSA-rv5g-5p4g-3v89">GHSA-rv5g-5p4g-3v89</a>
           <br /> <br />
         </td>
-        <td valign="top"><b>MimeBleed</b> <h2><i class="fa fa-file-image-o" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></h2></td>
+        <td valign="top"><b>MimeStorageBleed</b> <h2><span class="vulnerability-icons" role="img" aria-label="MimeStorageBleed"><i class="fa fa-file-code-o" style="color: black;" aria-hidden="true"></i> <i class="fa fa-archive" style="color: black;" aria-hidden="true"></i> <i class="fa fa-code" style="color: black;" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></span> </h2></td>
         <td valign="top">2026-07-14<br />2026-09-01 follow-up</td>
         <td valign="top">
           <b>HNUfwj</b> (coordinated disclosure) and <b>xet7</b> (fix)<br />
@@ -54,7 +54,7 @@
         </td>
         <td valign="top">
           <ul>
-            <li>1. <i class="fa fa-file-image-o" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i> MimeBleed — file-upload MIME-type validation bypass leading to stored XSS via a missing system binary fallback (CWE-434 Unrestricted Upload of File with Dangerous Type)</li>
+            <li>1. <span class="vulnerability-icons" role="img" aria-label="MimeStorageBleed"><i class="fa fa-file-code-o" style="color: black;" aria-hidden="true"></i> <i class="fa fa-archive" style="color: black;" aria-hidden="true"></i> <i class="fa fa-code" style="color: black;" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></span> MimeStorageBleed — file-upload MIME-type validation bypass leading to stored XSS via a missing system binary fallback (CWE-434 Unrestricted Upload of File with Dangerous Type)</li>
             <li>CVSS:3.1 8.3 High (AV:N/AC:L/PR:L/UI:R/S:C/C:H/I:H/A:N)</li>
             <li>Affected container deployments without the <code>file</code> binary and <code>WITH_API=true</code></li>
             <li>2. Follow-up stored XSS: slash-separated unquoted event handlers bypassed the markup sniff, filesystem uploads skipped migration-only validation, and executable metadata could reach the original Meteor-Files inline response (GHSA-rv5g-5p4g-3v89, CWE-79)</li>

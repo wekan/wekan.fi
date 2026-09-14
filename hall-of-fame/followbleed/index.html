@@ -39,7 +39,7 @@
           <a href="https://github.com/wekan/wekan/security/advisories/GHSA-j9p2-jm73-p549">GHSA-j9p2-jm73-p549</a>
           <br /> <br />
         </td>
-        <td valign="top"><b>FollowBleed</b> <h2><i class="fa fa-arrow-circle-right" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></h2></td>
+        <td valign="top"><b>FollowBleed</b> <h2><span class="vulnerability-icons" role="img" aria-label="FollowBleed"><i class="fa fa-upload" style="color: black;" aria-hidden="true"></i> <i class="fa fa-share" style="color: black;" aria-hidden="true"></i> <i class="fa fa-server" style="color: black;" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></span> </h2></td>
         <td valign="top">2026-08-03</td>
         <td valign="top">
           <b><a href="https://github.com/RandomGenerator">RandomGenerator</a></b> and <b><a href="https://github.com/xet7">xet7</a></b><br />
@@ -48,7 +48,7 @@
         </td>
         <td valign="top">
           <ul>
-            <li><i class="fa fa-arrow-circle-right" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i> FollowBleed &mdash; the import downloads validated the URL and then fetched it with something that follows redirects, so a public URL could answer <code>302 Location: http://127.0.0.1:…</code> and the loopback body became the imported attachment (CWE-918 Server-Side Request Forgery)</li>
+            <li><span class="vulnerability-icons" role="img" aria-label="FollowBleed"><i class="fa fa-upload" style="color: black;" aria-hidden="true"></i> <i class="fa fa-share" style="color: black;" aria-hidden="true"></i> <i class="fa fa-server" style="color: black;" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></span> FollowBleed &mdash; the import downloads validated the URL and then fetched it with something that follows redirects, so a public URL could answer <code>302 Location: http://127.0.0.1:…</code> and the loopback body became the imported attachment (CWE-918 Server-Side Request Forgery)</li>
             <li>Affected the live Trello import (<code>server/trelloApiImport.js</code>) and, unreported, the offline Trello and WeKan importers</li>
             <li>A bypass of the fix that closed <a href="../livebleed/">LiveBleed</a> / CVE-2026-30844</li>
             <li>Fixed at

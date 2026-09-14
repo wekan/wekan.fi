@@ -1,7 +1,7 @@
-<html><head><meta charset="UTF-8"><title>WeKan — Hall of Fame / RuleBleed</title><link rel="stylesheet" type="text/css" href="../../css/main.css"></head>
+<html><head><meta charset="UTF-8"><title>WeKan — Hall of Fame / RuleBleed</title><link rel="stylesheet" type="text/css" href="../../css/main.css"><link rel="stylesheet" href="../../font-awesome/css/font-awesome.min.css"></head>
 <body><img src="../hof.svg" alt="Hall of Fame trophy" width="300px" height="auto" />
 <div class="action-buttons"><a class="button" href="https://wekan.fi/hall-of-fame">Back to Hall of Fame Contents</a></div>
-<div class="hof"><h1 class="hof">Contents / RuleBleed</h1>
+<div class="hof"><h1 class="hof">Contents / RuleBleed</h1><h2><span class="vulnerability-icons" role="img" aria-label="RuleBleed"><i class="fa fa-cogs" style="color: black;" aria-hidden="true"></i> <i class="fa fa-columns" style="color: black;" aria-hidden="true"></i> <i class="fa fa-lock" style="color: black;" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></span> </h2>
 <h2>Automation-rule cross-board authorization bypass</h2>
 <p><a href="https://github.com/wekan/wekan/security/advisories/GHSA-9w4x-hf2r-hc9v">GHSA-9w4x-hf2r-hc9v</a> was reported by <a href="https://github.com/crypto-nidh">crypto-nidh</a>.</p>
 <p>Move, link and bulk-move automation actions execute on the server, outside the collection allow/deny callbacks. A user who could create a rule on their own board could therefore name an inaccessible private board as its destination and inject cards there. Destination list and swimlane matching also exposed a blind oracle for private board structure.</p>

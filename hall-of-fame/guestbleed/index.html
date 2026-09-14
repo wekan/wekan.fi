@@ -39,7 +39,7 @@
           <a href="https://github.com/wekan/wekan/security/advisories/GHSA-whxm-pxgj-7wqv">GHSA-whxm-pxgj-7wqv</a>
           <br /> <br />
         </td>
-        <td valign="top"><b>GuestBleed</b> <h2><i class="fa fa-user-plus" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></h2></td>
+        <td valign="top"><b>GuestBleed</b> <h2><span class="vulnerability-icons" role="img" aria-label="GuestBleed"><i class="fa fa-user-plus" style="color: black;" aria-hidden="true"></i> <i class="fa fa-columns" style="color: black;" aria-hidden="true"></i> <i class="fa fa-eye" style="color: black;" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></span> </h2></td>
         <td valign="top">2026-08-15</td>
         <td valign="top">
           <b><a href="https://github.com/ybsun0215">ybsun0215</a></b> and <b><a href="https://github.com/xet7">xet7</a></b><br />
@@ -49,7 +49,7 @@
         </td>
         <td valign="top">
           <ul>
-            <li><i class="fa fa-user-plus" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i> GuestBleed &mdash; the <code>members</code> and <code>assignees</code> ARRAYS on card create and card update were stored exactly as given, so a member of a private board could put any user id on a card, and <code>GET /api/user/cards</code> then fed that outsider the private board's card titles, ids and dates (CWE-639)</li>
+            <li><span class="vulnerability-icons" role="img" aria-label="GuestBleed"><i class="fa fa-user-plus" style="color: black;" aria-hidden="true"></i> <i class="fa fa-columns" style="color: black;" aria-hidden="true"></i> <i class="fa fa-eye" style="color: black;" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></span> GuestBleed &mdash; the <code>members</code> and <code>assignees</code> ARRAYS on card create and card update were stored exactly as given, so a member of a private board could put any user id on a card, and <code>GET /api/user/cards</code> then fed that outsider the private board's card titles, ids and dates (CWE-639)</li>
             <li>Two paths combine. Nothing validated that the ids in the arrays belong to the card's board, and the listing endpoint answered by CARD membership without re-checking access to the card's BOARD &mdash; so being named on a card was enough to read from a board that refuses to open</li>
             <li>The outsider's direct read of the board stayed Forbidden the whole time, which is what made this quiet: every ordinary check still said no, while the "my cards" feed kept answering. It is continuous, not a single disclosure &mdash; the feed follows the card</li>
             <li>The invariant already existed and was documented on the merge endpoint <code>POST .../cards/{cardId}/members/{memberId}</code>, which has refused a non-member with 400 since issue #5998. The array form on POST and PUT bypassed it, for both members and assignees</li>

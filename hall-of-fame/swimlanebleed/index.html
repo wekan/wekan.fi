@@ -1,7 +1,7 @@
-<html><head><meta charset="UTF-8"><title>WeKan — Hall of Fame / SwimlaneBleed</title><link rel="stylesheet" type="text/css" href="../../css/main.css"></head>
+<html><head><meta charset="UTF-8"><title>WeKan — Hall of Fame / SwimlaneBleed</title><link rel="stylesheet" type="text/css" href="../../css/main.css"><link rel="stylesheet" href="../../font-awesome/css/font-awesome.min.css"></head>
 <body><img src="../hof.svg" alt="Hall of Fame trophy" width="300px" height="auto" />
 <div class="action-buttons"><a class="button" href="https://wekan.fi/hall-of-fame">Back to Hall of Fame Contents</a></div>
-<div class="hof"><h1 class="hof">Contents / SwimlaneBleed</h1>
+<div class="hof"><h1 class="hof">Contents / SwimlaneBleed</h1><h2><span class="vulnerability-icons" role="img" aria-label="SwimlaneBleed"><i class="fa fa-bars" style="color: black;" aria-hidden="true"></i> <i class="fa fa-plus" style="color: black;" aria-hidden="true"></i> <i class="fa fa-lock" style="color: black;" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></span> </h2>
 <h2>Read-only default-swimlane creation</h2>
 <p><a href="https://github.com/wekan/wekan/security/advisories/GHSA-2x89-6mq2-834r">GHSA-2x89-6mq2-834r</a> was reported by <a href="https://github.com/crypto-nidh">crypto-nidh</a>.</p>
 <p>The default-swimlane Meteor method checked only board membership before inserting a structural object, so read-only roles could bypass the collection write rules.</p>

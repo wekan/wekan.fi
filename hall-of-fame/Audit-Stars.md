@@ -65,7 +65,7 @@ because they are missing from the public catalogue.
 | PortraitBleed | 2026-09-09 | 2 | 5 | [GHSA-6h68-m988-228w](https://github.com/wekan/wekan/security/advisories/GHSA-6h68-m988-228w) | Published GHSA details and suggested remediation verified. |
 | RelicAvatarBleed | 2026-09-09 | 2 | 5 | [GHSA-49wg-hc9w-fw45](https://github.com/wekan/wekan/security/advisories/GHSA-49wg-hc9w-fw45) | Published GHSA details and suggested remediation verified. |
 | SheetColorBleed | 2026-09-05 | 2 | 5 | [GHSA-crq2-phg8-4xvg](https://github.com/wekan/wekan/security/advisories/GHSA-crq2-phg8-4xvg) | Published GHSA details and suggested remediation verified. |
-| MimeBleed follow-up | 2026-09-01 | 2 | 5 | [GHSA-rv5g-5p4g-3v89](https://github.com/wekan/wekan/security/advisories/GHSA-rv5g-5p4g-3v89) | Published GHSA details and suggested remediation verified. |
+| MimeStorageBleed | 2026-09-01 | 2 | 5 | [GHSA-rv5g-5p4g-3v89](https://github.com/wekan/wekan/security/advisories/GHSA-rv5g-5p4g-3v89) | Published GHSA details and suggested remediation verified. |
 | CookieTokenBleed | 2026-08-29 | 2 | 4 | [GHSA-8phm-9rqm-v9hc](https://github.com/wekan/wekan/security/advisories/GHSA-8phm-9rqm-v9hc) | Published GHSA details verified; no explicit suggested-fix section/prose found. Review implied advice separately. |
 | MailTitleBleed | 2026-08-29 | 2 | 4 | [GHSA-hp9m-vff5-7pvw](https://github.com/wekan/wekan/security/advisories/GHSA-hp9m-vff5-7pvw) | Published GHSA details verified; no explicit suggested-fix section/prose found. Review implied advice separately. |
 | SearchBleed | 2026-08-29 | 2 | 5 | [GHSA-33h9-rc5h-667p](https://github.com/wekan/wekan/security/advisories/GHSA-33h9-rc5h-667p) | Published GHSA details and suggested remediation verified. |
@@ -82,7 +82,7 @@ because they are missing from the public catalogue.
 | MiniProfileBleed | 2026-08-25 | 2 | 5 | [GHSA-c3ch-34g5-x3x7](https://github.com/wekan/wekan/security/advisories/GHSA-c3ch-34g5-x3x7) | Published GHSA details and suggested remediation verified. |
 | PositionHistoryBleed | 2026-08-25 | 4 | 5 | [GHSA-5fc2-m4gw-j6qq](https://github.com/wekan/wekan/security/advisories/GHSA-5fc2-m4gw-j6qq) | Published GHSA details and suggested remediation verified. |
 | SubtaskExportBleed | 2026-08-25 | 4 | 5 | [GHSA-hvvr-j425-5xxm](https://github.com/wekan/wekan/security/advisories/GHSA-hvvr-j425-5xxm) | Published GHSA details and suggested remediation verified. |
-| CasBleed | 2026-08-25 | 2 | 5 | [GHSA-5797-pjx8-9h6m](https://github.com/wekan/wekan/security/advisories/GHSA-5797-pjx8-9h6m) | Published GHSA details and suggested remediation verified. |
+| CasAccountMergeBleed | 2026-08-25 | 2 | 5 | [GHSA-5797-pjx8-9h6m](https://github.com/wekan/wekan/security/advisories/GHSA-5797-pjx8-9h6m) | Published GHSA details and suggested remediation verified. |
 | ImportBleed | 2026-08-23 | 4 | 5 | [GHSA-qp32-wqxw-wq3h](https://github.com/wekan/wekan/security/advisories/GHSA-qp32-wqxw-wq3h) | Published GHSA details and suggested remediation verified. |
 | ChecklistWriteBleed | 2026-08-22 | 4 | 5 | [GHSA-cp24-5m9m-wm97](https://github.com/wekan/wekan/security/advisories/GHSA-cp24-5m9m-wm97) | Published GHSA details and suggested remediation verified. |
 | TokenAuditBleed | 2026-08-22 | 4 | 5 | [GHSA-5r57-9vj7-c64f](https://github.com/wekan/wekan/security/advisories/GHSA-5r57-9vj7-c64f) | Published GHSA details and suggested remediation verified. |
@@ -117,7 +117,7 @@ because they are missing from the public catalogue.
 | RedirectBleed | 2026-07-19 | 1 | 2 | No matched published advisory | No matching GHSA and no researcher-suggested fix documented; private/historical evidence may change this. **Evidence-limited.** |
 | SourceBleed | 2026-07-19 | 1 | 2 | No matched published advisory | No matching GHSA and no researcher-suggested fix documented; private/historical evidence may change this. **Evidence-limited.** |
 | LiveBleed | 2026-07-19 | 1 | 2 | No matched published advisory | No matching GHSA and no researcher-suggested fix documented; private/historical evidence may change this. **Evidence-limited.** |
-| CasBleed | 2026-07-19 | 1 | 2 | No matched published advisory | No matching GHSA and no researcher-suggested fix documented; private/historical evidence may change this. **Evidence-limited.** |
+| CasRaceBleed | 2026-07-19 | 1 | 2 | No matched published advisory | No matching GHSA and no researcher-suggested fix documented; private/historical evidence may change this. **Evidence-limited.** |
 | MetricsBleed | 2026-07-19 | 1 | 2 | No matched published advisory | No matching GHSA and no researcher-suggested fix documented; private/historical evidence may change this. **Evidence-limited.** |
 | ImpersonateBleed | 2026-07-19 | 1 | 2 | No matched published advisory | No matching GHSA and no researcher-suggested fix documented; private/historical evidence may change this. **Evidence-limited.** |
 | InviteBleed | 2026-07-19 | 1 | 2 | No matched published advisory | No matching GHSA and no researcher-suggested fix documented; private/historical evidence may change this. **Evidence-limited.** |
@@ -139,7 +139,7 @@ because they are missing from the public catalogue.
 | OIDCBleed | 2026-05-31 | 5 | 5 | [GHSA-mp7g-hj5q-gxhq](https://github.com/wekan/wekan/security/advisories/GHSA-mp7g-hj5q-gxhq) | Published GHSA details and suggested remediation verified. |
 | ReadOnlyBleed | 2026-05-31 | 5 | 5 | [GHSA-6733-4wgq-8xvr](https://github.com/wekan/wekan/security/advisories/GHSA-6733-4wgq-8xvr) | Published GHSA details and suggested remediation verified. |
 | WebhookBleed | 2026-05-31 | 4 | 4 | No matched published advisory | Advisory exists or is claimed but not matched to the published catalogue; retain pending verification. **Evidence-limited.** |
-| FileBleed | 2026-05-27 | 4 | 4 | [GHSA-g6vm-7757-pr88](https://github.com/wekan/wekan/security/advisories/GHSA-g6vm-7757-pr88) | Published GHSA details verified; no explicit suggested-fix section/prose found. Review implied advice separately. |
+| FilePathBleed | 2026-05-27 | 4 | 4 | [GHSA-g6vm-7757-pr88](https://github.com/wekan/wekan/security/advisories/GHSA-g6vm-7757-pr88) | Published GHSA details verified; no explicit suggested-fix section/prose found. Review implied advice separately. |
 | BFLABleed | 2026-05-19 | 5 | 5 | [GHSA-7w2h-g83c-jqrp](https://github.com/wekan/wekan/security/advisories/GHSA-7w2h-g83c-jqrp) | Published GHSA details and suggested remediation verified. |
 | AuthBleed | 2026-05-07 11:39 EET | 5 | 2 | No matched published advisory | No matching GHSA and no researcher-suggested fix documented; private/historical evidence may change this. **Evidence-limited.** |
 | AvatarBleed | 2026-05-03 13:57 EET | 5 | 5 | [GHSA-35j7-h385-2q9g](https://github.com/wekan/wekan/security/advisories/GHSA-35j7-h385-2q9g) | Published GHSA details and suggested remediation verified. |
@@ -154,7 +154,7 @@ because they are missing from the public catalogue.
 | AdminBleed | 2023-04-24 16.40 EET | 4 | 2 | No matched published advisory | No matching GHSA and no researcher-suggested fix documented; private/historical evidence may change this. **Evidence-limited.** |
 | InvisibleBleed | 2023-04-24 03.35 EET | 2 | 2 | No matched published advisory | No matching GHSA and no researcher-suggested fix documented; private/historical evidence may change this. **Evidence-limited.** |
 | ReactionBleed | 2023-02-28 12.36 EET | 5 | 3 | No matched published advisory | No matching GHSA; supplied fix/contribution documented in Process. |
-| FileBleed | 2023-02-16 17.35 EET | 4 | 2 | No matched published advisory | No matching GHSA and no researcher-suggested fix documented; private/historical evidence may change this. **Evidence-limited.** |
+| FileNameBleed | 2023-02-16 17.35 EET | 4 | 2 | No matched published advisory | No matching GHSA and no researcher-suggested fix documented; private/historical evidence may change this. **Evidence-limited.** |
 | Emailbleed | 2021-01-26 12.42 EET | 4 | 2 | No matched published advisory | No matching GHSA and no researcher-suggested fix documented; private/historical evidence may change this. **Evidence-limited.** |
 | LDAPBleed | 2021-01-26 0:42 EET | 4 | 3 | No matched published advisory | No matching GHSA; supplied fix/contribution documented in Process. |
 | DUEBleed | 2021-01-11 EET | 2 | 3 | No matched published advisory | No matching GHSA; supplied fix/contribution documented in Process. |
@@ -177,3 +177,6 @@ but follow-up is not planned.
 Current focus is at fixing any new GitHub advisories ASAP.
 At the time this audit was done and fixes implemented to star count,
 all advisories have already been fixed.
+
+Icon/name audit: [Audit-Icons.md](Audit-Icons.md). Renamed from Audit.md on
+2026-09-14; star counts are unchanged by this icon update.

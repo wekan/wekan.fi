@@ -39,7 +39,7 @@
           -
           <br /> <br />
         </td>
-        <td valign="top"><b>SourceBleed</b> <h2><i class="fa fa-code" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></h2></td>
+        <td valign="top"><b>SourceBleed</b> <h2><span class="vulnerability-icons" role="img" aria-label="SourceBleed"><i class="fa fa-upload" style="color: black;" aria-hidden="true"></i> <i class="fa fa-link" style="color: black;" aria-hidden="true"></i> <i class="fa fa-code" style="color: black;" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></span> </h2></td>
         <td valign="top">2026-07-19</td>
         <td valign="top">
           <b>meifukun</b> (<a href="https://github.com/meifukun">GitHub</a>) and <b>xet7</b> (fix)<br />
@@ -48,7 +48,7 @@
         </td>
         <td valign="top">
           <ul>
-            <li><i class="fa fa-code" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i> SourceBleed &mdash; a Trello board imported with a <code>javascript:</code> url had that URL stored as an activity <code>source.url</code> (<code>models/trelloCreator.js</code>) and rendered as an activity-sidebar link (<code>client/components/activities/activities.js</code>) with no scheme check, so a board admin who clicked the &quot;Trello&quot; source link ran attacker JavaScript in their session and could read <code>Meteor.loginToken</code> (stored XSS &rarr; account takeover). Fixed by only storing and linking <code>http(s)</code> source URLs (CWE-79 Stored Cross-site Scripting)</li>
+            <li><span class="vulnerability-icons" role="img" aria-label="SourceBleed"><i class="fa fa-upload" style="color: black;" aria-hidden="true"></i> <i class="fa fa-link" style="color: black;" aria-hidden="true"></i> <i class="fa fa-code" style="color: black;" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></span> SourceBleed &mdash; a Trello board imported with a <code>javascript:</code> url had that URL stored as an activity <code>source.url</code> (<code>models/trelloCreator.js</code>) and rendered as an activity-sidebar link (<code>client/components/activities/activities.js</code>) with no scheme check, so a board admin who clicked the &quot;Trello&quot; source link ran attacker JavaScript in their session and could read <code>Meteor.loginToken</code> (stored XSS &rarr; account takeover). Fixed by only storing and linking <code>http(s)</code> source URLs (CWE-79 Stored Cross-site Scripting)</li>
             <li>Reported privately by meifukun (<a href="https://github.com/meifukun">https://github.com/meifukun</a>)</li>
             <li>Fixed at <a href="https://github.com/wekan/wekan/blob/main/CHANGELOG.md#upcoming-wekan--release">upcoming WeKan release</a></li>
             <li><a href="./">More details</a></li>

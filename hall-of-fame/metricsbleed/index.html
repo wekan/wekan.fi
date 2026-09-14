@@ -39,7 +39,7 @@
           -
           <br /> <br />
         </td>
-        <td valign="top"><b>MetricsBleed</b> <h2><i class="fa fa-tachometer" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></h2></td>
+        <td valign="top"><b>MetricsBleed</b> <h2><span class="vulnerability-icons" role="img" aria-label="MetricsBleed"><i class="fa fa-bar-chart" style="color: black;" aria-hidden="true"></i> <i class="fa fa-server" style="color: black;" aria-hidden="true"></i> <i class="fa fa-user-secret" style="color: black;" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></span> </h2></td>
         <td valign="top">2026-07-19</td>
         <td valign="top">
           <b>meifukun</b> (<a href="https://github.com/meifukun">GitHub</a>) and <b>xet7</b> (fix)<br />
@@ -48,7 +48,7 @@
         </td>
         <td valign="top">
           <ul>
-            <li><i class="fa fa-tachometer" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i> MetricsBleed &mdash; the <code>/metrics</code> endpoint (<code>models/server/metrics.js</code>) trusted the client-supplied <code>X-Forwarded-For</code> header UNCONDITIONALLY when checking <code>METRICS_ACCEPTED_IP_ADDRESS</code>, so an unauthenticated requester could send <code>X-Forwarded-For: &lt;whitelisted-ip&gt;</code> and read operational Prometheus metrics (connected/registered user counts, board counts, active board titles). Fixed by trusting XFF only when <code>METRICS_TRUST_PROXY</code> is set (parsed spoof-resistantly from the right); otherwise the real socket peer address is used (CWE-290 Authentication Bypass by Spoofing)</li>
+            <li><span class="vulnerability-icons" role="img" aria-label="MetricsBleed"><i class="fa fa-bar-chart" style="color: black;" aria-hidden="true"></i> <i class="fa fa-server" style="color: black;" aria-hidden="true"></i> <i class="fa fa-user-secret" style="color: black;" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></span> MetricsBleed &mdash; the <code>/metrics</code> endpoint (<code>models/server/metrics.js</code>) trusted the client-supplied <code>X-Forwarded-For</code> header UNCONDITIONALLY when checking <code>METRICS_ACCEPTED_IP_ADDRESS</code>, so an unauthenticated requester could send <code>X-Forwarded-For: &lt;whitelisted-ip&gt;</code> and read operational Prometheus metrics (connected/registered user counts, board counts, active board titles). Fixed by trusting XFF only when <code>METRICS_TRUST_PROXY</code> is set (parsed spoof-resistantly from the right); otherwise the real socket peer address is used (CWE-290 Authentication Bypass by Spoofing)</li>
             <li>Reported privately by meifukun (<a href="https://github.com/meifukun">https://github.com/meifukun</a>)</li>
             <li>Fixed at <a href="https://github.com/wekan/wekan/blob/main/CHANGELOG.md#upcoming-wekan--release">upcoming WeKan release</a></li>
             <li><a href="./">More details</a></li>

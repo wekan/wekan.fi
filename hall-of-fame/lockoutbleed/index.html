@@ -39,7 +39,7 @@
           <a href="https://github.com/wekan/wekan/security/advisories/GHSA-2g94-9x3m-hv37">GHSA-2g94-9x3m-hv37</a>
           <br /> <br />
         </td>
-        <td valign="top"><b>LockoutBleed</b> <h2><i class="fa fa-unlock-alt" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></h2></td>
+        <td valign="top"><b>LockoutBleed</b> <h2><span class="vulnerability-icons" role="img" aria-label="LockoutBleed"><i class="fa fa-key" style="color: black;" aria-hidden="true"></i> <i class="fa fa-unlock" style="color: black;" aria-hidden="true"></i> <i class="fa fa-repeat" style="color: black;" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></span> </h2></td>
         <td valign="top">2026-08-04</td>
         <td valign="top">
           <b><a href="https://github.com/NinjaGPT">NinjaGPT</a></b> and <b><a href="https://github.com/xet7">xet7</a></b><br />
@@ -48,7 +48,7 @@
         </td>
         <td valign="top">
           <ul>
-            <li><i class="fa fa-unlock-alt" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i> LockoutBleed &mdash; the bundled brute-force lockout never fired, so passwords could be guessed without limit (CWE-307 Improper Restriction of Excessive Authentication Attempts)</li>
+            <li><span class="vulnerability-icons" role="img" aria-label="LockoutBleed"><i class="fa fa-key" style="color: black;" aria-hidden="true"></i> <i class="fa fa-unlock" style="color: black;" aria-hidden="true"></i> <i class="fa fa-repeat" style="color: black;" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></span> LockoutBleed &mdash; the bundled brute-force lockout never fired, so passwords could be guessed without limit (CWE-307 Improper Restriction of Excessive Authentication Attempts)</li>
             <li>Chained with user enumeration: a login for a real user runs bcrypt (~50 ms) while a missing one returns in ~2 ms, a timing oracle that reveals which usernames and emails exist (CWE-208 Observable Timing Discrepancy)</li>
             <li>Affected the DDP <code>login</code> method and the REST <code>POST /users/login</code> endpoint (which also named the missing user outright and had no lockout at all)</li>
             <li>Fixed at

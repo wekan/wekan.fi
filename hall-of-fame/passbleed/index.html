@@ -39,7 +39,7 @@
           <a href="https://github.com/wekan/wekan/security/advisories/GHSA-6p5m-f9p2-wqm5">GHSA-6p5m-f9p2-wqm5</a>
           <br /> <br />
         </td>
-        <td valign="top"><b>PassBleed</b> <h2><i class="fa fa-id-card-o" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></h2></td>
+        <td valign="top"><b>PassBleed</b> <h2><span class="vulnerability-icons" role="img" aria-label="PassBleed"><i class="fa fa-file-excel-o" style="color: black;" aria-hidden="true"></i> <i class="fa fa-download" style="color: black;" aria-hidden="true"></i> <i class="fa fa-chain-broken" style="color: black;" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></span> </h2></td>
         <td valign="top">2026-08-11</td>
         <td valign="top">
           <b><a href="https://github.com/TWPaMWang">TWPaMWang</a></b> and <b><a href="https://github.com/xet7">xet7</a></b><br />
@@ -49,7 +49,7 @@
         </td>
         <td valign="top">
           <ul>
-            <li><i class="fa fa-id-card-o" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i> PassBleed &mdash; the single-card Excel export authorised against one identifier and read its data using another, so the board id became a reusable access pass and the card id alone decided what came back (CWE-639, CVSS 6.5)</li>
+            <li><span class="vulnerability-icons" role="img" aria-label="PassBleed"><i class="fa fa-file-excel-o" style="color: black;" aria-hidden="true"></i> <i class="fa fa-download" style="color: black;" aria-hidden="true"></i> <i class="fa fa-chain-broken" style="color: black;" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></span> PassBleed &mdash; the single-card Excel export authorised against one identifier and read its data using another, so the board id became a reusable access pass and the card id alone decided what came back (CWE-639, CVSS 6.5)</li>
             <li>Any authenticated user could mint their own public board, name it as <code>:boardId</code>, and export any card from any private board on the instance &mdash; including the raw bytes of its image attachments</li>
             <li>Affected <code>models/server/ExporterExcelCard.js</code> and its route in <code>models/exportExcelCard.js</code>; the PDF exporter for the identical route shape had always been correct</li>
             <li>Fixed at

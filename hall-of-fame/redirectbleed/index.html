@@ -39,7 +39,7 @@
           -
           <br /> <br />
         </td>
-        <td valign="top"><b>RedirectBleed</b> <h2><i class="fa fa-external-link" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></h2></td>
+        <td valign="top"><b>RedirectBleed</b> <h2><span class="vulnerability-icons" role="img" aria-label="RedirectBleed"><i class="fa fa-user-circle" style="color: black;" aria-hidden="true"></i> <i class="fa fa-share" style="color: black;" aria-hidden="true"></i> <i class="fa fa-server" style="color: black;" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></span> </h2></td>
         <td valign="top">2026-07-19</td>
         <td valign="top">
           <b>meifukun</b> (<a href="https://github.com/meifukun">GitHub</a>) and <b>xet7</b> (fix)<br />
@@ -48,7 +48,7 @@
         </td>
         <td valign="top">
           <ul>
-            <li><i class="fa fa-external-link" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i> RedirectBleed &mdash; avatar localization (<code>server/lib/localizeAvatar.js</code>) validated only the ORIGINAL URL host with <code>assertSafePublicUrl</code> and then fetched with native <code>fetch(url, {redirect:'follow'})</code>, so an authenticated user could set <code>profile.avatarUrl</code> to a public redirector that 302s to 127.0.0.1, a private network, or 169.254.169.254 and the WeKan server followed it (SSRF). Fixed by fetching through the DNS-pinned, redirect-rejecting <code>fetchSafe</code> and scheme-validating <code>profile.avatarUrl</code> at write time (CWE-918 Server-Side Request Forgery)</li>
+            <li><span class="vulnerability-icons" role="img" aria-label="RedirectBleed"><i class="fa fa-user-circle" style="color: black;" aria-hidden="true"></i> <i class="fa fa-share" style="color: black;" aria-hidden="true"></i> <i class="fa fa-server" style="color: black;" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></span> RedirectBleed &mdash; avatar localization (<code>server/lib/localizeAvatar.js</code>) validated only the ORIGINAL URL host with <code>assertSafePublicUrl</code> and then fetched with native <code>fetch(url, {redirect:'follow'})</code>, so an authenticated user could set <code>profile.avatarUrl</code> to a public redirector that 302s to 127.0.0.1, a private network, or 169.254.169.254 and the WeKan server followed it (SSRF). Fixed by fetching through the DNS-pinned, redirect-rejecting <code>fetchSafe</code> and scheme-validating <code>profile.avatarUrl</code> at write time (CWE-918 Server-Side Request Forgery)</li>
             <li>Reported privately by meifukun (<a href="https://github.com/meifukun">https://github.com/meifukun</a>)</li>
             <li>Fixed at <a href="https://github.com/wekan/wekan/blob/main/CHANGELOG.md#upcoming-wekan--release">upcoming WeKan release</a></li>
             <li><a href="./">More details</a></li>

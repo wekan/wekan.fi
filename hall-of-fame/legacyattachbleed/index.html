@@ -1,7 +1,7 @@
-<html><head><meta charset="UTF-8"><title>WeKan — Hall of Fame / LegacyAttachBleed</title><link rel="stylesheet" type="text/css" href="../../css/main.css"></head>
+<html><head><meta charset="UTF-8"><title>WeKan — Hall of Fame / LegacyAttachBleed</title><link rel="stylesheet" type="text/css" href="../../css/main.css"><link rel="stylesheet" href="../../font-awesome/css/font-awesome.min.css"></head>
 <body><img src="../hof.svg" alt="Hall of Fame trophy" width="300px" height="auto" />
 <div class="action-buttons"><a class="button" href="https://wekan.fi/hall-of-fame">Back to Hall of Fame Contents</a></div>
-<div class="hof"><h1 class="hof">Contents / LegacyAttachBleed</h1>
+<div class="hof"><h1 class="hof">Contents / LegacyAttachBleed</h1><h2><span class="vulnerability-icons" role="img" aria-label="LegacyAttachBleed"><i class="fa fa-history" style="color: black;" aria-hidden="true"></i> <i class="fa fa-paperclip" style="color: black;" aria-hidden="true"></i> <i class="fa fa-file-code-o" style="color: black;" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></span> </h2>
 <h2>Stored active content through legacy attachment MIME metadata</h2>
 <p><a href="https://github.com/wekan/wekan/security/advisories/GHSA-xcxp-hx9w-q5q9">GHSA-xcxp-hx9w-q5q9</a> was reported by <a href="https://github.com/crypto-nidh">crypto-nidh</a>.</p>
 <p>The CollectionFS-compatible attachment route protected SVG files but served other browser-executable MIME types without the same CSP, nosniff and frame restrictions.</p>

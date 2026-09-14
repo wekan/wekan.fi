@@ -39,7 +39,7 @@
           <a href="https://github.com/wekan/wekan/security/advisories/GHSA-6jr3-42jf-vhm5">GHSA-6jr3-42jf-vhm5</a>
           <br /> <br />
         </td>
-        <td valign="top"><b>AuthorBleed</b> <h2><i class="fa fa-pencil" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></h2></td>
+        <td valign="top"><b>AuthorBleed</b> <h2><span class="vulnerability-icons" role="img" aria-label="AuthorBleed"><i class="fa fa-pencil" style="color: black;" aria-hidden="true"></i> <i class="fa fa-user-secret" style="color: black;" aria-hidden="true"></i> <i class="fa fa-history" style="color: black;" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></span> </h2></td>
         <td valign="top">2026-08-15</td>
         <td valign="top">
           <b><a href="https://github.com/ybsun0215">ybsun0215</a></b> and <b><a href="https://github.com/xet7">xet7</a></b><br />
@@ -49,7 +49,7 @@
         </td>
         <td valign="top">
           <ul>
-            <li><i class="fa fa-pencil" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i> AuthorBleed &mdash; six server paths took the actor's identity from the request body's <code>authorId</code> field, checking only that such a user exists, so a board member could record card creations, card deletions and custom fields as somebody else (CWE-345 Insufficient Verification of Data Authenticity)</li>
+            <li><span class="vulnerability-icons" role="img" aria-label="AuthorBleed"><i class="fa fa-pencil" style="color: black;" aria-hidden="true"></i> <i class="fa fa-user-secret" style="color: black;" aria-hidden="true"></i> <i class="fa fa-history" style="color: black;" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></span> AuthorBleed &mdash; six server paths took the actor's identity from the request body's <code>authorId</code> field, checking only that such a user exists, so a board member could record card creations, card deletions and custom fields as somebody else (CWE-345 Insufficient Verification of Data Authenticity)</li>
             <li>The board's own history is the thing at stake. "victim created this card" and "victim deleted this card" became attacker-controlled sentences, on any board the caller may write to, and the card document itself recorded the forged <code>userId</code> as its creator</li>
             <li>The six: single card create, bulk card create, linked-card create, single card delete, bulk card delete, and custom-field create</li>
             <li>WeKan had already accepted this exact class as a vulnerability and fixed it for card comments in 8.19, and again for the card PUT handler &mdash; whose inline note still reads <em>"use req.userId consistently (it previously read req.body.authorId here)"</em>. These six paths were missed, which makes it an incomplete fix rather than a new decision</li>

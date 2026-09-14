@@ -39,7 +39,7 @@
           -
           <br /> <br />
         </td>
-        <td valign="top"><b>PatternBleed</b> <h2><i class="fa fa-asterisk" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></h2></td>
+        <td valign="top"><b>PatternBleed</b> <h2><span class="vulnerability-icons" role="img" aria-label="PatternBleed"><i class="fa fa-asterisk" style="color: black;" aria-hidden="true"></i> <i class="fa fa-desktop" style="color: black;" aria-hidden="true"></i> <i class="fa fa-eraser" style="color: black;" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></span> </h2></td>
         <td valign="top">2026-08-08</td>
         <td valign="top">
           <b>GitHub CodeQL</b> (code scanning alert #431) and <b>xet7</b> (fix)<br />
@@ -49,7 +49,7 @@
         </td>
         <td valign="top">
           <ul>
-            <li>1. <i class="fa fa-asterisk" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i> PatternBleed — an escape that escaped nothing: a value went into a regular expression through a no-op <code>replace</code> (CWE-116 Improper Encoding or Escaping of Output)</li>
+            <li>1. <span class="vulnerability-icons" role="img" aria-label="PatternBleed"><i class="fa fa-asterisk" style="color: black;" aria-hidden="true"></i> <i class="fa fa-desktop" style="color: black;" aria-hidden="true"></i> <i class="fa fa-eraser" style="color: black;" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></span> PatternBleed — an escape that escaped nothing: a value went into a regular expression through a no-op <code>replace</code> (CWE-116 Improper Encoding or Escaping of Output)</li>
             <li>GitHub CodeQL code scanning alert #431, rule <code>js/identity-replacement</code>, severity Medium</li>
             <li>Affected only the WeKan test suite (<code>tests/releaseNodeSources.test.cjs</code>)</li>
             <li>Second finding of this rule after <a href="../identitybleed/">IdentityBleed</a> (alert #424), so the fix also adds a guard that catches the whole class in WeKan's own test run</li>

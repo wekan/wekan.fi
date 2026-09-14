@@ -39,7 +39,7 @@
           <a href="https://github.com/wekan/wekan/security/advisories/GHSA-r8r3-23vr-8jh6">GHSA-r8r3-23vr-8jh6</a>
           <br /> <br />
         </td>
-        <td valign="top"><b>StaleBleed</b> <h2><i class="fa fa-user-times" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></h2></td>
+        <td valign="top"><b>StaleBleed</b> <h2><span class="vulnerability-icons" role="img" aria-label="StaleBleed"><i class="fa fa-user-times" style="color: black;" aria-hidden="true"></i> <i class="fa fa-history" style="color: black;" aria-hidden="true"></i> <i class="fa fa-eye" style="color: black;" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></span> </h2></td>
         <td valign="top">2026-08-15</td>
         <td valign="top">
           <b><a href="https://github.com/ybsun0215">ybsun0215</a></b> and <b><a href="https://github.com/xet7">xet7</a></b><br />
@@ -49,7 +49,7 @@
         </td>
         <td valign="top">
           <ul>
-            <li><i class="fa fa-user-times" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i> StaleBleed &mdash; the board listing matched <code>'members.userId'</code> with a dotted path, which ignores the membership's <code>isActive</code> flag, so a removed member kept seeing the board's id and title indefinitely (CWE-863 Incorrect Authorization)</li>
+            <li><span class="vulnerability-icons" role="img" aria-label="StaleBleed"><i class="fa fa-user-times" style="color: black;" aria-hidden="true"></i> <i class="fa fa-history" style="color: black;" aria-hidden="true"></i> <i class="fa fa-eye" style="color: black;" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></span> StaleBleed &mdash; the board listing matched <code>'members.userId'</code> with a dotted path, which ignores the membership's <code>isActive</code> flag, so a removed member kept seeing the board's id and title indefinitely (CWE-863 Incorrect Authorization)</li>
             <li>Removing a board member does not delete their entry: it sets <code>isActive: false</code> and <code>isAdmin: false</code> and keeps it. A query that matches the entry without reading that flag therefore matches revoked members exactly as it matches current ones</li>
             <li>Reading the board itself was already refused, so the exposure is the board's id and its title &mdash; but the id is the part that matters, because it is what every other endpoint in the API is addressed by, and the title is often the thing a private board is private about</li>
             <li>This is the same class as GHSA-gwc4-fw7p-gw58 (org, team and domain shares, fixed in 10.74), whose fix introduced one builder for board visibility with the header note <em>"A share entry counts only while it is active, everywhere"</em>. This listing endpoint predates that consolidation and was never converted</li>

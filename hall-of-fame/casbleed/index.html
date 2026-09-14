@@ -2,7 +2,7 @@
 
 <head>
   <meta charset="UTF-8">
-  <title>WeKan — Hall of Fame / CasBleed</title>
+  <title>WeKan — Hall of Fame / CasRaceBleed and CasAccountMergeBleed</title>
   <link rel="icon" href="../../wekan-favicon.png">
   <link rel="stylesheet" type="text/css" href="../../css/main.css">
   <link rel="stylesheet" href="../../font-awesome/css/font-awesome.min.css">
@@ -20,7 +20,7 @@
   </div>
 
   <div class="hof">
-    <h1 class="hof">Contents / CasBleed</h1>
+    <h1 class="hof">Contents / CasRaceBleed and CasAccountMergeBleed</h1>
 
     <table border="1" margin="0" padding="10px" width="100%">
       <tr>
@@ -39,7 +39,7 @@
           -
           <br /> <br />
         </td>
-        <td valign="top"><b>CasBleed</b> <h2><i class="fa fa-random" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></h2></td>
+        <td valign="top"><b>CasRaceBleed</b> <h2><span class="vulnerability-icons" role="img" aria-label="CasRaceBleed"><i class="fa fa-id-card" style="color: black;" aria-hidden="true"></i> <i class="fa fa-exchange" style="color: black;" aria-hidden="true"></i> <i class="fa fa-clock-o" style="color: black;" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></span> </h2></td>
         <td valign="top">2026-07-19</td>
         <td valign="top">
           <b>meifukun</b> (<a href="https://github.com/meifukun">GitHub</a>) and <b>xet7</b> (fix)<br />
@@ -48,7 +48,7 @@
         </td>
         <td valign="top">
           <ul>
-            <li><i class="fa fa-random" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i> CasBleed &mdash; with CAS login enabled, <code>packages/wekan-accounts-cas/cas_server.js</code> stored validated CAS user data in a single module-global <code>_userData</code> shared across concurrent logins. Two logins racing could bind an attacker's credential token to a victim's user data, issuing the attacker a session for the victim's account (full admin if the victim was an admin). Fixed by binding the validated CAS user data PER credential token (CWE-362 Race Condition &rarr; Account Takeover)</li>
+            <li><span class="vulnerability-icons" role="img" aria-label="CasRaceBleed"><i class="fa fa-id-card" style="color: black;" aria-hidden="true"></i> <i class="fa fa-exchange" style="color: black;" aria-hidden="true"></i> <i class="fa fa-clock-o" style="color: black;" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></span> CasRaceBleed &mdash; with CAS login enabled, <code>packages/wekan-accounts-cas/cas_server.js</code> stored validated CAS user data in a single module-global <code>_userData</code> shared across concurrent logins. Two logins racing could bind an attacker's credential token to a victim's user data, issuing the attacker a session for the victim's account (full admin if the victim was an admin). Fixed by binding the validated CAS user data PER credential token (CWE-362 Race Condition &rarr; Account Takeover)</li>
             <li>Reported privately by meifukun (<a href="https://github.com/meifukun">https://github.com/meifukun</a>)</li>
             <li>Fixed at <a href="https://github.com/wekan/wekan/blob/main/CHANGELOG.md#upcoming-wekan--release">upcoming WeKan release</a></li>
             <li><a href="./">More details</a></li>
@@ -65,7 +65,7 @@
   <div class="hof">
     <h2 class="hof">Details</h2>
 
-    <h3>CasBleed — implicit matching-username account takeover (CWE-287, CWE-863)</h3>
+    <h3>CasAccountMergeBleed — implicit matching-username account takeover (CWE-287, CWE-863)</h3>
     <p>
       <a href="https://github.com/wekan/wekan/security/advisories/GHSA-5797-pjx8-9h6m">GHSA-5797-pjx8-9h6m</a>,
       reported by <a href="https://github.com/Char0n1507">Char0n1507</a> and

@@ -39,7 +39,7 @@
           <a href="https://github.com/wekan/wekan/security/advisories/GHSA-8cqr-x6m5-v4w6">GHSA-8cqr-x6m5-v4w6</a>
           <br /> <br />
         </td>
-        <td valign="top"><b>PurgeBleed</b> <h2><i class="fa fa-trash" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></h2></td>
+        <td valign="top"><b>PurgeBleed</b> <h2><span class="vulnerability-icons" role="img" aria-label="PurgeBleed"><i class="fa fa-columns" style="color: black;" aria-hidden="true"></i> <i class="fa fa-trash" style="color: black;" aria-hidden="true"></i> <i class="fa fa-chain-broken" style="color: black;" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></span> </h2></td>
         <td valign="top">2026-08-15</td>
         <td valign="top">
           <b><a href="https://github.com/ybsun0215">ybsun0215</a></b> and <b><a href="https://github.com/xet7">xet7</a></b><br />
@@ -49,7 +49,7 @@
         </td>
         <td valign="top">
           <ul>
-            <li><i class="fa fa-trash" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i> PurgeBleed &mdash; the single-card DELETE authorised the caller on the board in <code>:boardId</code> and then fetched the card by <code>:cardId</code> ALONE, so the child-removal it runs first erased the checklists, checklist items, comments, activity history and subcard tree of any card in the instance (CWE-639 Authorization Bypass Through User-Controlled Key, CWE-862 Missing Authorization)</li>
+            <li><span class="vulnerability-icons" role="img" aria-label="PurgeBleed"><i class="fa fa-columns" style="color: black;" aria-hidden="true"></i> <i class="fa fa-trash" style="color: black;" aria-hidden="true"></i> <i class="fa fa-chain-broken" style="color: black;" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></span> PurgeBleed &mdash; the single-card DELETE authorised the caller on the board in <code>:boardId</code> and then fetched the card by <code>:cardId</code> ALONE, so the child-removal it runs first erased the checklists, checklist items, comments, activity history and subcard tree of any card in the instance (CWE-639 Authorization Bypass Through User-Controlled Key, CWE-862 Missing Authorization)</li>
             <li>The destruction happens BEFORE the card is removed, so the unconstrained lookup is the whole vulnerability: <code>cardRemover</code> erases everything keyed on whatever card id came back. The removal that follows uses a triple key &mdash; <code>{_id, listId, boardId}</code> &mdash; so a foreign card was never actually removed, which is why the card SHELL survived and made the damage easy to miss</li>
             <li>The endpoint answered HTTP 200 with the card id either way, so nothing in the response said that a caller had just destroyed the contents of a card on a board they cannot read. Deletion is irreversible, and the attack is repeatable for every foreign card id an attacker learns</li>
             <li>Any authenticated user with write access to ONE board &mdash; their own is enough &mdash; could reach every board on the instance. All deployments with <code>WITH_API=true</code> are affected</li>
