@@ -1,4 +1,4 @@
-# Hall of Fame star audit
+# Hall of Fame Star audit
 
 Ranking adopted and star corrections applied locally: **2026-09-14**.
 The maintainer specifies **disclosure quality and contribution**, not severity.

@@ -1,4 +1,4 @@
-# Hall of Fame icon audit
+# Hall of Fame Icon audit
 
 Audit and changes completed: **2026-09-14**.
 
