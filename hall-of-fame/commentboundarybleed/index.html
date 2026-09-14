@@ -1,0 +1,22 @@
+<html><head><meta charset="UTF-8"><title>WeKan — CommentBoundaryBleed</title><link rel="stylesheet" href="../../css/main.css"></head><body>
+<h1>CommentBoundaryBleed</h1><table class="hof" width="100%"><tr><th>CVE</th><th>Icon</th><th>Vulnerability name</th><th>Date</th><th>Responsible Security Disclosure by</th><th>Stars</th><th>Process</th><th>Vulnerabilities</th></tr>
+      <tr>
+        <td valign="top">-</td>
+        <td class="icon" valign="top"><h2><i class="fa fa-lock" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></h2></td>
+        <td valign="top"><b>CommentBoundaryBleed</b></td>
+        <td valign="top">2026-09-14</td>
+        <td class="by" valign="top"><b>Wenhao Wu, Southeast University</b></td>
+        <td class="stars" valign="top"><img src="../GoldStar.png" width="30px" height="auto" /></td>
+        <td valign="top">
+
+          Responsible disclosure through a saved GitHub security advisory; REST and DDP comment boundary paths reviewed during remediation.
+        </td>
+        <td valign="top">
+
+          <ul><li>Comment insertion failed to bind cards to the authorized board (CWE-639).</li>
+          <li>REST and DDP inserts now validate the card board; DDP identity rebinding is denied. Denials are summarized in Admin Panel Problems.</li>
+          <li><a href="../">More details</a></li></ul>
+        </td>
+      </tr>
+
+</table><h2 class="hof">Details</h2><p>A comment-capable member could submit an authorized board ID with a foreign private card ID. REST and DDP inserted the inconsistent relation, which card-based comment subscriptions expose to the victim.</p><p>Both insert paths now validate the authoritative card board; DDP cannot rebind comment identities to bypass the insertion check. Blocked attempts are summarized in Problems and logging cannot break denial.</p><p><a href="https://github.com/wekan/wekan/commit/d7ac619d6">Source fix and regression coverage</a>. REST-prefix, DDP-deny, boundary and server insert-inventory tests pass. Live browser execution remains pending; no CVE is assigned here.</p></body></html>
