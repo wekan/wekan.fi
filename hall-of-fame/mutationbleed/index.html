@@ -1,0 +1,22 @@
+<html><head><meta charset="UTF-8"><title>WeKan — MutationBleed</title><link rel="stylesheet" href="../../css/main.css"></head><body>
+<h1>MutationBleed</h1><table class="hof" width="100%"><tr><th>CVE</th><th>Icon</th><th>Vulnerability name</th><th>Date</th><th>Responsible Security Disclosure by</th><th>Stars</th><th>Process</th><th>Vulnerabilities</th></tr>
+      <tr>
+        <td valign="top">-</td>
+        <td class="icon" valign="top"><h2><i class="fa fa-lock" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></h2></td>
+        <td valign="top"><b>MutationBleed</b></td>
+        <td valign="top">2026-09-14</td>
+        <td class="by" valign="top"><b>Wenhao Wu, Southeast University</b></td>
+        <td class="stars" valign="top"><img src="../GoldStar.png" width="30px" height="auto" /></td>
+        <td valign="top">
+
+          Responsible disclosure through a saved GitHub security advisory; membership-only method guards and their siblings reviewed during remediation.
+        </td>
+        <td valign="top">
+
+          <ul><li>Membership-only method guards allowed non-writing roles to mutate board data (CWE-863).</li>
+          <li>List, swimlane and checklist moves, scoped imports, attachment renames and history writes now enforce the canonical write capability. Denials are summarized in Admin Panel Problems.</li>
+          <li><a href="../">More details</a></li></ul>
+        </td>
+      </tr>
+
+</table><h2 class="hof">Details</h2><p>Server methods bypass collection allow/deny. Membership alone does not grant write access: comment-only, comment-assigned-only, worker and read-only roles cannot perform general board mutations.</p><p>Both sides of list, swimlane and checklist moves, scoped import, attachment rename and history write paths now enforce the canonical role capability. The No comments role keeps its intended write access. Denied attempts use bounded Problems summaries; logging cannot break enforcement.</p><p><a href="https://github.com/wekan/wekan/commit/9b1fb5214">Source fix and regression coverage</a>. Role decisions, reported moveList attack and sibling inventory tests pass. Browser regression added and syntax-checked; live execution pending. No CVE is assigned here.</p></body></html>

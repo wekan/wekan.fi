@@ -88,6 +88,29 @@
 
       <tr>
         <td valign="top">-</td>
+        <td class="icon" valign="top"><h2><i class="fa fa-lock" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></h2></td>
+        <td valign="top"><b>MutationBleed</b></td>
+        <td valign="top">2026-09-14</td>
+        <td class="by" valign="top"><b>Wenhao Wu, Southeast University</b></td>
+        <td class="stars" valign="top"><img src="../GoldStar.png" width="30px" height="auto" /></td>
+        <td valign="top">
+          <details><summary>Process</summary>
+
+          Responsible disclosure through a saved GitHub security advisory; membership-only method guards and their siblings reviewed during remediation.
+          </details>
+        </td>
+        <td valign="top">
+          <details><summary>Details</summary>
+
+          <ul><li>Membership-only method guards allowed non-writing roles to mutate board data (CWE-863).</li>
+          <li>List, swimlane and checklist moves, scoped imports, attachment renames and history writes now enforce the canonical write capability. Denials are summarized in Admin Panel Problems.</li>
+          <li><a href="mutationbleed/">More details</a></li></ul>
+          </details>
+        </td>
+      </tr>
+
+      <tr>
+        <td valign="top">-</td>
         <td class="icon" valign="top"><h2><i class="fa fa-eye" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></h2></td>
         <td valign="top"><b>VisibilityBleed</b></td>
         <td valign="top">2026-09-14</td>
