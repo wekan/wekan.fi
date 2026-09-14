@@ -1,0 +1,11 @@
+<html><head><meta charset="UTF-8"><title>WeKan — ManageBoardBleed</title><link rel="stylesheet" href="../../css/main.css"></head><body><h1>ManageBoardBleed</h1><table class="hof" width="100%"><tr><th>CVE</th><th>Icon</th><th>Vulnerability name</th><th>Date</th><th>Responsible Security Disclosure by</th><th>Stars</th><th>Process</th><th>Vulnerabilities</th></tr>      <tr>
+        <td valign="top">-</td>
+        <td class="icon" valign="top"><h2><i class="fa fa-lock" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></h2></td>
+        <td valign="top"><b>ManageBoardBleed</b></td>
+        <td valign="top">2026-09-14</td>
+        <td class="by" valign="top"><b>Wenhao Wu, Southeast University</b></td>
+        <td class="stars" valign="top"><img src="../GoldStar.png" width="30px" height="auto" /></td>
+        <td valign="top">Responsible disclosure through a saved GitHub security advisory; current code and sibling paths reviewed during remediation.</td>
+        <td valign="top"><p>REST management endpoints incorrectly accepted ordinary write capability. Title, card-settings and rule mutation endpoints now require board or site administrator privileges, aligning with DDP. Unauthorized management attempts are summarized in Problems; logging cannot break refusal.</p><p><a href="https://github.com/wekan/wekan/commit/c33e9c3bf">Source fix and regression coverage</a>. Targeted tests pass; live browser execution remains pending. No CVE is assigned here.</p></td>
+      </tr>
+</table><h2 class="hof">Details</h2><p>REST management endpoints incorrectly accepted ordinary write capability. Title, card-settings and rule mutation endpoints now require board or site administrator privileges, aligning with DDP. Unauthorized management attempts are summarized in Problems; logging cannot break refusal.</p><p><a href="https://github.com/wekan/wekan/commit/c33e9c3bf">Source fix and regression coverage</a>. Targeted tests pass; live browser execution remains pending. No CVE is assigned here.</p></body></html>
