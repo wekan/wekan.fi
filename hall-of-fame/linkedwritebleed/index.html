@@ -1,0 +1,11 @@
+<html><head><meta charset="UTF-8"><title>WeKan — LinkedWriteBleed</title><link rel="stylesheet" href="../../css/main.css"></head><body><h1>LinkedWriteBleed</h1><table class="hof" width="100%"><tr><th>CVE</th><th>Icon</th><th>Vulnerability name</th><th>Date</th><th>Responsible Security Disclosure by</th><th>Stars</th><th>Process</th><th>Vulnerabilities</th></tr>      <tr>
+        <td valign="top">-</td>
+        <td class="icon" valign="top"><h2><i class="fa fa-lock" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></h2></td>
+        <td valign="top"><b>LinkedWriteBleed</b></td>
+        <td valign="top">2026-09-14</td>
+        <td class="by" valign="top"><b>Wenhao Wu, Southeast University</b></td>
+        <td class="stars" valign="top"><img src="../GoldStar.png" width="30px" height="auto" /></td>
+        <td valign="top">Responsible disclosure through a saved GitHub security advisory; current code and sibling paths reviewed during remediation.</td>
+        <td valign="top"><p>Comment-only source members could create links on self-owned boards and use delegated write checks to modify the source. Source write access is now required for method and DDP link creation and pointer changes. Explicit non-writing source roles cap delegation through legacy links. UI permissions follow the ceiling. Denied attempts use bounded Problems summaries.</p><p><a href="https://github.com/wekan/wekan/commit/26e9e7030">Source fix and regression coverage</a>. Targeted tests pass; live browser execution remains pending. No CVE is assigned here.</p></td>
+      </tr>
+</table><h2 class="hof">Details</h2><p>Comment-only source members could create links on self-owned boards and use delegated write checks to modify the source. Source write access is now required for method and DDP link creation and pointer changes. Explicit non-writing source roles cap delegation through legacy links. UI permissions follow the ceiling. Denied attempts use bounded Problems summaries.</p><p><a href="https://github.com/wekan/wekan/commit/26e9e7030">Source fix and regression coverage</a>. Targeted tests pass; live browser execution remains pending. No CVE is assigned here.</p></body></html>

@@ -89,6 +89,24 @@
       <tr>
         <td valign="top">-</td>
         <td class="icon" valign="top"><h2><i class="fa fa-lock" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></h2></td>
+        <td valign="top"><b>LinkedWriteBleed</b></td>
+        <td valign="top">2026-09-14</td>
+        <td class="by" valign="top"><b>Wenhao Wu, Southeast University</b></td>
+        <td class="stars" valign="top"><img src="../GoldStar.png" width="30px" height="auto" /></td>
+        <td valign="top"><details>
+<summary>Process</summary>
+
+Responsible disclosure through a saved GitHub security advisory; current code and sibling paths reviewed during remediation.
+</details></td>
+        <td valign="top"><details>
+<summary>Details</summary>
+
+<p>Comment-only source members could create links on self-owned boards and use delegated write checks to modify the source. Source write access is now required for method and DDP link creation and pointer changes. Explicit non-writing source roles cap delegation through legacy links. UI permissions follow the ceiling. Denied attempts use bounded Problems summaries.</p><p><a href="https://github.com/wekan/wekan/commit/26e9e7030">Source fix and regression coverage</a>. Targeted tests pass; live browser execution remains pending. No CVE is assigned here.</p><p><a href="linkedwritebleed/">More details</a></p>
+</details></td>
+      </tr>
+      <tr>
+        <td valign="top">-</td>
+        <td class="icon" valign="top"><h2><i class="fa fa-lock" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></h2></td>
         <td valign="top"><b>InvitationBoardBleed</b></td>
         <td valign="top">2026-09-14</td>
         <td class="by" valign="top"><b>Wenhao Wu, Southeast University</b></td>
