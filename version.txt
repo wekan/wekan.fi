@@ -1,5 +1,5 @@
 WeKan 11.90
 FerretDB 1.79.0
-Meteor 3.6-beta.0
-Node 24.21.0
-NPM 11.12.1
+Meteor 3.6-beta.1
+Node 26.9.0
+NPM 12.0.2
