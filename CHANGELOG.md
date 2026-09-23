@@ -1,5 +1,11 @@
 # Upcoming wekan.fi update
 
+- [Fix Windows release source paths and allow scoped version links](https://github.com/wekan/wekan.fi/commit/5f1aeb10f4e782d91de09d9b2a72970b0e065ad2).
+  Allow only Node 26 version-directory links at the existing download hosts
+  on the install page. Other URLs remain checked. Use shell-relative paths
+  in the shared Windows resolver. Offline positive and negative tests pass;
+  no hosted publication or Windows build was run. Thanks to xet7.
+
 - [Accept valid GitHub SSH origins in release launchers](https://github.com/wekan/wekan.fi/commit/456498570429a54b9f8e6837908cc2d2bed6759f).
   Accept HTTPS and both SSH URL forms with or without .git, while rejecting
   incorrect repositories and lookalike hosts. Record the existing Node
