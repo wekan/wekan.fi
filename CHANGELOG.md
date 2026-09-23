@@ -1,5 +1,11 @@
 # Upcoming wekan.fi update
 
+- [Accept valid GitHub SSH origins in release launchers](https://github.com/wekan/wekan.fi/commit/456498570429a54b9f8e6837908cc2d2bed6759f).
+  Accept HTTPS and both SSH URL forms with or without .git, while rejecting
+  incorrect repositories and lookalike hosts. Record the existing Node
+  v26.10.0 download link in the URL baseline. Offline positive and negative
+  tests and source audits pass; no hosted release was run. Thanks to xet7.
+
 - [Add release menus and automated dependency checks](https://github.com/wekan/wekan.fi/commit/c28afbb).
   Shell and Windows launchers prepare numbered website releases, commit pending
   files, push and dispatch shared Pages workflows. Release All Missing retains
