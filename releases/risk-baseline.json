@@ -10996,5 +10996,11 @@
       ],
       "keywords": {}
     }
+  },
+  "allowUrlPatternsByFile": {
+    "install/index.html": [
+      "https://nodejs\\.org/dist/v26\\.\\d+\\.\\d+/",
+      "https://unofficial-builds\\.nodejs\\.org/download/release/v26\\.\\d+\\.\\d+/"
+    ]
   }
 }
