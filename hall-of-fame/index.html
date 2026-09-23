@@ -88,6 +88,22 @@
         <th width="19%">Vulnerabilities</th>
       </tr>
 
+
+      <tr>
+        <td valign="top">-</td>
+        <td class="icon" valign="top"><h2><span role="img" aria-label="AuthTraceBleed"><i class="fa fa-sign-in" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></span></h2></td>
+        <td valign="top"><b>AuthTraceBleed</b></td>
+        <td valign="top">2026-09-23</td>
+        <td class="by" valign="top"><b>GitHub CodeQL and xet7</b></td>
+        <td class="stars" valign="top">-</td>
+        <td valign="top"><details><summary>Process</summary>
+          Saved CodeQL alerts #543 and #544 in the local login fixture; sibling-source review found the same HTTP stack disclosure in the Sandstorm adapter.
+        </details></td>
+        <td valign="top"><details><summary>Details</summary>
+          <p>Bound and anchor OAuth-header parsing in the loopback-only test provider. Return generic HTTP errors from that provider and the deployed Sandstorm login endpoint. No ordinary password-login vulnerability or remote production OAuth-parser exposure is claimed. No CVE assigned.</p>
+          <p><a href="authtracebleed/">Scope, fixes and verification</a></p>
+        </details></td>
+      </tr>
       <tr>
         <td valign="top">-</td>
         <td class="icon" valign="top"><h2><span class="vulnerability-icons" role="img" aria-label="SubtaskDepositBleed"><i class="fa fa-sitemap" style="color: black;" aria-hidden="true"></i> <i class="fa fa-inbox" style="color: black;" aria-hidden="true"></i> <i class="fa fa-lock" style="color: black;" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></span> </h2></td>

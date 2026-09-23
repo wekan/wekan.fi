@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>WeKan — Hall of Fame / AuthTraceBleed</title>
+  <link rel="icon" href="../../wekan-favicon.png">
+  <link rel="stylesheet" href="../../css/main.css">
+</head>
+<body>
+  <img src="../hof.svg" alt="Hall of Fame" width="300">
+  <div class="action-buttons">
+    <a class="button" href="../">Back to Hall of Fame Contents</a>
+    <a class="button" href="../../">Back to WeKan Website</a>
+  </div>
+  <div class="hof">
+    <h1>AuthTraceBleed</h1>
+    <p>2026-09-23. Reported by GitHub CodeQL; sibling review and fixes by xet7.
+    No CVE is assigned. CWE-1333, CWE-400, CWE-209 and CWE-497.</p>
+    <h2>Scope</h2>
+    <p>Saved CodeQL alerts #543 and #544 identify an unanchored OAuth-header
+    regular expression and HTTP stack-trace disclosure in the loopback-only
+    login integration fixture. That test provider is not a production identity
+    service. Sibling review also found an HTTP stack-trace response in the
+    shipped Sandstorm login adapter, active in Sandstorm mode.</p>
+    <h2>Fix</h2>
+    <p>The fixture bounds headers to 8 KiB, anchors individual parameter matches,
+    rejects duplicate parameters and malformed percent encodings, and retains
+    OAuth signature validation. The fixture and Sandstorm endpoint return fixed
+    error text, without internal paths, stack traces or request-derived exception
+    messages. This does not change successful authentication or authorize an
+    unmatched Sandstorm token.</p>
+    <p>No Admin Panel Problems category is added: the fixture is outside the
+    application, and removing exception details from generic Sandstorm failure
+    responses does not distinguish attacks from operational failures.</p>
+    <h2>Verification</h2>
+    <p>Positive and negative tests exercise real signed HTTP requests, hostile
+    headers, invalid signatures, malformed requests, Sandstorm success and failure,
+    and tracked-source guards against direct HTTP stack sinks and the vulnerable
+    OAuth scanner. A macOS ARM64 build and ten Chromium OAuth/Sandstorm checks pass, including
+    valid signatures, rejected authorization and opaque failure responses.
+    Hosted CodeQL has not been rerun.</p>
+    <p><a href="https://github.com/wekan/wekan/commit/4d2951ae2">Fix and regression coverage</a></p>
+    <p><a href="https://github.com/wekan/wekan/blob/main/tests/loginProviderSecurity.test.cjs">Regression tests</a></p>
+  </div>
+</body>
+</html>
