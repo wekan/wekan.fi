@@ -1,3 +1,12 @@
 # Upcoming wekan.fi update
 
+- [Add release menus and automated dependency checks](https://github.com/wekan/wekan.fi/commit/c28afbb).
+  Shell and Windows launchers prepare numbered website releases, commit pending
+  files, push and dispatch shared Pages workflows. Release All Missing retains
+  the version and checks whether the exact commit is already deployed. Hash
+  drift only warns; known hashes, new suspicious keywords and new URLs stop
+  checks without requiring AI approval. Offline release/indicator tests and
+  workflow syntax checks pass; hosted deployment and Windows execution were
+  not run. Thanks to xet7.
+
 - [Update install page for Node.js 26 and npm 12](https://github.com/wekan/wekan.fi/commit/3690115). The active install page and version list now show Node.js 26.9.0, npm 12.0.2 and Meteor 3.6-beta.1. Thanks to xet7.
