@@ -1,5 +1,10 @@
 # Upcoming wekan.fi update
 
+- [Distinguish known dependency keyword false positives from new findings](https://github.com/wekan/wekan.fi/commit/289eee79914c0ab69e77039ead838980111f1f9f).
+  Documented exact matches are informational; new or changed matches warn.
+  Independent risk gates stay active. Current metadata needs no exemptions.
+  Positive and negative tests and offline audits pass. Thanks to xet7.
+
 - [Fix Windows release source paths and allow scoped version links](https://github.com/wekan/wekan.fi/commit/5f1aeb10f4e782d91de09d9b2a72970b0e065ad2).
   Allow only Node 26 version-directory links at the existing download hosts
   on the install page. Other URLs remain checked. Use shell-relative paths
