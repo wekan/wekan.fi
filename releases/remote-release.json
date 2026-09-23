@@ -1,0 +1,13 @@
+{
+  "repo": "wekan/wekan.fi",
+  "kind": "website",
+  "branch": "main",
+  "upcoming": "# Upcoming wekan.fi update",
+  "audits": [],
+  "indicatorCommand": [
+    "python3",
+    "releases/risk-audit.py",
+    "--source",
+    "."
+  ]
+}

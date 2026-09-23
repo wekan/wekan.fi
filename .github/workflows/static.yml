@@ -1,46 +1,72 @@
-# Simple workflow for deploying static content to GitHub Pages
 name: Deploy static content to Pages
-
 on:
-  # Runs on pushes targeting the default branch
   push:
-    branches: ["main"]
-
-  # Allows you to run this workflow manually from the Actions tab
+    branches: [main]
   workflow_dispatch:
-
-# Sets permissions of the GITHUB_TOKEN to allow deployment to GitHub Pages
+  workflow_call:
+    inputs:
+      version:
+        type: string
+        default: ''
+      missing:
+        type: boolean
+        default: false
 permissions:
-  contents: read
+  contents: write
+  deployments: read
   pages: write
   id-token: write
-
-# Allow only one concurrent deployment, skipping runs queued between the run in-progress and latest queued.
-# However, do NOT cancel in-progress runs as we want to allow these production deployments to complete.
 concurrency:
-  group: "pages"
+  group: pages
   cancel-in-progress: false
-
 jobs:
-  # Single deploy job since we're just deploying
   deploy:
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-      - name: Setup Pages
-        uses: actions/configure-pages@v5
-      - name: Upload artifact
-        uses: actions/upload-pages-artifact@v3
+      - uses: actions/checkout@v4
+      - name: Check dependency risk indicators
+        run: python3 releases/remote-release.py --audit
+      - name: Check whether this commit is already deployed
+        id: plan
+        env:
+          GH_TOKEN: ${{ github.token }}
+          MISSING: ${{ inputs.missing }}
+        run: |
+          set -euo pipefail
+          deploy=true
+          if [ "$MISSING" = true ]; then
+            gh api "repos/$GITHUB_REPOSITORY/deployments?sha=$GITHUB_SHA&environment=github-pages&per_page=100" > deployments.json
+            for id in $(jq -r '.[].id' deployments.json); do
+              status=$(gh api "repos/$GITHUB_REPOSITORY/deployments/$id/statuses" --jq '.[0].state')
+              if [ "$status" = success ]; then deploy=false; break; fi
+            done
+            rm deployments.json
+          fi
+          echo "deploy=$deploy" >> "$GITHUB_OUTPUT"
+      - uses: actions/configure-pages@v5
+        if: steps.plan.outputs.deploy == 'true'
+      - uses: actions/upload-pages-artifact@v3
+        if: steps.plan.outputs.deploy == 'true'
         with:
           name: github-pages-${{ github.run_attempt }}
-          # Upload entire repository
           path: '.'
-      - name: Deploy to GitHub Pages
+      - uses: actions/deploy-pages@v5
+        if: steps.plan.outputs.deploy == 'true'
         id: deployment
-        uses: actions/deploy-pages@v5
         with:
           artifact_name: github-pages-${{ github.run_attempt }}
+      - name: Record completed website release
+        if: inputs.version != ''
+        env:
+          VERSION: ${{ inputs.version }}
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          [[ "$VERSION" =~ ^v[0-9]+$ ]] || { echo 'Invalid website version'; exit 1; }
+          gh api "repos/$GITHUB_REPOSITORY/releases?per_page=100" > "$RUNNER_TEMP/releases.json"
+          if ! jq -e --arg v "$VERSION" 'any(.[]; .tag_name == $v)' "$RUNNER_TEMP/releases.json" >/dev/null; then
+            gh release create "$VERSION" --target "$GITHUB_SHA" --title "$VERSION" --notes-file CHANGELOG.md
+          fi

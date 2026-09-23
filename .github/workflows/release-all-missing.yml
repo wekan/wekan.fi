@@ -1,0 +1,20 @@
+name: Release All Missing
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: Website release to complete
+        required: true
+        type: string
+permissions:
+  contents: write
+  deployments: read
+  pages: write
+  id-token: write
+jobs:
+  deploy:
+    uses: ./.github/workflows/static.yml
+    with:
+      version: ${{ inputs.version }}
+      missing: true
+    secrets: inherit
