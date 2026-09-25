@@ -10998,6 +10998,14 @@
     }
   },
   "allowUrlPatternsByFile": {
+    "hall-of-fame/index.html": [
+      "https://github\\.com/esbrito81"
+    ],
+    "hall-of-fame/inactivebleed/index.html": [
+      "https://github\\.com/esbrito81",
+      "https://github\\.com/wekan/wekan/blob/main/tests/inactiveAccountSecurity\\.test\\.cjs",
+      "https://github\\.com/wekan/wekan/commit/c3caf87a1"
+    ],
     "install/index.html": [
       "https://nodejs\\.org/dist/v26\\.\\d+\\.\\d+/",
       "https://unofficial-builds\\.nodejs\\.org/download/release/v26\\.\\d+\\.\\d+/"
