@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8">
+<title>WeKan — Hall of Fame / InactiveBleed</title>
+<link rel="icon" href="../../wekan-favicon.png">
+<link rel="stylesheet" href="../../css/main.css">
+<link rel="stylesheet" href="../../font-awesome/css/font-awesome.min.css">
+</head><body>
+<img src="../hof.svg" alt="Hall of Fame" width="300">
+<div class="action-buttons"><a class="button" href="../">Back to Hall of Fame Contents</a>
+<a class="button" href="../../">Back to WeKan Website</a></div>
+<div class="hof"><h1>InactiveBleed</h1>
+<table border="1"><tr><th>CVE</th><th>Icon</th><th>Vulnerability name</th><th>Date</th>
+<th>Responsible disclosure by</th><th>Stars</th><th>Process</th><th>Vulnerabilities</th></tr>
+<tr>
+<td valign="top">-</td>
+<td class="icon" valign="top"><h2><span role="img" aria-label="InactiveBleed"><i class="fa fa-user-times" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></span></h2></td>
+<td valign="top"><b>InactiveBleed</b></td>
+<td valign="top">2026-09-26</td>
+<td class="by" valign="top"><b><a href="https://github.com/esbrito81">esbrito81</a></b></td>
+<td class="stars" valign="top"><img src="../GoldStar.png" width="30" height="30" alt="Gold star"><img src="../GoldStar.png" width="30" height="30" alt="Gold star"><img src="../GoldStar.png" width="30" height="30" alt="Gold star"><img src="../GoldStar.png" width="30" height="30" alt="Gold star"><img src="../GoldStar.png" width="30" height="30" alt="Gold star"></td>
+<td valign="top">Responsible disclosure through a private GitHub security advisory; confirmed against current source and remediated by xet7.</td>
+<td valign="top"><p>Disabled accounts could authenticate through REST and retain existing sessions. The People status toggle failed to persist, and admin-created inactive accounts did not receive their requested status. Shared authentication guards, token revocation and atomic account creation now enforce account status.</p><p>No CVE assigned. CWE-287 and CWE-613. Fix prepared for the Upcoming release.</p></td>
+</tr>
+</table>
+<h2>Fix</h2>
+<p>REST login, API tokens, attachment access, imports and exports share a disabled-account guard.
+Header login and REST token creation check status atomically when storing a token.
+LDAP leaves token issuance to the validated login pipeline. Disabling an account clears
+its login tokens; Meteor disconnects sessions observing those tokens. A server observer
+also revokes tokens on existing disabled accounts and direct database updates.</p>
+<p>The People Active control calls the administrator-only server method. Admin-created
+accounts receive their status, administrator flag and profile in a trusted server creation
+context before insertion. Client-supplied creation options cannot grant these permissions.
+Reactivating an account does not restore revoked tokens. Anonymous access to public boards
+remains public. Requests already authorized before deactivation are not rolled back.</p>
+<p>Attributable disabled-account authentication attempts appear as InactiveBleed summaries
+in Admin Panel / Problems. Routine administration is not logged as an attack.</p>
+<p><a href="https://github.com/wekan/wekan/commit/c3caf87a1">Source fix and regression coverage</a></p>
+<h2>Verification</h2>
+<p>Positive and negative Node tests cover the shared decision, logging failure, token
+issuance and revocation, with a source audit of server, models, imports and packages.
+Browser tests cover inactive creation, REST and DDP login, reactivation, live-session
+revocation, direct database deactivation, the People control and rejected old credentials.
+The Meteor build, focused Node suites and three Chromium cases pass. Live LDAP
+and the FerretDB matrix were not exercised.</p>
+<p><a href="https://github.com/wekan/wekan/blob/main/tests/inactiveAccountSecurity.test.cjs">Security regression tests</a></p>
+</div></body></html>

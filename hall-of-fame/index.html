@@ -89,6 +89,16 @@
       </tr>
 
 
+<tr>
+<td valign="top">-</td>
+<td class="icon" valign="top"><h2><span role="img" aria-label="InactiveBleed"><i class="fa fa-user-times" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></span></h2></td>
+<td valign="top"><b>InactiveBleed</b></td>
+<td valign="top">2026-09-26</td>
+<td class="by" valign="top"><b><a href="https://github.com/esbrito81">esbrito81</a></b></td>
+<td class="stars" valign="top"><img src="GoldStar.png" width="30" height="30" alt="Gold star"><img src="GoldStar.png" width="30" height="30" alt="Gold star"><img src="GoldStar.png" width="30" height="30" alt="Gold star"><img src="GoldStar.png" width="30" height="30" alt="Gold star"><img src="GoldStar.png" width="30" height="30" alt="Gold star"></td>
+<td valign="top"><details><summary>Process</summary>Responsible disclosure through a private GitHub security advisory; confirmed against current source and remediated by xet7.</details></td>
+<td valign="top"><details><summary>Details</summary><p>Disabled accounts could authenticate through REST and retain existing sessions. The People status toggle failed to persist, and admin-created inactive accounts did not receive their requested status. Shared authentication guards, token revocation and atomic account creation now enforce account status.</p><p>No CVE assigned. CWE-287 and CWE-613. Fix prepared for the Upcoming release.</p><p><a href="inactivebleed/">Fix and verification</a></p></details></td>
+</tr>
       <tr>
         <td valign="top">-</td>
         <td class="icon" valign="top"><h2><span role="img" aria-label="AuthTraceBleed"><i class="fa fa-sign-in" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></span></h2></td>
