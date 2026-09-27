@@ -43,6 +43,35 @@ class RiskAudit(unittest.TestCase):
         self.policy['denyHashes']=[hashlib.sha256(self.file.read_bytes()).hexdigest()]
         with self.assertRaisesRegex(ValueError,'hash'):r.inspect(self.root,self.policy)
         with self.assertRaisesRegex(ValueError,'hash'):r.artifact(self.file,self.policy)
+
+    def test_current_site_passes_the_release_indicator_gate(self):
+        policy = json.loads((ROOT/'releases/risk-baseline.json').read_text())
+        r.inspect(ROOT, policy)
+
+    def test_hall_of_fame_links_are_limited_to_reviewed_pages_and_exact_urls(self):
+        policy = json.loads((ROOT/'releases/risk-baseline.json').read_text())
+        self.policy['allowUrlPatternsByFile'] = policy['allowUrlPatternsByFile']
+        page = self.root/'hall-of-fame/ldapbindbleed/index.html'
+        page.parent.mkdir(parents=True)
+        urls = ['https://github.com/kta1kri',
+                'https://github.com/wekan/wekan/commit/679a8b349',
+                'https://github.com/wekan/wekan/blob/main/docs/Security/Authentication-Boundary-Audit-2026-09-27.md']
+        page.write_text('\n'.join('<a href="'+url+'">Reference</a>' for url in urls))
+        r.inspect(self.root, self.policy)
+        for url in urls:
+            with self.subTest(url=url):
+                self.file.write_text('fetch("'+url+'")')
+                with self.assertRaisesRegex(ValueError, 'main.js: new URL'):
+                    r.inspect(self.root, self.policy)
+        self.file.write_text('console.log("local diagnostics");')
+        for url in [urls[0]+'?report=1', urls[1]+'0', urls[2].replace('.md', 'Xmd'),
+                    'https://github.com/unreviewed',
+                    'https://github.com/other/repo/commit/679a8b349',
+                    'https://github.com.evil.example/kta1kri']:
+            with self.subTest(url=url):
+                page.write_text('<a href="'+url+'">Unreviewed</a>')
+                with self.assertRaisesRegex(ValueError, 'new URL'):
+                    r.inspect(self.root, self.policy)
     def test_baselined_keyword_is_not_blanket_for_new_occurrences(self):
         self.file.write_text('/* TelemetryClient compatibility */')
         self.policy['files']=r.collect(self.root,self.policy)

@@ -10999,7 +10999,29 @@
   },
   "allowUrlPatternsByFile": {
     "hall-of-fame/index.html": [
-      "https://github\\.com/esbrito81"
+      "https://github\\.com/esbrito81",
+      "https://github\\.com/kta1kri"
+    ],
+    "hall-of-fame/directorygroupbleed/index.html": [
+      "https://github\\.com/wekan/wekan/blob/main/docs/Security/Authentication-Boundary-Audit-2026-09-27\\.md",
+      "https://github\\.com/wekan/wekan/commit/679a8b349"
+    ],
+    "hall-of-fame/exportscopebleed/index.html": [
+      "https://github\\.com/wekan/wekan/blob/main/docs/Security/Export-Assignment-Scope-2026-09-27\\.md",
+      "https://github\\.com/wekan/wekan/commit/0c862047b"
+    ],
+    "hall-of-fame/historyscopebleed/index.html": [
+      "https://github\\.com/wekan/wekan/blob/main/docs/Security/History-Access-Boundary-2026-09-27\\.md",
+      "https://github\\.com/wekan/wekan/commit/285c1db24"
+    ],
+    "hall-of-fame/ldapbindbleed/index.html": [
+      "https://github\\.com/kta1kri",
+      "https://github\\.com/wekan/wekan/blob/main/docs/Security/Authentication-Boundary-Audit-2026-09-27\\.md",
+      "https://github\\.com/wekan/wekan/commit/679a8b349"
+    ],
+    "hall-of-fame/samlreplaybleed/index.html": [
+      "https://github\\.com/wekan/wekan/blob/main/docs/Security/Authentication-Boundary-Audit-2026-09-27\\.md",
+      "https://github\\.com/wekan/wekan/commit/679a8b349"
     ],
     "hall-of-fame/inactivebleed/index.html": [
       "https://github\\.com/esbrito81",
