@@ -1,5 +1,12 @@
 # Upcoming wekan.fi update
 
+- [Unblock Pages checks for reviewed Hall of Fame references](https://github.com/wekan/wekan.fi/commit/276468b).
+  The deployment audit rejected source-fix, audit-document and reporter links
+  on the authentication, export and History pages. Allow those exact links
+  only on the affected pages; unrelated URLs and suspicious indicators still
+  fail. All 30 risk, mocked-release and Hall of Fame checks pass, as does the
+  local deployment audit. Hosted deployment was not run. Thanks to xet7.
+
 - Document LdapBindBleed, DirectoryGroupBleed and SamlReplayBleed in the Hall
   of Fame, including deployment conditions, verification and runtime reporting.
   Credit kta1kri for GHSA-m87f-f43w-hwmc and xet7 for the sibling audit.
