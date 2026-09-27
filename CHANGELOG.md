@@ -1,5 +1,12 @@
 # Upcoming wekan.fi update
 
+- Document LdapBindBleed, DirectoryGroupBleed and SamlReplayBleed in the Hall
+  of Fame, including deployment conditions, verification and runtime reporting.
+  Credit kta1kri for GHSA-m87f-f43w-hwmc and xet7 for the sibling audit.
+  [Source fixes and regression tests](https://github.com/wekan/wekan/commit/679a8b349).
+  Prepared locally for the Upcoming release; no website publication performed.
+  Thanks to kta1kri and xet7.
+
 - [Distinguish known dependency keyword false positives from new findings](https://github.com/wekan/wekan.fi/commit/289eee79914c0ab69e77039ead838980111f1f9f).
   Documented exact matches are informational; new or changed matches warn.
   Independent risk gates stay active. Current metadata needs no exemptions.

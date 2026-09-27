@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8">
+<title>WeKan — Hall of Fame / DirectoryGroupBleed</title>
+<link rel="icon" href="../../wekan-favicon.png">
+<link rel="stylesheet" href="../../css/main.css">
+<link rel="stylesheet" href="../../font-awesome/css/font-awesome.min.css">
+</head><body>
+<img src="../hof.svg" alt="Hall of Fame" width="300">
+<div class="action-buttons"><a class="button" href="../">Back to Hall of Fame Contents</a>
+<a class="button" href="../../">Back to WeKan Website</a></div>
+<div class="hof"><h1>DirectoryGroupBleed</h1>
+<table border="1"><tr><th>CVE</th><th>Icon</th><th>Vulnerability name</th><th>Date</th>
+<th>Responsible Security Disclosure by</th><th>Stars</th><th>Process</th><th>Vulnerabilities</th></tr>
+<tr>
+<td valign="top">-</td>
+<td class="icon" valign="top"><h2><span role="img" aria-label="DirectoryGroupBleed"><i class="fa fa-users" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></span></h2></td>
+<td valign="top"><b>DirectoryGroupBleed</b></td>
+<td valign="top">2026-09-27</td>
+<td class="by" valign="top"><b><a href="https://github.com/xet7">xet7</a></b></td>
+<td class="stars" valign="top"><img src="../GoldStar.png" width="30" height="30" alt="Gold star"><img src="../GoldStar.png" width="30" height="30" alt="Gold star"><img src="../GoldStar.png" width="30" height="30" alt="Gold star"></td>
+<td valign="top">Found and fixed during the sibling authentication audit following the LDAP disclosure.</td>
+<td valign="top"><p>LDAP direct user-bind mode skipped configured login-group restrictions, and a group query could omit its membership clause when a user attribute was missing. CAS matched allowed group names as substring regular expressions, allowing similarly named groups. Both LDAP modes now enforce membership, missing identities fail closed, and CAS compares complete literal CN values. LDAP filter and DN values are escaped for their respective contexts.</p><p>CWE-863. High severity for deployments relying on the affected group restrictions. No CVE assigned.</p><p>Fix prepared for the Upcoming release.</p></td>
+</tr>
+</table>
+<h2 class="hof">Details</h2>
+<p>LDAP and CAS group refusals are summarized as DirectoryGroupBleed in Admin Panel / Problems. Escaping legitimate identifier punctuation does not itself record an attack.</p>
+<p><a href="https://github.com/wekan/wekan/commit/679a8b349">Source fix and regression coverage</a></p>
+<h2>Verification</h2>
+<p>Positive and negative tests execute the LDAP handler and CAS validator. Coverage includes allowed and denied members, missing membership values, service-account lookup order, no fallback after group denial, escaped DNs, prefix collisions, regex metacharacters, empty allowlists and query-injection values.</p>
+<p>The authentication regression run passed 46 focused Node suites and five Chromium scenarios.
+The local Meteor application rebuilt successfully. Live OpenLDAP/Active Directory,
+external CAS/SAML providers, Sandstorm and the FerretDB authentication matrix were not tested.</p>
+<p><a href="https://github.com/wekan/wekan/blob/main/docs/Security/Authentication-Boundary-Audit-2026-09-27.md">Authentication audit, findings and limitations</a></p>
+</div></body></html>

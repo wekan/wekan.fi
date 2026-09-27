@@ -91,6 +91,49 @@
 
 <tr>
 <td valign="top">-</td>
+<td class="icon" valign="top"><h2><span role="img" aria-label="LdapBindBleed"><i class="fa fa-sign-in" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></span></h2></td>
+<td valign="top"><b>LdapBindBleed</b></td>
+<td valign="top">2026-09-27</td>
+<td class="by" valign="top"><b><a href="https://github.com/kta1kri">kta1kri</a></b></td>
+<td class="stars" valign="top"><img src="GoldStar.png" width="30" height="30" alt="Gold star"><img src="GoldStar.png" width="30" height="30" alt="Gold star"><img src="GoldStar.png" width="30" height="30" alt="Gold star"><img src="GoldStar.png" width="30" height="30" alt="Gold star"><img src="GoldStar.png" width="30" height="30" alt="Gold star"></td>
+<td valign="top"><details><summary>Process</summary>
+
+Responsible disclosure through private GitHub advisory GHSA-m87f-f43w-hwmc, with a detailed report and suggested fix; validated and fixed by xet7.</details></td>
+<td valign="top"><details><summary>Details</summary>
+
+<p>LDAP direct user-bind mode accepted empty passwords. On a directory that permits unauthenticated binds and the subsequent user search, this could authenticate a matching WeKan account without its password. Both user-authentication helpers and the DDP/REST login boundary now reject empty or malformed credentials before binding or falling back.</p><p>CWE-287. Conditional critical authentication bypass. No CVE assigned. The OpenLDAP administrator guide states that unauthenticated binds are disabled by default; the report’s stock-default claim was not confirmed.</p><p>Fix prepared for the Upcoming release.</p><p><a href="ldapbindbleed/">Fix and verification</a></p></details></td>
+</tr>
+<tr>
+<td valign="top">-</td>
+<td class="icon" valign="top"><h2><span role="img" aria-label="DirectoryGroupBleed"><i class="fa fa-users" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></span></h2></td>
+<td valign="top"><b>DirectoryGroupBleed</b></td>
+<td valign="top">2026-09-27</td>
+<td class="by" valign="top"><b><a href="https://github.com/xet7">xet7</a></b></td>
+<td class="stars" valign="top"><img src="GoldStar.png" width="30" height="30" alt="Gold star"><img src="GoldStar.png" width="30" height="30" alt="Gold star"><img src="GoldStar.png" width="30" height="30" alt="Gold star"></td>
+<td valign="top"><details><summary>Process</summary>
+
+Found and fixed during the sibling authentication audit following the LDAP disclosure.</details></td>
+<td valign="top"><details><summary>Details</summary>
+
+<p>LDAP direct user-bind mode skipped configured login-group restrictions, and a group query could omit its membership clause when a user attribute was missing. CAS matched allowed group names as substring regular expressions, allowing similarly named groups. Both LDAP modes now enforce membership, missing identities fail closed, and CAS compares complete literal CN values. LDAP filter and DN values are escaped for their respective contexts.</p><p>CWE-863. High severity for deployments relying on the affected group restrictions. No CVE assigned.</p><p>Fix prepared for the Upcoming release.</p><p><a href="directorygroupbleed/">Fix and verification</a></p></details></td>
+</tr>
+<tr>
+<td valign="top">-</td>
+<td class="icon" valign="top"><h2><span role="img" aria-label="SamlReplayBleed"><i class="fa fa-repeat" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></span></h2></td>
+<td valign="top"><b>SamlReplayBleed</b></td>
+<td valign="top">2026-09-27</td>
+<td class="by" valign="top"><b><a href="https://github.com/xet7">xet7</a></b></td>
+<td class="stars" valign="top"><img src="GoldStar.png" width="30" height="30" alt="Gold star"><img src="GoldStar.png" width="30" height="30" alt="Gold star"><img src="GoldStar.png" width="30" height="30" alt="Gold star"></td>
+<td valign="top"><details><summary>Process</summary>
+
+Found and fixed during the sibling authentication audit; reproduced with locally signed SAML responses.</details></td>
+<td valign="top"><details><summary>Details</summary>
+
+<p>The SAML adapter inherited node-saml’s disabled InResponseTo validation. A still-valid signed response could be submitted again under a different RelayState. The adapter now requires a live request ID, and a bounded synchronous guard consumes each verified response before a login credential is stored, including concurrent validations.</p><p>CWE-294. High severity: reuse requires possession of a valid signed response. No CVE assigned. Unsolicited IdP-initiated responses are now rejected; login must start from WeKan.</p><p>Fix prepared for the Upcoming release.</p><p><a href="samlreplaybleed/">Fix and verification</a></p></details></td>
+</tr>
+
+<tr>
+<td valign="top">-</td>
 <td class="icon" valign="top"><h2><span role="img" aria-label="InactiveBleed"><i class="fa fa-user-times" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></span></h2></td>
 <td valign="top"><b>InactiveBleed</b></td>
 <td valign="top">2026-09-26</td>

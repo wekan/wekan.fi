@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8">
+<title>WeKan — Hall of Fame / LdapBindBleed</title>
+<link rel="icon" href="../../wekan-favicon.png">
+<link rel="stylesheet" href="../../css/main.css">
+<link rel="stylesheet" href="../../font-awesome/css/font-awesome.min.css">
+</head><body>
+<img src="../hof.svg" alt="Hall of Fame" width="300">
+<div class="action-buttons"><a class="button" href="../">Back to Hall of Fame Contents</a>
+<a class="button" href="../../">Back to WeKan Website</a></div>
+<div class="hof"><h1>LdapBindBleed</h1>
+<table border="1"><tr><th>CVE</th><th>Icon</th><th>Vulnerability name</th><th>Date</th>
+<th>Responsible Security Disclosure by</th><th>Stars</th><th>Process</th><th>Vulnerabilities</th></tr>
+<tr>
+<td valign="top">-</td>
+<td class="icon" valign="top"><h2><span role="img" aria-label="LdapBindBleed"><i class="fa fa-sign-in" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></span></h2></td>
+<td valign="top"><b>LdapBindBleed</b></td>
+<td valign="top">2026-09-27</td>
+<td class="by" valign="top"><b><a href="https://github.com/kta1kri">kta1kri</a></b></td>
+<td class="stars" valign="top"><img src="../GoldStar.png" width="30" height="30" alt="Gold star"><img src="../GoldStar.png" width="30" height="30" alt="Gold star"><img src="../GoldStar.png" width="30" height="30" alt="Gold star"><img src="../GoldStar.png" width="30" height="30" alt="Gold star"><img src="../GoldStar.png" width="30" height="30" alt="Gold star"></td>
+<td valign="top">Responsible disclosure through private GitHub advisory GHSA-m87f-f43w-hwmc, with a detailed report and suggested fix; validated and fixed by xet7.</td>
+<td valign="top"><p>LDAP direct user-bind mode accepted empty passwords. On a directory that permits unauthenticated binds and the subsequent user search, this could authenticate a matching WeKan account without its password. Both user-authentication helpers and the DDP/REST login boundary now reject empty or malformed credentials before binding or falling back.</p><p>CWE-287. Conditional critical authentication bypass. No CVE assigned. The OpenLDAP administrator guide states that unauthenticated binds are disabled by default; the report’s stock-default claim was not confirmed.</p><p>Fix prepared for the Upcoming release.</p></td>
+</tr>
+</table>
+<h2 class="hof">Details</h2>
+<p>Blocked attempts are summarized as LdapBindBleed in Admin Panel / Problems. Passwords are never included in the security event.</p>
+<p><a href="https://github.com/wekan/wekan/commit/679a8b349">Source fix and regression coverage</a></p>
+<h2>Verification</h2>
+<p>The actual LDAP class and login handler were reproduced with controlled directory and database responses. Tests cover valid and wrong passwords, empty and non-string credentials, both modes, ambiguous searches, local fallback, logging failure and intentional anonymous service searches. Chromium verifies that an empty-password attempt creates no session and records a Problems summary.</p>
+<p>The authentication regression run passed 46 focused Node suites and five Chromium scenarios.
+The local Meteor application rebuilt successfully. Live OpenLDAP/Active Directory,
+external CAS/SAML providers, Sandstorm and the FerretDB authentication matrix were not tested.</p>
+<p><a href="https://github.com/wekan/wekan/blob/main/docs/Security/Authentication-Boundary-Audit-2026-09-27.md">Authentication audit, findings and limitations</a></p>
+</div></body></html>
