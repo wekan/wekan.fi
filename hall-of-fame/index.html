@@ -91,6 +91,20 @@
 
 <tr>
 <td valign="top">-</td>
+<td valign="top"><h2><span role="img" aria-label="HistoryScopeBleed"><i class="fa fa-history" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></span></h2></td>
+<td valign="top"><b>HistoryScopeBleed</b></td>
+<td valign="top">2026-09-27</td>
+<td valign="top"><b><a href="https://github.com/xet7">xet7</a></b></td>
+<td valign="top"><img src="GoldStar.png" width="30" height="30" alt="Gold star"><img src="GoldStar.png" width="30" height="30" alt="Gold star"><img src="GoldStar.png" width="30" height="30" alt="Gold star"></td>
+<td valign="top"><details><summary>Process</summary>
+
+Found and fixed while integrating Scrum with universal History; current access and historical authorship were not consistently separated.</details></td>
+<td valign="top"><details><summary>Details</summary>
+
+<p>Universal History returned hidden cards to assigned-only members and could retain private-board history access after membership was removed. Its reversal path could also use an old board’s access to edit a card now on another board. Reads now enforce current scope before searching or counting; restore, undo and redo share current scope and card edit checks.</p><p>CWE-863. High severity. No CVE assigned. Fix prepared for the Upcoming release.</p><p><a href="historyscopebleed/">Fix and verification</a></p></details></td>
+</tr>
+<tr>
+<td valign="top">-</td>
 <td class="icon" valign="top"><h2><span role="img" aria-label="LdapBindBleed"><i class="fa fa-sign-in" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></span></h2></td>
 <td valign="top"><b>LdapBindBleed</b></td>
 <td valign="top">2026-09-27</td>

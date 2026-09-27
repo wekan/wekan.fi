@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8">
+<title>WeKan — Hall of Fame / HistoryScopeBleed</title>
+<link rel="icon" href="../../wekan-favicon.png">
+<link rel="stylesheet" href="../../css/main.css">
+<link rel="stylesheet" href="../../font-awesome/css/font-awesome.min.css">
+</head><body>
+<img src="../hof.svg" alt="Hall of Fame" width="300">
+<div class="action-buttons"><a class="button" href="../">Back to Hall of Fame Contents</a>
+<a class="button" href="../../">Back to WeKan Website</a></div>
+<div class="hof"><h1>HistoryScopeBleed</h1>
+<table border="1"><tr><th>CVE</th><th>Icon</th><th>Vulnerability name</th><th>Date</th>
+<th>Responsible Security Disclosure by</th><th>Stars</th><th>Process</th><th>Vulnerabilities</th></tr>
+<tr>
+<td valign="top">-</td>
+<td valign="top"><h2><span role="img" aria-label="HistoryScopeBleed"><i class="fa fa-history" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></span></h2></td>
+<td valign="top"><b>HistoryScopeBleed</b></td>
+<td valign="top">2026-09-27</td>
+<td valign="top"><b><a href="https://github.com/xet7">xet7</a></b></td>
+<td valign="top"><img src="../GoldStar.png" width="30" height="30" alt="Gold star"><img src="../GoldStar.png" width="30" height="30" alt="Gold star"><img src="../GoldStar.png" width="30" height="30" alt="Gold star"></td>
+<td valign="top">Found and fixed while integrating Scrum with universal History; current access and historical authorship were not consistently separated.</td>
+<td valign="top"><p>Universal History returned hidden cards to assigned-only members and could retain private-board history access after membership was removed. Its reversal path could also use an old board’s access to edit a card now on another board. Reads now enforce current scope before searching or counting; restore, undo and redo share current scope and card edit checks.</p><p>CWE-863. High severity. No CVE assigned. Fix prepared for the Upcoming release.</p></td>
+</tr>
+</table>
+<h2 class="hof">Details</h2>
+<p><a href="https://github.com/wekan/wekan/commit/285c1db24">Source fix and regression coverage</a></p>
+<h2>Detection</h2>
+<p>Routine history filtering is not an attack signal. A refused restoration may follow a legitimate concurrent reassignment or permission change, so this guard does not automatically classify those refusals as account-blocking attacks. Existing linked-card policy logging remains unchanged.</p>
+<h2>Verification</h2>
+<p>Positive and negative tests cover currently visible history, assigned-only cards, hidden search results and contributor counts, revoked private-board access, authorized restoration and denied edits to moved cards. Existing rule undo/redo and stale-state regressions also pass. Verification uses Chromium, Meteor and MongoDB; other browsers, FerretDB and Sandstorm were not exercised.</p>
+<p><a href="https://github.com/wekan/wekan/blob/main/docs/Security/History-Access-Boundary-2026-09-27.md">Audit and verification scope</a></p>
+</div></body></html>
