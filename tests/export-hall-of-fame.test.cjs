@@ -1,0 +1,16 @@
+'use strict';
+const fs=require('node:fs');const path=require('node:path');const assert=require('node:assert/strict');
+const root=path.resolve(__dirname,'../hall-of-fame');
+const index=fs.readFileSync(path.join(root,'index.html'),'utf8');
+const rows=index.match(/<tr>[\s\S]*?<\/tr>/g).filter(row=>row.includes('<b>ExportScopeBleed</b>'));
+assert.equal(rows.length,1);
+const cells=rows[0].match(/<td\b[^>]*>[\s\S]*?<\/td>/g);assert.equal(cells.length,8);
+assert.match(cells[1],/fa-tint/);assert.match(cells[4],/github.com\/xet7/);
+assert.equal((cells[5].match(/GoldStar.png/g)||[]).length,3);
+assert.match(cells[6],/<details><summary>Process<\/summary>/);
+assert.match(cells[7],/<details><summary>Details<\/summary>/);
+const page=fs.readFileSync(path.join(root,'exportscopebleed/index.html'),'utf8');
+assert.doesNotMatch(page,/<details>/);assert.match(page,/Export-Assignment-Scope-2026-09-27/);
+assert.match(page,/No CVE assigned/);assert.match(page,/Upcoming release/);
+assert.match(page,/Ordinary export menus/);assert.match(page,/not exercised/);
+console.log('Export Hall of Fame structure, attribution, source link and verification limits pass.');

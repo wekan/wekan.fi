@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8">
+<title>WeKan — Hall of Fame / ExportScopeBleed</title>
+<link rel="icon" href="../../wekan-favicon.png">
+<link rel="stylesheet" href="../../css/main.css">
+<link rel="stylesheet" href="../../font-awesome/css/font-awesome.min.css">
+</head><body>
+<img src="../hof.svg" alt="Hall of Fame" width="300">
+<div class="action-buttons"><a class="button" href="../">Back to Hall of Fame Contents</a>
+<a class="button" href="../../">Back to WeKan Website</a></div>
+<div class="hof"><h1>ExportScopeBleed</h1>
+<table border="1"><tr><th>CVE</th><th>Icon</th><th>Vulnerability name</th><th>Date</th>
+<th>Responsible Security Disclosure by</th><th>Stars</th><th>Process</th><th>Vulnerabilities</th></tr>
+<tr>
+<td valign="top">-</td>
+<td valign="top"><h2><span role="img" aria-label="ExportScopeBleed"><i class="fa fa-download" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></span></h2></td>
+<td valign="top"><b>ExportScopeBleed</b></td>
+<td valign="top">2026-09-27</td>
+<td valign="top"><b><a href="https://github.com/xet7">xet7</a></b></td>
+<td valign="top"><img src="../GoldStar.png" width="30" height="30" alt="Gold star"><img src="../GoldStar.png" width="30" height="30" alt="Gold star"><img src="../GoldStar.png" width="30" height="30" alt="Gold star"></td>
+<td valign="top">Found and fixed while reviewing native Scrum export permissions; board visibility did not enforce assigned-only card access.</td>
+<td valign="top"><p>Board-wide exporters accepted private-board visibility for assigned-only members while reading unassigned cards and related data. All nine exporter authorization methods now share an assignment-aware decision. Unfiltered exports are refused for assigned-only members; explicitly scoped Scrum reports retain access.</p><p>CWE-863. High severity. No CVE assigned. Fix prepared for the Upcoming release.</p></td>
+</tr>
+</table>
+<h2 class="hof">Details</h2>
+<p><a href="https://github.com/wekan/wekan/commit/0c862047b">Source fix and regression coverage</a></p>
+<p><a href="https://github.com/wekan/wekan/blob/main/docs/Security/Export-Assignment-Scope-2026-09-27.md">Source audit, fix and verification scope</a></p>
+<h2>Detection</h2>
+<p>Ordinary export menus can lead assigned-only users to unsupported exports. A refusal alone cannot identify an attack, so no new account-blocking canary is added. Existing generic export-denial logging remains.</p>
+<h2>Verification</h2>
+<p>Policy tests cover all assigned-only roles and preserve ordinary member access and scoped Scrum charts. A source regression covers all nine exporter authorization methods; HTTP tests cover native JSON, ZIP, CSV, calendar, PDF, Excel and chart formats. Local verification uses Chromium, Meteor and MongoDB; other browsers, FerretDB and Sandstorm were not exercised.</p>
+</div></body></html>
