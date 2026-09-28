@@ -25,7 +25,10 @@
 <h2 class="hof">Details</h2>
 <p>Attributable concurrent replay refusals are summarized as SamlReplayBleed in Admin Panel / Problems. The library also rejects unknown or expired request IDs; those failures cannot reliably distinguish replay from an ordinary stale login. State is process-local, so clustered login handshakes require sticky routing. The eight-hour consumption cache is bounded and fails closed at capacity.</p>
 <p><a href="https://github.com/wekan/wekan/commit/679a8b349">Source fix and regression coverage</a></p>
-<h2>Verification</h2>
+<h2>Compatibility correction, 2026-09-28</h2>
+<p>The application guard originally called an accessor absent from node-saml and consequently rejected valid logins. It now reads the validated <code>profile.inResponseTo</code> string while retaining request correlation and single-use consumption. ACS errors reach the sign-in page without exchanging a missing credential.</p>
+<p><a href="https://github.com/wekan/wekan/commit/3578e3ef8">Response compatibility fix and signed-popup regression tests</a>. Local Chromium tests establish a Meteor session through a signed SAML popup and verify a tampered response reports its real error. The reporter's external identity provider and deployment settings were not tested or changed.</p>
+<h2>Original verification</h2>
 <p>A generated test certificate and local protocol fixture reproduce the old configuration accepting the same signed response twice. The patched configuration accepts valid login once and rejects replay, unknown requests, unsigned and tampered responses. Atomic consumption, expiration and capacity are tested. This is not a live external identity-provider or full SAML browser deployment test.</p>
 <p>The authentication regression run passed 46 focused Node suites and five Chromium scenarios.
 The local Meteor application rebuilt successfully. Live OpenLDAP/Active Directory,

@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8">
+<title>WeKan — Hall of Fame / AdminFieldBleed</title>
+<link rel="icon" href="../../wekan-favicon.png">
+<link rel="stylesheet" href="../../css/main.css">
+<link rel="stylesheet" href="../../font-awesome/css/font-awesome.min.css">
+</head><body>
+<img src="../hof.svg" alt="Hall of Fame" width="300">
+<div class="action-buttons"><a class="button" href="../">Back to Hall of Fame Contents</a>
+<a class="button" href="../../">Back to WeKan Website</a></div>
+<div class="hof"><h1>AdminFieldBleed</h1>
+<table border="1"><tr><th>CVE</th><th>Icon</th><th>Vulnerability name</th><th>Date</th>
+<th>Responsible Security Disclosure by</th><th>Stars</th><th>Process</th><th>Vulnerabilities</th></tr>
+<tr>
+<td valign="top">-</td>
+<td valign="top"><h2><span role="img" aria-label="AdminFieldBleed"><i class="fa fa-lock" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></span></h2></td>
+<td valign="top"><b>AdminFieldBleed</b></td>
+<td valign="top">2026-09-28</td>
+<td valign="top"><b><a href="https://github.com/Hama1cco">Hama1cco</a></b></td>
+<td valign="top"><img src="../GoldStar.png" width="30" height="30" alt="Gold star"><img src="../GoldStar.png" width="30" height="30" alt="Gold star"><img src="../GoldStar.png" width="30" height="30" alt="Gold star"></td>
+<td valign="top">Reported privately by Hama1cco through GitHub Security Advisory GHSA-m8gh-2h78-f57x; validated and fixed by xet7.</td>
+<td valign="top"><p>Non-admin board members could read admin-only custom-field values through raw card responses and set them during card creation or copying. Whole-array updates also bypassed the indexed-value guard.</p><p>The fix enforces the value boundary on server publications, API and method results, card writes and exports, including live permission changes. Protected definition changes require administration of every affected board.</p><p>CWE-863. High severity. No CVE assigned. Fix prepared locally for the Upcoming release; not yet released.</p></td>
+</tr>
+
+</table>
+<h2 class="hof">Details</h2>
+<p>Server-side redaction preserves field IDs and positions while concealing values. Live subscriptions retract values after board-admin access is lost or a field becomes admin-only. Ordinary public-field editing remains available.</p>
+<p>All card mutation operators are checked against the protected before/after values. The driver boundary also covers server-side direct writes from authenticated HTTP and DDP requests. Copying omits values the caller cannot read.</p>
+<h2>Detection</h2>
+<p>Explicit protected-value or protected-definition mutation attempts are refused and summarized under AdminFieldBleed in Admin Panel → Problems. Normal reads are silently redacted. An ordinary export refusal is not classified as an attack.</p>
+<h2>Export compatibility</h2>
+<p>Binary and streaming exports containing protected fields require board-admin access until they support value-level redaction. Public-board shortcuts do not bypass this restriction.</p>
+<p><a href="https://github.com/wekan/wekan/commit/89a65ee7c">Source fix and regression tests</a></p>
+<h2>Verification</h2>
+<p>Regression coverage includes positive and negative Node tests, live REST/DDP browser checks, forged writes, History/search inference and the Problems summary. Local MongoDB, Meteor and Chromium were tested; production deployments, FerretDB and other browsers were not exercised.</p>
+<p>See the <a href="https://github.com/wekan/wekan/blob/main/docs/Security/Admin-Only-Custom-Fields-2026-09-28.md">boundary review and verification scope</a> and the Upcoming changelog.</p>
+</div></body></html>

@@ -1,5 +1,15 @@
 # Upcoming wekan.fi update
 
+- Document AdminFieldBleed, reported privately by Hama1cco, with server read,
+  mutation and export boundaries, runtime summaries and verification limits.
+  [Source fix and regression tests](https://github.com/wekan/wekan/commit/89a65ee7c).
+  Record the SAML response-property compatibility correction and real local
+  signed-popup tests on the SamlReplayBleed page.
+  [SAML compatibility fix](https://github.com/wekan/wekan/commit/3578e3ef8).
+  Allow only these reviewed reporter/source/document URLs on their specific
+  Hall of Fame pages. Prepared locally; no website publication performed.
+  Thanks to Hama1cco and xet7.
+
 - [Unblock Pages checks for reviewed Hall of Fame references](https://github.com/wekan/wekan.fi/commit/276468b).
   The deployment audit rejected source-fix, audit-document and reporter links
   on the authentication, export and History pages. Allow those exact links

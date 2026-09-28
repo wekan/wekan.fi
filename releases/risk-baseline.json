@@ -9591,7 +9591,7 @@
       "urls": [
         "http://&lt;public-host&gt;/attachment.txt",
         "http://127.0.0.1:18080/secret",
-        "http://127.0.0.1:\u2026",
+        "http://127.0.0.1:…",
         "https://github.com/RandomGenerator",
         "https://github.com/wekan/wekan/blob/main/CHANGELOG.md#upcoming-wekan--release",
         "https://github.com/wekan/wekan/blob/main/SECURITY.md",
@@ -11000,7 +11000,8 @@
   "allowUrlPatternsByFile": {
     "hall-of-fame/index.html": [
       "https://github\\.com/esbrito81",
-      "https://github\\.com/kta1kri"
+      "https://github\\.com/kta1kri",
+      "https://github\\.com/Hama1cco"
     ],
     "hall-of-fame/directorygroupbleed/index.html": [
       "https://github\\.com/wekan/wekan/blob/main/docs/Security/Authentication-Boundary-Audit-2026-09-27\\.md",
@@ -11021,7 +11022,8 @@
     ],
     "hall-of-fame/samlreplaybleed/index.html": [
       "https://github\\.com/wekan/wekan/blob/main/docs/Security/Authentication-Boundary-Audit-2026-09-27\\.md",
-      "https://github\\.com/wekan/wekan/commit/679a8b349"
+      "https://github\\.com/wekan/wekan/commit/679a8b349",
+      "https://github\\.com/wekan/wekan/commit/3578e3ef8"
     ],
     "hall-of-fame/inactivebleed/index.html": [
       "https://github\\.com/esbrito81",
@@ -11031,6 +11033,11 @@
     "install/index.html": [
       "https://nodejs\\.org/dist/v26\\.\\d+\\.\\d+/",
       "https://unofficial-builds\\.nodejs\\.org/download/release/v26\\.\\d+\\.\\d+/"
+    ],
+    "hall-of-fame/adminfieldbleed/index.html": [
+      "https://github\\.com/Hama1cco",
+      "https://github\\.com/wekan/wekan/commit/89a65ee7c",
+      "https://github\\.com/wekan/wekan/blob/main/docs/Security/Admin-Only-Custom-Fields-2026-09-28\\.md"
     ]
   }
 }
