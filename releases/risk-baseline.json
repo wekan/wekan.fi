@@ -9591,7 +9591,7 @@
       "urls": [
         "http://&lt;public-host&gt;/attachment.txt",
         "http://127.0.0.1:18080/secret",
-        "http://127.0.0.1:…",
+        "http://127.0.0.1:\u2026",
         "https://github.com/RandomGenerator",
         "https://github.com/wekan/wekan/blob/main/CHANGELOG.md#upcoming-wekan--release",
         "https://github.com/wekan/wekan/blob/main/SECURITY.md",
@@ -11038,6 +11038,10 @@
       "https://github\\.com/Hama1cco",
       "https://github\\.com/wekan/wekan/commit/89a65ee7c",
       "https://github\\.com/wekan/wekan/blob/main/docs/Security/Admin-Only-Custom-Fields-2026-09-28\\.md"
+    ],
+    "hall-of-fame/copyidentitybleed/index.html": [
+      "https://github\\.com/wekan/wekan/commit/1e44a1ffc",
+      "https://github\\.com/wekan/wekan/blob/main/docs/Security/Card-Copy-Boundary-2026-09-29\\.md"
     ]
   }
 }

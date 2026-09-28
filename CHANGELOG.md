@@ -1,5 +1,12 @@
 # Upcoming wekan.fi update
 
+- Document CopyIdentityBleed, reproduced and fixed during card-copy review,
+  with text-only overrides, private-child isolation, Problems attribution and
+  verification limits. Malformed text is not classified as an attack.
+  [Source fix and tests](https://github.com/wekan/wekan/commit/1e44a1ffc).
+  Add eight-column Hall of Fame coverage and exact source/document URL allowances.
+  Prepared locally; no website publication performed. Thanks to xet7.
+
 - Document AdminFieldBleed, reported privately by Hama1cco, with server read,
   mutation and export boundaries, runtime summaries and verification limits.
   [Source fix and regression tests](https://github.com/wekan/wekan/commit/89a65ee7c).
