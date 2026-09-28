@@ -1,5 +1,12 @@
 # Upcoming wekan.fi update
 
+- Record server card-copy destination validation and its limits on the
+  CopyIdentityBleed page, distinguishing it from remaining source-access,
+  client-template, board-property and concurrency review.
+  [Destination fix and tests](https://github.com/wekan/wekan/commit/c35ba4b35).
+  Allow this exact source link on that page. Prepared locally; no publication.
+  Thanks to xet7.
+
 - Document CopyIdentityBleed, reproduced and fixed during card-copy review,
   with text-only overrides, private-child isolation, Problems attribution and
   verification limits. Malformed text is not classified as an attack.

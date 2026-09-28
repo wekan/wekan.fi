@@ -15,6 +15,8 @@ assert.match(cells[7], /<details><summary>Details<\/summary>/);
 const page = fs.readFileSync(path.join(root, 'copyidentitybleed/index.html'), 'utf8');
 assert.doesNotMatch(page, /<details>/);
 assert.match(page, /not yet released/);
+assert.match(page, /Server card copies now validate destination board, list and swimlane ownership/);
+assert.match(page, /client-side template writes, board-copy property merging/);
 assert.match(page, /not tested/);
 assert.match(page, /without attack records or account blocking/);
 assert.match(page, /github.com\/wekan\/wekan\/commit\/[a-f0-9]{9,40}/);

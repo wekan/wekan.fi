@@ -27,9 +27,10 @@
 <p>The supported override contract is optional string title and description. The source identity, board, methods and sort are preserved. Existing protected custom-field checks remain in place.</p>
 <h2>Detection</h2>
 <p>Extra-field override attempts are refused and summarized as CopyIdentityBleed in Admin Panel → Problems. Existing high-severity security policy blocks the attempting account. Supplied values and target identifiers are not logged. Malformed title/description values are rejected as input errors without attack records or account blocking.</p>
+<p><a href="https://github.com/wekan/wekan/commit/c35ba4b35">Server destination validation and regression tests</a></p>
 <h2>Verification and remaining review</h2>
 <p>Positive and negative unit tests, a source-pattern scan, and real MongoDB/DDP/Chromium checks cover private child isolation, Problems attribution, source preservation and the copy dialog. Existing admin-only-field and Scrum copy regressions also run. Other browsers and database backends were not tested.</p>
-<p>Assigned-only child visibility, destination placement validation, direct Rules writes and concurrent permission changes remain separate review work. This is not a complete audit of every copy entry point.</p>
+<p>Server card copies now validate destination board, list and swimlane ownership before sorting or writing, rejecting missing or soft-deleted containers while preserving board-wide lists and archived-container copy behavior. Assigned-only child visibility, client-side template writes, board-copy property merging, direct Rules writes and concurrent permission changes remain separate review work. This is not a complete audit of every copy entry point.</p>
 <p><a href="https://github.com/wekan/wekan/commit/1e44a1ffc">Source fix and regression tests</a></p>
 <p><a href="https://github.com/wekan/wekan/blob/main/docs/Security/Card-Copy-Boundary-2026-09-29.md">Boundary review and verification scope</a></p>
 </div></body></html>
