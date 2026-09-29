@@ -72,6 +72,26 @@ class RiskAudit(unittest.TestCase):
                 page.write_text('<a href="'+url+'">Unreviewed</a>')
                 with self.assertRaisesRegex(ValueError, 'new URL'):
                     r.inspect(self.root, self.policy)
+    def test_board_copy_reference_is_allowed_only_on_its_reviewed_page(self):
+        policy = json.loads((ROOT/'releases/risk-baseline.json').read_text())
+        self.policy['allowUrlPatternsByFile'] = policy['allowUrlPatternsByFile']
+        page = self.root/'hall-of-fame/copyidentitybleed/index.html'
+        page.parent.mkdir(parents=True)
+        url = 'https://github.com/wekan/wekan/commit/94931c7ab'
+        page.write_text('<a href="'+url+'">Board copy fix and regression tests</a>')
+        r.inspect(self.root, self.policy)
+        self.file.write_text('fetch("'+url+'")')
+        with self.assertRaisesRegex(ValueError, 'main.js: new URL'):
+            r.inspect(self.root, self.policy)
+        self.file.write_text('console.log("local diagnostics");')
+        for unreviewed in [url+'?report=1', url+'0',
+                           url.replace('github.com', 'githubXcom'),
+                           url.replace('/wekan/wekan/', '/other/repo/')]:
+            with self.subTest(url=unreviewed):
+                page.write_text('<a href="'+unreviewed+'">Unreviewed</a>')
+                with self.assertRaisesRegex(ValueError, 'new URL'):
+                    r.inspect(self.root, self.policy)
+
     def test_baselined_keyword_is_not_blanket_for_new_occurrences(self):
         self.file.write_text('/* TelemetryClient compatibility */')
         self.policy['files']=r.collect(self.root,self.policy)

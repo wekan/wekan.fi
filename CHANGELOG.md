@@ -1,5 +1,12 @@
 # Upcoming wekan.fi update
 
+- Unblock the Pages audit for the CopyIdentityBleed board-copy fix reference.
+  Allow the exact reviewed commit URL only on its Hall of Fame page; altered
+  URLs and use on other files still fail. Update the page regression to reflect
+  completed board-copy validation. All 28 Python tests, four Hall of Fame
+  checks and the local deployment audit pass. Hosted deployment was not run.
+  Thanks to xet7.
+
 - Record server card-copy destination validation and its limits on the
   CopyIdentityBleed page, distinguishing it from remaining source-access,
   client-template, board-property and concurrency review.

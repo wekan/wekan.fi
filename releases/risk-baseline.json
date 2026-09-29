@@ -11042,7 +11042,8 @@
     "hall-of-fame/copyidentitybleed/index.html": [
       "https://github\\.com/wekan/wekan/commit/1e44a1ffc",
       "https://github\\.com/wekan/wekan/blob/main/docs/Security/Card-Copy-Boundary-2026-09-29\\.md",
-      "https://github\\.com/wekan/wekan/commit/c35ba4b35"
+      "https://github\\.com/wekan/wekan/commit/c35ba4b35",
+      "https://github\\.com/wekan/wekan/commit/94931c7ab"
     ]
   }
 }

@@ -16,7 +16,11 @@ const page = fs.readFileSync(path.join(root, 'copyidentitybleed/index.html'), 'u
 assert.doesNotMatch(page, /<details>/);
 assert.match(page, /not yet released/);
 assert.match(page, /Server card copies now validate destination board, list and swimlane ownership/);
-assert.match(page, /client-side template writes, board-copy property merging/);
+// Board-copy property merging is now fixed; template writes remain under review.
+assert.match(page, /client-side template writes, direct Rules writes/);
+assert.match(page, /Properties outside title, sort, type, without-cards and card selection are now refused/);
+assert.match(page, /https:\/\/github\.com\/wekan\/wekan\/commit\/94931c7ab/);
+assert.doesNotMatch(page, /board-copy property merging/);
 assert.match(page, /not tested/);
 assert.match(page, /without attack records or account blocking/);
 assert.match(page, /github.com\/wekan\/wekan\/commit\/[a-f0-9]{9,40}/);
