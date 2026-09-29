@@ -19,7 +19,7 @@
 <td valign="top"><b><a href="https://github.com/xet7">xet7</a></b></td>
 <td valign="top"><img src="../GoldStar.png" width="30" height="30" alt="Gold star"><img src="../GoldStar.png" width="30" height="30" alt="Gold star"><img src="../GoldStar.png" width="30" height="30" alt="Gold star"></td>
 <td valign="top">Found and reproduced while reviewing TODO Later card-copy inputs; fixed by xet7.</td>
-<td valign="top"><p>Caller-controlled card-copy overrides could replace the source card identifier after its board membership check, causing private children from another card to be copied into a readable destination.</p><p>Copy overrides now accept only title and description text on a separate card object. Other fields are refused before sorting or copying children.</p><p>CWE-915. High severity. No CVE assigned. Fix prepared locally for the Upcoming release; not yet released.</p></td>
+<td valign="top"><p>Caller-controlled card-copy overrides could replace the source card identifier after its board membership check, causing private children from another card to be copied into a readable destination.</p><p>Copy overrides now accept only title and description text on a separate card object. Other fields are refused before sorting or copying children.</p><p>Board copying had the same fault: the copy method assigned caller-supplied properties, including the identifier, onto the source board, so a board admin could duplicate another private board. Board copies now accept only title, sort, type and card selection on a separate board object.</p><p>CWE-915. High severity. No CVE assigned. Fix prepared locally for the Upcoming release; not yet released.</p></td>
 </tr>
 </table>
 <h2 class="hof">Details</h2>
@@ -30,7 +30,10 @@
 <p><a href="https://github.com/wekan/wekan/commit/c35ba4b35">Server destination validation and regression tests</a></p>
 <h2>Verification and remaining review</h2>
 <p>Positive and negative unit tests, a source-pattern scan, and real MongoDB/DDP/Chromium checks cover private child isolation, Problems attribution, source preservation and the copy dialog. Existing admin-only-field and Scrum copy regressions also run. Other browsers and database backends were not tested.</p>
-<p>Server card copies now validate destination board, list and swimlane ownership before sorting or writing, rejecting missing or soft-deleted containers while preserving board-wide lists and archived-container copy behavior. Assigned-only child visibility, client-side template writes, board-copy property merging, direct Rules writes and concurrent permission changes remain separate review work. This is not a complete audit of every copy entry point.</p>
+<p>Server card copies now validate destination board, list and swimlane ownership before sorting or writing, rejecting missing or soft-deleted containers while preserving board-wide lists and archived-container copy behavior. Assigned-only child visibility, client-side template writes, direct Rules writes and concurrent permission changes remain separate review work. This is not a complete audit of every copy entry point.</p>
 <p><a href="https://github.com/wekan/wekan/commit/1e44a1ffc">Source fix and regression tests</a></p>
+<h2>Board copy</h2>
+<p>The board copy method merged every caller-supplied property onto the source board before copying, and the copy loads lists, cards and their children by that board's identifier. Passing another board's identifier duplicated a private board the caller was not a member of. Properties outside title, sort, type, without-cards and card selection are now refused and summarized as CopyIdentityBleed in Admin Panel → Problems; the REST copy route accepts only a string title. Unit, source-scan and Chromium regressions cover the refusal, the Problems record and malformed input.</p>
+<p><a href="https://github.com/wekan/wekan/commit/94931c7ab">Board copy fix and regression tests</a></p>
 <p><a href="https://github.com/wekan/wekan/blob/main/docs/Security/Card-Copy-Boundary-2026-09-29.md">Boundary review and verification scope</a></p>
 </div></body></html>
