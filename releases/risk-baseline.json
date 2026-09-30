@@ -11001,7 +11001,8 @@
     "hall-of-fame/index.html": [
       "https://github\\.com/esbrito81",
       "https://github\\.com/kta1kri",
-      "https://github\\.com/Hama1cco"
+      "https://github\\.com/Hama1cco",
+      "https://github\\.com/alex131125"
     ],
     "hall-of-fame/directorygroupbleed/index.html": [
       "https://github\\.com/wekan/wekan/blob/main/docs/Security/Authentication-Boundary-Audit-2026-09-27\\.md",
@@ -11044,6 +11045,11 @@
       "https://github\\.com/wekan/wekan/blob/main/docs/Security/Card-Copy-Boundary-2026-09-29\\.md",
       "https://github\\.com/wekan/wekan/commit/c35ba4b35",
       "https://github\\.com/wekan/wekan/commit/94931c7ab"
+    ],
+    "hall-of-fame/replybleed/index.html": [
+      "https://github\\.com/alex131125",
+      "https://github\\.com/wekan/wekan/security/advisories/GHSA-mc7c-cv99-64h7",
+      "https://github\\.com/wekan/wekan/commit/3151f8a81"
     ]
   }
 }

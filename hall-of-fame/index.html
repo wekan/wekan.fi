@@ -91,6 +91,20 @@
 
 <tr>
 <td valign="top">-</td>
+<td valign="top"><h2><span role="img" aria-label="ReplyBleed"><i class="fa fa-reply" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></span></h2></td>
+<td valign="top"><b>ReplyBleed</b></td>
+<td valign="top">2026-09-30</td>
+<td valign="top"><b><a href="https://github.com/alex131125">alex131125</a></b></td>
+<td valign="top"><img src="GoldStar.png" width="30" height="30" alt="Gold star"><img src="GoldStar.png" width="30" height="30" alt="Gold star"><img src="GoldStar.png" width="30" height="30" alt="Gold star"><img src="GoldStar.png" width="30" height="30" alt="Gold star"><img src="GoldStar.png" width="30" height="30" alt="Gold star"></td>
+<td valign="top"><details><summary>Process</summary>
+
+Reported privately by alex131125 through GitHub Security Advisory GHSA-mc7c-cv99-64h7, with details and suggested remediation; validated and fixed by xet7.</details></td>
+<td valign="top"><details><summary>Details</summary>
+
+<p>The reply-by-email token in a notification's Reply-To address signed only the card, so every recipient of that card held the same address, and the webhook took the comment author from the reply's From field, which the sender controls. Anyone holding one card's reply address could have posted a comment on it as any user.</p><p>Validation found that the webhook module was never imported by the server entry point, so released versions did not register <code>/api/inbound-email</code> and the flaw could not be reached. The endpoint is now registered with the fix.</p><p>The reply address now names the card and the one recipient, and expires (30 days by default). The author is that recipient, the From address must be one of that recipient's own addresses, and the recipient must still be allowed to comment on the card. An optional provider secret authenticates the mail provider. Addresses in the old card-only form are refused.</p><p>CWE-346. Medium severity (CVSS 4.3). No CVE assigned. Fix prepared locally for the Upcoming release; not yet released.</p><p><a href="replybleed/">Fix and verification</a></p></details></td>
+</tr>
+<tr>
+<td valign="top">-</td>
 <td valign="top"><h2><span role="img" aria-label="CopyIdentityBleed"><i class="fa fa-clone" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></span></h2></td>
 <td valign="top"><b>CopyIdentityBleed</b></td>
 <td valign="top">2026-09-29</td>

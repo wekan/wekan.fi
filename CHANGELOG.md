@@ -1,5 +1,15 @@
 # Upcoming wekan.fi update
 
+- Document ReplyBleed, reported privately by alex131125 in GHSA-mc7c-cv99-64h7:
+  reply-by-email took the comment author from the reply's From address. Record
+  that the endpoint was never registered in released versions, the
+  per-recipient expiring reply address, the provider secret, Problems
+  attribution and verification limits.
+  [Source fix and regression tests](https://github.com/wekan/wekan/commit/3151f8a81).
+  Allow only these reporter, advisory and source URLs on their pages. Five Hall
+  of Fame checks and the local deployment audit pass. Prepared locally; no
+  website publication performed. Thanks to alex131125 and xet7.
+
 - Unblock the Pages audit for the CopyIdentityBleed board-copy fix reference.
   Allow the exact reviewed commit URL only on its Hall of Fame page; altered
   URLs and use on other files still fail. Update the page regression to reflect

@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8">
+<title>WeKan — Hall of Fame / ReplyBleed</title>
+<link rel="icon" href="../../wekan-favicon.png">
+<link rel="stylesheet" href="../../css/main.css">
+<link rel="stylesheet" href="../../font-awesome/css/font-awesome.min.css">
+</head><body>
+<img src="../hof.svg" alt="Hall of Fame" width="300">
+<div class="action-buttons"><a class="button" href="../">Back to Hall of Fame Contents</a>
+<a class="button" href="../../">Back to WeKan Website</a></div>
+<div class="hof"><h1>ReplyBleed</h1>
+<table border="1"><tr><th>CVE</th><th>Icon</th><th>Vulnerability name</th><th>Date</th>
+<th>Responsible Security Disclosure by</th><th>Stars</th><th>Process</th><th>Vulnerabilities</th></tr>
+<tr>
+<td valign="top">-</td>
+<td valign="top"><h2><span role="img" aria-label="ReplyBleed"><i class="fa fa-reply" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></span></h2></td>
+<td valign="top"><b>ReplyBleed</b></td>
+<td valign="top">2026-09-30</td>
+<td valign="top"><b><a href="https://github.com/alex131125">alex131125</a></b></td>
+<td valign="top"><img src="../GoldStar.png" width="30" height="30" alt="Gold star"><img src="../GoldStar.png" width="30" height="30" alt="Gold star"><img src="../GoldStar.png" width="30" height="30" alt="Gold star"><img src="../GoldStar.png" width="30" height="30" alt="Gold star"><img src="../GoldStar.png" width="30" height="30" alt="Gold star"></td>
+<td valign="top">Reported privately by alex131125 through GitHub Security Advisory GHSA-mc7c-cv99-64h7, with details and suggested remediation; validated and fixed by xet7.</td>
+<td valign="top"><p>The reply-by-email token in a notification's Reply-To address signed only the card, so every recipient of that card held the same address, and the webhook took the comment author from the reply's From field, which the sender controls. Anyone holding one card's reply address could have posted a comment on it as any user.</p><p>Validation found that the webhook module was never imported by the server entry point, so released versions did not register <code>/api/inbound-email</code> and the flaw could not be reached. The endpoint is now registered with the fix.</p><p>The reply address now names the card and the one recipient, and expires (30 days by default). The author is that recipient, the From address must be one of that recipient's own addresses, and the recipient must still be allowed to comment on the card. An optional provider secret authenticates the mail provider. Addresses in the old card-only form are refused.</p><p>CWE-346. Medium severity (CVSS 4.3). No CVE assigned. Fix prepared locally for the Upcoming release; not yet released.</p></td>
+</tr>
+</table>
+<h2 class="hof">Details</h2>
+<p>Advisory <a href="https://github.com/wekan/wekan/security/advisories/GHSA-mc7c-cv99-64h7">GHSA-mc7c-cv99-64h7</a> reported that a reply to a notification email was attributed to whichever WeKan user owned the reply's From address. The reply token proved only that the address belonged to a card, not to whom it had been sent, so one recipient could reply as another, and anyone who saw a card's reply address could reply as anyone.</p>
+<p>Reading the source confirmed the logic. It also showed that <code>server/routes/inboundEmail.js</code> had never been imported by <code>server/imports.js</code>: from the feature's introduction through v12.12, the running server did not register the endpoint, and no built bundle contained the handler. The documented feature did not work, and the flaw could not be reached. The fix registers the endpoint only together with the corrected checks.</p>
+<h2>Fix</h2>
+<p>The Reply-To address is now <code>reply+&lt;cardId&gt;.&lt;userId&gt;.&lt;expiry&gt;.&lt;mac&gt;</code>. The HMAC-SHA256 covers the card, the recipient and the last valid day, so none of them can be changed. The comment author is the recipient in the token. The reply is accepted only when its From address is one of that recipient's account addresses, the recipient is enabled, and their board role may comment on that card, including the assigned-only restriction. <code>INBOUND_EMAIL_WEBHOOK_SECRET</code>, when set, must be presented by the mail provider as a header or query value and is compared in constant time. The old card-only form is refused.</p>
+<h2>Detection</h2>
+<p>A forged token, a From address that is not the recipient's, and a missing or wrong provider secret are summarized as ReplyBleed in Admin Panel → Problems. Expired and pre-fix tokens, disabled users and members who have lost comment access are refused without a record, because real users replying to old mail reach them.</p>
+<h2>Verification</h2>
+<p>Unit tests cover the token round trip, per-recipient addresses, tampering with the card, the recipient or the expiry, expiry, and legacy tokens. The author decision reproduces the advisory's attack as data and covers disabled users, lost roles and the assigned-only restriction. A tree-wide negative test fails if any code chooses an author by searching users for a From address. A full-app test posts over HTTP to <code>/api/inbound-email</code> and checks spoofed senders, forged recipients, the genuine recipient, lost access, the provider secret and the Problems record. Multipart provider payloads are not parsed by WeKan's body parsers; JSON and URL-encoded payloads are.</p>
+<p><a href="https://github.com/wekan/wekan/commit/3151f8a81">Source fix and regression tests</a></p>
+</div></body></html>
