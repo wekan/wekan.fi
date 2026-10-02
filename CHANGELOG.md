@@ -1,5 +1,13 @@
 # Upcoming wekan.fi update
 
+- Document DirectoryInfoBleed, found while auditing publications sent before
+  sign-in: the setting publication sent every visitor, before sign-in, the LDAP
+  host, port, base DN, bind DN, filter and encryption mode. Record the
+  admin-only fields, why there is no Problems record, and verification limits.
+  [Source fix and regression tests](https://github.com/wekan/wekan/commit/1b37bea1f0).
+  Allow only these source URLs on its page. Prepared locally; no website
+  publication performed. Thanks to xet7.
+
 - Document MigrationBleed, found while auditing attachment migration methods:
   the attachment migration progress methods returned whole attachment documents,
   with storage paths, uploaders and names of files on cards the caller cannot
