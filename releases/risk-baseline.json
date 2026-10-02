@@ -11106,6 +11106,11 @@
     "hall-of-fame/codebleed/index.html": [
       "https://github\\.com/xet7",
       "https://github\\.com/wekan/wekan/commit/611093e957"
+    ],
+    "hall-of-fame/backgroundbleed/index.html": [
+      "https://github\\.com/xet7",
+      "https://github\\.com/wekan/wekan/commit/146d58df27",
+      "https://github\\.com/wekan/wekan/commit/f9d9596e2a"
     ]
   }
 }

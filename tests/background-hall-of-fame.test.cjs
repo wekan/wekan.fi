@@ -1,0 +1,32 @@
+'use strict';
+const fs = require('node:fs');
+const path = require('node:path');
+const assert = require('node:assert/strict');
+const root = path.resolve(__dirname, '../hall-of-fame');
+const index = fs.readFileSync(path.join(root, 'index.html'), 'utf8');
+const rows = index.match(/<tr>[\s\S]*?<\/tr>/g).filter(row => row.includes('<b>BackgroundBleed</b>'));
+assert.equal(rows.length, 1);
+const cells = rows[0].match(/<td\b[^>]*>[\s\S]*?<\/td>/g);
+assert.equal(cells.length, 8);
+assert.equal(cells[0], '<td valign="top">-</td>');
+assert.match(cells[1], /fa-tint" style="color: red;"/);
+assert.equal(cells[3], '<td valign="top">2026-10-02</td>');
+assert.match(cells[4], /^<td valign="top"><b><a href="https:\/\/github.com\/xet7">xet7<\/a><\/b><\/td>$/);
+// Found and fixed by the maintainer, no GHSA: three stars (Audit-Stars.md).
+assert.equal((cells[5].match(/GoldStar.png/g) || []).length, 3);
+assert.match(cells[6], /<details><summary>Process<\/summary>[\s\S]*Found while auditing/);
+assert.match(cells[7], /<details><summary>Details<\/summary>/);
+assert.match(cells[7], /<a href="backgroundbleed\/">Fix and verification<\/a>/);
+// Newest first: above CodeBleed.
+assert.ok(index.indexOf('<b>BackgroundBleed</b>') < index.indexOf('<b>CodeBleed</b>'));
+const page = fs.readFileSync(path.join(root, 'backgroundbleed/index.html'), 'utf8');
+assert.doesNotMatch(page, /<details>/);
+assert.match(page, /not yet released/);
+assert.match(page, /CWE-639/);
+assert.match(page, /authz.background/);
+assert.match(page, /backgroundImageId/);
+assert.match(page, /https:\/\/github\.com\/wekan\/wekan\/commit\/146d58df27/);
+assert.match(page, /https:\/\/github\.com\/wekan\/wekan\/commit\/f9d9596e2a/);
+assert.match(page, /Admin Panel → Problems/);
+assert.match(page, /<h2>Detection<\/h2>\n<p>[^<]*summarized as BackgroundBleed/);
+console.log('BackgroundBleed Hall of Fame: structure, attribution, fix evidence and limits pass');

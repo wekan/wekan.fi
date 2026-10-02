@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8">
+<title>WeKan — Hall of Fame / BackgroundBleed</title>
+<link rel="icon" href="../../wekan-favicon.png">
+<link rel="stylesheet" href="../../css/main.css">
+<link rel="stylesheet" href="../../font-awesome/css/font-awesome.min.css">
+</head><body>
+<img src="../hof.svg" alt="Hall of Fame" width="300">
+<div class="action-buttons"><a class="button" href="../">Back to Hall of Fame Contents</a>
+<a class="button" href="../../">Back to WeKan Website</a></div>
+<div class="hof"><h1>BackgroundBleed</h1>
+<table border="1"><tr><th>CVE</th><th>Icon</th><th>Vulnerability name</th><th>Date</th>
+<th>Responsible Security Disclosure by</th><th>Stars</th><th>Process</th><th>Vulnerabilities</th></tr>
+<tr>
+<td valign="top">-</td>
+<td valign="top"><h2><span role="img" aria-label="BackgroundBleed"><i class="fa fa-picture-o" aria-hidden="true"></i> <i class="fa fa-paperclip" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></span></h2></td>
+<td valign="top"><b>BackgroundBleed</b></td>
+<td valign="top">2026-10-02</td>
+<td valign="top"><b><a href="https://github.com/xet7">xet7</a></b></td>
+<td valign="top"><img src="../GoldStar.png" width="30" height="30" alt="Gold star"><img src="../GoldStar.png" width="30" height="30" alt="Gold star"><img src="../GoldStar.png" width="30" height="30" alt="Gold star"></td>
+<td valign="top">Found while auditing board background downloads after the 2026-10-02 Hall of Fame review; fixed by xet7.</td>
+<td valign="top"><p>The board background download - REST <code>/api/attachment/download-background/:boardId</code> and the <code>api.board.downloadBackground</code> method - returned whatever attachment the board's <code>backgroundImageId</code> named, checking only that the caller was a member of that board. A board admin could set that field to any attachment id, so anyone could create a board, point its background at an attachment on somebody else's private board, and download it.</p><p>Only a live attachment of the same board is served as its background, and setting <code>backgroundImageId</code> to anything else is refused.</p><p>CWE-639. High severity: any registered user, with an attachment id. No CVE assigned. Fix prepared locally for the Upcoming release; not yet released.</p></td>
+</tr>
+</table>
+<h2 class="hof">Details</h2>
+<p>A board's background image is one of its attachments, named by the board's <code>backgroundImageId</code>. Both download paths - REST <code>/api/attachment/download-background/:boardId</code> and the <code>api.board.downloadBackground</code> method - checked that the caller was a member of the board in the URL and then served whichever attachment the field named, without asking which board that attachment belonged to.</p>
+<p>A board admin may change the field, and anyone becomes a board admin by creating a board. So a user who learned the id of an attachment on another board - from a link, a notification, an old export - could create a board, set its background to that id, and download the file through their own board.</p>
+<h2>Fix</h2>
+<p>Both download paths serve the background only when the named attachment is live and belongs to the same board. A Boards deny rule refuses setting <code>backgroundImageId</code> to anything but an attachment of that board. A follow-up commit restored <code>models/lib/boardBackground.js</code>, which the first commit had overwritten.</p>
+<h2>Detection</h2>
+<p>Setting a background that is not one of the board's own attachments is refused and summarized as BackgroundBleed in Admin Panel → Problems (catalog key <code>authz.background</code>).</p>
+<h2>Verification</h2>
+<p>Unit tests in <code>tests/backgroundBleed.test.cjs</code> reproduce the reported attack with another board's attachment, check that both download paths and the field write ask the same rule and record an attempt, and the negative test fails on anything in the server that serves a <code>backgroundImageId</code> without checking it. The browser test <code>tests/playwright/specs/background-bleed.e2e.js</code> tries the attack from a signed-in client. The unit tests pass in the WeKan repository. The browser test was not run for this page.</p>
+<p><a href="https://github.com/wekan/wekan/commit/146d58df27">Source fix and regression tests</a></p>
+<p><a href="https://github.com/wekan/wekan/commit/f9d9596e2a">Follow-up restoring the shared background module</a></p>
+</div></body></html>

@@ -1,5 +1,15 @@
 # Upcoming wekan.fi update
 
+- Document BackgroundBleed, found while auditing board background downloads: the
+  board background download served whatever attachment backgroundImageId named,
+  and a board admin could set it to another board's attachment. Record the
+  same-board check, the deny rule, the follow-up restoring the shared module,
+  Problems attribution and verification limits.
+  [Source fix and regression tests](https://github.com/wekan/wekan/commit/146d58df27).
+  [Follow-up restoring the shared background module](https://github.com/wekan/wekan/commit/f9d9596e2a).
+  Allow only these source URLs on its page. Prepared locally; no website
+  publication performed. Thanks to xet7.
+
 - Document CodeBleed, found while auditing passwordless sign-in: passwordless
   sign-in codes were six hex characters valid for an hour, and only a
   per-connection limit stood between a spray of many connections and any
