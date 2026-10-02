@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8">
+<title>WeKan — Hall of Fame / SyncBleed</title>
+<link rel="icon" href="../../wekan-favicon.png">
+<link rel="stylesheet" href="../../css/main.css">
+<link rel="stylesheet" href="../../font-awesome/css/font-awesome.min.css">
+</head><body>
+<img src="../hof.svg" alt="Hall of Fame" width="300">
+<div class="action-buttons"><a class="button" href="../">Back to Hall of Fame Contents</a>
+<a class="button" href="../../">Back to WeKan Website</a></div>
+<div class="hof"><h1>SyncBleed</h1>
+<table border="1"><tr><th>CVE</th><th>Icon</th><th>Vulnerability name</th><th>Date</th>
+<th>Responsible Security Disclosure by</th><th>Stars</th><th>Process</th><th>Vulnerabilities</th></tr>
+<tr>
+<td valign="top">-</td>
+<td valign="top"><h2><span role="img" aria-label="SyncBleed"><i class="fa fa-refresh" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></span></h2></td>
+<td valign="top"><b>SyncBleed</b></td>
+<td valign="top">2026-10-02</td>
+<td valign="top"><b><a href="https://github.com/alham-rizvi">alham-rizvi</a></b></td>
+<td valign="top"><img src="../GoldStar.png" width="30" height="30" alt="Gold star"><img src="../GoldStar.png" width="30" height="30" alt="Gold star"><img src="../GoldStar.png" width="30" height="30" alt="Gold star"><img src="../GoldStar.png" width="30" height="30" alt="Gold star"><img src="../GoldStar.png" width="30" height="30" alt="Gold star"></td>
+<td valign="top">Reported privately by alham-rizvi through GitHub Security Advisory GHSA-5q84-p3vr-f3xv, with details, a proof of concept and a suggested fix; validated and fixed by xet7.</td>
+<td valign="top"><p>List Sync's Gitea, Forgejo, GitLab and Jira server address is chosen by any board member with write access, and it was fetched without the SSRF guard WeKan uses for every other outbound request. A member could make the server send requests to 127.0.0.1, private networks and the cloud metadata address, and read back up to 200 bytes of what answered in the error the sync preview returned or the list stored. An open and a closed internal port also answered differently.</p><p>Every List Sync request now goes through the guard, internal addresses are refused when Sync settings are saved and on every request, and an error carries only the server's origin and HTTP status. A self-hosted tracker on the server's own network can be allowed by the server administrator only. Validation also found that an IPv6 address in brackets was looked up as a name; it is now checked as the address it is.</p><p>CWE-918. Medium severity (CVSS 5.0). No CVE assigned. Affected v12.14 and earlier versions with List Sync. Fix prepared locally for the Upcoming release; not yet released.</p></td>
+</tr>
+</table>
+<h2 class="hof">Details</h2>
+<p>Advisory <a href="https://github.com/wekan/wekan/security/advisories/GHSA-5q84-p3vr-f3xv">GHSA-5q84-p3vr-f3xv</a> reported that the List Sync fetchers called the platform <code>fetch()</code> with the server address a board member had saved. The address was checked only for its form - http or https, no credentials, query or fragment - so server addresses on <code>127.0.0.1</code>, the cloud metadata address <code>169.254.169.254</code> and private networks such as <code>10.0.0.5</code> were all accepted. A failed request's error text included the first 200 bytes of the response; the sync preview returned it to the member and a sync stored up to 500 characters of it as the list's last error. The report ran WeKan's own fetch and validation code against a local service and showed the request arriving with the member's token, the service's body coming back, and open and closed ports telling themselves apart.</p>
+<p>Reading the source confirmed it for all four providers. GET only, on a path fixed by the provider, with the member's own stored token; no other user's credential was sent.</p>
+<h2>Fix</h2>
+<p>Every List Sync request goes through <code>fetchSafe</code>, the guard webhooks and imports use: private, loopback and link-local addresses are refused, DNS is resolved once and the connection pinned to that address, redirects are refused, and the response is bounded in size and time. An error says only the server's origin and HTTP status; a response that is not JSON is reported as such without quoting it; and a refusal is one message that does not say what a name resolved to. Saving Sync settings refuses an internal address too, so none is stored. A self-hosted tracker on the server's own network is allowed only by the server administrator, with <code>LIST_SYNC_ALLOWED_PRIVATE_HOSTS</code>, an exact list of hosts no board member can change.</p>
+<p>The browser test found one more gap: the save-time check read an IPv6 address such as <code>[::1]</code> with its brackets, as a name to look up, and let it through to the fetch. The shared validator now checks it as an address.</p>
+<h2>Detection</h2>
+<p>A refused address is summarized as SyncBleed in Admin Panel → Problems, whether it was refused when Sync settings were saved, when a preview ran, or when a sync ran - with who, how often and since when.</p>
+<h2>Verification</h2>
+<p>Unit tests run the real fetcher for Gitea, Forgejo, GitLab and Jira against the report's addresses and its service body, check that no request is sent, that nothing of the body or the resolved address reaches the message, that open and closed ports read the same, and that only the administrator's exact hosts are allowed. A tree-wide negative test fails on a platform <code>fetch()</code> to anything but a fixed or administrator-allowed host, or on a response body copied into an error. A browser test saves internal addresses through the List Sync popup and the method, previews a source stored before the fix, and checks that the mock tracker receives nothing and the attempt appears in Problems; it passes in Chromium and WebKit. In Firefox, run in the Playwright container, every refusal passed; the last step, a sync from the administrator's allowed host, could not reach the mock tracker inside the container, which affects every List Sync browser test run that way.</p>
+<p><a href="https://github.com/wekan/wekan/commit/2172f19d88">Source fix and regression tests</a></p>
+</div></body></html>

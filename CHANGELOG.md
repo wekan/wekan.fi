@@ -1,5 +1,14 @@
 # Upcoming wekan.fi update
 
+- Document SyncBleed, reported privately by alham-rizvi in GHSA-5q84-p3vr-f3xv:
+  List Sync fetched a board member's server address without the SSRF guard and
+  echoed the start of failed responses. Record the guarded fetch, the
+  save-time refusal, the administrator allow-list, the IPv6 gap the browser
+  test found, Problems attribution and verification limits.
+  [Source fix and regression tests](https://github.com/wekan/wekan/commit/2172f19d88).
+  Allow only these reporter, advisory and source URLs on their pages. Prepared
+  locally; no website publication performed. Thanks to alham-rizvi and xet7.
+
 - Document CacheBleed, reported privately by alham-rizvi in GHSA-w3qg-pf27-g68r:
   attachments and avatars were sent with a public, one-year Cache-Control, so a
   shared cache could serve a private board's file without the access check.

@@ -91,6 +91,20 @@
 
 <tr>
 <td valign="top">-</td>
+<td valign="top"><h2><span role="img" aria-label="SyncBleed"><i class="fa fa-refresh" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></span></h2></td>
+<td valign="top"><b>SyncBleed</b></td>
+<td valign="top">2026-10-02</td>
+<td valign="top"><b><a href="https://github.com/alham-rizvi">alham-rizvi</a></b></td>
+<td valign="top"><img src="GoldStar.png" width="30" height="30" alt="Gold star"><img src="GoldStar.png" width="30" height="30" alt="Gold star"><img src="GoldStar.png" width="30" height="30" alt="Gold star"><img src="GoldStar.png" width="30" height="30" alt="Gold star"><img src="GoldStar.png" width="30" height="30" alt="Gold star"></td>
+<td valign="top"><details><summary>Process</summary>
+
+Reported privately by alham-rizvi through GitHub Security Advisory GHSA-5q84-p3vr-f3xv, with details, a proof of concept and a suggested fix; validated and fixed by xet7.</details></td>
+<td valign="top"><details><summary>Details</summary>
+
+<p>List Sync's Gitea, Forgejo, GitLab and Jira server address is chosen by any board member with write access, and it was fetched without the SSRF guard WeKan uses for every other outbound request. A member could make the server send requests to 127.0.0.1, private networks and the cloud metadata address, and read back up to 200 bytes of what answered in the error the sync preview returned or the list stored. An open and a closed internal port also answered differently.</p><p>Every List Sync request now goes through the guard, internal addresses are refused when Sync settings are saved and on every request, and an error carries only the server's origin and HTTP status. A self-hosted tracker on the server's own network can be allowed by the server administrator only. Validation also found that an IPv6 address in brackets was looked up as a name; it is now checked as the address it is.</p><p>CWE-918. Medium severity (CVSS 5.0). No CVE assigned. Affected v12.14 and earlier versions with List Sync. Fix prepared locally for the Upcoming release; not yet released.</p><p><a href="syncbleed/">Fix and verification</a></p></details></td>
+</tr>
+<tr>
+<td valign="top">-</td>
 <td valign="top"><h2><span role="img" aria-label="CacheBleed"><i class="fa fa-hdd-o" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></span></h2></td>
 <td valign="top"><b>CacheBleed</b></td>
 <td valign="top">2026-10-02</td>
