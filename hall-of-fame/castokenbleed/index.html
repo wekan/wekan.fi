@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8">
+<title>WeKan — Hall of Fame / CasTokenBleed</title>
+<link rel="icon" href="../../wekan-favicon.png">
+<link rel="stylesheet" href="../../css/main.css">
+<link rel="stylesheet" href="../../font-awesome/css/font-awesome.min.css">
+</head><body>
+<img src="../hof.svg" alt="Hall of Fame" width="300">
+<div class="action-buttons"><a class="button" href="../">Back to Hall of Fame Contents</a>
+<a class="button" href="../../">Back to WeKan Website</a></div>
+<div class="hof"><h1>CasTokenBleed</h1>
+<table border="1"><tr><th>CVE</th><th>Icon</th><th>Vulnerability name</th><th>Date</th>
+<th>Responsible Security Disclosure by</th><th>Stars</th><th>Process</th><th>Vulnerabilities</th></tr>
+<tr>
+<td valign="top">-</td>
+<td valign="top"><h2><span role="img" aria-label="CasTokenBleed"><i class="fa fa-ticket" aria-hidden="true"></i> <i class="fa fa-id-card" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></span></h2></td>
+<td valign="top"><b>CasTokenBleed</b></td>
+<td valign="top">2026-10-02</td>
+<td valign="top"><b><a href="https://github.com/xet7">xet7</a></b></td>
+<td valign="top"><img src="../GoldStar.png" width="30" height="30" alt="Gold star"><img src="../GoldStar.png" width="30" height="30" alt="Gold star"><img src="../GoldStar.png" width="30" height="30" alt="Gold star"></td>
+<td valign="top">Found while auditing the CAS login callback after the 2026-10-02 Hall of Fame review; fixed by xet7.</td>
+<td valign="top"><p>The CAS callback stored the identity CAS had validated under whatever <code>casToken</code> the callback URL carried, and that token is chosen by the browser. An attacker picked a token, sent a victim who was already signed in to CAS a link to the CAS login whose service URL carried that token, CAS sent the victim back with a ticket, WeKan stored the victim's identity under the attacker's token, and the attacker logged in with it as the victim.</p><p>The browser that starts a CAS login now sets a cookie with its token, and the callback is accepted only when that cookie matches. A ticket parameter on an instance without CAS is left to its route.</p><p>CWE-352: login cross-site request forgery leading to account takeover. Critical severity where CAS is enabled. No CVE assigned. Fix prepared locally for the Upcoming release; not yet released.</p></td>
+</tr>
+</table>
+<h2 class="hof">Details</h2>
+<p>A CAS login starts in the browser, which makes up a <code>casToken</code> and sends the user to the CAS server with a service URL that carries it. CAS sends the user back with a ticket; WeKan validates the ticket and stores the identity CAS returned under that token, and the browser then logs in with <code>cas: { credentialToken }</code>.</p>
+<p>Nothing tied the token to the browser that made it up. An attacker could choose a token, send a victim who was already signed in to CAS a link to the CAS login page whose <code>service</code> parameter is WeKan's own address with <code>?casToken=KNOWN</code> added, and wait. CAS sent the victim straight back with a ticket for their own account, WeKan stored the victim's identity under <code>KNOWN</code>, and the attacker logged in with <code>cas: { credentialToken: 'KNOWN' }</code> as the victim.</p>
+<p>This is a different fault from <a href="../casbleed/">CasRaceBleed</a>, the concurrent-login race reported by meifukun, which mixed up two genuine logins; here the attacker starts no login of their own at the CAS server.</p>
+<h2>Fix</h2>
+<p>The browser that starts a CAS login sets a <code>SameSite=Lax</code> cookie holding its token, and the callback stores an identity only when the token in the URL matches that cookie, which a link sent to somebody else cannot carry. A <code>ticket</code> parameter on an instance without CAS is left to the route it was meant for.</p>
+<h2>Detection</h2>
+<p>A callback whose token the browser did not set is refused and summarized as CasTokenBleed in Admin Panel → Problems (catalog key <code>authn.cas-state</code>, recorded through the <code>cas.state-mismatch</code> canary).</p>
+<h2>Verification</h2>
+<p>Unit tests in <code>tests/casStateBinding.test.cjs</code> check that the state is read only from its own cookie, reproduce the reported attack - a callback whose token this browser did not set is refused and recorded - and the negative test fails unless the browser that starts a login sets the state it will be checked against. The unit tests pass in the WeKan repository. A login against a real CAS server was not tested.</p>
+<p><a href="https://github.com/wekan/wekan/commit/d3095fefd6">Source fix and regression tests</a></p>
+</div></body></html>

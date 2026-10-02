@@ -1,5 +1,14 @@
 # Upcoming wekan.fi update
 
+- Document CasTokenBleed, found while auditing the CAS login callback: the CAS
+  callback stored a validated identity under a browser-chosen casToken, so a
+  link sent to a victim signed in to CAS let the attacker log in as them. Record
+  the cookie-bound state, the relation to CasRaceBleed, Problems attribution and
+  verification limits.
+  [Source fix and regression tests](https://github.com/wekan/wekan/commit/d3095fefd6).
+  Allow only these source URLs on its page. Prepared locally; no website
+  publication performed. Thanks to xet7.
+
 - Document TrayBleed, found while auditing client-writable profile fields:
   profile.notifications fell under the client-writable profile rule, and a tray
   entry naming any activity made the notification publications send that card's
