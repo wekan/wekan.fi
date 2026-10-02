@@ -84,6 +84,8 @@
       </tr>
 
     </table>
+<h2>Follow-up fixes (2026-10-02)</h2>
+<p>The login lockouts counted per address and per account and address, so guessing spread over many addresses was never slowed. After five failures on one account within 15 minutes, the account accepts one attempt per slot - 1 second, doubling up to 30 seconds - over REST and DDP, and an early attempt is refused before the password is checked. Addresses the account has signed in from are not slowed, so the owner is never locked out, unlike a per-account lockout (see <a href="../jambleed/">JamBleed</a>). Refusals are summarized as BruteBleed in Admin Panel → Problems. <a href="https://github.com/wekan/wekan/commit/fd8b51464f">Fix</a>.</p>
   </div>
 
   <br />

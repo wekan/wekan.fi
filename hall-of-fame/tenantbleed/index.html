@@ -97,6 +97,8 @@
         <td valign="top">Fixed for the <a href="https://github.com/wekan/wekan/blob/main/CHANGELOG.md#upcoming-wekan--release">upcoming WeKan release</a>.</td>
       </tr>
     </table>
+<h2>Follow-up fixes (2026-10-02)</h2>
+<p>An organization's own admin could set its tenant hostnames to anything unclaimed, including the instance's own host from <code>ROOT_URL</code>, putting the organization's branding on everybody's sign-in page. The instance host is now refused for everyone, and an organization admin's attempt is summarized as TenantBleed in Admin Panel → Problems. A new hostname from an organization admin is stored as a request that a site admin assigns; removing hostnames applies at once. <a href="https://github.com/wekan/wekan/commit/94a8c41b3c">Fix</a>.</p>
   </div>
 
   <div class="action-buttons">

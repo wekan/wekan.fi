@@ -11193,6 +11193,15 @@
     ],
     "hall-of-fame/rulebleed/index.html": [
       "https://github\\.com/wekan/wekan/commit/c63d909c81"
+    ],
+    "hall-of-fame/ldapbleed/index.html": [
+      "https://github\\.com/wekan/wekan/commit/daf6593adf"
+    ],
+    "hall-of-fame/brutebleed/index.html": [
+      "https://github\\.com/wekan/wekan/commit/fd8b51464f"
+    ],
+    "hall-of-fame/tenantbleed/index.html": [
+      "https://github\\.com/wekan/wekan/commit/94a8c41b3c"
     ]
   }
 }

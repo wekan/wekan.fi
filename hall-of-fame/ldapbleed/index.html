@@ -101,6 +101,8 @@
       </tr>
 
     </table>
+<h2>Follow-up fixes (2026-10-02)</h2>
+<p>Regression of CVE-2021-3309: the code verified LDAP server certificates only when <code>LDAP_REJECT_UNAUTHORIZED</code> was unset, but the Docker image and the snap set it to <code>false</code>, and an empty value turned verification off too. Verification is now the default everywhere, and only the exact value <code>false</code> turns it off; a self-signed certificate or a private CA belongs in <code>LDAP_CA_CERT</code>. <a href="https://github.com/wekan/wekan/commit/daf6593adf">Fix</a>.</p>
   </div>
 
   <br />

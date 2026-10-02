@@ -1,5 +1,13 @@
 # Upcoming wekan.fi update
 
+- Add follow-up fixes (2026-10-02) to the LDAPBleed, BruteBleed and TenantBleed
+  pages: LDAP certificates are verified by default again, including in Docker
+  and the snap; guessing one account from many addresses is slowed without
+  locking its owner out; and only a site admin assigns a tenant hostname, never
+  the instance's own. Each links its source commit, with one sentence in the
+  row's collapsed Details. Allow only these commit URLs on their own pages.
+  Prepared locally; no website publication performed. Thanks to xet7.
+
 - Add a "Follow-up fixes (2026-10-02)" section to 25 existing Hall of Fame
   pages - AssignedBleed, VisibilityBleed, MetricsBleed, JamBleed, ReadOnlyBleed,
   FrameBleed, SignupBleed, LinkedWriteBleed, SubtaskDepositBleed, ParentBleed,
