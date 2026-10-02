@@ -1,5 +1,13 @@
 # Upcoming wekan.fi update
 
+- Document AuthMethodBleed, found while auditing user publications: the
+  user-authenticationMethod publication gave any signed-in user any other user's
+  organizations, teams and login method. Record the own-account-only answer, why
+  there is no Problems record, and verification limits.
+  [Source fix and regression tests](https://github.com/wekan/wekan/commit/da394cf2ea).
+  Allow only these source URLs on its page. Prepared locally; no website
+  publication performed. Thanks to xet7.
+
 - Document ArchiveBleed, found while auditing Sandstorm board import and clone:
   on Sandstorm, importBoard and cloneBoard archived whichever board the client
   named as currentBoard. Record the board-admin check, why there is no Problems

@@ -91,6 +91,20 @@
 
 <tr>
 <td valign="top">-</td>
+<td valign="top"><h2><span role="img" aria-label="AuthMethodBleed"><i class="fa fa-id-badge" aria-hidden="true"></i> <i class="fa fa-search" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></span></h2></td>
+<td valign="top"><b>AuthMethodBleed</b></td>
+<td valign="top">2026-10-02</td>
+<td valign="top"><b><a href="https://github.com/xet7">xet7</a></b></td>
+<td valign="top"><img src="GoldStar.png" width="30" height="30" alt="Gold star"><img src="GoldStar.png" width="30" height="30" alt="Gold star"><img src="GoldStar.png" width="30" height="30" alt="Gold star"></td>
+<td valign="top"><details><summary>Process</summary>
+
+Found while auditing user publications after the 2026-10-02 Hall of Fame review; fixed by xet7.</details></td>
+<td valign="top"><details><summary>Details</summary>
+
+<p>The <code>user-authenticationMethod</code> publication answered any signed-in user with any user's organizations, teams and login method, looked up by username.</p><p>It now answers for the caller's own account only.</p><p>CWE-200. Low severity: it needs an account and a username, and tells which organizations and teams that user is in and how they sign in. No CVE assigned. Fix prepared locally for the Upcoming release; not yet released.</p><p><a href="authmethodbleed/">Fix and verification</a></p></details></td>
+</tr>
+<tr>
+<td valign="top">-</td>
 <td valign="top"><h2><span role="img" aria-label="ArchiveBleed"><i class="fa fa-archive" aria-hidden="true"></i> <i class="fa fa-columns" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></span></h2></td>
 <td valign="top"><b>ArchiveBleed</b></td>
 <td valign="top">2026-10-02</td>
