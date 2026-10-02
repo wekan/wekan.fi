@@ -91,6 +91,20 @@
 
 <tr>
 <td valign="top">-</td>
+<td valign="top"><h2><span role="img" aria-label="TrayBleed"><i class="fa fa-bell" aria-hidden="true"></i> <i class="fa fa-inbox" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></span></h2></td>
+<td valign="top"><b>TrayBleed</b></td>
+<td valign="top">2026-10-02</td>
+<td valign="top"><b><a href="https://github.com/xet7">xet7</a></b></td>
+<td valign="top"><img src="GoldStar.png" width="30" height="30" alt="Gold star"><img src="GoldStar.png" width="30" height="30" alt="Gold star"><img src="GoldStar.png" width="30" height="30" alt="Gold star"></td>
+<td valign="top"><details><summary>Process</summary>
+
+Found while auditing client-writable profile fields after the 2026-10-02 Hall of Fame review; fixed by xet7.</details></td>
+<td valign="top"><details><summary>Details</summary>
+
+<p>A user's <code>profile.notifications</code> fell under the rule that lets a client write its own <code>profile.*</code>. A tray entry names an activity, and the notification publications send that activity with its card, comments, checklists and attachments from any board. So a client could push any activity id into its own tray and read what it pointed at.</p><p>A client may now only set an entry's read state and remove entries; the server alone adds them.</p><p>CWE-639. High severity: any signed-in user, with an activity id. No CVE assigned. Fix prepared locally for the Upcoming release; not yet released.</p><p><a href="traybleed/">Fix and verification</a></p></details></td>
+</tr>
+<tr>
+<td valign="top">-</td>
 <td valign="top"><h2><span role="img" aria-label="HookUrlBleed"><i class="fa fa-plug" aria-hidden="true"></i> <i class="fa fa-link" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></span></h2></td>
 <td valign="top"><b>HookUrlBleed</b></td>
 <td valign="top">2026-10-02</td>

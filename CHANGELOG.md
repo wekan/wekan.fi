@@ -1,5 +1,15 @@
 # Upcoming wekan.fi update
 
+- Document TrayBleed, found while auditing client-writable profile fields:
+  profile.notifications fell under the client-writable profile rule, and a tray
+  entry naming any activity made the notification publications send that card's
+  content from any board. Record the read-state-only client write, Problems
+  attribution and verification limits.
+  [Source fix and regression tests](https://github.com/wekan/wekan/commit/cd07d8db18).
+  [Problems key and naming](https://github.com/wekan/wekan/commit/c15f9486d8).
+  Allow only these source URLs on its page. Prepared locally; no website
+  publication performed. Thanks to xet7.
+
 - Document HookUrlBleed, found while auditing the board publication: the board
   publication sent integrations with their URLs to read-only members and
   public-board visitors, and a chat webhook URL carries its secret. Record the

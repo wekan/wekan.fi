@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8">
+<title>WeKan — Hall of Fame / TrayBleed</title>
+<link rel="icon" href="../../wekan-favicon.png">
+<link rel="stylesheet" href="../../css/main.css">
+<link rel="stylesheet" href="../../font-awesome/css/font-awesome.min.css">
+</head><body>
+<img src="../hof.svg" alt="Hall of Fame" width="300">
+<div class="action-buttons"><a class="button" href="../">Back to Hall of Fame Contents</a>
+<a class="button" href="../../">Back to WeKan Website</a></div>
+<div class="hof"><h1>TrayBleed</h1>
+<table border="1"><tr><th>CVE</th><th>Icon</th><th>Vulnerability name</th><th>Date</th>
+<th>Responsible Security Disclosure by</th><th>Stars</th><th>Process</th><th>Vulnerabilities</th></tr>
+<tr>
+<td valign="top">-</td>
+<td valign="top"><h2><span role="img" aria-label="TrayBleed"><i class="fa fa-bell" aria-hidden="true"></i> <i class="fa fa-inbox" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></span></h2></td>
+<td valign="top"><b>TrayBleed</b></td>
+<td valign="top">2026-10-02</td>
+<td valign="top"><b><a href="https://github.com/xet7">xet7</a></b></td>
+<td valign="top"><img src="../GoldStar.png" width="30" height="30" alt="Gold star"><img src="../GoldStar.png" width="30" height="30" alt="Gold star"><img src="../GoldStar.png" width="30" height="30" alt="Gold star"></td>
+<td valign="top">Found while auditing client-writable profile fields after the 2026-10-02 Hall of Fame review; fixed by xet7.</td>
+<td valign="top"><p>A user's <code>profile.notifications</code> fell under the rule that lets a client write its own <code>profile.*</code>. A tray entry names an activity, and the notification publications send that activity with its card, comments, checklists and attachments from any board. So a client could push any activity id into its own tray and read what it pointed at.</p><p>A client may now only set an entry's read state and remove entries; the server alone adds them.</p><p>CWE-639. High severity: any signed-in user, with an activity id. No CVE assigned. Fix prepared locally for the Upcoming release; not yet released.</p></td>
+</tr>
+</table>
+<h2 class="hof">Details</h2>
+<p>The notification tray is stored on the user as <code>profile.notifications</code>, a list of entries that each name an activity and say whether it was read. The client may write its own <code>profile.*</code> fields - language, view settings and the like - and the tray fell under the same rule.</p>
+<p>The notification publications send each entry's activity together with the card it is about and that card's comments, checklists and attachments, trusting that the server put the entry there because the user could see it. A client that added an entry naming an activity of another board received that board's card content.</p>
+<h2>Fix</h2>
+<p>A client update to <code>profile.notifications</code> may only change an existing entry's read state or pull entries. Adding or rewriting an entry is refused; the server adds them when it notifies.</p>
+<h2>Detection</h2>
+<p>An added or rewritten tray entry is refused and summarized as TrayBleed in Admin Panel → Problems (catalog key <code>authz.notification-tray</code>).</p>
+<h2>Verification</h2>
+<p>Unit tests in <code>tests/notificationTrayWrite.test.cjs</code> show that adding or rewriting a tray entry is refused, that what the client really does - marking read and removing - stays allowed, and that the deny rule records the attempt. The unit tests pass in the WeKan repository. There is no browser test.</p>
+<p><a href="https://github.com/wekan/wekan/commit/cd07d8db18">Source fix and regression tests</a></p>
+<p><a href="https://github.com/wekan/wekan/commit/c15f9486d8">Problems key and naming</a></p>
+</div></body></html>
