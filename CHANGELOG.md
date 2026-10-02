@@ -1,5 +1,15 @@
 # Upcoming wekan.fi update
 
+- Document RepointBleed, found while auditing board-owned rule and webhook
+  documents: rule triggers, actions, rules and webhook integrations could be
+  moved to another board by an admin of the board they were on, so a trigger set
+  to every board mailed its owner the content of private boards. Record the
+  board-change refusal, the custom-field and reaction siblings, the own-board
+  rule matcher, Problems attribution and verification limits.
+  [Source fix and regression tests](https://github.com/wekan/wekan/commit/f02da1bfd2).
+  Allow only these source URLs on its page. Prepared locally; no website
+  publication performed. Thanks to xet7.
+
 - Document PrototypeBleed, found while auditing per-user layout methods: the
   per-user layout methods wrote map[boardId][listId] with client ids, so a
   __proto__ board id let any signed-in user set a property on every object in

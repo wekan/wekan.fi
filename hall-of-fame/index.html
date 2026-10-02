@@ -91,6 +91,20 @@
 
 <tr>
 <td valign="top">-</td>
+<td valign="top"><h2><span role="img" aria-label="RepointBleed"><i class="fa fa-cogs" aria-hidden="true"></i> <i class="fa fa-share" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></span></h2></td>
+<td valign="top"><b>RepointBleed</b></td>
+<td valign="top">2026-10-02</td>
+<td valign="top"><b><a href="https://github.com/xet7">xet7</a></b></td>
+<td valign="top"><img src="GoldStar.png" width="30" height="30" alt="Gold star"><img src="GoldStar.png" width="30" height="30" alt="Gold star"><img src="GoldStar.png" width="30" height="30" alt="Gold star"></td>
+<td valign="top"><details><summary>Process</summary>
+
+Found while auditing board-owned rule and webhook documents after the 2026-10-02 Hall of Fame review; fixed by xet7.</details></td>
+<td valign="top"><details><summary>Details</summary>
+
+<p>Rule triggers, actions, rules and webhook integrations could be updated by an admin of the board the document was on before the update, and nothing refused an update that changed that board. Any registered user, as admin of a board they created, could move a rule trigger to <code>'*'</code> or unset its board - which the rule matcher matched on every board - and have a send-email action mail them cards, comments and attachments from every private board; or move a webhook integration onto a private board and receive its activity, or rewrite its comments through a two-way hook. Custom fields accepted a board list when the caller could write any one board in it, and a comment reaction could be moved to another comment.</p><p>A client update can no longer change the board of these documents, custom fields need write access on every board added or removed, and the rule matcher runs a rule only for activity on its own board.</p><p>CWE-863. High severity: anyone who can register can create a board and become its admin. No CVE assigned. Fix prepared locally for the Upcoming release; not yet released.</p><p><a href="repointbleed/">Fix and verification</a></p></details></td>
+</tr>
+<tr>
+<td valign="top">-</td>
 <td valign="top"><h2><span role="img" aria-label="PrototypeBleed"><i class="fa fa-sitemap" aria-hidden="true"></i> <i class="fa fa-bug" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></span></h2></td>
 <td valign="top"><b>PrototypeBleed</b></td>
 <td valign="top">2026-10-02</td>

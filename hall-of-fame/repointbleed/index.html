@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8">
+<title>WeKan — Hall of Fame / RepointBleed</title>
+<link rel="icon" href="../../wekan-favicon.png">
+<link rel="stylesheet" href="../../css/main.css">
+<link rel="stylesheet" href="../../font-awesome/css/font-awesome.min.css">
+</head><body>
+<img src="../hof.svg" alt="Hall of Fame" width="300">
+<div class="action-buttons"><a class="button" href="../">Back to Hall of Fame Contents</a>
+<a class="button" href="../../">Back to WeKan Website</a></div>
+<div class="hof"><h1>RepointBleed</h1>
+<table border="1"><tr><th>CVE</th><th>Icon</th><th>Vulnerability name</th><th>Date</th>
+<th>Responsible Security Disclosure by</th><th>Stars</th><th>Process</th><th>Vulnerabilities</th></tr>
+<tr>
+<td valign="top">-</td>
+<td valign="top"><h2><span role="img" aria-label="RepointBleed"><i class="fa fa-cogs" aria-hidden="true"></i> <i class="fa fa-share" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></span></h2></td>
+<td valign="top"><b>RepointBleed</b></td>
+<td valign="top">2026-10-02</td>
+<td valign="top"><b><a href="https://github.com/xet7">xet7</a></b></td>
+<td valign="top"><img src="../GoldStar.png" width="30" height="30" alt="Gold star"><img src="../GoldStar.png" width="30" height="30" alt="Gold star"><img src="../GoldStar.png" width="30" height="30" alt="Gold star"></td>
+<td valign="top">Found while auditing board-owned rule and webhook documents after the 2026-10-02 Hall of Fame review; fixed by xet7.</td>
+<td valign="top"><p>Rule triggers, actions, rules and webhook integrations could be updated by an admin of the board the document was on before the update, and nothing refused an update that changed that board. Any registered user, as admin of a board they created, could move a rule trigger to <code>'*'</code> or unset its board - which the rule matcher matched on every board - and have a send-email action mail them cards, comments and attachments from every private board; or move a webhook integration onto a private board and receive its activity, or rewrite its comments through a two-way hook. Custom fields accepted a board list when the caller could write any one board in it, and a comment reaction could be moved to another comment.</p><p>A client update can no longer change the board of these documents, custom fields need write access on every board added or removed, and the rule matcher runs a rule only for activity on its own board.</p><p>CWE-863. High severity: anyone who can register can create a board and become its admin. No CVE assigned. Fix prepared locally for the Upcoming release; not yet released.</p></td>
+</tr>
+</table>
+<h2 class="hof">Details</h2>
+<p>Rule triggers, actions, rules and webhook integrations belong to a board, and their client update rules asked whether the caller was an admin of the board the document was on. That is the board BEFORE the update; nothing looked at the board the update moved it to. A board admin is anyone who has created a board, so any registered user could take a trigger of their own board and set its <code>boardId</code> to <code>'*'</code>, or unset it. The rule matcher treated both as matching every board, so a rule whose action sends email ran for activity on every board of the server and mailed its owner the cards, comments and attachments of private boards they were never a member of.</p>
+<p>Webhook integrations had the same fault: moving one onto a private board delivered that board's activity to the attacker's URL, and a two-way hook's answer could rewrite the board's comments. Custom fields carry a list of boards and accepted a new list when the caller could write any one board in it, so a field could be attached to a board the caller could not write. A comment reaction could be moved onto another comment.</p>
+<h2>Fix</h2>
+<p>One shared deny rule refuses a client update that changes the board of a trigger, action, rule or integration, and a comment reaction can no longer be moved to another comment. A custom field's board list may change only when the caller can write every board added and every board removed. The rule matcher runs a rule only for activity on the rule's own board, so a trigger stored before the fix with <code>'*'</code> or no board matches nothing.</p>
+<h2>Detection</h2>
+<p>A refused board change is summarized as RepointBleed in Admin Panel → Problems (catalog key <code>authz.repoint</code>), with who, how often and since when.</p>
+<h2>Verification</h2>
+<p>Unit tests in <code>tests/repointBleed.test.cjs</code> reproduce the reported attack - moving a trigger or a webhook to another board is refused and recorded - and cover custom fields and comment reactions, and check that the matcher keeps a rule on its own board. The negative test fails on any board-owned collection with a client update rule that does not refuse a board change. The browser test <code>tests/playwright/specs/repoint-bleed.e2e.js</code> tries to move triggers, webhooks and custom fields from a signed-in client. The unit tests pass in the WeKan repository. The browser test was not run for this page.</p>
+<p><a href="https://github.com/wekan/wekan/commit/f02da1bfd2">Source fix and regression tests</a></p>
+</div></body></html>
