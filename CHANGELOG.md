@@ -1,5 +1,14 @@
 # Upcoming wekan.fi update
 
+- Document MigrationBleed, found while auditing attachment migration methods:
+  the attachment migration progress methods returned whole attachment documents,
+  with storage paths, uploaders and names of files on cards the caller cannot
+  see. Record the id-only answers, why there is no Problems record, and
+  verification limits.
+  [Source fix and regression tests](https://github.com/wekan/wekan/commit/a79e05223a).
+  Allow only these source URLs on its page. Prepared locally; no website
+  publication performed. Thanks to xet7.
+
 - Document AuthMethodBleed, found while auditing user publications: the
   user-authenticationMethod publication gave any signed-in user any other user's
   organizations, teams and login method. Record the own-account-only answer, why

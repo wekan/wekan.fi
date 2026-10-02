@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8">
+<title>WeKan — Hall of Fame / MigrationBleed</title>
+<link rel="icon" href="../../wekan-favicon.png">
+<link rel="stylesheet" href="../../css/main.css">
+<link rel="stylesheet" href="../../font-awesome/css/font-awesome.min.css">
+</head><body>
+<img src="../hof.svg" alt="Hall of Fame" width="300">
+<div class="action-buttons"><a class="button" href="../">Back to Hall of Fame Contents</a>
+<a class="button" href="../../">Back to WeKan Website</a></div>
+<div class="hof"><h1>MigrationBleed</h1>
+<table border="1"><tr><th>CVE</th><th>Icon</th><th>Vulnerability name</th><th>Date</th>
+<th>Responsible Security Disclosure by</th><th>Stars</th><th>Process</th><th>Vulnerabilities</th></tr>
+<tr>
+<td valign="top">-</td>
+<td valign="top"><h2><span role="img" aria-label="MigrationBleed"><i class="fa fa-truck" aria-hidden="true"></i> <i class="fa fa-paperclip" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></span></h2></td>
+<td valign="top"><b>MigrationBleed</b></td>
+<td valign="top">2026-10-02</td>
+<td valign="top"><b><a href="https://github.com/xet7">xet7</a></b></td>
+<td valign="top"><img src="../GoldStar.png" width="30" height="30" alt="Gold star"><img src="../GoldStar.png" width="30" height="30" alt="Gold star"><img src="../GoldStar.png" width="30" height="30" alt="Gold star"></td>
+<td valign="top">Found while auditing attachment migration methods after the 2026-10-02 Hall of Fame review; fixed by xet7.</td>
+<td valign="top"><p>The <code>attachmentMigration.getProgress</code> and <code>getUnconvertedAttachments</code> methods returned whole stored attachment documents - storage paths, versions, uploader, and the names of files on cards the caller cannot see - to anyone who could read the board.</p><p>They now return attachment ids only.</p><p>CWE-200. Medium severity: board readers, including assigned-only members. No CVE assigned. Fix prepared locally for the Upcoming release; not yet released.</p></td>
+</tr>
+</table>
+<h2 class="hof">Details</h2>
+<p>The attachment migration shows its progress to anyone who can read the board, and the methods behind it answered with the stored attachment documents themselves. Those carry the file's storage path on the server, its versions, who uploaded it, its name and the card it is on.</p>
+<p>A member who may see only some cards - an assigned-only member - learned the names and uploaders of files on every card, and every reader learned the server's storage layout.</p>
+<h2>Fix</h2>
+<p>Both methods return attachment ids only, which is all the progress display needs.</p>
+<h2>Detection</h2>
+<p>None. The fix changes what a response carries; reading migration progress is ordinary use, so there is no attempt to record in Admin Panel → Problems.</p>
+<h2>Verification</h2>
+<p>Unit tests in <code>tests/attachmentMigrationLeak.test.cjs</code> check that both reader-facing answers carry attachment ids only, and the negative test checks that the client needs nothing but the id. The unit tests pass in the WeKan repository. There is no browser test.</p>
+<p><a href="https://github.com/wekan/wekan/commit/a79e05223a">Source fix and regression tests</a></p>
+</div></body></html>
