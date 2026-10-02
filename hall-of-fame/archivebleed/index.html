@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8">
+<title>WeKan — Hall of Fame / ArchiveBleed</title>
+<link rel="icon" href="../../wekan-favicon.png">
+<link rel="stylesheet" href="../../css/main.css">
+<link rel="stylesheet" href="../../font-awesome/css/font-awesome.min.css">
+</head><body>
+<img src="../hof.svg" alt="Hall of Fame" width="300">
+<div class="action-buttons"><a class="button" href="../">Back to Hall of Fame Contents</a>
+<a class="button" href="../../">Back to WeKan Website</a></div>
+<div class="hof"><h1>ArchiveBleed</h1>
+<table border="1"><tr><th>CVE</th><th>Icon</th><th>Vulnerability name</th><th>Date</th>
+<th>Responsible Security Disclosure by</th><th>Stars</th><th>Process</th><th>Vulnerabilities</th></tr>
+<tr>
+<td valign="top">-</td>
+<td valign="top"><h2><span role="img" aria-label="ArchiveBleed"><i class="fa fa-archive" aria-hidden="true"></i> <i class="fa fa-columns" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></span></h2></td>
+<td valign="top"><b>ArchiveBleed</b></td>
+<td valign="top">2026-10-02</td>
+<td valign="top"><b><a href="https://github.com/xet7">xet7</a></b></td>
+<td valign="top"><img src="../GoldStar.png" width="30" height="30" alt="Gold star"><img src="../GoldStar.png" width="30" height="30" alt="Gold star"><img src="../GoldStar.png" width="30" height="30" alt="Gold star"></td>
+<td valign="top">Found while auditing Sandstorm board import and clone after the 2026-10-02 Hall of Fame review; fixed by xet7.</td>
+<td valign="top"><p>On Sandstorm, <code>importBoard</code> and <code>cloneBoard</code> passed the client's <code>currentBoard</code> id to the board creators, which archive that board because a Sandstorm grain holds one board. The id was never checked, so anyone could archive any board by naming it.</p><p>Only a board the caller administers is replaced.</p><p>CWE-639. Medium severity, Sandstorm only. No CVE assigned. Fix prepared locally for the Upcoming release; not yet released.</p></td>
+</tr>
+</table>
+<h2 class="hof">Details</h2>
+<p>A Sandstorm grain holds one board, so importing or cloning a board there replaces the current one: the creators archive the board named as <code>currentBoard</code> and put the new one in its place. <code>importBoard</code> and <code>cloneBoard</code> took that id from the client and passed it on.</p>
+<p>Nothing checked that the id was the caller's own board, or that the caller administered it, so any user could archive any board by naming it in an import.</p>
+<h2>Fix</h2>
+<p>The current board is replaced only when the caller is an admin of it. Every creator call in the import methods passes a checked board id.</p>
+<h2>Detection</h2>
+<p>None. A member who is not an admin reaches this by importing from a board page, which is ordinary use, so a refusal is not an attempt to record in Admin Panel → Problems.</p>
+<h2>Verification</h2>
+<p>Unit tests in <code>tests/sandstormReplaceBoard.test.cjs</code> reproduce the reported shape - naming someone else's board - and the negative test fails on any <code>creator.create</code> in the import methods that passes an unchecked board id. The unit tests pass in the WeKan repository. It was not tested inside Sandstorm.</p>
+<p><a href="https://github.com/wekan/wekan/commit/fb93c5f430">Source fix and regression tests</a></p>
+</div></body></html>

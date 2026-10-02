@@ -11065,6 +11065,10 @@
       "https://github\\.com/alham-rizvi",
       "https://github\\.com/wekan/wekan/security/advisories/GHSA-w3qg-pf27-g68r",
       "https://github\\.com/wekan/wekan/commit/77c3957e5c"
+    ],
+    "hall-of-fame/archivebleed/index.html": [
+      "https://github\\.com/xet7",
+      "https://github\\.com/wekan/wekan/commit/fb93c5f430"
     ]
   }
 }

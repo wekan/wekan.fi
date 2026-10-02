@@ -91,6 +91,20 @@
 
 <tr>
 <td valign="top">-</td>
+<td valign="top"><h2><span role="img" aria-label="ArchiveBleed"><i class="fa fa-archive" aria-hidden="true"></i> <i class="fa fa-columns" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></span></h2></td>
+<td valign="top"><b>ArchiveBleed</b></td>
+<td valign="top">2026-10-02</td>
+<td valign="top"><b><a href="https://github.com/xet7">xet7</a></b></td>
+<td valign="top"><img src="GoldStar.png" width="30" height="30" alt="Gold star"><img src="GoldStar.png" width="30" height="30" alt="Gold star"><img src="GoldStar.png" width="30" height="30" alt="Gold star"></td>
+<td valign="top"><details><summary>Process</summary>
+
+Found while auditing Sandstorm board import and clone after the 2026-10-02 Hall of Fame review; fixed by xet7.</details></td>
+<td valign="top"><details><summary>Details</summary>
+
+<p>On Sandstorm, <code>importBoard</code> and <code>cloneBoard</code> passed the client's <code>currentBoard</code> id to the board creators, which archive that board because a Sandstorm grain holds one board. The id was never checked, so anyone could archive any board by naming it.</p><p>Only a board the caller administers is replaced.</p><p>CWE-639. Medium severity, Sandstorm only. No CVE assigned. Fix prepared locally for the Upcoming release; not yet released.</p><p><a href="archivebleed/">Fix and verification</a></p></details></td>
+</tr>
+<tr>
+<td valign="top">-</td>
 <td valign="top"><h2><span role="img" aria-label="RelayBleed"><i class="fa fa-key" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></span></h2></td>
 <td valign="top"><b>RelayBleed</b></td>
 <td valign="top">2026-10-02</td>

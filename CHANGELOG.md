@@ -1,5 +1,13 @@
 # Upcoming wekan.fi update
 
+- Document ArchiveBleed, found while auditing Sandstorm board import and clone:
+  on Sandstorm, importBoard and cloneBoard archived whichever board the client
+  named as currentBoard. Record the board-admin check, why there is no Problems
+  record, and verification limits.
+  [Source fix and regression tests](https://github.com/wekan/wekan/commit/fb93c5f430).
+  Allow only these source URLs on its page. Prepared locally; no website
+  publication performed. Thanks to xet7.
+
 - Document RelayBleed, found while auditing outbound requests: the live Trello
   import sent the importer's Trello key and token with downloads from any host,
   including renamed link attachments. Record the Trello-host-only credential,
