@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8">
+<title>WeKan — Hall of Fame / RelayBleed</title>
+<link rel="icon" href="../../wekan-favicon.png">
+<link rel="stylesheet" href="../../css/main.css">
+<link rel="stylesheet" href="../../font-awesome/css/font-awesome.min.css">
+</head><body>
+<img src="../hof.svg" alt="Hall of Fame" width="300">
+<div class="action-buttons"><a class="button" href="../">Back to Hall of Fame Contents</a>
+<a class="button" href="../../">Back to WeKan Website</a></div>
+<div class="hof"><h1>RelayBleed</h1>
+<table border="1"><tr><th>CVE</th><th>Icon</th><th>Vulnerability name</th><th>Date</th>
+<th>Responsible Security Disclosure by</th><th>Stars</th><th>Process</th><th>Vulnerabilities</th></tr>
+<tr>
+<td valign="top">-</td>
+<td valign="top"><h2><span role="img" aria-label="RelayBleed"><i class="fa fa-key" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></span></h2></td>
+<td valign="top"><b>RelayBleed</b></td>
+<td valign="top">2026-10-02</td>
+<td valign="top"><b><a href="https://github.com/xet7">xet7</a></b></td>
+<td valign="top"><img src="../GoldStar.png" width="30" height="30" alt="Gold star"><img src="../GoldStar.png" width="30" height="30" alt="Gold star"><img src="../GoldStar.png" width="30" height="30" alt="Gold star"></td>
+<td valign="top">Found while auditing outbound requests after SyncBleed; fixed by xet7.</td>
+<td valign="top"><p>The live Trello import downloaded attachments, the board background and member avatars with the importing user's Trello API key and token in an OAuth header, whatever host the URL named. A link attachment's URL is chosen by anyone who can edit the Trello board, and one renamed to look like a file was downloaded like an upload, so its host received the importer's token. The background and avatar downloads retried with the token after a public download failed.</p><p>The credential now goes only to Trello's own HTTPS hosts; every other download goes without it.</p><p>CWE-201, CWE-522. High severity: it needs the victim to import a board the attacker can add an attachment to. No CVE assigned. Fix prepared locally for the Upcoming release; not yet released.</p></td>
+</tr>
+</table>
+<h2 class="hof">Details</h2>
+<p>Reviewing every outbound request after SyncBleed showed that the live Trello import, which downloads files server-side so they can be stored in WeKan, attached the importing user's Trello key and token to every download. Trello needs that credential for files uploaded to Trello, and WeKan sent it everywhere. The only filter skipped a link whose name equalled its URL, and Trello lets a link be renamed, so a link named like a file and pointing at another host was downloaded with the credential. The SSRF guard already refused internal addresses and dropped the header on a redirect off the origin, but the first request went straight to the named public host. Background and avatar downloads tried without the credential first and retried with it.</p>
+<p>Whoever can add an attachment to a Trello board that someone later imports into WeKan - a member of a shared board, for example - could collect that person's Trello token, which acts for them on Trello within its scope.</p>
+<h2>Fix</h2>
+<p>The OAuth header is built in one place, and only for HTTPS to <code>trello.com</code> and <code>api.trello.com</code> on the default port. Every other attachment, background or avatar is downloaded without it, and the background and avatar retries with the credential happen only for those hosts.</p>
+<h2>Detection</h2>
+<p>None. A link attachment on another host is ordinary board content, so withholding the credential happens on normal imports and is not an attempt to record in Admin Panel → Problems.</p>
+<h2>Verification</h2>
+<p>Unit tests run the real import code with the network stubbed and record which hosts receive the credential: an uploaded Trello file does, a renamed link and Trello lookalikes (another port, plain HTTP, a longer host name) do not, and the background and avatar retries follow the same rule. A negative test fails if the credential header is built anywhere else in the server. The live import always calls the fixed Trello API, so there is no browser test.</p>
+<p><a href="https://github.com/wekan/wekan/commit/de67550476">Source fix and regression tests</a></p>
+</div></body></html>

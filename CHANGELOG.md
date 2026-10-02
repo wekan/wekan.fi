@@ -1,5 +1,12 @@
 # Upcoming wekan.fi update
 
+- Document RelayBleed, found while auditing outbound requests: the live Trello
+  import sent the importer's Trello key and token with downloads from any host,
+  including renamed link attachments. Record the Trello-host-only credential,
+  why there is no Problems record, and verification limits.
+  [Source fix and regression tests](https://github.com/wekan/wekan/commit/de67550476).
+  Prepared locally; no website publication performed. Thanks to xet7.
+
 - Document SyncBleed, reported privately by alham-rizvi in GHSA-5q84-p3vr-f3xv:
   List Sync fetched a board member's server address without the SSRF guard and
   echoed the start of failed responses. Record the guarded fetch, the

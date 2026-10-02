@@ -11052,6 +11052,10 @@
       "https://github\\.com/wekan/wekan/security/advisories/GHSA-mc7c-cv99-64h7",
       "https://github\\.com/wekan/wekan/commit/3151f8a81"
     ],
+    "hall-of-fame/relaybleed/index.html": [
+      "https://github\\.com/xet7",
+      "https://github\\.com/wekan/wekan/commit/de67550476"
+    ],
     "hall-of-fame/syncbleed/index.html": [
       "https://github\\.com/alham-rizvi",
       "https://github\\.com/wekan/wekan/security/advisories/GHSA-5q84-p3vr-f3xv",
