@@ -1,5 +1,13 @@
 # Upcoming wekan.fi update
 
+- Document HookUrlBleed, found while auditing the board publication: the board
+  publication sent integrations with their URLs to read-only members and
+  public-board visitors, and a chat webhook URL carries its secret. Record the
+  admin-only URLs, why there is no Problems record, and verification limits.
+  [Source fix and regression tests](https://github.com/wekan/wekan/commit/4af54face7).
+  Allow only these source URLs on its page. Prepared locally; no website
+  publication performed. Thanks to xet7.
+
 - Document DirectoryInfoBleed, found while auditing publications sent before
   sign-in: the setting publication sent every visitor, before sign-in, the LDAP
   host, port, base DN, bind DN, filter and encryption mode. Record the

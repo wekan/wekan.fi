@@ -91,6 +91,20 @@
 
 <tr>
 <td valign="top">-</td>
+<td valign="top"><h2><span role="img" aria-label="HookUrlBleed"><i class="fa fa-plug" aria-hidden="true"></i> <i class="fa fa-link" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></span></h2></td>
+<td valign="top"><b>HookUrlBleed</b></td>
+<td valign="top">2026-10-02</td>
+<td valign="top"><b><a href="https://github.com/xet7">xet7</a></b></td>
+<td valign="top"><img src="GoldStar.png" width="30" height="30" alt="Gold star"><img src="GoldStar.png" width="30" height="30" alt="Gold star"><img src="GoldStar.png" width="30" height="30" alt="Gold star"></td>
+<td valign="top"><details><summary>Process</summary>
+
+Found while auditing the board publication after the 2026-10-02 Hall of Fame review; fixed by xet7.</details></td>
+<td valign="top"><details><summary>Details</summary>
+
+<p>The board publication sent every integration of the board, URL included, to everyone who could read the board: read-only members, and on a public board anonymous visitors. A chat incoming-webhook URL carries its secret in its path, so reading a board was enough to post as its integration.</p><p>Only board admins receive the URLs. Others get the board, enabled state and activities, and the card-opened notification finds the integration by its id.</p><p>CWE-200, CWE-522. High severity on public boards with an integration. No CVE assigned. Fix prepared locally for the Upcoming release; not yet released.</p><p><a href="hookurlbleed/">Fix and verification</a></p></details></td>
+</tr>
+<tr>
+<td valign="top">-</td>
 <td valign="top"><h2><span role="img" aria-label="DirectoryInfoBleed"><i class="fa fa-address-book" aria-hidden="true"></i> <i class="fa fa-sign-in" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></span></h2></td>
 <td valign="top"><b>DirectoryInfoBleed</b></td>
 <td valign="top">2026-10-02</td>
