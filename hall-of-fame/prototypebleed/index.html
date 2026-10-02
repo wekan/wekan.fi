@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8">
+<title>WeKan — Hall of Fame / PrototypeBleed</title>
+<link rel="icon" href="../../wekan-favicon.png">
+<link rel="stylesheet" href="../../css/main.css">
+<link rel="stylesheet" href="../../font-awesome/css/font-awesome.min.css">
+</head><body>
+<img src="../hof.svg" alt="Hall of Fame" width="300">
+<div class="action-buttons"><a class="button" href="../">Back to Hall of Fame Contents</a>
+<a class="button" href="../../">Back to WeKan Website</a></div>
+<div class="hof"><h1>PrototypeBleed</h1>
+<table border="1"><tr><th>CVE</th><th>Icon</th><th>Vulnerability name</th><th>Date</th>
+<th>Responsible Security Disclosure by</th><th>Stars</th><th>Process</th><th>Vulnerabilities</th></tr>
+<tr>
+<td valign="top">-</td>
+<td valign="top"><h2><span role="img" aria-label="PrototypeBleed"><i class="fa fa-sitemap" aria-hidden="true"></i> <i class="fa fa-bug" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></span></h2></td>
+<td valign="top"><b>PrototypeBleed</b></td>
+<td valign="top">2026-10-02</td>
+<td valign="top"><b><a href="https://github.com/xet7">xet7</a></b></td>
+<td valign="top"><img src="../GoldStar.png" width="30" height="30" alt="Gold star"><img src="../GoldStar.png" width="30" height="30" alt="Gold star"><img src="../GoldStar.png" width="30" height="30" alt="Gold star"></td>
+<td valign="top">Found while auditing per-user layout methods after the 2026-10-02 Hall of Fame review; fixed by xet7.</td>
+<td valign="top"><p>The per-user layout methods kept maps keyed by the ids a client sent and wrote <code>map[boardId][listId] = value</code>. With <code>__proto__</code> as the board id, any signed-in user could set a property on every object in the server process until it restarted - for example <code>Meteor.call('setListCollapsedState', '__proto__', 'isAdmin', true)</code>.</p><p>A key that reaches a prototype - <code>__proto__</code>, <code>constructor</code>, <code>prototype</code> - or that MongoDB refuses is no longer accepted as a map key.</p><p>CWE-1321. High severity: one call by any signed-in user changes every object in the server until restart. No CVE assigned. Fix prepared locally for the Upcoming release; not yet released.</p></td>
+</tr>
+</table>
+<h2 class="hof">Details</h2>
+<p>Several per-user layout methods - collapsed lists and swimlanes, list widths and similar view state - store their values in a map on the user, keyed first by board id and then by list or swimlane id, and set them with <code>map[boardId][listId] = value</code>. Both ids came from the client and were checked only to be strings.</p>
+<p>With <code>__proto__</code> as the board id, <code>map[boardId]</code> is <code>Object.prototype</code>, so the write set a property on every object in the server process. <code>Meteor.call('setListCollapsedState', '__proto__', 'isAdmin', true)</code> made <code>isAdmin</code> true on every object that does not have its own, until the server restarted - a value any later check reading a missing property would see. Any signed-in user could make the call.</p>
+<h2>Fix</h2>
+<p>A shared <code>assertSafeMapKey</code> refuses <code>__proto__</code>, <code>constructor</code> and <code>prototype</code>, and keys that MongoDB refuses in a field name, before any id-keyed map is written. Every function that writes such a map checks its keys first.</p>
+<h2>Detection</h2>
+<p>A refused key is summarized as PrototypeBleed in Admin Panel → Problems (catalog key <code>injection.prototype</code>). The layout code never sends such an id, so every refusal is an attempt; the browser test shows the account that sent it is blocked.</p>
+<h2>Verification</h2>
+<p>Unit tests in <code>tests/prototypeBleed.test.cjs</code> run the real method bodies in a sandbox: before the fix the reported call pollutes the prototype, after it the call is refused and nothing is polluted. The negative test fails on any function that writes an id-keyed map without checking its keys first. The browser test <code>tests/playwright/specs/prototype-bleed.e2e.js</code> sends a <code>__proto__</code> id to the layout methods and checks that it is refused and the account blocked. The unit tests pass in the WeKan repository. The browser test was not run for this page.</p>
+<p><a href="https://github.com/wekan/wekan/commit/875a0065ed">Source fix and regression tests</a></p>
+</div></body></html>

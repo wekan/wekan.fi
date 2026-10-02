@@ -1,5 +1,14 @@
 # Upcoming wekan.fi update
 
+- Document PrototypeBleed, found while auditing per-user layout methods: the
+  per-user layout methods wrote map[boardId][listId] with client ids, so a
+  __proto__ board id let any signed-in user set a property on every object in
+  the server until restart. Record the shared key check, Problems attribution
+  and verification limits.
+  [Source fix and regression tests](https://github.com/wekan/wekan/commit/875a0065ed).
+  Allow only these source URLs on its page. Prepared locally; no website
+  publication performed. Thanks to xet7.
+
 - Document BackgroundBleed, found while auditing board background downloads: the
   board background download served whatever attachment backgroundImageId named,
   and a board admin could set it to another board's attachment. Record the
