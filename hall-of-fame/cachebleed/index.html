@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8">
+<title>WeKan — Hall of Fame / CacheBleed</title>
+<link rel="icon" href="../../wekan-favicon.png">
+<link rel="stylesheet" href="../../css/main.css">
+<link rel="stylesheet" href="../../font-awesome/css/font-awesome.min.css">
+</head><body>
+<img src="../hof.svg" alt="Hall of Fame" width="300">
+<div class="action-buttons"><a class="button" href="../">Back to Hall of Fame Contents</a>
+<a class="button" href="../../">Back to WeKan Website</a></div>
+<div class="hof"><h1>CacheBleed</h1>
+<table border="1"><tr><th>CVE</th><th>Icon</th><th>Vulnerability name</th><th>Date</th>
+<th>Responsible Security Disclosure by</th><th>Stars</th><th>Process</th><th>Vulnerabilities</th></tr>
+<tr>
+<td valign="top">-</td>
+<td valign="top"><h2><span role="img" aria-label="CacheBleed"><i class="fa fa-hdd-o" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></span></h2></td>
+<td valign="top"><b>CacheBleed</b></td>
+<td valign="top">2026-10-02</td>
+<td valign="top"><b><a href="https://github.com/alham-rizvi">alham-rizvi</a></b></td>
+<td valign="top"><img src="../GoldStar.png" width="30" height="30" alt="Gold star"><img src="../GoldStar.png" width="30" height="30" alt="Gold star"><img src="../GoldStar.png" width="30" height="30" alt="Gold star"><img src="../GoldStar.png" width="30" height="30" alt="Gold star"><img src="../GoldStar.png" width="30" height="30" alt="Gold star"></td>
+<td valign="top">Reported privately by alham-rizvi through GitHub Security Advisory GHSA-w3qg-pf27-g68r, with details, a proof of concept and a suggested fix; validated and fixed by xet7.</td>
+<td valign="top"><p>Attachments were answered with <code>Cache-Control: public, max-age=31536000</code> and no <code>Vary</code>, after the board access check. A shared cache in front of WeKan (a CDN, a caching reverse proxy, a corporate proxy) could store a board member's copy and serve it to anyone who knew the URL, without credentials, for a year, also after the member was removed from the board.</p><p>Validation found the same header in both download branches and both avatar routes, and Meteor-Files' own <code>/cdn/storage</code> route sent its default public, one-year header as well.</p><p>Every file response, its 304 and the thumbnail are now <code>private, no-cache</code> with <code>Vary: Cookie, Authorization, X-Auth-Token</code>, on public boards too, because a board made private later would otherwise leave a public copy behind.</p><p>CWE-524, CWE-525. Medium severity (CVSS 5.9). No CVE assigned. Affected v8.16 through v12.14. Fix prepared locally for the Upcoming release; not yet released.</p></td>
+</tr>
+</table>
+<h2 class="hof">Details</h2>
+<p>Advisory <a href="https://github.com/wekan/wekan/security/advisories/GHSA-w3qg-pf27-g68r">GHSA-w3qg-pf27-g68r</a> reported that WeKan authorized an attachment download against the board and then marked the response <code>public</code> for a year. <code>public</code> explicitly allows a shared cache to store a response produced for an authenticated request, and with no <code>Vary</code> on the credential the cache key is only the URL. A later request for that URL, with no cookie and no token, is answered from the cache without reaching WeKan. The report showed this with WeKan's own header function and an RFC 9111 cache implementation, and gave the nginx setup for an end-to-end check.</p>
+<p>Reading the source confirmed the three places the report named and found three more: both avatar routes, and Meteor-Files' own <code>/cdn/storage/attachments/&lt;id&gt;/original/&lt;name&gt;</code> route, which is guarded by WeKan's access callback but sent the library's default <code>public, max-age=31536000, s-maxage=31536000</code>. The header came in with the universal file server in v8.16. Attachment IDs are random, so the URL has to be known: a user later removed from the board, proxy or access logs, browser history, chat or Referer data.</p>
+<h2>Fix</h2>
+<p>One helper sets the policy for every response that carries a stored file: <code>Cache-Control: private, no-cache</code> keeps it out of every shared cache and makes the browser revalidate before each use, so the access check runs again and a revocation takes effect at once. <code>Vary: Cookie, Authorization, X-Auth-Token</code> names the credentials for any cache that ignores <code>private</code>. The 304 for a revalidation and the thumbnail carry the same headers, and both file collections pass the same value to Meteor-Files. The suggested fix kept a public, one-year cache for public boards; the fix does not, because a board can be made private later and a copy cached as public would outlive that change. The ETag keeps revalidation a bodiless 304.</p>
+<h2>Detection</h2>
+<p>None. The fix changes the headers of responses that were authorized, and nothing is refused. The attack happens in a shared cache that WeKan never sees, so there is no attempt to record in Admin Panel → Problems.</p>
+<h2>Verification</h2>
+<p>A unit test drives the policy against the shared-cache rules the report used: the old headers are stored and reused for an anonymous request, the new ones are neither. It checks each file route, the 304 and the thumbnail. A tree-wide negative test fails on any public <code>Cache-Control</code> value, any file collection left on the Meteor-Files default, and any file route that sends an ETag without the policy. A Playwright test checks the headers on the original, the download, the thumbnail and Meteor-Files' route, and that a signed-out request for a private board's file is refused. The browser test and an end-to-end run behind a caching proxy were not run where the fix was written.</p>
+<p><a href="https://github.com/wekan/wekan/commit/77c3957e5c">Source fix and regression tests</a></p>
+</div></body></html>

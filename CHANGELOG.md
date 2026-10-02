@@ -1,5 +1,15 @@
 # Upcoming wekan.fi update
 
+- Document CacheBleed, reported privately by alham-rizvi in GHSA-w3qg-pf27-g68r:
+  attachments and avatars were sent with a public, one-year Cache-Control, so a
+  shared cache could serve a private board's file without the access check.
+  Record the three further places validation found, the private, revalidated
+  policy for every board, why there is no Problems record, and verification
+  limits.
+  [Source fix and regression tests](https://github.com/wekan/wekan/commit/77c3957e5c).
+  Allow only these reporter, advisory and source URLs on their pages. Prepared
+  locally; no website publication performed. Thanks to alham-rizvi and xet7.
+
 - Document ReplyBleed, reported privately by alex131125 in GHSA-mc7c-cv99-64h7:
   reply-by-email took the comment author from the reply's From address. Record
   that the endpoint was never registered in released versions, the

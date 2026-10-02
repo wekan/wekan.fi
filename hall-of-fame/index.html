@@ -91,6 +91,20 @@
 
 <tr>
 <td valign="top">-</td>
+<td valign="top"><h2><span role="img" aria-label="CacheBleed"><i class="fa fa-hdd-o" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></span></h2></td>
+<td valign="top"><b>CacheBleed</b></td>
+<td valign="top">2026-10-02</td>
+<td valign="top"><b><a href="https://github.com/alham-rizvi">alham-rizvi</a></b></td>
+<td valign="top"><img src="GoldStar.png" width="30" height="30" alt="Gold star"><img src="GoldStar.png" width="30" height="30" alt="Gold star"><img src="GoldStar.png" width="30" height="30" alt="Gold star"><img src="GoldStar.png" width="30" height="30" alt="Gold star"><img src="GoldStar.png" width="30" height="30" alt="Gold star"></td>
+<td valign="top"><details><summary>Process</summary>
+
+Reported privately by alham-rizvi through GitHub Security Advisory GHSA-w3qg-pf27-g68r, with details, a proof of concept and a suggested fix; validated and fixed by xet7.</details></td>
+<td valign="top"><details><summary>Details</summary>
+
+<p>Attachments were answered with <code>Cache-Control: public, max-age=31536000</code> and no <code>Vary</code>, after the board access check. A shared cache in front of WeKan (a CDN, a caching reverse proxy, a corporate proxy) could store a board member's copy and serve it to anyone who knew the URL, without credentials, for a year, also after the member was removed from the board.</p><p>Validation found the same header in both download branches and both avatar routes, and Meteor-Files' own <code>/cdn/storage</code> route sent its default public, one-year header as well.</p><p>Every file response, its 304 and the thumbnail are now <code>private, no-cache</code> with <code>Vary: Cookie, Authorization, X-Auth-Token</code>, on public boards too, because a board made private later would otherwise leave a public copy behind.</p><p>CWE-524, CWE-525. Medium severity (CVSS 5.9). No CVE assigned. Affected v8.16 through v12.14. Fix prepared locally for the Upcoming release; not yet released.</p><p><a href="cachebleed/">Fix and verification</a></p></details></td>
+</tr>
+<tr>
+<td valign="top">-</td>
 <td valign="top"><h2><span role="img" aria-label="ReplyBleed"><i class="fa fa-reply" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></span></h2></td>
 <td valign="top"><b>ReplyBleed</b></td>
 <td valign="top">2026-09-30</td>

@@ -11002,7 +11002,8 @@
       "https://github\\.com/esbrito81",
       "https://github\\.com/kta1kri",
       "https://github\\.com/Hama1cco",
-      "https://github\\.com/alex131125"
+      "https://github\\.com/alex131125",
+      "https://github\\.com/alham-rizvi"
     ],
     "hall-of-fame/directorygroupbleed/index.html": [
       "https://github\\.com/wekan/wekan/blob/main/docs/Security/Authentication-Boundary-Audit-2026-09-27\\.md",
@@ -11050,6 +11051,11 @@
       "https://github\\.com/alex131125",
       "https://github\\.com/wekan/wekan/security/advisories/GHSA-mc7c-cv99-64h7",
       "https://github\\.com/wekan/wekan/commit/3151f8a81"
+    ],
+    "hall-of-fame/cachebleed/index.html": [
+      "https://github\\.com/alham-rizvi",
+      "https://github\\.com/wekan/wekan/security/advisories/GHSA-w3qg-pf27-g68r",
+      "https://github\\.com/wekan/wekan/commit/77c3957e5c"
     ]
   }
 }
