@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8">
+<title>WeKan — Hall of Fame / CodeBleed</title>
+<link rel="icon" href="../../wekan-favicon.png">
+<link rel="stylesheet" href="../../css/main.css">
+<link rel="stylesheet" href="../../font-awesome/css/font-awesome.min.css">
+</head><body>
+<img src="../hof.svg" alt="Hall of Fame" width="300">
+<div class="action-buttons"><a class="button" href="../">Back to Hall of Fame Contents</a>
+<a class="button" href="../../">Back to WeKan Website</a></div>
+<div class="hof"><h1>CodeBleed</h1>
+<table border="1"><tr><th>CVE</th><th>Icon</th><th>Vulnerability name</th><th>Date</th>
+<th>Responsible Security Disclosure by</th><th>Stars</th><th>Process</th><th>Vulnerabilities</th></tr>
+<tr>
+<td valign="top">-</td>
+<td valign="top"><h2><span role="img" aria-label="CodeBleed"><i class="fa fa-keyboard-o" aria-hidden="true"></i> <i class="fa fa-clock-o" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></span></h2></td>
+<td valign="top"><b>CodeBleed</b></td>
+<td valign="top">2026-10-02</td>
+<td valign="top"><b><a href="https://github.com/xet7">xet7</a></b></td>
+<td valign="top"><img src="../GoldStar.png" width="30" height="30" alt="Gold star"><img src="../GoldStar.png" width="30" height="30" alt="Gold star"><img src="../GoldStar.png" width="30" height="30" alt="Gold star"></td>
+<td valign="top">Found while auditing passwordless sign-in after the 2026-10-02 Hall of Fame review; fixed by xet7.</td>
+<td valign="top"><p>Passwordless sign-in codes were Meteor's default: six hexadecimal characters, valid for an hour. The login lockout counts wrong passwords, not wrong codes, and the only limit was per connection, which an attacker multiplies by opening connections. With about a thousand connections, a code could be guessed with about one chance in ten within its hour - for any account, administrators included, wherever passwordless sign-in is enabled.</p><p>Codes are now ten hexadecimal characters, over a trillion values, valid for 15 minutes: the same spray has about one chance in three million. The code field accepts the whole code and no longer opens a numeric keyboard.</p><p>CWE-307, CWE-330. High severity where passwordless sign-in is enabled. No CVE assigned. Fix prepared locally for the Upcoming release; not yet released.</p></td>
+</tr>
+</table>
+<h2 class="hof">Details</h2>
+<p>WeKan used <code>accounts-passwordless</code> with Meteor's default token: six hexadecimal characters, about 16.7 million values, valid for one hour. The login lockout counts wrong passwords and does not see wrong codes, and the rate limit on the code method is per connection, so an attacker who opens many connections multiplies it.</p>
+<p>Requesting a code for an account needs only its email address. With about a thousand connections the hour's guesses covered roughly a tenth of the code space, so each requested code had about one chance in ten of being found - for any account, administrators included.</p>
+<h2>Fix</h2>
+<p>Codes are ten hexadecimal characters - over a trillion values - and expire after 15 minutes, which brings the same spray to about one chance in three million. The sign-in form's code field no longer asks for a numeric keyboard and accepts the whole code, letters included.</p>
+<h2>Detection</h2>
+<p>None. A wrong code cannot be told apart from a mistyped one, so a refusal is not an attempt to record in Admin Panel → Problems; the fix is the code's entropy and lifetime.</p>
+<h2>Verification</h2>
+<p>Unit tests in <code>tests/codeBleed.test.cjs</code> compute that a code is long and short-lived enough that spraying it is hopeless, check that the code field accepts the whole code, and the negative test fails if anything configures a shorter or longer-lived code. The unit tests pass in the WeKan repository. There is no browser test.</p>
+<p><a href="https://github.com/wekan/wekan/commit/611093e957">Source fix and regression tests</a></p>
+</div></body></html>

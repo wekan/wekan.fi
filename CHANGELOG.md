@@ -1,5 +1,14 @@
 # Upcoming wekan.fi update
 
+- Document CodeBleed, found while auditing passwordless sign-in: passwordless
+  sign-in codes were six hex characters valid for an hour, and only a
+  per-connection limit stood between a spray of many connections and any
+  account. Record the longer, shorter-lived code, why there is no Problems
+  record, and verification limits.
+  [Source fix and regression tests](https://github.com/wekan/wekan/commit/611093e957).
+  Allow only these source URLs on its page. Prepared locally; no website
+  publication performed. Thanks to xet7.
+
 - Document HookBleed, found while auditing outgoing board webhooks: the
   outgoingWebhooks method built its request from the caller's integration object
   and text, so any member could post as WeKan to the board's chat webhook or

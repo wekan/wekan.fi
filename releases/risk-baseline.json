@@ -11102,6 +11102,10 @@
     "hall-of-fame/hookbleed/index.html": [
       "https://github\\.com/xet7",
       "https://github\\.com/wekan/wekan/commit/047bde7546"
+    ],
+    "hall-of-fame/codebleed/index.html": [
+      "https://github\\.com/xet7",
+      "https://github\\.com/wekan/wekan/commit/611093e957"
     ]
   }
 }
