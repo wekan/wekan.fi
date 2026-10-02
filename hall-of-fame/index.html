@@ -91,6 +91,20 @@
 
 <tr>
 <td valign="top">-</td>
+<td valign="top"><h2><span role="img" aria-label="HookBleed"><i class="fa fa-bullhorn" aria-hidden="true"></i> <i class="fa fa-plug" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></span></h2></td>
+<td valign="top"><b>HookBleed</b></td>
+<td valign="top">2026-10-02</td>
+<td valign="top"><b><a href="https://github.com/xet7">xet7</a></b></td>
+<td valign="top"><img src="GoldStar.png" width="30" height="30" alt="Gold star"><img src="GoldStar.png" width="30" height="30" alt="Gold star"><img src="GoldStar.png" width="30" height="30" alt="Gold star"></td>
+<td valign="top"><details><summary>Process</summary>
+
+Found while auditing outgoing board webhooks after the 2026-10-02 Hall of Fame review; fixed by xet7.</details></td>
+<td valign="top"><details><summary>Details</summary>
+
+<p>The <code>outgoingWebhooks</code> method built its request from the integration object the CALLER sent - which decided whether the hook was two-way and carried the token - and from the caller's own description and parameters. Any board member, read-only included, could post any text to the board's Slack, Matrix or other chat webhook as WeKan, without a limit, or make a one-way hook two-way so that its answer rewrote comments.</p><p>The request is now built from the stored integration. From a client only the card-opened notification is allowed, and its parameters are rebuilt on the server from a card on that board.</p><p>CWE-345. High severity: any member of a board with a webhook. No CVE assigned. Fix prepared locally for the Upcoming release; not yet released.</p><p><a href="hookbleed/">Fix and verification</a></p></details></td>
+</tr>
+<tr>
+<td valign="top">-</td>
 <td valign="top"><h2><span role="img" aria-label="ZipBombBleed"><i class="fa fa-bomb" aria-hidden="true"></i> <i class="fa fa-file-archive-o" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></span></h2></td>
 <td valign="top"><b>ZipBombBleed</b></td>
 <td valign="top">2026-10-02</td>

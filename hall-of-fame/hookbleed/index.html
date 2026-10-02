@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8">
+<title>WeKan — Hall of Fame / HookBleed</title>
+<link rel="icon" href="../../wekan-favicon.png">
+<link rel="stylesheet" href="../../css/main.css">
+<link rel="stylesheet" href="../../font-awesome/css/font-awesome.min.css">
+</head><body>
+<img src="../hof.svg" alt="Hall of Fame" width="300">
+<div class="action-buttons"><a class="button" href="../">Back to Hall of Fame Contents</a>
+<a class="button" href="../../">Back to WeKan Website</a></div>
+<div class="hof"><h1>HookBleed</h1>
+<table border="1"><tr><th>CVE</th><th>Icon</th><th>Vulnerability name</th><th>Date</th>
+<th>Responsible Security Disclosure by</th><th>Stars</th><th>Process</th><th>Vulnerabilities</th></tr>
+<tr>
+<td valign="top">-</td>
+<td valign="top"><h2><span role="img" aria-label="HookBleed"><i class="fa fa-bullhorn" aria-hidden="true"></i> <i class="fa fa-plug" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></span></h2></td>
+<td valign="top"><b>HookBleed</b></td>
+<td valign="top">2026-10-02</td>
+<td valign="top"><b><a href="https://github.com/xet7">xet7</a></b></td>
+<td valign="top"><img src="../GoldStar.png" width="30" height="30" alt="Gold star"><img src="../GoldStar.png" width="30" height="30" alt="Gold star"><img src="../GoldStar.png" width="30" height="30" alt="Gold star"></td>
+<td valign="top">Found while auditing outgoing board webhooks after the 2026-10-02 Hall of Fame review; fixed by xet7.</td>
+<td valign="top"><p>The <code>outgoingWebhooks</code> method built its request from the integration object the CALLER sent - which decided whether the hook was two-way and carried the token - and from the caller's own description and parameters. Any board member, read-only included, could post any text to the board's Slack, Matrix or other chat webhook as WeKan, without a limit, or make a one-way hook two-way so that its answer rewrote comments.</p><p>The request is now built from the stored integration. From a client only the card-opened notification is allowed, and its parameters are rebuilt on the server from a card on that board.</p><p>CWE-345. High severity: any member of a board with a webhook. No CVE assigned. Fix prepared locally for the Upcoming release; not yet released.</p></td>
+</tr>
+</table>
+<h2 class="hof">Details</h2>
+<p>The client calls <code>outgoingWebhooks</code> when a card is opened, so the board's chat hook can say so. The server method trusted the integration object in the call: its type decided whether the hook was two-way, and its token was sent. The text and the parameters came from the caller too.</p>
+<p>So any member of the board - read-only members included - could send any message to the board's Slack, Matrix or other webhook, appearing to come from WeKan, as often as they liked. Calling it with the type set to two-way made the server treat the hook's answer as an edit of the board's comments.</p>
+<h2>Fix</h2>
+<p>The request is built from the integration stored for the board, never from the caller's copy. A client may only trigger the card-opened notification, and its parameters are rebuilt on the server from a card that is on that board.</p>
+<h2>Detection</h2>
+<p>A client call that asks for anything but the card-opened notification, or names a card that is not on the board, is refused and summarized as HookBleed in Admin Panel → Problems (catalog key <code>ssrf.webhook-forge</code>).</p>
+<h2>Verification</h2>
+<p>Unit tests in <code>tests/webhookPreparation.test.cjs</code> check that a client cannot forge what a board webhook sends, together with the existing tests that preparation freezes endpoint, token and parameters and that suppressed or denied deliveries never send; <code>tests/activityPayloadValues.test.cjs</code> checks the payload still carries every configured value. The browser test <code>tests/playwright/specs/hook-bleed.e2e.js</code> tries to send a member's own message through a board webhook. The unit tests pass in the WeKan repository. The browser test was not run for this page.</p>
+<p><a href="https://github.com/wekan/wekan/commit/047bde7546">Source fix and regression tests</a></p>
+</div></body></html>

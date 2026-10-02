@@ -1,5 +1,14 @@
 # Upcoming wekan.fi update
 
+- Document HookBleed, found while auditing outgoing board webhooks: the
+  outgoingWebhooks method built its request from the caller's integration object
+  and text, so any member could post as WeKan to the board's chat webhook or
+  turn a one-way hook two-way. Record the stored-integration request, the
+  card-opened-only client call, Problems attribution and verification limits.
+  [Source fix and regression tests](https://github.com/wekan/wekan/commit/047bde7546).
+  Allow only these source URLs on its page. Prepared locally; no website
+  publication performed. Thanks to xet7.
+
 - Document ZipBombBleed, found while auditing zip imports: the Trello zip import
   read entry sizes from a field its entries do not have, so a small archive
   inflated without limit in server memory, and the zip import accepted members
