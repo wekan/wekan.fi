@@ -1,5 +1,14 @@
 # Upcoming wekan.fi update
 
+- Document ZipBombBleed, found while auditing zip imports: the Trello zip import
+  read entry sizes from a field its entries do not have, so a small archive
+  inflated without limit in server memory, and the zip import accepted members
+  without write access. Record the bounded reader, the write check, why there is
+  no Problems record, and verification limits.
+  [Source fix and regression tests](https://github.com/wekan/wekan/commit/e7ed71ee2e).
+  Allow only these source URLs on its page. Prepared locally; no website
+  publication performed. Thanks to xet7.
+
 - Document CasTokenBleed, found while auditing the CAS login callback: the CAS
   callback stored a validated identity under a browser-chosen casToken, so a
   link sent to a victim signed in to CAS let the attacker log in as them. Record

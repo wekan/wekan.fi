@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8">
+<title>WeKan — Hall of Fame / ZipBombBleed</title>
+<link rel="icon" href="../../wekan-favicon.png">
+<link rel="stylesheet" href="../../css/main.css">
+<link rel="stylesheet" href="../../font-awesome/css/font-awesome.min.css">
+</head><body>
+<img src="../hof.svg" alt="Hall of Fame" width="300">
+<div class="action-buttons"><a class="button" href="../">Back to Hall of Fame Contents</a>
+<a class="button" href="../../">Back to WeKan Website</a></div>
+<div class="hof"><h1>ZipBombBleed</h1>
+<table border="1"><tr><th>CVE</th><th>Icon</th><th>Vulnerability name</th><th>Date</th>
+<th>Responsible Security Disclosure by</th><th>Stars</th><th>Process</th><th>Vulnerabilities</th></tr>
+<tr>
+<td valign="top">-</td>
+<td valign="top"><h2><span role="img" aria-label="ZipBombBleed"><i class="fa fa-bomb" aria-hidden="true"></i> <i class="fa fa-file-archive-o" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></span></h2></td>
+<td valign="top"><b>ZipBombBleed</b></td>
+<td valign="top">2026-10-02</td>
+<td valign="top"><b><a href="https://github.com/xet7">xet7</a></b></td>
+<td valign="top"><img src="../GoldStar.png" width="30" height="30" alt="Gold star"><img src="../GoldStar.png" width="30" height="30" alt="Gold star"><img src="../GoldStar.png" width="30" height="30" alt="Gold star"></td>
+<td valign="top">Found while auditing zip imports after the 2026-10-02 Hall of Fame review; fixed by xet7.</td>
+<td valign="top"><p>The Trello zip import checked sizes from <code>entry.vars.uncompressedSize</code>, a field the zip library's directory entries do not have, so every check saw zero and an archive of a few hundred kilobytes inflated without limit in memory: any signed-in user could exhaust the server. The WeKan zip import read <code>wekan.json</code> with no limit at all, and <code>POST /api/import/zip</code> accepted any active member rather than one with write access.</p><p>Entries are read through one bounded reader that counts the bytes actually inflated, with a limit per entry and per archive, and the zip import requires write access.</p><p>CWE-409. High severity: a denial of service by any signed-in user. No CVE assigned. Fix prepared locally for the Upcoming release; not yet released.</p></td>
+</tr>
+</table>
+<h2 class="hof">Details</h2>
+<p>Both zip imports open the archive with <code>unzipper</code>. The Trello import meant to refuse oversized entries and read the size from <code>entry.vars.uncompressedSize</code>, but the directory entries the import uses carry it as <code>entry.uncompressedSize</code>, not under <code>vars</code>. Every check compared against <code>undefined</code>, saw nothing, and inflated the entry whole into memory.</p>
+<p>Repetitive data compresses enormously, so a small upload could become gigabytes in the server's memory and stopped it. The WeKan zip import read its <code>wekan.json</code> with no limit at all, and the REST route <code>POST /api/import/zip</code> let any active member of the board import, where the method requires write access.</p>
+<h2>Fix</h2>
+<p><code>readZipEntryBounded</code> inflates an entry while counting the bytes it actually produces and stops at a limit per entry and a limit for the whole archive, whatever the archive declares. Both imports read entries only through it. The zip import route requires write access to the board.</p>
+<h2>Detection</h2>
+<p>None. An oversized entry can be an honest large export, so a refusal does not identify an attack and is not recorded in Admin Panel → Problems.</p>
+<h2>Verification</h2>
+<p>Unit tests in <code>tests/zipBombBleed.test.cjs</code> build a real small archive that inflates to megabytes and show that the declared size is not where the old check looked, check that both imports read entries only through the bounded reader, and the negative test fails on any server code that inflates a zip entry whole or trusts <code>entry.vars</code>. The unit tests pass in the WeKan repository. There is no browser test.</p>
+<p><a href="https://github.com/wekan/wekan/commit/e7ed71ee2e">Source fix and regression tests</a></p>
+</div></body></html>
