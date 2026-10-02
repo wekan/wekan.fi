@@ -6,4 +6,6 @@
 <p><a href="https://github.com/wekan/wekan/security/advisories/GHSA-4mjm-vj9f-p629">GHSA-4mjm-vj9f-p629</a> was reported by <a href="https://github.com/crypto-nidh">crypto-nidh</a>.</p>
 <p>Current and CollectionFS-compatible avatar routes trusted the stored MIME type, allowing browser-executable content to be served under the WeKan origin.</p>
 <p><b>Fix:</b> a shared response policy converts HTML, XML, SVG and JavaScript MIME types to sandboxed opaque downloads with nosniff and frame denial. Safe image types remain inline. No Problems event is emitted because legitimate avatar views use this same path and cannot identify who supplied old metadata. Fixed for the upcoming WeKan v11.21 release on 2026-08-28.</p>
+<h2>Follow-up fixes (2026-10-02)</h2>
+<p>The avatar prefix routes in the universal file server answered before the fixed avatar server and served a stored type inline. They now serve only image types inline, and clients can update only a file's name. <a href="https://github.com/wekan/wekan/commit/e14671efa6">Fix</a>.</p>
 </div></body></html>

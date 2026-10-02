@@ -29,4 +29,6 @@
 <h2>Verification</h2>
 <p>Positive and negative tests cover currently visible history, assigned-only cards, hidden search results and contributor counts, revoked private-board access, authorized restoration and denied edits to moved cards. Existing rule undo/redo and stale-state regressions also pass. Verification uses Chromium, Meteor and MongoDB; other browsers, FerretDB and Sandstorm were not exercised.</p>
 <p><a href="https://github.com/wekan/wekan/blob/main/docs/Security/History-Access-Boundary-2026-09-27.md">Audit and verification scope</a></p>
+<h2>Follow-up fixes (2026-10-02)</h2>
+<p>History restore, undo and redo now follow what they change to its current board, and need write access there and on any board the entry moves something to. <a href="https://github.com/wekan/wekan/commit/1f368e9c7c">Fix</a>.</p>
 </div></body></html>

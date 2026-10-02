@@ -159,6 +159,8 @@ return await ReactiveCache.getCards({ _id: { $in: ancestorIds } }, {}, true);
       confirmed against <code>v10.73.0</code>. Fixed at the
       <a href="https://github.com/wekan/wekan/blob/main/CHANGELOG.md#upcoming-wekan--release">upcoming WeKan release</a>.
     </p>
+<h2>Follow-up fixes (2026-10-02)</h2>
+<p>The bulk card REST route wrote each entry's parent without checking that the caller may see the parent card's board. Each entry is now checked like a single create, and a refused parent is recorded as ParentBleed in Admin Panel → Problems. <a href="https://github.com/wekan/wekan/commit/c6f59fc923">Fix</a>.</p>
   </div>
 
 </body>

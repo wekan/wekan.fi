@@ -11015,7 +11015,8 @@
     ],
     "hall-of-fame/historyscopebleed/index.html": [
       "https://github\\.com/wekan/wekan/blob/main/docs/Security/History-Access-Boundary-2026-09-27\\.md",
-      "https://github\\.com/wekan/wekan/commit/285c1db24"
+      "https://github\\.com/wekan/wekan/commit/285c1db24",
+      "https://github\\.com/wekan/wekan/commit/1f368e9c7c"
     ],
     "hall-of-fame/ldapbindbleed/index.html": [
       "https://github\\.com/kta1kri",
@@ -11064,7 +11065,8 @@
     "hall-of-fame/cachebleed/index.html": [
       "https://github\\.com/alham-rizvi",
       "https://github\\.com/wekan/wekan/security/advisories/GHSA-w3qg-pf27-g68r",
-      "https://github\\.com/wekan/wekan/commit/77c3957e5c"
+      "https://github\\.com/wekan/wekan/commit/77c3957e5c",
+      "https://github\\.com/wekan/wekan/commit/cd4c8064ae"
     ],
     "hall-of-fame/archivebleed/index.html": [
       "https://github\\.com/xet7",
@@ -11119,6 +11121,78 @@
     "hall-of-fame/repointbleed/index.html": [
       "https://github\\.com/xet7",
       "https://github\\.com/wekan/wekan/commit/f02da1bfd2"
+    ],
+    "hall-of-fame/assignedbleed/index.html": [
+      "https://github\\.com/wekan/wekan/commit/1a218ead02",
+      "https://github\\.com/wekan/wekan/commit/a3da90833a",
+      "https://github\\.com/wekan/wekan/commit/7788e0c4e6"
+    ],
+    "hall-of-fame/visibilitybleed/index.html": [
+      "https://github\\.com/wekan/wekan/commit/3af89a6a00"
+    ],
+    "hall-of-fame/metricsbleed/index.html": [
+      "https://github\\.com/wekan/wekan/commit/a4b524a5fc"
+    ],
+    "hall-of-fame/jambleed/index.html": [
+      "https://github\\.com/wekan/wekan/commit/c49d9d8d3e",
+      "https://github\\.com/wekan/wekan/commit/3156dec7bc"
+    ],
+    "hall-of-fame/readonlybleed/index.html": [
+      "https://github\\.com/wekan/wekan/commit/8ddce924ec",
+      "https://github\\.com/wekan/wekan/commit/c15f9486d8"
+    ],
+    "hall-of-fame/framebleed/index.html": [
+      "https://github\\.com/wekan/wekan/commit/dae1fd68e8"
+    ],
+    "hall-of-fame/signupbleed/index.html": [
+      "https://github\\.com/wekan/wekan/commit/dd36db3641",
+      "https://github\\.com/wekan/wekan/commit/433ff5506c"
+    ],
+    "hall-of-fame/linkedwritebleed/index.html": [
+      "https://github\\.com/wekan/wekan/commit/3da444db74"
+    ],
+    "hall-of-fame/subtaskdepositbleed/index.html": [
+      "https://github\\.com/wekan/wekan/commit/1167a2ae2f"
+    ],
+    "hall-of-fame/parentbleed/index.html": [
+      "https://github\\.com/wekan/wekan/commit/c6f59fc923"
+    ],
+    "hall-of-fame/hashbleed/index.html": [
+      "https://github\\.com/wekan/wekan/commit/8fc9bd5a94"
+    ],
+    "hall-of-fame/mailtitlebleed/index.html": [
+      "https://github\\.com/wekan/wekan/commit/a9e8bda47b"
+    ],
+    "hall-of-fame/positionhistorybleed/index.html": [
+      "https://github\\.com/wekan/wekan/commit/3d080956be"
+    ],
+    "hall-of-fame/uploadpathbleed/index.html": [
+      "https://github\\.com/wekan/wekan/commit/06b8ea5750"
+    ],
+    "hall-of-fame/avatarmimebleed/index.html": [
+      "https://github\\.com/wekan/wekan/commit/e14671efa6"
+    ],
+    "hall-of-fame/ownerbleed/index.html": [
+      "https://github\\.com/wekan/wekan/commit/ebcaac1962"
+    ],
+    "hall-of-fame/errorbleed/index.html": [
+      "https://github\\.com/wekan/wekan/commit/215293868b"
+    ],
+    "hall-of-fame/mutationbleed/index.html": [
+      "https://github\\.com/wekan/wekan/commit/fd458543f9",
+      "https://github\\.com/wekan/wekan/commit/5de71ba789"
+    ],
+    "hall-of-fame/invisiblebleed/index.html": [
+      "https://github\\.com/wekan/wekan/commit/1076c08381"
+    ],
+    "hall-of-fame/bypassbleed/index.html": [
+      "https://github\\.com/wekan/wekan/commit/a8e836efd3"
+    ],
+    "hall-of-fame/stalebleed/index.html": [
+      "https://github\\.com/wekan/wekan/commit/d3a94fd2d9"
+    ],
+    "hall-of-fame/rulebleed/index.html": [
+      "https://github\\.com/wekan/wekan/commit/c63d909c81"
     ]
   }
 }

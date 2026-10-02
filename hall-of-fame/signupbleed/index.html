@@ -121,6 +121,8 @@ if (setting?.disableRegistration === true) {
     <p>
       <a href="https://github.com/wekan/wekan/pull/6598">Pull request #6598</a> by <b><a href="https://github.com/AhmedLukman">AhmedLukman</a></b> changed this guard to read WeKan's setting. It was filed against <a href="https://github.com/wekan/wekan/issues/4774">issue #4774</a>, a <i>403 Forbidden</i> from this endpoint that nobody had been able to reproduce &mdash; and which this line cannot produce, because it never returned 403 at all. Looking into why turned up the opposite fault, and a more serious one. The pull request was closed and the fix written with a security log entry and the tests; the finding is the reporter's.
     </p>
+<h2>Follow-up fixes (2026-10-02)</h2>
+<p>With registration disabled, the DDP sign-up methods - <code>ATCreateUserServer</code>, which the sign-up form calls, and <code>createUser</code> - still accepted the server-only options that skip the registration checks. Both are now guarded the same way, and attempts are recorded as SignupBleed. <a href="https://github.com/wekan/wekan/commit/dd36db3641">Fix</a>, <a href="https://github.com/wekan/wekan/commit/433ff5506c">completed</a>.</p>
   </div>
 
   <br />

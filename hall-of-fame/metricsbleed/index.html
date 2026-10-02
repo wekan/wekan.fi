@@ -76,6 +76,8 @@
       Fixed at the
       <a href="https://github.com/wekan/wekan/blob/main/CHANGELOG.md#upcoming-wekan--release">upcoming WeKan release</a>.
     </p>
+<h2>Follow-up fixes (2026-10-02)</h2>
+<p><code>/metrics</code> compared <code>METRICS_ACCESS_TOKEN</code> with a loose, early-exit comparison, and a configured but empty token let <code>?access_token=</code> through. The comparison is now constant-time, and an empty token admits nobody. <a href="https://github.com/wekan/wekan/commit/a4b524a5fc">Fix</a>.</p>
   </div>
 
 </body>

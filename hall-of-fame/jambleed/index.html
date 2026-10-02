@@ -143,6 +143,9 @@ if (!hadError) {
     <p>
       <b><a href="https://github.com/daniais">daniais</a></b> reported it through a GitHub security advisory with a lab reproduction on v10.91, an A/B harness comparing the original against a patched build, a suggested fix direction, and a CVSS assessment they marked as preliminary and offered for independent review. They offered a 90-day disclosure window rather than assuming one. Nothing was published before the fix.
     </p>
+<h2>Follow-up fixes (2026-10-02)</h2>
+<p>The lockout record named the GUESSED account as its actor, and a high-severity blocked record with a user disables that account, so three wrong passwords from anyone who knew a username disabled its owner. The account is now named as the target, and a lockout never disables it. <a href="https://github.com/wekan/wekan/commit/c49d9d8d3e">Fix</a>.</p>
+<p>One try/catch wrapped every lockout setting read at startup, so a single unreadable setting left the server with no lockout at all. Each setting now falls back to its default. <a href="https://github.com/wekan/wekan/commit/3156dec7bc">Fix</a>.</p>
   </div>
 
   <br />

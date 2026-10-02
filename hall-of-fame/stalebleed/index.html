@@ -101,6 +101,8 @@ members: { $elemMatch: { userId: paramUserId, isActive: true } },
     <p>
       <code>tests/restApiIdorBatch.test.cjs</code> pins the <code>$elemMatch</code> form and that the dotted match does not return.
     </p>
+<h2>Follow-up fixes (2026-10-02)</h2>
+<p><code>GET /api/user</code> and the attachment migration status publication found boards by any membership, including removed ones; they now use active membership. Board copy over REST requires an active board admin. <a href="https://github.com/wekan/wekan/commit/d3a94fd2d9">Fix</a>.</p>
   </div>
 
   <br />

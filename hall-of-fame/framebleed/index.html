@@ -153,6 +153,8 @@
       </tr>
 
     </table>
+<h2>Follow-up fixes (2026-10-02)</h2>
+<p>Regression: when browser-policy was removed in 2022, every line of <code>server/policy.js</code> was commented out, and since then WeKan's pages carried no framing header. The <code>X-Frame-Options</code> and <code>Content-Security-Policy: frame-ancestors</code> headers are restored on the app's HTML. <a href="https://github.com/wekan/wekan/commit/dae1fd68e8">Fix</a>.</p>
   </div>
 
   <br />

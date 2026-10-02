@@ -32,4 +32,6 @@
 <h2>Verification</h2>
 <p>A unit test drives the policy against the shared-cache rules the report used: the old headers are stored and reused for an anonymous request, the new ones are neither. It checks each file route, the 304 and the thumbnail. A tree-wide negative test fails on any public <code>Cache-Control</code> value, any file collection left on the Meteor-Files default, and any file route that sends an ETag without the policy. A Playwright test checks the headers on the original, the download, the thumbnail and Meteor-Files' route, and that a signed-out request for a private board's file is refused. The browser test and an end-to-end run behind a caching proxy were not run where the fix was written.</p>
 <p><a href="https://github.com/wekan/wekan/commit/77c3957e5c">Source fix and regression tests</a></p>
+<h2>Follow-up fixes (2026-10-02)</h2>
+<p>API answers now carry <code>Cache-Control: no-store</code> unless a route sets its own, and the legacy attachments route answers only GET and HEAD, with the private cache headers. <a href="https://github.com/wekan/wekan/commit/cd4c8064ae">Fix</a>.</p>
 </div></body></html>

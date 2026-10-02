@@ -6,4 +6,6 @@
 <p><a href="https://github.com/wekan/wekan/security/advisories/GHSA-5fc2-m4gw-j6qq">GHSA-5fc2-m4gw-j6qq</a> was reported by <a href="https://github.com/Char0n1507">Char0n1507</a>.</p>
 <p>An authenticated user could store a history record naming another private board and then undo it, moving a controlled card into that board.</p>
 <p><b>Fix:</b> history insertion requires membership on every named board, and undo rechecks both the history board and destination membership immediately before the move. Denied cross-board attempts are bounded and summarized as PositionHistoryBleed in Admin Panel &rarr; Problems with the account and source address. Fixed in the <a href="https://github.com/wekan/wekan/commit/4ce5cf6e1">upcoming WeKan release</a> on 2026-08-25.</p>
+<h2>Follow-up fixes (2026-10-02)</h2>
+<p>Clients could still insert position-history entries naming another board's card or list. Client inserts are now denied, and undo and redo apply an entry only when what it moves is still on its boards and the user can write there. <a href="https://github.com/wekan/wekan/commit/3d080956be">Fix</a>.</p>
 </div></body></html>

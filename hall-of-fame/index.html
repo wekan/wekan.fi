@@ -311,7 +311,7 @@ Reported privately by alham-rizvi through GitHub Security Advisory GHSA-5q84-p3v
 Reported privately by alham-rizvi through GitHub Security Advisory GHSA-w3qg-pf27-g68r, with details, a proof of concept and a suggested fix; validated and fixed by xet7.</details></td>
 <td valign="top"><details><summary>Details</summary>
 
-<p>Attachments were answered with <code>Cache-Control: public, max-age=31536000</code> and no <code>Vary</code>, after the board access check. A shared cache in front of WeKan (a CDN, a caching reverse proxy, a corporate proxy) could store a board member's copy and serve it to anyone who knew the URL, without credentials, for a year, also after the member was removed from the board.</p><p>Validation found the same header in both download branches and both avatar routes, and Meteor-Files' own <code>/cdn/storage</code> route sent its default public, one-year header as well.</p><p>Every file response, its 304 and the thumbnail are now <code>private, no-cache</code> with <code>Vary: Cookie, Authorization, X-Auth-Token</code>, on public boards too, because a board made private later would otherwise leave a public copy behind.</p><p>CWE-524, CWE-525. Medium severity (CVSS 5.9). No CVE assigned. Affected v8.16 through v12.14. Fix prepared locally for the Upcoming release; not yet released.</p><p><a href="cachebleed/">Fix and verification</a></p></details></td>
+<p>Attachments were answered with <code>Cache-Control: public, max-age=31536000</code> and no <code>Vary</code>, after the board access check. A shared cache in front of WeKan (a CDN, a caching reverse proxy, a corporate proxy) could store a board member's copy and serve it to anyone who knew the URL, without credentials, for a year, also after the member was removed from the board.</p><p>Validation found the same header in both download branches and both avatar routes, and Meteor-Files' own <code>/cdn/storage</code> route sent its default public, one-year header as well.</p><p>Every file response, its 304 and the thumbnail are now <code>private, no-cache</code> with <code>Vary: Cookie, Authorization, X-Auth-Token</code>, on public boards too, because a board made private later would otherwise leave a public copy behind.</p><p>CWE-524, CWE-525. Medium severity (CVSS 5.9). No CVE assigned. Affected v8.16 through v12.14. Fix prepared locally for the Upcoming release; not yet released.</p><p><a href="cachebleed/">Fix and verification</a></p><p>Follow-up fix (2026-10-02): API answers are no-store, and legacy attachments are private.</p></details></td>
 </tr>
 <tr>
 <td valign="top">-</td>
@@ -373,7 +373,7 @@ Reported privately by Hama1cco through GitHub Security Advisory GHSA-m8gh-2h78-f
 Found and fixed while integrating Scrum with universal History; current access and historical authorship were not consistently separated.</details></td>
 <td valign="top"><details><summary>Details</summary>
 
-<p>Universal History returned hidden cards to assigned-only members and could retain private-board history access after membership was removed. Its reversal path could also use an old board’s access to edit a card now on another board. Reads now enforce current scope before searching or counting; restore, undo and redo share current scope and card edit checks.</p><p>CWE-863. High severity. No CVE assigned. Fix prepared for the Upcoming release.</p><p><a href="historyscopebleed/">Fix and verification</a></p></details></td>
+<p>Universal History returned hidden cards to assigned-only members and could retain private-board history access after membership was removed. Its reversal path could also use an old board’s access to edit a card now on another board. Reads now enforce current scope before searching or counting; restore, undo and redo share current scope and card edit checks.</p><p>CWE-863. High severity. No CVE assigned. Fix prepared for the Upcoming release.</p><p><a href="historyscopebleed/">Fix and verification</a></p><p>Follow-up fix (2026-10-02): history follows what it changes to its current board.</p></details></td>
 </tr>
 <tr>
 <td valign="top">-</td>
@@ -459,7 +459,7 @@ Responsible disclosure through a saved GitHub security advisory; current code an
 <summary>Details</summary>
 
 <p>An unvalidated deposit pointer bridged private cards and related content into the source board feed, and subtask creation skipped destination write authorization. Source card scopes now exclude foreign pointers and null IDs. Deposit content follows a reactive authorized board cursor with its own assignment restrictions. Assigned-card content follows reactive card cursors. Writes and pointer changes require destination write access. Write refusals are summarized in Problems; ordinary filtered reads are not attack events.</p><p><a href="https://github.com/wekan/wekan/commit/c50d7b4ea">Source fix and regression coverage</a>. Targeted tests pass; live browser execution remains pending. No CVE is assigned here.</p><p><a href="subtaskdepositbleed/">More details</a></p>
-</details></td>
+<p>Follow-up fix (2026-10-02): inviting to the deposit board requires being allowed to invite on it.</p></details></td>
       </tr>
       <tr>
         <td valign="top">-</td>
@@ -477,7 +477,7 @@ Responsible disclosure through a saved GitHub security advisory; current code an
 <summary>Details</summary>
 
 <p>Comment-only source members could create links on self-owned boards and use delegated write checks to modify the source. Source write access is now required for method and DDP link creation and pointer changes. Explicit non-writing source roles cap delegation through legacy links. UI permissions follow the ceiling. Denied attempts use bounded Problems summaries.</p><p><a href="https://github.com/wekan/wekan/commit/26e9e7030">Source fix and regression coverage</a>. Targeted tests pass; live browser execution remains pending. No CVE is assigned here.</p><p><a href="linkedwritebleed/">More details</a></p>
-</details></td>
+<p>Follow-up fix (2026-10-02): the REST route for linked cards uses the same check.</p></details></td>
       </tr>
       <tr>
         <td valign="top">-</td>
@@ -595,7 +595,7 @@ Responsible disclosure through a saved GitHub security advisory; current code an
           <ul><li>Membership-only method guards allowed non-writing roles to mutate board data (CWE-863).</li>
           <li>List, swimlane and checklist moves, scoped imports, attachment renames and history writes now enforce the canonical write capability. Denials are summarized in Admin Panel Problems.</li>
           <li><a href="mutationbleed/">More details</a></li></ul>
-          </details>
+          <p>Follow-up fix (2026-10-02): the remaining mutation paths check write access.</p></details>
         </td>
       </tr>
 
@@ -615,7 +615,7 @@ Responsible disclosure through a saved GitHub security advisory; current code an
           <ul><li>Server methods bypassed the private-only board visibility policy (CWE-863).</li>
           <li>Board creation and card-to-board conversion now force private visibility when required, recording blocked overrides in Admin Panel Problems.</li>
           <li><a href="visibilitybleed/">More details</a></li></ul>
-        </details></td>
+        <p>Follow-up fix (2026-10-02): board imports apply the private-only policy too.</p></details></td>
       </tr>
 
       <tr>
@@ -659,7 +659,7 @@ Responsible disclosure through a saved GitHub security advisory; current code an
             <li>Fixed at <a href="https://github.com/wekan/wekan/blob/main/CHANGELOG.md#upcoming-wekan--release">upcoming WeKan release</a></li>
             <li><a href="uploadpathbleed/">More details</a></li>
           </ul>
-          </details></td>
+          <p>Follow-up fix (2026-10-02): avatar upload ids are sanitized and require a user.</p></details></td>
       </tr>
 
       <tr>
@@ -767,7 +767,7 @@ Responsible disclosure through a saved GitHub security advisory; current code an
         <td valign="top"><details><summary>Details</summary>
 
           <ul><li>Stored activity titles could become active email markup (CWE-79)</li><li>The completed localized body is escaped at its final HTML boundary</li><li>Notification subjects discard header-injecting newlines</li><li><a href="mailtitlebleed/">More details</a></li></ul>
-          </details></td>
+          <p>Follow-up fix (2026-10-02): values in templated HTML email are escaped again.</p></details></td>
       </tr>
 
       <tr>
@@ -810,7 +810,7 @@ Responsible disclosure through a saved GitHub security advisory; current code an
           <summary>Details</summary>
 
           <ul><li>Server-side automation bypassed the collection cross-board deny hook (CWE-862, CWE-863)</li><li>Rule registration and execution now independently enforce destination write access</li><li>Authorization runs before destination list or swimlane lookup, removing the private-structure oracle</li><li>Denied attempts are summarized in Admin Panel &rarr; Problems</li><li><a href="rulebleed/">More details</a></li></ul>
-          </details>
+          <p>Follow-up fix (2026-10-02): a legacy action without a board acts on its own board.</p></details>
         </td>
       </tr>
 
@@ -832,7 +832,7 @@ Responsible disclosure through a saved GitHub security advisory; current code an
           <summary>Details</summary>
 
           <ul><li>Stored browser-executable avatar MIME types could render active content under the WeKan origin (CWE-79, CWE-434)</li><li>Dangerous types are now sandboxed opaque downloads with nosniff and frame denial</li><li>No Problems event is emitted because legitimate avatar views use the same response path</li><li><a href="avatarmimebleed/">More details</a></li></ul>
-          </details>
+          <p>Follow-up fix (2026-10-02): the prefix routes serve only image types inline, and clients can change only the name.</p></details>
         </td>
       </tr>
 
@@ -977,7 +977,7 @@ Responsible disclosure through a saved GitHub security advisory; current code an
         <td class="by" valign="top"><b><a href="https://github.com/Char0n1507">Char0n1507</a></b> and <b><a href="https://github.com/xet7">xet7</a></b></td>
         <td class="stars" valign="top"><img src="GoldStar.png" width="30px" height="auto" /><img src="GoldStar.png" width="30px" height="auto" /><img src="GoldStar.png" width="30px" height="auto" /><img src="GoldStar.png" width="30px" height="auto" /><img src="GoldStar.png" width="30px" height="auto" /></td>
         <td valign="top"><details><summary>Process</summary>Coordinated disclosure through a GitHub security advisory, validated at insertion, method and model boundaries.</details></td>
-        <td valign="top"><details><summary>Details</summary><ul><li>Forged undo history could inject a card into another private board (CWE-284, CWE-639)</li><li>Denied attempts are summarized in Admin Panel &rarr; Problems</li><li><a href="positionhistorybleed/">More details</a></li></ul></details></td>
+        <td valign="top"><details><summary>Details</summary><ul><li>Forged undo history could inject a card into another private board (CWE-284, CWE-639)</li><li>Denied attempts are summarized in Admin Panel &rarr; Problems</li><li><a href="positionhistorybleed/">More details</a></li></ul><p>Follow-up fix (2026-10-02): client inserts are denied; undo and redo apply only applicable entries.</p></details></td>
       </tr>
       <tr>
         <td valign="top"><a href="https://github.com/wekan/wekan/security/advisories/GHSA-hvvr-j425-5xxm">GHSA-hvvr-j425-5xxm</a></td>
@@ -1033,7 +1033,7 @@ Responsible disclosure through a saved GitHub security advisory; current code an
         <td class="by" valign="top"><b><a href="https://github.com/Char0n1507">Char0n1507</a></b> and <b><a href="https://github.com/xet7">xet7</a></b></td>
         <td class="stars" valign="top"><img src="GoldStar.png" width="30px" height="auto" /><img src="GoldStar.png" width="30px" height="auto" /><img src="GoldStar.png" width="30px" height="auto" /><img src="GoldStar.png" width="30px" height="auto" /><img src="GoldStar.png" width="30px" height="auto" /></td>
         <td valign="top"><details><summary>Process</summary>Coordinated disclosure through a GitHub security advisory, validated against current REST handlers.</details></td>
-        <td valign="top"><details><summary>Details</summary><ul><li>Board creation trusted client-selected ownership (CWE-639)</li><li><a href="ownerbleed/">More details</a></li></ul></details></td>
+        <td valign="top"><details><summary>Details</summary><ul><li>Board creation trusted client-selected ownership (CWE-639)</li><li><a href="ownerbleed/">More details</a></li></ul><p>Follow-up fix (2026-10-02): a client board insert naming other members is denied.</p></details></td>
       </tr>
       <tr>
         <td valign="top"><a href="https://github.com/wekan/wekan/security/advisories/GHSA-cp24-5m9m-wm97">GHSA-cp24-5m9m-wm97</a></td>
@@ -1051,7 +1051,7 @@ Responsible disclosure through a saved GitHub security advisory; current code an
         <td class="by" valign="top"><b><a href="https://github.com/Char0n1507">Char0n1507</a></b> and <b><a href="https://github.com/xet7">xet7</a></b></td>
         <td class="stars" valign="top"><img src="GoldStar.png" width="30px" height="auto" /><img src="GoldStar.png" width="30px" height="auto" /><img src="GoldStar.png" width="30px" height="auto" /><img src="GoldStar.png" width="30px" height="auto" /><img src="GoldStar.png" width="30px" height="auto" /></td>
         <td valign="top"><details><summary>Process</summary>Coordinated disclosure through a GitHub security advisory, validated against current REST handlers.</details></td>
-        <td valign="top"><details><summary>Details</summary><ul><li>Raw errors were returned as successful REST responses (CWE-209)</li><li><a href="errorbleed/">More details</a></li></ul></details></td>
+        <td valign="top"><details><summary>Details</summary><ul><li>Raw errors were returned as successful REST responses (CWE-209)</li><li><a href="errorbleed/">More details</a></li></ul><p>Follow-up fix (2026-10-02): error details are hidden in ten more files.</p></details></td>
       </tr>
       <tr>
         <td valign="top"><a href="https://github.com/wekan/wekan/security/advisories/GHSA-qf5c-63jx-mpv4">GHSA-qf5c-63jx-mpv4</a></td>
@@ -1128,7 +1128,7 @@ Responsible disclosure through a saved GitHub security advisory; current code an
             <li>Fixed at <a href="https://github.com/wekan/wekan/blob/main/CHANGELOG.md#upcoming-wekan--release">upcoming WeKan release</a></li>
             <li><a href="assignedbleed/">More details</a></li>
           </ul>
-          </details>
+          <p>Follow-up fixes (2026-10-02): attachments, activities, Due Cards, search, move pickers, position history, REST reads and copies are scoped for assigned-only members too.</p></details>
         </td>
       </tr>
 
@@ -1245,7 +1245,7 @@ Responsible disclosure through a saved GitHub security advisory; current code an
             <li>Fixed at <a href="https://github.com/wekan/wekan/blob/main/CHANGELOG.md#upcoming-wekan--release">upcoming WeKan release</a></li>
             <li><a href="jambleed/">More details</a></li>
           </ul>
-          </details>
+          <p>Follow-up fixes (2026-10-02): a lockout never disables the guessed account, and one unreadable setting no longer turns the lockout off.</p></details>
         </td>
       </tr>
 
@@ -1284,7 +1284,7 @@ Responsible disclosure through a saved GitHub security advisory; current code an
             <li>Fixed at <a href="https://github.com/wekan/wekan/blob/main/CHANGELOG.md#upcoming-wekan--release">upcoming WeKan release</a></li>
             <li><a href="signupbleed/">More details</a></li>
           </ul>
-          </details>
+          <p>Follow-up fix (2026-10-02): the DDP sign-up methods are guarded too.</p></details>
         </td>
       </tr>
 
@@ -1362,7 +1362,7 @@ Responsible disclosure through a saved GitHub security advisory; current code an
             <li>Fixed at <a href="https://github.com/wekan/wekan/blob/main/CHANGELOG.md#upcoming-wekan--release">upcoming WeKan release</a></li>
             <li><a href="hashbleed/">More details</a></li>
           </ul>
-          </details>
+          <p>Follow-up fix (2026-10-02): the board member REST routes refuse an unknown action.</p></details>
         </td>
       </tr>
 
@@ -1440,7 +1440,7 @@ Responsible disclosure through a saved GitHub security advisory; current code an
             <li>Fixed at <a href="https://github.com/wekan/wekan/blob/main/CHANGELOG.md#upcoming-wekan--release">upcoming WeKan release</a></li>
             <li><a href="stalebleed/">More details</a></li>
           </ul>
-          </details>
+          <p>Follow-up fix (2026-10-02): user and migration-status lookups use active membership; board copy needs board admin.</p></details>
         </td>
       </tr>
 
@@ -1629,7 +1629,7 @@ Responsible disclosure through a saved GitHub security advisory; current code an
             <li>Fixed at <a href="https://github.com/wekan/wekan/blob/main/CHANGELOG.md#upcoming-wekan--release">upcoming WeKan release</a></li>
             <li><a href="parentbleed/">More details</a></li>
           </ul>
-          </details>
+          <p>Follow-up fix (2026-10-02): the bulk card REST route checks the parent card's board too.</p></details>
         </td>
       </tr>
 
@@ -2096,7 +2096,7 @@ Responsible disclosure through a saved GitHub security advisory; current code an
             <li>Fixed at <a href="https://github.com/wekan/wekan/blob/main/CHANGELOG.md#upcoming-wekan--release">upcoming WeKan release</a></li>
             <li><a href="casbleed/">More details</a></li>
           </ul>
-          </details>
+          <p>Related (2026-10-02): see CasTokenBleed for the CAS callback token fix.</p></details>
         </td>
       </tr>
 
@@ -2131,7 +2131,7 @@ Responsible disclosure through a saved GitHub security advisory; current code an
             <li>Fixed at <a href="https://github.com/wekan/wekan/blob/main/CHANGELOG.md#upcoming-wekan--release">upcoming WeKan release</a></li>
             <li><a href="metricsbleed/">More details</a></li>
           </ul>
-          </details>
+          <p>Follow-up fix (2026-10-02): the access token is compared in constant time, and an empty token admits nobody.</p></details>
         </td>
       </tr>
 
@@ -2833,7 +2833,7 @@ Responsible disclosure through a saved GitHub security advisory; current code an
             </li>
             <li><a href="readonlybleed/">More details</a></li>
           </ul>
-          </details>
+          <p>Follow-up fixes (2026-10-02): refused REST writes are recorded in Problems, and every mutating REST route must make a write-level decision.</p></details>
         </td>
       </tr>
 
@@ -3435,7 +3435,7 @@ Responsible disclosure through a saved GitHub security advisory; current code an
             <li>Fixed at Wekan v6.86 2023-04-26</a></li>
             <li><a href="invisiblebleed/">More details</a></li>
           </ul>
-          </details>
+          <p>Follow-up fix (2026-10-02): every hidden comment is made visible, not only the first.</p></details>
         </td>
       </tr>
       <tr>
@@ -3643,7 +3643,7 @@ Responsible disclosure through a saved GitHub security advisory; current code an
             <li>Fixed at <a href="https://github.com/wekan/wekan/blob/main/CHANGELOG.md#v381-2020-03-01-wekan-release">Wekan v3.81 2020-03-01</a></li>
             <li><a href="bypassbleed/">More details</a></li>
           </ul>
-          </details>
+          <p>Follow-up fix (2026-10-02): rule chains stop at depth five, and deeper loops are recorded.</p></details>
         </td>
       </tr>
 
@@ -3759,7 +3759,7 @@ Responsible disclosure through a saved GitHub security advisory; current code an
             <li>Affected Wekan v0.7-v0.79</li>
             <li><a href="framebleed/">More details</a></li>
           </ul>
-          </details>
+          <p>Follow-up fix (2026-10-02): the framing headers, commented out since 2022, are restored.</p></details>
         </td>
       </tr>
     </table>

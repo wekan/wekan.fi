@@ -100,6 +100,10 @@
         <td valign="top">Fixed for the <a href="https://github.com/wekan/wekan/blob/main/CHANGELOG.md#upcoming-wekan--release">upcoming WeKan release</a>.</td>
       </tr>
     </table>
+<h2>Follow-up fixes (2026-10-02)</h2>
+<p>Assigned-only members' read paths still showed every card of the board: the attachment API (REST and method list, download and info), the activities publication, Due Cards with all users, Global Search, the structural move pickers and position history asked only for board membership. Each now applies the same assigned-only rule as the board publication, and a download or info request for another card's attachment is recorded under AssignedBleed in Admin Panel → Problems. <a href="https://github.com/wekan/wekan/commit/1a218ead02">Fix</a>.</p>
+<p>The REST board access check behind the routes that return whole-board data counted the assigned-only roles as full readers, so such a member's API client read every card. They are refused there now; it is not recorded, because their client reaches it in ordinary use. <a href="https://github.com/wekan/wekan/commit/a3da90833a">Fix</a>.</p>
+<p>Copying or moving cards, lists and swimlanes out of a board checked only membership of the source board. An assigned-only member may now copy a card assigned to them, and no list or swimlane. <a href="https://github.com/wekan/wekan/commit/7788e0c4e6">Fix</a>.</p>
   </div>
 
   <div class="action-buttons">

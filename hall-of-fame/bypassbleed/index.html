@@ -273,6 +273,8 @@ a["{\"msg\":\"result\",\"id\":\"3\",\"result\":{\"version\":\"3.80.0\",\"os\":{\
 
 
     </table>
+<h2>Follow-up fixes (2026-10-02)</h2>
+<p>Two rules undoing each other ran without end. Rules triggered by rules are now limited to a depth of five, and a deeper loop is recorded as BypassBleed in Admin Panel → Problems. <a href="https://github.com/wekan/wekan/commit/a8e836efd3">Fix</a>.</p>
   </div>
 
   <br />

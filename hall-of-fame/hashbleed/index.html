@@ -120,6 +120,8 @@ function withoutSecrets(user) {
     <p>
       <code>tests/restApiIdorBatch.test.cjs</code> pins that both endpoints answer through it, and that the self view and the list endpoint keep the projections they always had.
     </p>
+<h2>Follow-up fixes (2026-10-02)</h2>
+<p>The board member add and remove REST routes answered any action other than add or remove with the whole user document. An unknown action is now refused before the user is read. <a href="https://github.com/wekan/wekan/commit/8fc9bd5a94">Fix</a>.</p>
   </div>
 
   <br />

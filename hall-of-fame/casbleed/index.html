@@ -91,6 +91,8 @@
       Fixed at the
       <a href="https://github.com/wekan/wekan/blob/main/CHANGELOG.md#upcoming-wekan--release">upcoming WeKan release</a>.
     </p>
+<h2>Follow-up fixes (2026-10-02)</h2>
+<p>A separate, related CAS fault was fixed on the same day: the CAS callback stored a validated identity under whatever token the callback URL carried, so a link sent to a victim already signed in to CAS let an attacker log in as them. The callback is now accepted only from the browser that started that login. See <a href="../castokenbleed/">CasTokenBleed</a>.</p>
   </div>
 
 </body>

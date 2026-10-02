@@ -6,4 +6,6 @@
 <p><a href="https://github.com/wekan/wekan/security/advisories/GHSA-hp9m-vff5-7pvw">GHSA-hp9m-vff5-7pvw</a> was reported by <a href="https://github.com/binary-lover">binary-lover</a>.</p>
 <p>Stored board, list and card titles and other activity values were interpolated into localized notification prose before it became an HTML email body. A writable member could place active markup in a title and have it delivered to another member's mail client.</p>
 <p><b>Fix:</b> the completed localized notification is escaped at the final HTML output boundary before plain-text newlines become line breaks. Notification subjects also discard newlines, preventing stored values from creating additional mail headers. Fixed for the upcoming WeKan release on 2026-08-29.</p>
+<h2>Follow-up fixes (2026-10-02)</h2>
+<p>Regression: with an admin-defined activity email template, member-written values were substituted into the HTML body unescaped. They are escaped again. <a href="https://github.com/wekan/wekan/commit/a9e8bda47b">Fix</a>.</p>
 </div></body></html>

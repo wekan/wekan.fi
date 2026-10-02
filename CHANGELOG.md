@@ -1,5 +1,17 @@
 # Upcoming wekan.fi update
 
+- Add a "Follow-up fixes (2026-10-02)" section to 25 existing Hall of Fame
+  pages - AssignedBleed, VisibilityBleed, MetricsBleed, JamBleed, ReadOnlyBleed,
+  FrameBleed, SignupBleed, LinkedWriteBleed, SubtaskDepositBleed, ParentBleed,
+  HashBleed, MailTitleBleed, PositionHistoryBleed, UploadPathBleed,
+  AvatarMimeBleed, OwnerBleed, ErrorBleed, MutationBleed, InvisibleBleed,
+  BypassBleed, StaleBleed, HistoryScopeBleed, CacheBleed and RuleBleed - for the
+  siblings and regressions closed after the 2026-10-02 review, each linking its
+  source commit, with one sentence in the row's collapsed Details on the
+  contents page. The CasRaceBleed page points to the new CasTokenBleed. Allow
+  only these commit URLs on their own pages. Prepared locally; no website
+  publication performed. Thanks to xet7.
+
 - Document RepointBleed, found while auditing board-owned rule and webhook
   documents: rule triggers, actions, rules and webhook integrations could be
   moved to another board by an admin of the board they were on, so a trigger set
