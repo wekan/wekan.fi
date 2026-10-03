@@ -176,6 +176,8 @@ Cards.allow({
         </td>
       </tr>
     </table>
+<h2>Follow-up fix (2026-10-03)</h2>
+<p>A card inserted over DDP on a board the caller may write to could name the list and swimlane of another, private board. The card stayed on its own board, but its creation activity carried that list's and swimlane's titles, so a member could read the names of another board's lists by id. Such an insert is now refused, and the attempt is recorded in Admin Panel → Problems under BoardBleed. <a href="https://github.com/wekan/wekan/commit/6d3b27aeb6">Fix</a>.</p>
   </div>
 
   <br />
