@@ -32,4 +32,6 @@
 <h2>Verification</h2>
 <p>Unit tests in <code>tests/repointBleed.test.cjs</code> reproduce the reported attack - moving a trigger or a webhook to another board is refused and recorded - and cover custom fields and comment reactions, and check that the matcher keeps a rule on its own board. The negative test fails on any board-owned collection with a client update rule that does not refuse a board change. The browser test <code>tests/playwright/specs/repoint-bleed.e2e.js</code> tries to move triggers, webhooks and custom fields from a signed-in client. The unit tests pass in the WeKan repository. The browser test was not run for this page.</p>
 <p><a href="https://github.com/wekan/wekan/commit/f02da1bfd2">Source fix and regression tests</a></p>
+<h2>Follow-up fix (2026-10-03)</h2>
+<p>A board admin could still save a rule on their own board that named a trigger of another board. Only that board's own rules ran on its activities, but the matcher took a trigger's rule from whichever rule named it first, so the other board's own rule could silently stop running. The matcher now looks up the rule on the activity's own board, and a rule naming another board's trigger is refused and summarized as RepointBleed in Admin Panel → Problems. <a href="https://github.com/wekan/wekan/commit/509f1d97fc">Fix</a>.</p>
 </div></body></html>
