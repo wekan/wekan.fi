@@ -64,6 +64,36 @@ class RiskAudit(unittest.TestCase):
                         r.inspect(self.root, self.policy)
             page.unlink()
 
+    def test_saml_subject_and_zip_report_links_are_exact_and_page_scoped(self):
+        policy = json.loads((ROOT/'releases/risk-baseline.json').read_text())
+        self.policy['allowUrlPatternsByFile'] = policy['allowUrlPatternsByFile']
+        reviewed = {
+            'samlsubjectbleed': [
+                'https://github.com/alham-rizvi',
+                'https://github.com/wekan/wekan/blob/main/docs/Features/Login/SAML.md',
+                'https://github.com/wekan/wekan/commit/c0c6aa5414fd9fa28cef07ea89908670c424e2e9'],
+            'zipbombbleed': ['https://github.com/alham-rizvi'],
+        }
+        for name, urls in reviewed.items():
+            page = self.root/f'hall-of-fame/{name}/index.html'
+            page.parent.mkdir(parents=True)
+            for url in urls:
+                with self.subTest(page=name, url=url):
+                    self.assertIn(url, (ROOT/page.relative_to(self.root)).read_text())
+                    page.write_text('<a href="'+url+'">Reviewed reference</a>')
+                    r.inspect(self.root, self.policy)
+                    self.file.write_text('fetch("'+url+'")')
+                    with self.assertRaisesRegex(ValueError, 'main.js: new URL'):
+                        r.inspect(self.root, self.policy)
+                    self.file.write_text('console.log("local diagnostics");')
+                    for other in [url+'?report=1', url+'0',
+                                  url.replace('github.com', 'githubXcom'),
+                                  url.replace('github.com/', 'github.com/unreviewed/')]:
+                        page.write_text('<a href="'+other+'">Unreviewed</a>')
+                        with self.assertRaisesRegex(ValueError, 'new URL'):
+                            r.inspect(self.root, self.policy)
+            page.unlink()
+
     def test_known_bad_hash_always_blocks_source_or_binary(self):
         self.policy['denyHashes']=[hashlib.sha256(self.file.read_bytes()).hexdigest()]
         with self.assertRaisesRegex(ValueError,'hash'):r.inspect(self.root,self.policy)

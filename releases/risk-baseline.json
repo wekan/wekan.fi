@@ -11099,7 +11099,8 @@
     ],
     "hall-of-fame/zipbombbleed/index.html": [
       "https://github\\.com/xet7",
-      "https://github\\.com/wekan/wekan/commit/e7ed71ee2e"
+      "https://github\\.com/wekan/wekan/commit/e7ed71ee2e",
+      "https://github\\.com/alham\\-rizvi"
     ],
     "hall-of-fame/hookbleed/index.html": [
       "https://github\\.com/xet7",
@@ -11207,6 +11208,11 @@
     ],
     "hall-of-fame/boardbleed/index.html": [
       "https://github\\.com/wekan/wekan/commit/6d3b27aeb6"
+    ],
+    "hall-of-fame/samlsubjectbleed/index.html": [
+      "https://github\\.com/alham\\-rizvi",
+      "https://github\\.com/wekan/wekan/blob/main/docs/Features/Login/SAML\\.md",
+      "https://github\\.com/wekan/wekan/commit/c0c6aa5414fd9fa28cef07ea89908670c424e2e9"
     ]
   }
 }

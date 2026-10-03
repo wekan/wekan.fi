@@ -1,5 +1,11 @@
 # Upcoming wekan.fi update
 
+- Fix the release risk check for the SamlSubjectBleed and ZipBombBleed pages.
+  Allow the reviewed reporter, SAML upgrade documentation and source-fix links
+  only on their respective pages. All 13 risk-audit tests pass, including
+  negative checks for changed URLs and use from other files; the release
+  launcher's offline audit passes. Thanks to xet7.
+
 - Fix the Pages deployment risk check for the AssignedBleed, BoardBleed and
   RepointBleed follow-up links added on 2026-10-03. Allow the three reviewed
   source-fix URLs only on their respective Hall of Fame pages. Regression
