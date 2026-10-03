@@ -1,5 +1,13 @@
 # Upcoming wekan.fi update
 
+- Fix the Pages deployment risk check for the AssignedBleed, BoardBleed and
+  RepointBleed follow-up links added on 2026-10-03. Allow the three reviewed
+  source-fix URLs only on their respective Hall of Fame pages. Regression
+  checks reject changed hosts, repositories, hashes, query strings and use
+  from another file. Let the October 2 index regression accept later follow-up
+  paragraphs while still requiring its dated text inside collapsed Details.
+  Thanks to xet7.
+
 - Add follow-up fixes (2026-10-02) to the LDAPBleed, BruteBleed and TenantBleed
   pages: LDAP certificates are verified by default again, including in Docker
   and the snap; guessing one account from many addresses is slowed without
