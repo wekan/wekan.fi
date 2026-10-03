@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8">
+<title>WeKan — Hall of Fame / SamlSubjectBleed</title>
+<link rel="icon" href="../../wekan-favicon.png">
+<link rel="stylesheet" href="../../css/main.css">
+<link rel="stylesheet" href="../../font-awesome/css/font-awesome.min.css">
+</head><body>
+<img src="../hof.svg" alt="Hall of Fame" width="300">
+<div class="action-buttons"><a class="button" href="../">Back to Hall of Fame Contents</a>
+<a class="button" href="../../">Back to WeKan Website</a></div>
+<div class="hof"><h1>SamlSubjectBleed</h1>
+<table border="1"><tr><th>CVE</th><th>Icon</th><th>Vulnerability name</th><th>Date</th>
+<th>Responsible Security Disclosure by</th><th>Stars</th><th>Process</th><th>Vulnerabilities</th></tr>
+<tr>
+<td valign="top">-</td>
+<td class="icon" valign="top"><h2><i class="fa fa-id-card" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></h2></td>
+<td valign="top"><b><a href="./">SamlSubjectBleed</a></b></td>
+<td valign="top">2026-10-03</td>
+<td class="by" valign="top"><b><a href="https://github.com/alham-rizvi">alham-rizvi</a></b></td>
+<td class="stars" valign="top"><img src="../GoldStar.png" width="30" height="30" alt="Gold star"><img src="../GoldStar.png" width="30" height="30" alt="Gold star"><img src="../GoldStar.png" width="30" height="30" alt="Gold star"></td>
+<td valign="top"><p>Reported by alham-rizvi through coordinated GitHub advisory GHSA-966m-4qgp-j8w4; fixed by xet7.</p>
+</td>
+<td valign="top"><p>SAML login matched mutable usernames or email addresses and overwrote the stored NameID. A different IdP subject claiming the same username could take over an existing SAML account. Login now resolves issuer and qualified NameID first, refuses rebinding even when merging is enabled, and stores the binding atomically. Email is no longer marked verified without an explicit assertion attestation. CWE-287; high severity. No CVE assigned. Fix prepared locally for the Upcoming release.</p>
+</td>
+</tr>
+</table>
+<h2 class="hof">Details</h2>
+<p>New accounts bind issuer, NameID, NameID format and both qualifiers. Returning subjects can change profile attributes without changing account identity. Transient or malformed subjects are rejected. Opt-in linking requires explicit verified matching email on both sides, and a conditional database update prevents concurrent links from replacing each other.</p>
+<p><strong>Upgrade:</strong> legacy bindings without issuer require independent identity verification and server-side repair by an administrator. The next assertion is never trusted to fill missing scope. See the <a href="https://github.com/wekan/wekan/blob/main/docs/Features/Login/SAML.md">SAML upgrade instructions</a>.</p>
+<h2>Detection</h2>
+<p>Conflicting subjects are summarized as SamlSubjectBleed in Admin Panel / Problems. Logging failure never permits login. Missing legacy scope is refused without an attack record, because an ordinary login after upgrade reaches that path.</p>
+<h2>Verification</h2>
+<p>Behavioral tests execute the login handler, including real signed assertions with the same email and different NameIDs. Negative coverage checks the tracked source for duplicate binding writers. Tests also cover repeated login, attribute changes, qualifiers, legacy accounts, verification claims and concurrent writes.</p>
+<p><a href="https://github.com/wekan/wekan/commit/c0c6aa5414fd9fa28cef07ea89908670c424e2e9">Source fix and regression coverage</a></p>
+<h2>Browser verification, 2026-10-03</h2>
+<p>Using build.sh source-mode startup and isolated local MongoDB, Chromium, Firefox and WebKit each passed all three focused scenarios: SAML error display, a real signed login followed by a different-subject takeover refusal, and native ZIP decompression-limit refusal followed by a valid import. The macOS Firefox launch initially failed on protected shared app data; isolating both Gecko app-data roots resolved it, with probes enabled and all browser sandboxes retained. Production identity providers were not tested.</p>
+</div></body></html>

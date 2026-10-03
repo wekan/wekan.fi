@@ -1,0 +1,17 @@
+'use strict';
+const fs = require('node:fs');
+const path = require('node:path');
+const assert = require('node:assert/strict');
+const root = path.resolve(__dirname, '../hall-of-fame');
+const index = fs.readFileSync(path.join(root, 'index.html'), 'utf8');
+const rows = index.match(/<tr>[\s\S]*?<\/tr>/g).filter(row => row.includes('samlsubjectbleed/'));
+assert.equal(rows.length, 1);
+const cells = rows[0].match(/<td\b[^>]*>[\s\S]*?<\/td>/g);
+assert.equal(cells.length, 8);
+assert.match(cells[4], /href="https:\/\/github.com\/alham-rizvi">alham-rizvi/);
+assert.match(cells[6], /<summary>Process<\/summary>/);
+assert.match(cells[7], /<summary>Details<\/summary>/);
+const page = fs.readFileSync(path.join(root, 'samlsubjectbleed/index.html'), 'utf8');
+assert.doesNotMatch(page, /<details>/);
+for (const text of ['GHSA-966m-4qgp-j8w4', 'CWE-287', 'legacy', 'Admin Panel / Problems', 'Chromium, Firefox and WebKit each passed', 'c0c6aa5414']) assert.ok(page.includes(text), text);
+console.log('SamlSubjectBleed attribution, layout, upgrade, detection and verification checks pass');

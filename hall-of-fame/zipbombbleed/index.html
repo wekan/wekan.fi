@@ -16,9 +16,9 @@
 <td valign="top"><h2><span role="img" aria-label="ZipBombBleed"><i class="fa fa-bomb" aria-hidden="true"></i> <i class="fa fa-file-archive-o" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></span></h2></td>
 <td valign="top"><b>ZipBombBleed</b></td>
 <td valign="top">2026-10-02</td>
-<td valign="top"><b><a href="https://github.com/xet7">xet7</a></b></td>
+<td valign="top"><b><a href="https://github.com/xet7">xet7</a></b>, <b><a href="https://github.com/alham-rizvi">alham-rizvi</a></b></td>
 <td valign="top"><img src="../GoldStar.png" width="30" height="30" alt="Gold star"><img src="../GoldStar.png" width="30" height="30" alt="Gold star"><img src="../GoldStar.png" width="30" height="30" alt="Gold star"></td>
-<td valign="top">Found while auditing zip imports after the 2026-10-02 Hall of Fame review; fixed by xet7.</td>
+<td valign="top">Found while auditing zip imports after the 2026-10-02 Hall of Fame review; fixed by xet7. Independently reported by alham-rizvi in GHSA-rmcq-68x2-3g5j and verified on 2026-10-03 as already fixed in v12.15.</td>
 <td valign="top"><p>The Trello zip import checked sizes from <code>entry.vars.uncompressedSize</code>, a field the zip library's directory entries do not have, so every check saw zero and an archive of a few hundred kilobytes inflated without limit in memory: any signed-in user could exhaust the server. The WeKan zip import read <code>wekan.json</code> with no limit at all, and <code>POST /api/import/zip</code> accepted any active member rather than one with write access.</p><p>Entries are read through one bounded reader that counts the bytes actually inflated, with a limit per entry and per archive, and the zip import requires write access.</p><p>CWE-409. High severity: a denial of service by any signed-in user. No CVE assigned. Fix prepared locally for the Upcoming release; not yet released.</p></td>
 </tr>
 </table>
@@ -30,6 +30,10 @@
 <h2>Detection</h2>
 <p>None. An oversized entry can be an honest large export, so a refusal does not identify an attack and is not recorded in Admin Panel → Problems.</p>
 <h2>Verification</h2>
-<p>Unit tests in <code>tests/zipBombBleed.test.cjs</code> build a real small archive that inflates to megabytes and show that the declared size is not where the old check looked, check that both imports read entries only through the bounded reader, and the negative test fails on any server code that inflates a zip entry whole or trusts <code>entry.vars</code>. The unit tests pass in the WeKan repository. There is no browser test.</p>
+<p>Unit tests in <code>tests/zipBombBleed.test.cjs</code> build a real small archive that inflates to megabytes and show that the declared size is not where the old check looked, check that both imports read entries only through the bounded reader, and the negative test fails on any server code that inflates a zip entry whole or trusts <code>entry.vars</code>. The unit tests pass in the WeKan repository. The original verification did not include a browser test; see the later browser verification below.</p>
 <p><a href="https://github.com/wekan/wekan/commit/e7ed71ee2e">Source fix and regression tests</a></p>
+<h2>Independent report verification, 2026-10-03</h2>
+<p>GHSA-rmcq-68x2-3g5j describes the native wekan.json path already fixed in commit e7ed71ee2ec90558abe775a48f17923e449a4d45, included in v12.15. The document is bounded to 256 MiB of actual decompressed output. The strengthened archive test names wekan.json and confirms a forged declared size does not bypass the byte counter.</p>
+<h2>Browser verification, 2026-10-03</h2>
+<p>Using build.sh source-mode startup and isolated local MongoDB, Chromium, Firefox and WebKit each passed all three focused scenarios: SAML error display, a real signed login followed by a different-subject takeover refusal, and native ZIP decompression-limit refusal followed by a valid import. The macOS Firefox launch initially failed on protected shared app data; isolating both Gecko app-data roots resolved it, with probes enabled and all browser sandboxes retained. Production identity providers were not tested.</p>
 </div></body></html>

@@ -87,6 +87,23 @@
         <th width="10%">Process</th>
         <th width="19%">Vulnerabilities</th>
       </tr>
+<tr>
+<td valign="top">-</td>
+<td class="icon" valign="top"><h2><i class="fa fa-id-card" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></h2></td>
+<td valign="top"><b><a href="samlsubjectbleed/">SamlSubjectBleed</a></b></td>
+<td valign="top">2026-10-03</td>
+<td class="by" valign="top"><b><a href="https://github.com/alham-rizvi">alham-rizvi</a></b></td>
+<td class="stars" valign="top"><img src="GoldStar.png" width="30" height="30" alt="Gold star"><img src="GoldStar.png" width="30" height="30" alt="Gold star"><img src="GoldStar.png" width="30" height="30" alt="Gold star"></td>
+<td valign="top"><details><summary>Process</summary>
+
+<p>Reported by alham-rizvi through coordinated GitHub advisory GHSA-966m-4qgp-j8w4; fixed by xet7.</p>
+</details></td>
+<td valign="top"><details><summary>Details</summary>
+
+<p>SAML login matched mutable usernames or email addresses and overwrote the stored NameID. A different IdP subject claiming the same username could take over an existing SAML account. Login now resolves issuer and qualified NameID first, refuses rebinding even when merging is enabled, and stores the binding atomically. Email is no longer marked verified without an explicit assertion attestation. CWE-287; high severity. No CVE assigned. Fix prepared locally for the Upcoming release.</p>
+</details></td>
+</tr>
+
 
 
 <tr>
@@ -164,11 +181,11 @@ Found while auditing outgoing board webhooks after the 2026-10-02 Hall of Fame r
 <td valign="top"><h2><span role="img" aria-label="ZipBombBleed"><i class="fa fa-bomb" aria-hidden="true"></i> <i class="fa fa-file-archive-o" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></span></h2></td>
 <td valign="top"><b>ZipBombBleed</b></td>
 <td valign="top">2026-10-02</td>
-<td valign="top"><b><a href="https://github.com/xet7">xet7</a></b></td>
+<td valign="top"><b><a href="https://github.com/xet7">xet7</a></b>, <b><a href="https://github.com/alham-rizvi">alham-rizvi</a></b></td>
 <td valign="top"><img src="GoldStar.png" width="30" height="30" alt="Gold star"><img src="GoldStar.png" width="30" height="30" alt="Gold star"><img src="GoldStar.png" width="30" height="30" alt="Gold star"></td>
 <td valign="top"><details><summary>Process</summary>
 
-Found while auditing zip imports after the 2026-10-02 Hall of Fame review; fixed by xet7.</details></td>
+Found while auditing zip imports after the 2026-10-02 Hall of Fame review; fixed by xet7. Independently reported by alham-rizvi in GHSA-rmcq-68x2-3g5j and verified on 2026-10-03 as already fixed in v12.15.</details></td>
 <td valign="top"><details><summary>Details</summary>
 
 <p>The Trello zip import checked sizes from <code>entry.vars.uncompressedSize</code>, a field the zip library's directory entries do not have, so every check saw zero and an archive of a few hundred kilobytes inflated without limit in memory: any signed-in user could exhaust the server. The WeKan zip import read <code>wekan.json</code> with no limit at all, and <code>POST /api/import/zip</code> accepted any active member rather than one with write access.</p><p>Entries are read through one bounded reader that counts the bytes actually inflated, with a limit per entry and per archive, and the zip import requires write access.</p><p>CWE-409. High severity: a denial of service by any signed-in user. No CVE assigned. Fix prepared locally for the Upcoming release; not yet released.</p><p><a href="zipbombbleed/">Fix and verification</a></p></details></td>
