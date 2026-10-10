@@ -11035,7 +11035,9 @@
     ],
     "install/index.html": [
       "https://nodejs\\.org/dist/v26\\.\\d+\\.\\d+/",
-      "https://unofficial-builds\\.nodejs\\.org/download/release/v26\\.\\d+\\.\\d+/"
+      "https://unofficial-builds\\.nodejs\\.org/download/release/v26\\.\\d+\\.\\d+/",
+      "https://github\\.com/wekan/wekan/blob/main/docs/Databases/Supported\\.md",
+      "https://github\\.com/wekan/wekan/blob/main/docs/Databases/FerretDB/1/Conformance\\.md"
     ],
     "hall-of-fame/adminfieldbleed/index.html": [
       "https://github\\.com/Hama1cco",
@@ -11213,6 +11215,9 @@
       "https://github\\.com/alham\\-rizvi",
       "https://github\\.com/wekan/wekan/blob/main/docs/Features/Login/SAML\\.md",
       "https://github\\.com/wekan/wekan/commit/c0c6aa5414fd9fa28cef07ea89908670c424e2e9"
+    ],
+    "upgrade/index.html": [
+      "https://github\\.com/wekan/wekan/blob/main/docs/Databases/Supported\\.md"
     ]
   }
 }
