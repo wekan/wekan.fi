@@ -1,5 +1,10 @@
 # Upcoming wekan.fi update
 
+- Make the release launcher work with a GitHub CLI older than 2.48. It read
+  the list of earlier releases with `gh api --paginate --slurp`, and an older
+  `gh` stops with "unknown flag: --slurp". The pages `--paginate` prints one
+  after another are now read in turn. Thanks to xet7.
+
 - Fix the release risk check for the SamlSubjectBleed and ZipBombBleed pages.
   Allow the reviewed reporter, SAML upgrade documentation and source-fix links
   only on their respective pages. All 13 risk-audit tests pass, including
