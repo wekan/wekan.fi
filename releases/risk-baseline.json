@@ -11217,7 +11217,8 @@
       "https://github\\.com/wekan/wekan/commit/c0c6aa5414fd9fa28cef07ea89908670c424e2e9"
     ],
     "upgrade/index.html": [
-      "https://github\\.com/wekan/wekan/blob/main/docs/Databases/Supported\\.md"
+      "https://github\\.com/wekan/wekan/blob/main/docs/Databases/Supported\\.md",
+      "https://github\\.com/wekan/wekan/tree/main/docs/Platforms/FOSS/Container/Sandstorm"
     ]
   }
 }
