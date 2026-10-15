@@ -1,5 +1,11 @@
 # Upcoming wekan.fi update
 
+- Fix the deploy risk check for the AssignedBleed follow-up of 2026-10-15. Allow
+  the GHSA-3cgr-47wm-9cc9 advisory on the Hall of Fame index and the AssignedBleed
+  page, and the fix commit on the AssignedBleed page, only there. The offline
+  release audit, both release test files and all website Node suites pass.
+  Thanks to xet7.
+
 - Make the release launcher work with a GitHub CLI older than 2.48. It read
   the list of earlier releases with `gh api --paginate --slurp`, and an older
   `gh` stops with "unknown flag: --slurp". The pages `--paginate` prints one
