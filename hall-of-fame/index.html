@@ -1113,13 +1113,13 @@ Responsible disclosure through a saved GitHub security advisory; current code an
 
       <tr>
         <td valign="top">
-          <a href="https://github.com/wekan/wekan/security/advisories/GHSA-f396-42fx-vr88">GHSA-f396-42fx-vr88</a>
+          <a href="https://github.com/wekan/wekan/security/advisories/GHSA-f396-42fx-vr88">GHSA-f396-42fx-vr88</a><br /><a href="https://github.com/wekan/wekan/security/advisories/GHSA-3cgr-47wm-9cc9">GHSA-3cgr-47wm-9cc9</a>
         </td>
         <td class="icon" valign="top"><h2><span class="vulnerability-icons" role="img" aria-label="AssignedBleed"><i class="fa fa-user" style="color: black;" aria-hidden="true"></i> <i class="fa fa-check-square-o" style="color: black;" aria-hidden="true"></i> <i class="fa fa-pencil" style="color: black;" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></span> </h2></td>
         <td valign="top"><b>AssignedBleed</b></td>
         <td valign="top">2026-08-21</td>
         <td class="by" valign="top">
-          <b><a href="https://github.com/Char0n1507">Char0n1507</a></b> and <b><a href="https://github.com/xet7">xet7</a></b>
+          <b><a href="https://github.com/Char0n1507">Char0n1507</a></b>, <b><a href="https://github.com/crypto-nidh">crypto-nidh</a></b> and <b><a href="https://github.com/xet7">xet7</a></b>
         </td>
         <td class="stars" valign="top">
           <img src="GoldStar.png" width="30px" height="auto" /><img src="GoldStar.png" width="30px" height="auto" /><img src="GoldStar.png" width="30px" height="auto" /><img src="GoldStar.png" width="30px" height="auto" /><img src="GoldStar.png" width="30px" height="auto" />
@@ -1131,7 +1131,7 @@ Responsible disclosure through a saved GitHub security advisory; current code an
           <details>
           <summary>Process</summary>
 
-          Coordinated disclosure through a GitHub security advisory, with a working v11.06 reproduction and root-cause analysis of the missing role flag.
+          Coordinated disclosure through a GitHub security advisory, with a working v11.06 reproduction and root-cause analysis of the missing role flag. A second advisory (2026-10-15) traced the remaining read paths of the same root cause from source, with a reproduction for each.
           </details>
         </td>
         <td valign="top">
@@ -1146,7 +1146,8 @@ Responsible disclosure through a saved GitHub security advisory; current code an
             <li><a href="assignedbleed/">More details</a></li>
           </ul>
           <p>Follow-up fixes (2026-10-02): attachments, activities, Due Cards, search, move pickers, position history, REST reads and copies are scoped for assigned-only members too.</p>
-          <p>Follow-up fix (2026-10-03): a copy of a card carries only the subtasks the copier could read and copy themselves.</p></details>
+          <p>Follow-up fix (2026-10-03): a copy of a card carries only the subtasks the copier could read and copy themselves.</p>
+          <p>Follow-up fix (2026-10-15, GHSA-3cgr-47wm-9cc9): file downloads, the document text search, legacy attachments and linked lists are scoped for assigned-only members too.</p></details>
         </td>
       </tr>
 
