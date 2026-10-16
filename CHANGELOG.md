@@ -1,5 +1,10 @@
 # Upcoming wekan.fi update
 
+- Follow WeKan's docs to their menu-based places: the Drag and drop and Touch
+  Screen pages are under General/DragDrop, Sync under Board Settings /
+  Import-Export, and the SAML upgrade instructions under Login-Page. The release
+  audit's recorded URLs and SAML allowance follow. Thanks to xet7.
+
 - Record the LockoutBleed follow-up of 2026-10-16: the DDP login timing
   equalizer was never loaded, so the web login still told by its response time
   whether a username exists. The LockoutBleed page describes the fix, and the

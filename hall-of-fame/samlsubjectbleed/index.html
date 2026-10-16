@@ -26,7 +26,7 @@
 </table>
 <h2 class="hof">Details</h2>
 <p>New accounts bind issuer, NameID, NameID format and both qualifiers. Returning subjects can change profile attributes without changing account identity. Transient or malformed subjects are rejected. Opt-in linking requires explicit verified matching email on both sides, and a conditional database update prevents concurrent links from replacing each other.</p>
-<p><strong>Upgrade:</strong> legacy bindings without issuer require independent identity verification and server-side repair by an administrator. The next assertion is never trusted to fill missing scope. See the <a href="https://github.com/wekan/wekan/blob/main/docs/Features/Login/SAML.md">SAML upgrade instructions</a>.</p>
+<p><strong>Upgrade:</strong> legacy bindings without issuer require independent identity verification and server-side repair by an administrator. The next assertion is never trusted to fill missing scope. See the <a href="https://github.com/wekan/wekan/blob/main/docs/Features/Login-Page/SAML.md">SAML upgrade instructions</a>.</p>
 <h2>Detection</h2>
 <p>Conflicting subjects are summarized as SamlSubjectBleed in Admin Panel / Problems. Logging failure never permits login. Missing legacy scope is refused without an attack record, because an ordinary login after upgrade reaches that path.</p>
 <h2>Verification</h2>
