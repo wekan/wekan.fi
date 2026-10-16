@@ -168,6 +168,19 @@ _handleError = (msg, throwError = true, errorCode = 403) => {
       reproduced against <code>v8.35</code>. Fixed at the
       <a href="https://github.com/wekan/wekan/blob/main/CHANGELOG.md#upcoming-wekan--release">upcoming WeKan release</a>.
     </p>
+    <h3>Follow-up fix (2026-10-16)</h3>
+    <p>
+      The DDP half of the timing fix was never loaded. Since WeKan's <code>package.json</code>
+      sets <code>meteor.mainModule</code>, the server runs only what an import chain from
+      <code>server/main.js</code> reaches, and <code>server/loginTimingNormalization.js</code>
+      was not imported, so the web login's response time still told whether a username
+      exists; the REST login was equalized. It is now loaded, and
+      <code>tests/serverModulesLoaded.test.cjs</code> fails when any server module that
+      registers a login handler, method, publication, route, startup hook or job is not
+      reached. Nothing is refused by this fix, so there is nothing to record in Admin Panel
+      &rarr; Problems; the lockout itself still records under LockoutBleed.
+      <a href="https://github.com/wekan/wekan/commit/3f3a61df0c">Fix</a>.
+    </p>
   </div>
 
 </body>

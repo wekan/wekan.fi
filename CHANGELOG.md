@@ -1,5 +1,10 @@
 # Upcoming wekan.fi update
 
+- Record the LockoutBleed follow-up of 2026-10-16: the DDP login timing
+  equalizer was never loaded, so the web login still told by its response time
+  whether a username exists. The LockoutBleed page describes the fix, and the
+  release audit allows its commit link on that page only. Thanks to xet7.
+
 - Record the AssignedBleed follow-up of 2026-10-16 (GHSA-r4gm-mjj9-g3x8): board
   role permissions apply to every board view. The index row and the AssignedBleed
   page list the advisory, credit binary-lover beside crypto-nidh, and describe
