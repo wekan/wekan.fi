@@ -1,5 +1,11 @@
 # Upcoming wekan.fi update
 
+- Record the AssignedBleed follow-up of 2026-10-16 (GHSA-r4gm-mjj9-g3x8): board
+  role permissions apply to every board view. The index row and the AssignedBleed
+  page list the advisory, credit binary-lover beside crypto-nidh, and describe
+  the fix; the release audit allows the advisory and fix links on those pages
+  only. Thanks to crypto-nidh, binary-lover and xet7.
+
 - Fix the deploy risk check for the AssignedBleed follow-up of 2026-10-15. Allow
   the GHSA-3cgr-47wm-9cc9 advisory on the Hall of Fame index and the AssignedBleed
   page, and the fix commit on the AssignedBleed page, only there. The offline

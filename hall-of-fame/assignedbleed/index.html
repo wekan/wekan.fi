@@ -30,12 +30,13 @@
         <th width="40%">Vulnerabilities</th>
       </tr>
       <tr>
-        <td valign="top"><a href="https://github.com/wekan/wekan/security/advisories/GHSA-f396-42fx-vr88">GHSA-f396-42fx-vr88</a><br /><a href="https://github.com/wekan/wekan/security/advisories/GHSA-3cgr-47wm-9cc9">GHSA-3cgr-47wm-9cc9</a></td>
+        <td valign="top"><a href="https://github.com/wekan/wekan/security/advisories/GHSA-f396-42fx-vr88">GHSA-f396-42fx-vr88</a><br /><a href="https://github.com/wekan/wekan/security/advisories/GHSA-3cgr-47wm-9cc9">GHSA-3cgr-47wm-9cc9</a><br /><a href="https://github.com/wekan/wekan/security/advisories/GHSA-r4gm-mjj9-g3x8">GHSA-r4gm-mjj9-g3x8</a></td>
         <td valign="top"><b>AssignedBleed</b> <h2><span class="vulnerability-icons" role="img" aria-label="AssignedBleed"><i class="fa fa-user" style="color: black;" aria-hidden="true"></i> <i class="fa fa-check-square-o" style="color: black;" aria-hidden="true"></i> <i class="fa fa-pencil" style="color: black;" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></span> </h2></td>
         <td valign="top">2026-08-21</td>
         <td valign="top">
           <b><a href="https://github.com/Char0n1507">Char0n1507</a></b>,
-          <b><a href="https://github.com/crypto-nidh">crypto-nidh</a></b> and
+          <b><a href="https://github.com/crypto-nidh">crypto-nidh</a></b>,
+          <b><a href="https://github.com/binary-lover">binary-lover</a></b> and
           <b><a href="https://github.com/xet7">xet7</a></b><br />
           <img src="../GoldStar.png" width="30px" height="auto" /><img src="../GoldStar.png" width="30px" height="auto" /><img src="../GoldStar.png" width="30px" height="auto" /><img src="../GoldStar.png" width="30px" height="auto" /><img src="../GoldStar.png" width="30px" height="auto" />
 
@@ -104,6 +105,10 @@
         <td valign="top"><b>2026-10-15</b></td>
         <td valign="top">Follow-up report received from crypto-nidh through GitHub Security Advisory <a href="https://github.com/wekan/wekan/security/advisories/GHSA-3cgr-47wm-9cc9">GHSA-3cgr-47wm-9cc9</a>, validated against the current source and fixed for the <a href="https://github.com/wekan/wekan/blob/main/CHANGELOG.md#upcoming-wekan--release">upcoming WeKan release</a>.</td>
       </tr>
+      <tr>
+        <td valign="top"><b>2026-10-16</b></td>
+        <td valign="top">Follow-up report received from crypto-nidh through GitHub Security Advisory <a href="https://github.com/wekan/wekan/security/advisories/GHSA-r4gm-mjj9-g3x8">GHSA-r4gm-mjj9-g3x8</a>, validated against the current source and fixed for the <a href="https://github.com/wekan/wekan/blob/main/CHANGELOG.md#upcoming-wekan--release">upcoming WeKan release</a>.</td>
+      </tr>
     </table>
 <h2>Follow-up fixes (2026-10-02)</h2>
 <p>Assigned-only members' read paths still showed every card of the board: the attachment API (REST and method list, download and info), the activities publication, Due Cards with all users, Global Search, the structural move pickers and position history asked only for board membership. Each now applies the same assigned-only rule as the board publication, and a download or info request for another card's attachment is recorded under AssignedBleed in Admin Panel → Problems. <a href="https://github.com/wekan/wekan/commit/1a218ead02">Fix</a>.</p>
@@ -113,6 +118,8 @@
 <p>A copy of a card carried every subtask of it. An assigned-only member who copied a card assigned to them got copies of its subtasks assigned to others, and any member got copies of its subtasks on boards they cannot read, since a parent may have subtasks on another board. A copy now carries only the subtasks the copier could read and copy themselves, in the copy dialog and in rules alike. It is not recorded in Admin Panel → Problems: copying a card with subtasks is ordinary use. <a href="https://github.com/wekan/wekan/commit/5fad29a254">Fix</a>.</p>
 <h2>Follow-up fix (2026-10-15)</h2>
 <p>Reported by crypto-nidh in <a href="https://github.com/wekan/wekan/security/advisories/GHSA-3cgr-47wm-9cc9">GHSA-3cgr-47wm-9cc9</a>: the 2026-10-02 fix reached the attachment API, but six other paths still asked an assigned-only member only for board membership. The <code>/cdn/storage/attachments</code> and <code>/cfs/files/attachments</code> downloads, the <code>Attachments.protected</code> check and the legacy download route served the file of any card; the document text search returned the extracted text of every card's PDF, DOCX, XLSX and PPTX files with their attachment and card ids; the legacy attachments publication listed every legacy file of the board; and a linked list showed every card of its source list. Each now applies the same rule. A refused download, or a subscription to another card's legacy files, is recorded under AssignedBleed in Admin Panel → Problems; searching and viewing a linked list are ordinary use and are narrowed without a record. The board's own background and map image stay readable to every member. <a href="https://github.com/wekan/wekan/commit/7f3428db8e">Fix</a>.</p>
+<h2>Follow-up fix (2026-10-16)</h2>
+<p>Reported by crypto-nidh in <a href="https://github.com/wekan/wekan/security/advisories/GHSA-r4gm-mjj9-g3x8">GHSA-r4gm-mjj9-g3x8</a>: the Board Email View checked only that the reader was a board member, so an assigned-only member read the title, description and email metadata of every card in a list or label, and their counts. Board role permissions now apply to every board view and every path to a card. An audit found the same shape in the board publication's parent and linked cards and comment reactions, the All Boards counts, linked boards' activities, the Chat view and All Boards feed (which also let card members through), the notification publications, position history, the cross-board subtask picker and REST - and in writes, where the role's write permission let such a member change, comment on, move or watch any card by id. Each now asks the card; REST writes refuse assigned-only members, as REST reads already did. Attempts no view would make are recorded under AssignedBleed in Admin Panel → Problems. <a href="https://github.com/wekan/wekan/commit/5b2ed17e6b">Fix</a>.</p>
   </div>
 
   <div class="action-buttons">
