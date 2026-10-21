@@ -1,5 +1,5 @@
-WeKan 12.57
+WeKan 12.58
 FerretDB 1.96.0
 Meteor 3.6-rc.0
-Node 26.12.0
+Node 26.12.1
 NPM 12.2.0
