@@ -13,6 +13,9 @@
   "denyHashes": [
     "4221c252d2f11ad658d60d2a0ab6147feb3d984e62e204a64c9ce8562e2410b0"
   ],
+  "allowUrls": [
+    "https://cdn.redocly.com/redoc/v3.0.1/bundles/redoc.standalone.js"
+  ],
   "files": {
     ".github/workflows/release-all-missing.yml": {
       "sha256": "eeae140355693bf7987fe7704f788153e0a8771d52300390cbb320d5d9951a91",
