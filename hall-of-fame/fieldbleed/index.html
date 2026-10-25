@@ -491,6 +491,32 @@ Vulnerability report JVN#80785288 (ends here)
 <br /><br />
         </td>
       </tr>
+      <tr>
+        <td vAlign="top"><a name="SVG2026"></a><b>2026-10-25 06:43 EET</b></td>
+        <td vAlign="top">
+          SVG is sanitized, and not blocked anymore.<br />
+          <br />
+          <h3>From maintainer of WeKan, <a href="https://github.com/xet7">xet7</a>:</h3>
+
+          After JVN#74210258, WeKan refused SVG uploads and served every SVG as a download.
+          Now SVG is again an image like any other: an attachment, a card cover, a board background
+          and an avatar, and a WeKan drawing is saved as SVG.<br /><br />
+          This is safe because of sanitizing, at two places:
+          <ul>
+            <li>Every uploaded SVG is sanitized on the server before it is stored: no
+              <code>&lt;script&gt;</code>, no event handlers like <code>onload</code>,
+              no <code>javascript:</code> URIs, no <code>foreignObject</code>, and no
+              DOCTYPE/ENTITY XML loops (Billion Laughs).</li>
+            <li>Every SVG is sanitized again, as a whole file, each time it is served, on every route
+              that serves files. It is sent with a Content-Security-Policy that allows no script and has
+              <code>sandbox</code>, so even when the SVG file is opened directly, it cannot run anything.
+              An SVG larger than 8 MB is still served only as a download.</li>
+          </ul>
+          When active markup is removed from an SVG, it is logged to Admin Panel / Problems.<br /><br />
+          Changed at <a href="https://github.com/wekan/wekan/commit/0afb1336db">this commit</a>, released in
+          the next WeKan release after v12.64.<br /><br />
+        </td>
+      </tr>
     </table>
   </div>
 

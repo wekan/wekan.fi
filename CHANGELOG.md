@@ -1,5 +1,13 @@
 # Upcoming wekan.fi update
 
+- Record that SVG is sanitized and not blocked anymore, 2026-10-25: after
+  JVN#74210258 SVG uploads were refused and every SVG served as a download; now
+  every SVG is sanitized on upload and again each time it is served, under a
+  no-script sandbox Content-Security-Policy, and is an image again - attachment,
+  cover, board background, avatar. The FieldBleed page has the new dated entry,
+  the Hall of Fame index row links it, and the release audit allows the fix
+  commit link on the FieldBleed page only. Thanks to xet7.
+
 - Follow WeKan's docs to their menu-based places: the Drag and drop and Touch
   Screen pages are under General/DragDrop, Sync under Board Settings /
   Import-Export, and the SAML upgrade instructions under Login-Page. The release
