@@ -6,4 +6,8 @@
 <p><a href="https://github.com/wekan/wekan/security/advisories/GHSA-xcxp-hx9w-q5q9">GHSA-xcxp-hx9w-q5q9</a> was reported by <a href="https://github.com/crypto-nidh">crypto-nidh</a>.</p>
 <p>The CollectionFS-compatible attachment route protected SVG files but served other browser-executable MIME types without the same CSP, nosniff and frame restrictions.</p>
 <p><b>Fix:</b> HTML, XML, SVG and JavaScript types now share one sandboxed opaque-download policy. No Problems event is emitted because legitimate legacy downloads use the same path and cannot attribute dangerous old metadata to the current viewer. Fixed for the upcoming WeKan v11.21 release on 2026-08-28.</p>
+
+<h2 class="hof">Follow-up fix, 2026-10-27</h2>
+<p>Found in the regression audit of every Hall of Fame vulnerability; fixed by xet7. The legacy attachment route judged a file name dangerous only for <code>.svg</code>, and the shared response policy missed <code>application/x-javascript</code>, <code>application/ecmascript</code>, <code>text/ecmascript</code>, <code>text/xsl</code> and every <code>+xml</code> type. All are served as opaque downloads now.</p>
+<p><a href="https://github.com/wekan/wekan/commit/ebcd02be6f">Source fix and regression coverage</a></p>
 </div></body></html>

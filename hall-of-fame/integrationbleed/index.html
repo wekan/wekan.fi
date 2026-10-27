@@ -103,7 +103,11 @@
   <div class="action-buttons">
     <a class="button" href="https://wekan.fi/hall-of-fame">Back to Hall of Fame Contents</a>
     <a class="button" href="https://wekan.fi">Back to Wekan Website</a>
-  </div>
+  
+<h2 class="hof">Follow-up fix, 2026-10-27</h2>
+<p>Found in the regression audit of every Hall of Fame vulnerability; fixed by xet7. HookUrlBleed sibling: the REST reads of a board's integrations gave the webhook URL - whose path carries its secret - to every member who reads the board, read-only and comment-only members included. Non-admins now get what the board publication gives them.</p>
+<p><a href="https://github.com/wekan/wekan/commit/ebcd02be6f">Source fix and regression coverage</a></p>
+</div>
 
   <h1>
     <br />

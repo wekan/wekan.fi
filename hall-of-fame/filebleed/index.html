@@ -290,7 +290,11 @@ EOF Heiner Liesegang / @2023
   <div class="action-buttons">
     <a class="button" href="https://wekan.fi/hall-of-fame">Back to Hall of Fame Contents</a>
     <a class="button" href="https://wekan.fi">Back to Wekan Website</a>
-  </div>
+  
+<h2 class="hof">Follow-up fix, 2026-10-27</h2>
+<p>Found in the regression audit of every Hall of Fame vulnerability; fixed by xet7. FilePathBleed sibling (GHSA-g6vm-7757-pr88): the insert guard looked only inside <code>versions</code>; with <code>versions</code> left out, ostrio:files falls back to a top-level <code>path</code>, which removing the record deletes and validation reads. A client's top-level <code>path</code> is refused now for attachments and avatars, and recorded in Admin Panel / Problems.</p>
+<p><a href="https://github.com/wekan/wekan/commit/ebcd02be6f">Source fix and regression coverage</a></p>
+</div>
 
   <h1>
     <br />
