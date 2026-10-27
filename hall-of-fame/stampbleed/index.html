@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8">
+<title>WeKan — Hall of Fame / StampBleed</title>
+<link rel="icon" href="../../wekan-favicon.png">
+<link rel="stylesheet" href="../../css/main.css">
+<link rel="stylesheet" href="../../font-awesome/css/font-awesome.min.css">
+</head><body>
+<img src="../hof.svg" alt="Hall of Fame" width="300">
+<div class="action-buttons"><a class="button" href="../">Back to Hall of Fame Contents</a>
+<a class="button" href="../../">Back to WeKan Website</a></div>
+<div class="hof"><h1>StampBleed</h1>
+<table border="1"><tr><th>CVE</th><th>Icon</th><th>Vulnerability name</th><th>Date</th>
+<th>Responsible Security Disclosure by</th><th>Stars</th><th>Process</th><th>Vulnerabilities</th></tr>
+<tr>
+<td valign="top">-</td>
+<td class="icon" valign="top"><h2><span role="img" aria-label="StampBleed"><i class="fa fa-check-square-o" aria-hidden="true"></i> <i class="fa fa-tag" aria-hidden="true"></i> <i class="fa fa-sign-in" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></span></h2></td>
+<td valign="top"><b><a href="./">StampBleed</a></b></td>
+<td valign="top">2026-10-27</td>
+<td class="by" valign="top"><b><a href="https://github.com/xet7">xet7</a></b></td>
+<td class="stars" valign="top"><img src="../GoldStar.png" width="30" height="30" alt="Gold star"><img src="../GoldStar.png" width="30" height="30" alt="Gold star"><img src="../GoldStar.png" width="30" height="30" alt="Gold star"></td>
+<td valign="top"><p>Found while reviewing a contributed patch for <a href="https://github.com/wekan/wekan/issues/6813">#6813</a>, which would have relied on the stamp; fixed by xet7.</p>
+</td>
+<td valign="top"><p>A checklist, checklist item, text note or attachment inserted on one's own card could carry another board's id, and a checklist item another card's checklist id: a write into a private board without membership. CWE-639; high severity. No CVE assigned. Fix prepared locally for the Upcoming release; not yet released.</p>
+</td>
+</tr>
+</table>
+<h2 class="hof">Details</h2>
+<p>Checklists, checklist items, text notes and attachments carry a denormalized board id: the board publication publishes them by it, with one reactive query per board. A checklist item also carries the id of its checklist, by which the checklist draws it. When a client inserted one of these documents, the server checked write access on the document's <em>card</em> only, and its insert hooks kept a board id the client had sent (they filled it from the card only when it was missing).</p>
+<p>So any user - every user can create a board and be a member of it - could insert, on a card of their own board, a document stamped with a private board's id. It was published to that board's members. A checklist item could also name a checklist of the private board, and was drawn inside it. Board membership of the private board was not needed, only its ids.</p>
+<p>The contributed patch for #6813 - a checklist item dragged on one's own board was reported as a cross-board attack - skipped the cross-board check for "the board the item is already on", read from this stamp. With a forged stamp that would have let an item be moved onto a card of the private board. The fix for #6813 reads the board from the item's card instead.</p>
+<p><strong>Fix:</strong> the server takes the board id from the card on insert, always (checklists, checklist items, text notes). An insert stamped with another board, or a checklist item naming another card's checklist, is refused - for a direct attachment insert too, by its <code>meta.boardId</code>. WeKan's own client never sends such an insert. Attachments uploaded through the upload pipeline are covered by <a href="../uploadbleed/">UploadBleed</a>.</p>
+<h2>Detection</h2>
+<p>A refused insert is recorded as StampBleed in Admin Panel / Problems (key <code>authz.card-child-stamp</code>), and the account that tried it is blocked, as for other high-severity attempts. Logging can never break the refusal.</p>
+<h2>Verification</h2>
+<p>tests/stampBleed.test.cjs runs the real refusal against stubs: the forged stamp and the foreign checklist are refused and recorded, and what WeKan's own client sends is neither refused nor recorded. A negative test fails on any card-child collection without an insert board check. tests/checklistSameBoardCanary6813.test.cjs reproduces the forged-stamp move the contributed patch would have allowed. A Playwright spec attacks the running server; it has not been run yet.</p>
+<p><a href="https://github.com/wekan/wekan/commit/51111e1958">Source fix and regression coverage</a></p>
+</div></body></html>

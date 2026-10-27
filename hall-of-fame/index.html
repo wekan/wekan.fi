@@ -89,6 +89,38 @@
       </tr>
 <tr>
 <td valign="top">-</td>
+<td class="icon" valign="top"><h2><span role="img" aria-label="UploadBleed"><i class="fa fa-cloud-upload" aria-hidden="true"></i> <i class="fa fa-paperclip" aria-hidden="true"></i> <i class="fa fa-user-secret" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></span></h2></td>
+<td valign="top"><b><a href="uploadbleed/">UploadBleed</a></b></td>
+<td valign="top">2026-10-27</td>
+<td class="by" valign="top"><b><a href="https://github.com/xet7">xet7</a></b></td>
+<td class="stars" valign="top"><img src="GoldStar.png" width="30" height="30" alt="Gold star"><img src="GoldStar.png" width="30" height="30" alt="Gold star"><img src="GoldStar.png" width="30" height="30" alt="Gold star"></td>
+<td valign="top"><details><summary>Process</summary>
+
+<p>Found while checking whether attachments had the shape of StampBleed, the day it was found; fixed by xet7.</p>
+</details></td>
+<td valign="top"><details><summary>Details</summary>
+
+<p>Meteor-Files' upload pipeline stores an attachment with a server-side insert, so the attachments' allow rules were never asked, and the only check on an upload cleaned its file name. Any DDP client, signed in or not, could put a file on any card of any board - published to that board's members, with an activity and its notifications - and the administrator's switch that blocks uploads was skipped as well.</p><p>Every upload is authorized on the server now, on every chunk: the uploader is signed in, may edit the card (or write the board, for a board's background or map image), uploads are not blocked, and the attachment's board, list and swimlane are its card's. An attempt is shown in Admin Panel / Problems.</p><p>CWE-862. Critical severity: no account is needed. No CVE assigned. Fix prepared locally for the Upcoming release; not yet released.</p><p><a href="uploadbleed/">Fix and verification</a></p>
+</details></td>
+</tr>
+<tr>
+<td valign="top">-</td>
+<td class="icon" valign="top"><h2><span role="img" aria-label="StampBleed"><i class="fa fa-check-square-o" aria-hidden="true"></i> <i class="fa fa-tag" aria-hidden="true"></i> <i class="fa fa-sign-in" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></span></h2></td>
+<td valign="top"><b><a href="stampbleed/">StampBleed</a></b></td>
+<td valign="top">2026-10-27</td>
+<td class="by" valign="top"><b><a href="https://github.com/xet7">xet7</a></b></td>
+<td class="stars" valign="top"><img src="GoldStar.png" width="30" height="30" alt="Gold star"><img src="GoldStar.png" width="30" height="30" alt="Gold star"><img src="GoldStar.png" width="30" height="30" alt="Gold star"></td>
+<td valign="top"><details><summary>Process</summary>
+
+<p>Found while reviewing a contributed patch for <a href="https://github.com/wekan/wekan/issues/6813">#6813</a>, which would have relied on the stamp; fixed by xet7.</p>
+</details></td>
+<td valign="top"><details><summary>Details</summary>
+
+<p>Checklists, checklist items, text notes and attachments carry the id of their board, by which the board publication publishes them, and a checklist item the id of its checklist, by which the checklist draws it. A client inserting one was checked for write access on its card only, and the server kept the board id the client sent. So a member of any board could add, on a card of their own, a document stamped with a private board's id - published to that board's members - and a checklist item with the id of that board's checklist, drawn inside it: a write into a board they are not a member of.</p><p>The server takes the board from the card now, and refuses and records an insert stamped with another board or another card's checklist.</p><p>CWE-639. High severity. No CVE assigned. Fix prepared locally for the Upcoming release; not yet released.</p><p><a href="stampbleed/">Fix and verification</a></p>
+</details></td>
+</tr>
+<tr>
+<td valign="top">-</td>
 <td class="icon" valign="top"><h2><i class="fa fa-id-card" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></h2></td>
 <td valign="top"><b><a href="samlsubjectbleed/">SamlSubjectBleed</a></b></td>
 <td valign="top">2026-10-03</td>

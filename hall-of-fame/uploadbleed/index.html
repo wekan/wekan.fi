@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8">
+<title>WeKan — Hall of Fame / UploadBleed</title>
+<link rel="icon" href="../../wekan-favicon.png">
+<link rel="stylesheet" href="../../css/main.css">
+<link rel="stylesheet" href="../../font-awesome/css/font-awesome.min.css">
+</head><body>
+<img src="../hof.svg" alt="Hall of Fame" width="300">
+<div class="action-buttons"><a class="button" href="../">Back to Hall of Fame Contents</a>
+<a class="button" href="../../">Back to WeKan Website</a></div>
+<div class="hof"><h1>UploadBleed</h1>
+<table border="1"><tr><th>CVE</th><th>Icon</th><th>Vulnerability name</th><th>Date</th>
+<th>Responsible Security Disclosure by</th><th>Stars</th><th>Process</th><th>Vulnerabilities</th></tr>
+<tr>
+<td valign="top">-</td>
+<td class="icon" valign="top"><h2><span role="img" aria-label="UploadBleed"><i class="fa fa-cloud-upload" aria-hidden="true"></i> <i class="fa fa-paperclip" aria-hidden="true"></i> <i class="fa fa-user-secret" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></span></h2></td>
+<td valign="top"><b><a href="./">UploadBleed</a></b></td>
+<td valign="top">2026-10-27</td>
+<td class="by" valign="top"><b><a href="https://github.com/xet7">xet7</a></b></td>
+<td class="stars" valign="top"><img src="../GoldStar.png" width="30" height="30" alt="Gold star"><img src="../GoldStar.png" width="30" height="30" alt="Gold star"><img src="../GoldStar.png" width="30" height="30" alt="Gold star"></td>
+<td valign="top"><p>Found while checking whether attachments had the shape of <a href="../stampbleed/">StampBleed</a>, the day it was found; fixed by xet7.</p>
+</td>
+<td valign="top"><p>Meteor-Files' upload pipeline stored attachments past the allow rules, and nothing checked who uploaded: anyone, signed in or not, could put a file on any card of any board. CWE-862; critical severity. No CVE assigned. Fix prepared locally for the Upcoming release; not yet released.</p>
+</td>
+</tr>
+</table>
+<h2 class="hof">Details</h2>
+<p>Attachments are uploaded through Meteor-Files' own DDP methods (<code>_FilesCollectionStart_attachments</code>, <code>_FilesCollectionWrite_attachments</code>) and their HTTP equivalent. When the last chunk arrives, the package inserts the stored document with a <em>server-side</em> insert, which never asks the collection's allow rules. The only hook it asks on the way, <code>onBeforeUpload</code>, cleaned the file name and returned true.</p>
+<p>So any DDP client, signed in or not, could upload a file onto any card of any board by naming its ids in the upload's <code>meta</code>. The attachment was published to that board's members, shown on the card, and announced with an activity and its notifications. The administrator's switch that blocks uploads was checked only in the allow rule, and so was skipped as well. Avatars were not affected: their upload hook requires a signed-in user.</p>
+<p><strong>Fix:</strong> a server-side <code>onBeforeUpload</code> authorizes every chunk of an upload, after the shared file-name cleaning: the uploader is signed in; may edit the card - or, for a board's background or map image, write the board; uploads are not blocked; and a card attachment's board, list and swimlane are taken from its card, whatever the upload said.</p>
+<h2>Detection</h2>
+<p>A refused upload is recorded once per upload, at its start, as UploadBleed in Admin Panel / Problems (key <code>authz.attachment-upload</code>); a signed-in account that tries it is blocked, as for other critical attempts. Refusals a legitimate user can reach - uploads turned off by an administrator, a card or board deleted meanwhile - are not recorded.</p>
+<h2>Verification</h2>
+<p>tests/uploadBleed.test.cjs drives the upload decision: not signed in, a card one cannot edit, a board one cannot write, and a foreign board stamp are refused and recorded; WeKan's own uploads - card attachments, linked cards, board backgrounds and map images - are allowed and stamped from the card. A negative test fails on any FilesCollection whose upload is not checked on the server. A Playwright spec starts a refused upload on the running server; it has not been run yet.</p>
+<p><a href="https://github.com/wekan/wekan/commit/51111e1958">Source fix and regression coverage</a></p>
+</div></body></html>

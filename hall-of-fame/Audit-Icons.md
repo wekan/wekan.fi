@@ -146,6 +146,7 @@ Star methodology: [Audit-Stars.md](Audit-Stars.md).
 | SpaceBleed | `fa-rocket`, `fa-paperclip`, `fa-code` | rocket + paperclip + code | 14 |
 | SpliceBleed | `fa-file-text-o`, `fa-scissors`, `fa-code` | file text + scissors + code | 4 |
 | StaleBleed | `fa-user-times`, `fa-history`, `fa-eye` | user times + history + eye | 4 |
+| StampBleed | `fa-check-square-o`, `fa-tag`, `fa-sign-in` | check square + tag + sign in | 2 |
 | SubtaskDepositBleed | `fa-sitemap`, `fa-inbox`, `fa-lock` | sitemap + inbox + lock | 2 |
 | SubtaskExportBleed | `fa-sitemap`, `fa-download`, `fa-eye` | sitemap + download + eye | 2 |
 | SwimlaneBleed | `fa-bars`, `fa-plus`, `fa-lock` | bars + plus + lock | 2 |
@@ -154,6 +155,7 @@ Star methodology: [Audit-Stars.md](Audit-Stars.md).
 | TokenAuditBleed | `fa-key`, `fa-user-secret`, `fa-eye-slash` | key + user secret + eye slash | 2 |
 | TokenBleed | `fa-key`, `fa-plus`, `fa-unlock` | key + plus + unlock | 5 |
 | TransitBleed | `fa-globe`, `fa-exchange`, `fa-server` | globe + exchange + server | 4 |
+| UploadBleed | `fa-cloud-upload`, `fa-paperclip`, `fa-user-secret` | cloud upload + paperclip + user secret | 2 |
 | UploadPathBleed | `fa-upload`, `fa-folder-open`, `fa-level-up` | upload + folderpen + level up | 4 |
 | UserBleed | `fa-user`, `fa-key`, `fa-eye` | user + key + eye | 2 |
 | UserSearchBleed | `fa-search`, `fa-user`, `fa-asterisk` | search + user + asterisk | 2 |

@@ -11011,7 +11011,8 @@
       "https://github\\.com/alex131125",
       "https://github\\.com/alham-rizvi",
       "https://github\\.com/wekan/wekan/security/advisories/GHSA-3cgr-47wm-9cc9",
-      "https://github\\.com/wekan/wekan/security/advisories/GHSA-r4gm-mjj9-g3x8"
+      "https://github\\.com/wekan/wekan/security/advisories/GHSA-r4gm-mjj9-g3x8",
+      "https://github\\.com/wekan/wekan/issues/6813"
     ],
     "hall-of-fame/directorygroupbleed/index.html": [
       "https://github\\.com/wekan/wekan/blob/main/docs/Security/Authentication-Boundary-Audit-2026-09-27\\.md",
@@ -11234,6 +11235,13 @@
     "upgrade/index.html": [
       "https://github\\.com/wekan/wekan/blob/main/docs/Databases/Supported\\.md",
       "https://github\\.com/wekan/wekan/tree/main/docs/Platforms/FOSS/Container/Sandstorm"
+    ],
+    "hall-of-fame/stampbleed/index.html": [
+      "https://github\\.com/wekan/wekan/commit/51111e1958",
+      "https://github\\.com/wekan/wekan/issues/6813"
+    ],
+    "hall-of-fame/uploadbleed/index.html": [
+      "https://github\\.com/wekan/wekan/commit/51111e1958"
     ]
   }
 }
