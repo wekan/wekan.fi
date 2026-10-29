@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8">
+<title>WeKan — Hall of Fame / ImportPlacementBleed</title>
+<link rel="icon" href="../../wekan-favicon.png">
+<link rel="stylesheet" href="../../css/main.css">
+<link rel="stylesheet" href="../../font-awesome/css/font-awesome.min.css">
+</head><body>
+<img src="../hof.svg" alt="Hall of Fame" width="300">
+<div class="action-buttons"><a class="button" href="../">Back to Hall of Fame Contents</a>
+<a class="button" href="../../">Back to WeKan Website</a></div>
+<div class="hof"><h1>ImportPlacementBleed</h1>
+<table border="1"><tr><th>CVE</th><th>Icon</th><th>Vulnerability name</th><th>Date</th>
+<th>Responsible Security Disclosure by</th><th>Stars</th><th>Process</th><th>Vulnerabilities</th></tr>
+<tr>
+<td valign="top">-</td>
+<td class="icon" valign="top"><h2><span role="img" aria-label="ImportPlacementBleed"><i class="fa fa-file-archive-o" aria-hidden="true"></i> <i class="fa fa-columns" aria-hidden="true"></i> <i class="fa fa-random" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></span></h2></td>
+<td valign="top"><b><a href="./">ImportPlacementBleed</a></b></td>
+<td valign="top">2026-10-29</td>
+<td class="by" valign="top"><b>Zachariah Mithani (AploSec)</b></td>
+<td class="stars" valign="top"><img src="../GoldStar.png" width="30" height="30" alt="Gold star"><img src="../GoldStar.png" width="30" height="30" alt="Gold star"><img src="../GoldStar.png" width="30" height="30" alt="Gold star"></td>
+<td valign="top"><p>Reported by email, with a proof of concept and a suggested fix. Asked to submit it as a GitHub security advisory too; it has not arrived there yet, so three stars for now (no GHSA, suggested fix present).</p>
+</td>
+<td valign="top"><p>An import into a board the importer may write was placed beside a list, swimlane or card id taken from the request without checking that it belonged to that board, so cards were created on one board pointing at another board's list and swimlane, and a card id of another board could be probed. CWE-639; medium severity. No CVE assigned. Fix prepared locally for the Upcoming release; not yet released.</p>
+</td>
+</tr>
+</table>
+<h2 class="hof">Details</h2>
+<p>An export can be imported INTO a board that is already open, beside the swimlane, list or card whose menu was used (#1173). Two routes reach that scoped importer: <code>POST /api/import/zip?boardId=...</code>, which takes the swimlane, list and card as <code>swimlaneId</code>, <code>listId</code> and <code>cardId</code> query parameters, and the <code>importScoped</code> method, which takes them in its target. Both authorized the import on the board alone - the caller must be able to write it - and checked the other three ids only for their format.</p>
+<p>The importer then placed the cards with them as given: a <code>listId</code> and <code>swimlaneId</code> went onto every new card as its list and swimlane, and a <code>cardId</code> was looked up with no board filter, its list and swimlane used in the same way. So a writer of board A could create cards on A whose list and swimlane were those of board B, a board they are not a member of - cards that show in neither place as they should, and that views selecting by list id may draw under B's list. The <code>cardId</code> variant also answered whether a card id existed anywhere. The REST card create already refuses a list or swimlane of another board (<a href="https://github.com/wekan/wekan/issues/6572">#6572</a>).</p>
+<p><strong>Fix:</strong> before anything is written, the importer looks the list, swimlane and card up together with the id of the board it imports into (<code>models/lib/importPlacement.js</code> decides, <code>ScopedImporter._checkPlacement</code> looks up). An id that is not on that board is refused - <code>400 listId does not belong to this board.</code> over REST, <code>error-import-placement</code> from the method - with the same answer for a card of another board and a card that does not exist, so it is no longer a probe. The cards are placed only by what was found on the board, never by a raw id from the request.</p>
+<h2>Detection</h2>
+<p>A refused import is recorded as ImportPlacementBleed in Admin Panel / Problems (key <code>authz.import-placement</code>), with the route it came by. The account is not blocked: an import menu left open while its list was moved to another board reaches the same refusal. Logging can never break the refusal.</p>
+<h2>Verification</h2>
+<p>tests/importPlacementBleed.test.cjs drives the decision with the reporter's ids, checks that the importer looks every target id up on the board before it writes, and fails if any target id is written onto a card or looked up without the board. tests/playwright/specs/security-import-placement.e2e.js runs the reporter's attack against a running server by both routes - zip and method, list and swimlane, foreign card and missing card - and expects 400, no card planted, and the record in Admin Panel / Problems, then imports beside the board's own list and card. It passes in Chromium and Firefox and fails on the previous code.</p>
+<p><a href="https://github.com/wekan/wekan/commit/0d6d481fcb">Source fix and regression coverage</a></p>
+</div></body></html>

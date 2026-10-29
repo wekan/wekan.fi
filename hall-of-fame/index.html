@@ -89,6 +89,22 @@
       </tr>
 <tr>
 <td valign="top">-</td>
+<td class="icon" valign="top"><h2><span role="img" aria-label="ImportPlacementBleed"><i class="fa fa-file-archive-o" aria-hidden="true"></i> <i class="fa fa-columns" aria-hidden="true"></i> <i class="fa fa-random" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></span></h2></td>
+<td valign="top"><b><a href="importplacementbleed/">ImportPlacementBleed</a></b></td>
+<td valign="top">2026-10-29</td>
+<td class="by" valign="top"><b>Zachariah Mithani (AploSec)</b></td>
+<td class="stars" valign="top"><img src="GoldStar.png" width="30" height="30" alt="Gold star"><img src="GoldStar.png" width="30" height="30" alt="Gold star"><img src="GoldStar.png" width="30" height="30" alt="Gold star"></td>
+<td valign="top"><details><summary>Process</summary>
+
+<p>Reported by email, with a proof of concept and a suggested fix. Asked to submit it as a GitHub security advisory too; it has not arrived there yet, so three stars for now (no GHSA, suggested fix present).</p>
+</details></td>
+<td valign="top"><details><summary>Details</summary>
+
+<p>The scoped importer - <code>POST /api/import/zip</code> and the <code>importScoped</code> method - checked write access on the board it imported into, and nothing else. The <code>listId</code>, <code>swimlaneId</code> and <code>cardId</code> beside it, where the imported cards land, were written onto the new cards as given, and a <code>cardId</code> was looked up with no board at all. A writer of one board could create cards on it whose list and swimlane were another board's, and the answer told whether a card id existed on a board they cannot see.</p><p>The list, swimlane and card are now looked up on the board being imported into, before anything is written; an id of another board is refused (400 over REST), as the REST card create refuses it. An attempt is shown in Admin Panel / Problems.</p><p>CWE-639. Medium severity: integrity of another board's placement; no data of the other board is read. No CVE assigned. Fix prepared locally for the Upcoming release; not yet released.</p><p><a href="importplacementbleed/">Fix and verification</a></p>
+</details></td>
+</tr>
+<tr>
+<td valign="top">-</td>
 <td class="icon" valign="top"><h2><span role="img" aria-label="UploadBleed"><i class="fa fa-cloud-upload" aria-hidden="true"></i> <i class="fa fa-paperclip" aria-hidden="true"></i> <i class="fa fa-user-secret" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></span></h2></td>
 <td valign="top"><b><a href="uploadbleed/">UploadBleed</a></b></td>
 <td valign="top">2026-10-27</td>
