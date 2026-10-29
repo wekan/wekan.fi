@@ -1,5 +1,16 @@
 # Upcoming wekan.fi update
 
+- Hall of Fame: every Vulnerability name in the index links to its own page,
+  with a relative URL - 136 of 141 had no link; CasRaceBleed and
+  CasAccountMergeBleed share casbleed/, FileNameBleed and FilePathBleed
+  filebleed/, MimeStorageBleed mimebleed/. Every Hall of Fame page is aligned
+  the same way: centered above the CVE table, the table and everything below it
+  left aligned with each cell's content at its top. The 31 pages that begin
+  with <!DOCTYPE html>, ImportPlacementBleed among them, had centered cells,
+  because the site's centered body reaches table cells only in standards mode.
+  Checked in Chromium on all 139 pages; tests/hall-of-fame-links-alignment.test.cjs
+  pins it. Thanks to xet7.
+
 - Record that SVG is sanitized and not blocked anymore, 2026-10-25: after
   JVN#74210258 SVG uploads were refused and every SVG served as a download; now
   every SVG is sanitized on upload and again each time it is served, under a

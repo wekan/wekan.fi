@@ -4,7 +4,7 @@ const path = require('node:path');
 const assert = require('node:assert/strict');
 const root = path.resolve(__dirname, '../hall-of-fame');
 const index = fs.readFileSync(path.join(root, 'index.html'), 'utf8');
-const rows = index.match(/<tr>[\s\S]*?<\/tr>/g).filter(row => row.includes('<b>RelayBleed</b>'));
+const rows = index.match(/<tr>[\s\S]*?<\/tr>/g).filter(row => row.includes('<b><a href="relaybleed/">RelayBleed</a></b>'));
 assert.equal(rows.length, 1);
 const cells = rows[0].match(/<td\b[^>]*>[\s\S]*?<\/td>/g);
 assert.equal(cells.length, 8);
@@ -14,7 +14,7 @@ assert.equal((cells[5].match(/GoldStar.png/g) || []).length, 3);
 assert.match(cells[6], /<details><summary>Process<\/summary>[\s\S]*Found while auditing/);
 assert.match(cells[7], /<details><summary>Details<\/summary>/);
 // Newest first: above SyncBleed.
-assert.ok(index.indexOf('<b>RelayBleed</b>') < index.indexOf('<b>SyncBleed</b>'));
+assert.ok(index.indexOf('<b><a href="relaybleed/">RelayBleed</a></b>') < index.indexOf('<b><a href="syncbleed/">SyncBleed</a></b>'));
 const page = fs.readFileSync(path.join(root, 'relaybleed/index.html'), 'utf8');
 assert.doesNotMatch(page, /<details>/);
 assert.match(page, /not yet released/);

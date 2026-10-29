@@ -26,7 +26,7 @@ for (const [dir, name, hashes] of FOLLOW_UPS) {
   assert.ok(section.includes('</body>'), dir + ': section is before </body>');
   // Never a long URL as visible text.
   assert.doesNotMatch(section, />https?:\/\//, dir + ': link text is short');
-  const rows = index.match(/<tr>[\s\S]*?<\/tr>/g).filter(row => row.includes('<b>' + name + '</b>'));
+  const rows = index.match(/<tr>[\s\S]*?<\/tr>/g).filter(row => row.includes('<b><a href="' + dir + '/">' + name + '</a></b>'));
   assert.equal(rows.length, 1, name);
   const cells = rows[0].match(/<td\b[^>]*>[\s\S]*?<\/td>/g);
   assert.equal(cells.length, 8, name);

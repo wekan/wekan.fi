@@ -187,3 +187,24 @@ tr:hover {background-color: #ddd;}
     background-color: #4CAF50;
     color: white;
 }
+
+/* Hall of Fame: every page under hall-of-fame/ has <body class="hall-of-fame">.
+   What is above the CVE table - the trophy, the buttons, the title and the
+   introduction - stays centered like the rest of the site; the table and
+   everything below it is left aligned, with each cell's content at its top.
+   Spelled out rather than inherited: body's text-align: center reaches table
+   cells only in standards mode, so the 31 pages with <!DOCTYPE html>
+   (ImportPlacementBleed among them) had centered cells and the others did not.
+   A page with no table is left aligned from below its title. */
+body.hall-of-fame table,
+body.hall-of-fame table ~ *,
+body.hall-of-fame > .hof ~ *,
+body.hall-of-fame .hof:not(:has(table)) > h1 ~ * {
+  text-align: left;
+}
+
+body.hall-of-fame th,
+body.hall-of-fame td {
+  text-align: left;
+  vertical-align: top;
+}

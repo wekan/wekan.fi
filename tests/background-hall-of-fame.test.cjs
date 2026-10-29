@@ -4,7 +4,7 @@ const path = require('node:path');
 const assert = require('node:assert/strict');
 const root = path.resolve(__dirname, '../hall-of-fame');
 const index = fs.readFileSync(path.join(root, 'index.html'), 'utf8');
-const rows = index.match(/<tr>[\s\S]*?<\/tr>/g).filter(row => row.includes('<b>BackgroundBleed</b>'));
+const rows = index.match(/<tr>[\s\S]*?<\/tr>/g).filter(row => row.includes('<b><a href="backgroundbleed/">BackgroundBleed</a></b>'));
 assert.equal(rows.length, 1);
 const cells = rows[0].match(/<td\b[^>]*>[\s\S]*?<\/td>/g);
 assert.equal(cells.length, 8);
@@ -18,7 +18,7 @@ assert.match(cells[6], /<details><summary>Process<\/summary>[\s\S]*Found while a
 assert.match(cells[7], /<details><summary>Details<\/summary>/);
 assert.match(cells[7], /<a href="backgroundbleed\/">Fix and verification<\/a>/);
 // Newest first: above CodeBleed.
-assert.ok(index.indexOf('<b>BackgroundBleed</b>') < index.indexOf('<b>CodeBleed</b>'));
+assert.ok(index.indexOf('<b><a href="backgroundbleed/">BackgroundBleed</a></b>') < index.indexOf('<b><a href="codebleed/">CodeBleed</a></b>'));
 const page = fs.readFileSync(path.join(root, 'backgroundbleed/index.html'), 'utf8');
 assert.doesNotMatch(page, /<details>/);
 assert.match(page, /not yet released/);

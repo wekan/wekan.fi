@@ -2,7 +2,7 @@
 const fs=require('node:fs');const path=require('node:path');const assert=require('node:assert/strict');
 const root=path.resolve(__dirname,'../hall-of-fame');
 const index=fs.readFileSync(path.join(root,'index.html'),'utf8');
-const rows=index.match(/<tr>[\s\S]*?<\/tr>/g).filter(row=>row.includes('<b>HistoryScopeBleed</b>'));
+const rows=index.match(/<tr>[\s\S]*?<\/tr>/g).filter(row=>row.includes('<b><a href="historyscopebleed/">HistoryScopeBleed</a></b>'));
 assert.equal(rows.length,1);
 const cells=rows[0].match(/<td\b[^>]*>[\s\S]*?<\/td>/g);assert.equal(cells.length,8);
 assert.match(cells[1],/fa-tint/);assert.match(cells[4],/github.com\/xet7/);

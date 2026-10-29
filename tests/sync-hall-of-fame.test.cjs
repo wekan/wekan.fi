@@ -4,7 +4,7 @@ const path = require('node:path');
 const assert = require('node:assert/strict');
 const root = path.resolve(__dirname, '../hall-of-fame');
 const index = fs.readFileSync(path.join(root, 'index.html'), 'utf8');
-const rows = index.match(/<tr>[\s\S]*?<\/tr>/g).filter(row => row.includes('<b>SyncBleed</b>'));
+const rows = index.match(/<tr>[\s\S]*?<\/tr>/g).filter(row => row.includes('<b><a href="syncbleed/">SyncBleed</a></b>'));
 assert.equal(rows.length, 1);
 const cells = rows[0].match(/<td\b[^>]*>[\s\S]*?<\/td>/g);
 assert.equal(cells.length, 8);
@@ -14,7 +14,7 @@ assert.equal((cells[5].match(/GoldStar.png/g) || []).length, 5);
 assert.match(cells[6], /<details><summary>Process<\/summary>[\s\S]*GHSA-5q84-p3vr-f3xv/);
 assert.match(cells[7], /<details><summary>Details<\/summary>/);
 // Newest first: above CacheBleed.
-assert.ok(index.indexOf('<b>SyncBleed</b>') < index.indexOf('<b>CacheBleed</b>'));
+assert.ok(index.indexOf('<b><a href="syncbleed/">SyncBleed</a></b>') < index.indexOf('<b><a href="cachebleed/">CacheBleed</a></b>'));
 const page = fs.readFileSync(path.join(root, 'syncbleed/index.html'), 'utf8');
 assert.doesNotMatch(page, /<details>/);
 assert.match(page, /not yet released/);
