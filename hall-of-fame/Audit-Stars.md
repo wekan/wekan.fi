@@ -25,6 +25,25 @@ Internal code/patch contributions without a GHSA use three stars where a fix
 is documented. A detailed PoC alone does not substitute for suggested fixes
 under this ranking. Suggested remediation can be prose; a patch is optional.
 
+## A GHSA added later
+
+A researcher who sent the report to security@wekan.fi, or some other way, may
+later be able to add it as a GitHub security advisory. When they do, the
+maintainer of WeKan requests the CVE through that GHSA, and the row is ranked
+again as a GHSA report: **3 stars become 5**. Until then the row stays at 3,
+and its Process cell says the GHSA is awaited.
+
+Whenever an AI updates or audits the Hall of Fame, it checks every 3-star row
+whose Process says the report came without a GHSA against
+[WeKan Security Advisories](https://github.com/wekan/wekan/security/advisories).
+When a GHSA for that same report now exists - matched by the report's subject
+and reporter, never by a nearby advisory about something else - it:
+
+- sets the row to 5 stars on the index and on the row's own page;
+- links the GHSA, and puts the CVE in the CVE cell once one is assigned;
+- rewrites the Process cell to say the report later arrived as a GHSA;
+- adds a line to the award inventory below, Previous 3, Current 5.
+
 ## Corrections and limits
 
 The index contains **111 entries**; **95 displayed awards changed** and
@@ -51,6 +70,7 @@ because they are missing from the public catalogue.
 
 | Entry | Date | Previous | Current | GHSA evidence | Reason / remaining review |
 | --- | --- | ---: | ---: | --- | --- |
+| ImportPlacementBleed | 2026-10-29 | - | 3 | GHSA awaited | Email report with a PoC and a suggested fix; the researcher was asked to add it as a GHSA. Becomes 5 when the GHSA arrives (see "A GHSA added later"). |
 | SubtaskDepositBleed | 2026-09-14 | 1 | 5 | [GHSA-483r-px2x-cjcg](https://github.com/wekan/wekan/security/advisories/GHSA-483r-px2x-cjcg) | Published GHSA details and suggested remediation verified. |
 | LinkedWriteBleed | 2026-09-14 | 1 | 5 | [GHSA-jp39-3pf7-q5ww](https://github.com/wekan/wekan/security/advisories/GHSA-jp39-3pf7-q5ww) | Published GHSA details and suggested remediation verified. |
 | InvitationBoardBleed | 2026-09-14 | 1 | 5 | [GHSA-p9qq-frc9-qfhm](https://github.com/wekan/wekan/security/advisories/GHSA-p9qq-frc9-qfhm) | Published GHSA details and suggested remediation verified. |
