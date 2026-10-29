@@ -1,5 +1,10 @@
 # Upcoming wekan.fi update
 
+- Link Sandstorm at sandstorm.org: the SaaS page's Sandstorm security
+  practices and the success page's App Market link use docs.sandstorm.org and
+  apps.sandstorm.org, and the release audit allows those URLs on those pages
+  instead of the sandstorm.io ones. Thanks to xet7.
+
 - Hall of Fame: every Vulnerability name in the index links to its own page,
   with a relative URL - 136 of 141 had no link; CasRaceBleed and
   CasAccountMergeBleed share casbleed/, FileNameBleed and FilePathBleed

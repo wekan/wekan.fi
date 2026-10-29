@@ -10759,7 +10759,7 @@
       "urls": [
         "https://app.transifex.com/wekan/wekan",
         "https://caddyserver.com",
-        "https://docs.sandstorm.io/en/latest/using/security-practices/",
+        "https://docs.sandstorm.org/en/latest/using/security-practices/",
         "https://github.com/caddyserver/caddy",
         "https://github.com/canonical/snapcraft",
         "https://github.com/sandstorm-io/sandstorm",
@@ -10952,7 +10952,7 @@
     "success/index.html": {
       "sha256": "494a81562d4c1ef309efbfab6bf446e749c258250bca73a2218a0125c11d54e4",
       "urls": [
-        "https://apps.sandstorm.io/app/m86q05rdvj14yvn78ghaxynqz7u2svw6rnttptxx49g1785cdv1h",
+        "https://apps.sandstorm.org/app/m86q05rdvj14yvn78ghaxynqz7u2svw6rnttptxx49g1785cdv1h",
         "https://fhv.at",
         "https://fhv.at/",
         "https://github.com/wekan/wekan",
