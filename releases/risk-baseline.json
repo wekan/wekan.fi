@@ -11013,7 +11013,8 @@
       "https://github\\.com/wekan/wekan/security/advisories/GHSA-3cgr-47wm-9cc9",
       "https://github\\.com/wekan/wekan/security/advisories/GHSA-r4gm-mjj9-g3x8",
       "https://github\\.com/wekan/wekan/issues/6813",
-      "https://github\\.com/wekan/wekan/commit/ebcd02be6f"
+      "https://github\\.com/wekan/wekan/commit/ebcd02be6f",
+      "https://github\\.com/wekan/wekan/security/advisories"
     ],
     "hall-of-fame/directorygroupbleed/index.html": [
       "https://github\\.com/wekan/wekan/blob/main/docs/Security/Authentication-Boundary-Audit-2026-09-27\\.md",
@@ -11261,6 +11262,10 @@
     ],
     "hall-of-fame/mimebleed/index.html": [
       "https://github\\.com/wekan/wekan/commit/ebcd02be6f"
+    ],
+    "hall-of-fame/importplacementbleed/index.html": [
+      "https://github\\.com/wekan/wekan/commit/0d6d481fcb",
+      "https://github\\.com/wekan/wekan/issues/6572"
     ]
   }
 }

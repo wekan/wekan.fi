@@ -70,7 +70,9 @@ class RiskAudit(unittest.TestCase):
         reviewed = {
             'samlsubjectbleed': [
                 'https://github.com/alham-rizvi',
-                'https://github.com/wekan/wekan/blob/main/docs/Features/Login/SAML.md',
+                # 16a7c73 moved the page's link, and its allowlist entry, to the
+                # menu-based docs place Login-Page/; this list followed later.
+                'https://github.com/wekan/wekan/blob/main/docs/Features/Login-Page/SAML.md',
                 'https://github.com/wekan/wekan/commit/c0c6aa5414fd9fa28cef07ea89908670c424e2e9'],
             'zipbombbleed': ['https://github.com/alham-rizvi'],
         }
