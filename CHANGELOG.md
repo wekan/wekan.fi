@@ -1,5 +1,12 @@
 # Upcoming wekan.fi update
 
+- Hall of Fame: the text below the CVE table has the table's margins, 5% of
+  the page on each side, instead of running from edge to edge. The margin is on
+  each block directly in the page body and nothing nested adds to it, so a page
+  with several .hof blocks (AssignedBleed and others) gets it once, and the nine
+  tables that were full width have the same margins as the rest. Checked in
+  Chromium on all 139 pages at 1400, 800 and 400px. Thanks to xet7.
+
 - Link Sandstorm at sandstorm.org: the SaaS page's Sandstorm security
   practices and the success page's App Market link use docs.sandstorm.org and
   apps.sandstorm.org, and the release audit allows those URLs on those pages

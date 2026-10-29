@@ -208,3 +208,27 @@ body.hall-of-fame td {
   text-align: left;
   vertical-align: top;
 }
+
+/* The text below the table has the table's margins on both sides, 5% of the
+   page each, so it lines up with the table instead of running from edge to
+   edge. The margin is on each block that is a direct child of body - the
+   .hof blocks (a page can have several), a table, a heading, a paragraph -
+   and nothing nested adds to it: a table inside such a block fills it, and
+   one directly in body (CommentBoundaryBleed and 8 more, width="100%") is the
+   90% between the margins. Above the table everything is centered, so the
+   margins do not show there; the trophy image is inline and is left alone so
+   that it stays centered. */
+body.hall-of-fame > :not(img, br, script) {
+  margin-left: 5%;
+  margin-right: 5%;
+}
+
+body.hall-of-fame > table {
+  width: 90%;
+}
+
+body.hall-of-fame * table {
+  margin-left: 0;
+  margin-right: 0;
+  width: 100%;
+}

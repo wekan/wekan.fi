@@ -73,4 +73,25 @@ test('css: the table and what is below it are left aligned, each cell top aligne
   assert.doesNotMatch(css, /body\.hall-of-fame \.hof\s*(?:,|\{)/);
 });
 
+test('css: the text below the table has the table\'s margins on both sides', () => {
+  // It ran from edge to edge while the table had 5% on each side.
+  const css = fs.readFileSync(path.join(site, 'css/main.css'), 'utf8');
+  const rule = sel => {
+    const at = css.indexOf(`${sel} {`);
+    assert.ok(at >= 0, `no rule for ${sel}`);
+    return css.slice(at, css.indexOf('}', at));
+  };
+  const blocks = rule('body.hall-of-fame > :not(img, br, script)');
+  assert.match(blocks, /margin-left: 5%;/);
+  assert.match(blocks, /margin-right: 5%;/);
+  assert.match(rule('body.hall-of-fame > table'), /width: 90%;/);
+  // Negative: nothing nested adds a second margin - a .hof block below the
+  // first holds tables and headings of its own (AssignedBleed and others).
+  const nested = rule('body.hall-of-fame * table');
+  assert.match(nested, /margin-left: 0;/);
+  assert.match(nested, /margin-right: 0;/);
+  assert.match(nested, /width: 100%;/);
+  assert.doesNotMatch(css, /body\.hall-of-fame table ~ [^{]*\{[^}]*margin/, 'a sibling rule would double the margin');
+});
+
 console.log(`hall-of-fame-links-alignment: ${passed} tests passed`);
