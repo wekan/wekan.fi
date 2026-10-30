@@ -70,7 +70,7 @@ because they are missing from the public catalogue.
 
 | Entry | Date | Previous | Current | GHSA evidence | Reason / remaining review |
 | --- | --- | ---: | ---: | --- | --- |
-| ImportPlacementBleed | 2026-10-29 | - | 3 | GHSA awaited | Email report with a PoC and a suggested fix; the researcher was asked to add it as a GHSA. Becomes 5 when the GHSA arrives (see "A GHSA added later"). |
+| ImportPlacementBleed | 2026-10-29 | 3 | 5 | [GHSA-pm7j-752h-qfvj](https://github.com/wekan/wekan/security/advisories/GHSA-pm7j-752h-qfvj) | Published GHSA details and suggested remediation verified. |
 | SubtaskDepositBleed | 2026-09-14 | 1 | 5 | [GHSA-483r-px2x-cjcg](https://github.com/wekan/wekan/security/advisories/GHSA-483r-px2x-cjcg) | Published GHSA details and suggested remediation verified. |
 | LinkedWriteBleed | 2026-09-14 | 1 | 5 | [GHSA-jp39-3pf7-q5ww](https://github.com/wekan/wekan/security/advisories/GHSA-jp39-3pf7-q5ww) | Published GHSA details and suggested remediation verified. |
 | InvitationBoardBleed | 2026-09-14 | 1 | 5 | [GHSA-p9qq-frc9-qfhm](https://github.com/wekan/wekan/security/advisories/GHSA-p9qq-frc9-qfhm) | Published GHSA details and suggested remediation verified. |

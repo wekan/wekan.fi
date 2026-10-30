@@ -1,5 +1,13 @@
 # Upcoming wekan.fi update
 
+- Hall of Fame: ImportPlacementBleed is credited as the GitHub security
+  advisory it was reported through,
+  [GHSA-pm7j-752h-qfvj](https://github.com/wekan/wekan/security/advisories/GHSA-pm7j-752h-qfvj),
+  with five stars, its reporter zachariah-mithani linked, the CVE requested
+  through the advisory and the fix released in v12.69 - on the index and on its
+  own page. The release audit allows the advisory and the reporter's profile on
+  those two pages only. Thanks to zachariah-mithani and xet7.
+
 - Hall of Fame: the text below the CVE table has the table's margins, 5% of
   the page on each side, instead of running from edge to edge. The margin is on
   each block directly in the page body and nothing nested adds to it, so a page

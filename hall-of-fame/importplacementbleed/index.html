@@ -16,11 +16,11 @@
 <td class="icon" valign="top"><h2><span role="img" aria-label="ImportPlacementBleed"><i class="fa fa-file-archive-o" aria-hidden="true"></i> <i class="fa fa-columns" aria-hidden="true"></i> <i class="fa fa-random" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></span></h2></td>
 <td valign="top"><b><a href="./">ImportPlacementBleed</a></b></td>
 <td valign="top">2026-10-29</td>
-<td class="by" valign="top"><b>Zachariah Mithani (AploSec)</b></td>
-<td class="stars" valign="top"><img src="../GoldStar.png" width="30" height="30" alt="Gold star"><img src="../GoldStar.png" width="30" height="30" alt="Gold star"><img src="../GoldStar.png" width="30" height="30" alt="Gold star"></td>
-<td valign="top"><p>Reported by email, with a proof of concept and a suggested fix. Asked to add it as a GitHub security advisory too; it has not arrived there yet, so three stars for now (no GHSA, suggested fix present). When the GHSA arrives, the CVE is requested through it and the stars become five.</p>
+<td class="by" valign="top"><b><a href="https://github.com/zachariah-mithani">zachariah-mithani</a></b></td>
+<td class="stars" valign="top"><img src="../GoldStar.png" width="30" height="30" alt="Gold star"><img src="../GoldStar.png" width="30" height="30" alt="Gold star"><img src="../GoldStar.png" width="30" height="30" alt="Gold star"><img src="../GoldStar.png" width="30" height="30" alt="Gold star"><img src="../GoldStar.png" width="30" height="30" alt="Gold star"></td>
+<td valign="top"><p>Reported privately by zachariah-mithani through GitHub Security Advisory <a href="https://github.com/wekan/wekan/security/advisories/GHSA-pm7j-752h-qfvj">GHSA-pm7j-752h-qfvj</a>, with details, a proof of concept and a suggested fix; validated and fixed by xet7.</p>
 </td>
-<td valign="top"><p>An import into a board the importer may write was placed beside a list, swimlane or card id taken from the request without checking that it belonged to that board, so cards were created on one board pointing at another board's list and swimlane, and a card id of another board could be probed. CWE-639; medium severity. No CVE assigned. Fix prepared locally for the Upcoming release; not yet released.</p>
+<td valign="top"><p>An import into a board the importer may write was placed beside a list, swimlane or card id taken from the request without checking that it belonged to that board, so cards were created on one board pointing at another board's list and swimlane, and a card id of another board could be probed. CWE-639; moderate severity. CVE requested through <a href="https://github.com/wekan/wekan/security/advisories/GHSA-pm7j-752h-qfvj">GHSA-pm7j-752h-qfvj</a>. Affected v12.68 and earlier; fixed in v12.69.</p>
 </td>
 </tr>
 </table>

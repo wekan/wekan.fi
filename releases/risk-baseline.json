@@ -9594,7 +9594,7 @@
       "urls": [
         "http://&lt;public-host&gt;/attachment.txt",
         "http://127.0.0.1:18080/secret",
-        "http://127.0.0.1:\u2026",
+        "http://127.0.0.1:…",
         "https://github.com/RandomGenerator",
         "https://github.com/wekan/wekan/blob/main/CHANGELOG.md#upcoming-wekan--release",
         "https://github.com/wekan/wekan/blob/main/SECURITY.md",
@@ -11014,7 +11014,9 @@
       "https://github\\.com/wekan/wekan/security/advisories/GHSA-r4gm-mjj9-g3x8",
       "https://github\\.com/wekan/wekan/issues/6813",
       "https://github\\.com/wekan/wekan/commit/ebcd02be6f",
-      "https://github\\.com/wekan/wekan/security/advisories"
+      "https://github\\.com/wekan/wekan/security/advisories",
+      "https://github\\.com/zachariah\\-mithani",
+      "https://github\\.com/wekan/wekan/security/advisories/GHSA\\-pm7j\\-752h\\-qfvj"
     ],
     "hall-of-fame/directorygroupbleed/index.html": [
       "https://github\\.com/wekan/wekan/blob/main/docs/Security/Authentication-Boundary-Audit-2026-09-27\\.md",
@@ -11265,7 +11267,9 @@
     ],
     "hall-of-fame/importplacementbleed/index.html": [
       "https://github\\.com/wekan/wekan/commit/0d6d481fcb",
-      "https://github\\.com/wekan/wekan/issues/6572"
+      "https://github\\.com/wekan/wekan/issues/6572",
+      "https://github\\.com/zachariah\\-mithani",
+      "https://github\\.com/wekan/wekan/security/advisories/GHSA\\-pm7j\\-752h\\-qfvj"
     ]
   }
 }
