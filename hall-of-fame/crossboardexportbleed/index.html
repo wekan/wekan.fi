@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8">
+<title>WeKan — Hall of Fame / CrossBoardExportBleed</title>
+<link rel="icon" href="../../wekan-favicon.png">
+<link rel="stylesheet" href="../../css/main.css">
+<link rel="stylesheet" href="../../font-awesome/css/font-awesome.min.css">
+</head><body class="hall-of-fame">
+<img src="../hof.svg" alt="Hall of Fame" width="300">
+<div class="action-buttons"><a class="button" href="../">Back to Hall of Fame Contents</a>
+<a class="button" href="../../">Back to WeKan Website</a></div>
+<div class="hof"><h1>CrossBoardExportBleed</h1>
+<table border="1"><tr><th>CVE</th><th>Icon</th><th>Vulnerability name</th><th>Date</th>
+<th>Responsible Security Disclosure by</th><th>Stars</th><th>Process</th><th>Vulnerabilities</th></tr>
+<tr>
+<td valign="top">-</td>
+<td class="icon" valign="top"><h2><span role="img" aria-label="CrossBoardExportBleed"><i class="fa fa-download" aria-hidden="true"></i> <i class="fa fa-check-square-o" aria-hidden="true"></i> <i class="fa fa-user-secret" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></span></h2></td>
+<td valign="top"><b><a href="./">CrossBoardExportBleed</a></b></td>
+<td valign="top">2026-11-01</td>
+<td class="by" valign="top"><b><a href="https://github.com/ccsimplyspolit">ccsimplyspolit</a></b></td>
+<td class="stars" valign="top"><img src="../GoldStar.png" width="30" height="30" alt="Gold star"><img src="../GoldStar.png" width="30" height="30" alt="Gold star"><img src="../GoldStar.png" width="30" height="30" alt="Gold star"><img src="../GoldStar.png" width="30" height="30" alt="Gold star"><img src="../GoldStar.png" width="30" height="30" alt="Gold star"></td>
+<td valign="top"><p>Reported privately by ccsimplyspolit through GitHub Security Advisory <a href="https://github.com/wekan/wekan/security/advisories/GHSA-8885-xrq4-j47h">GHSA-8885-xrq4-j47h</a>, with details, verification code and a suggested fix for both findings; validated and fixed by xet7.</p>
+</td>
+<td valign="top"><p>A board export scoped with <code>?checklistId=</code> streamed a checklist of another board - a private one too - with its items and its creator. The streaming CSV/TSV export ignored Disable all export and Anonymize export users, and so did the Excel, PDF, chart, calendar and external-format exports.</p>
+</td>
+</tr>
+</table>
+<h2 class="hof">Details</h2>
+<p><strong>Finding 1.</strong> <code>GET /api/boards/:boardId/export?checklistId=...</code> and <code>exportZip</code> chose the cards to export with the board's id, but selected the scoped checklist and its items by the checklist's id alone. A checklist on a card of another board matched no card of the exported board, yet it was still streamed, with every item and its creator's user record, whose profile the anonymization map did not cover. Anyone who could export one board - or anyone at all, through a public board - could read a private board's checklist whose id they knew.</p>
+<p><strong>Finding 2.</strong> Admin Panel / Features / Security promises that with <em>Disable all export</em> "the server rejects any export request", and that <em>Anonymize export users</em> leaves no real identity in an exported file. Only the WeKan JSON, ZIP and Trello exports asked. The streaming CSV/TSV export the report names did not, and neither did the Excel (board, card, all boards), PDF (board, card), chart, calendar and external-format exports.</p>
+<p><strong>Fix:</strong> both checklist selectors are bound to the exported board's cards. Every HTTP export route answers 403 before writing anything when export is disabled (<code>refuseDisabledExport</code>), and every exporter that names people anonymizes users, mentions, requested-by / assigned-by and comments with the same map the JSON export builds (<code>anonymizeExportIdentities</code>).</p>
+<h2>Detection</h2>
+<p>A checklist scope from another board is recorded in Admin Panel / Problems as CrossBoardExportBleed (key <code>authz.export-checklist-scope</code>): no export menu asks for one. An export while all export is disabled is recorded too (<code>authz.export-disabled</code>), without blocking the account, because a page opened before the switch still shows the menus. An anonymization leak is in what a response carried, so it has no event of its own.</p>
+<h2>Verification</h2>
+<p>tests/crossBoardExportBleed.test.cjs drives the gate and the anonymizer, and scans the tree: no scoped checklist is selected by id alone, no export route lacks the gate, and no exporter that names people skips anonymization; all of it fails on the code before. tests/playwright/specs/security-cross-board-export.e2e.js replays the reporter's requests against a running server.</p>
+<p><a href="https://github.com/wekan/wekan/commit/be6727607c">Source fix and regression coverage</a></p>
+</div></body></html>

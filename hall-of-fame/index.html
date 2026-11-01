@@ -92,6 +92,22 @@
       </tr>
 <tr>
 <td valign="top">-</td>
+<td class="icon" valign="top"><h2><span role="img" aria-label="CrossBoardExportBleed"><i class="fa fa-download" aria-hidden="true"></i> <i class="fa fa-check-square-o" aria-hidden="true"></i> <i class="fa fa-user-secret" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></span></h2></td>
+<td valign="top"><b><a href="crossboardexportbleed/">CrossBoardExportBleed</a></b></td>
+<td valign="top">2026-11-01</td>
+<td class="by" valign="top"><b><a href="https://github.com/ccsimplyspolit">ccsimplyspolit</a></b></td>
+<td class="stars" valign="top"><img src="GoldStar.png" width="30" height="30" alt="Gold star"><img src="GoldStar.png" width="30" height="30" alt="Gold star"><img src="GoldStar.png" width="30" height="30" alt="Gold star"><img src="GoldStar.png" width="30" height="30" alt="Gold star"><img src="GoldStar.png" width="30" height="30" alt="Gold star"></td>
+<td valign="top"><details><summary>Process</summary>
+
+<p>Reported privately by ccsimplyspolit through GitHub Security Advisory <a href="https://github.com/wekan/wekan/security/advisories/GHSA-8885-xrq4-j47h">GHSA-8885-xrq4-j47h</a>, with details, verification code and a suggested fix for both findings; validated and fixed by xet7.</p>
+</details></td>
+<td valign="top"><details><summary>Details</summary>
+
+<p>A board export scoped with <code>?checklistId=</code> streamed a checklist of another board - a private one too - with its items and its creator. The streaming CSV/TSV export ignored Disable all export and Anonymize export users, and so did the Excel, PDF, chart, calendar and external-format exports.</p><ul><li>CWE-639 and CWE-863. Moderate severity. No CVE assigned yet. Fix prepared for the Upcoming release.</li><li><a href="crossboardexportbleed/">More details</a></li></ul>
+</details></td>
+</tr>
+<tr>
+<td valign="top">-</td>
 <td class="icon" valign="top"><h2><span role="img" aria-label="ImportPlacementBleed"><i class="fa fa-file-archive-o" aria-hidden="true"></i> <i class="fa fa-columns" aria-hidden="true"></i> <i class="fa fa-random" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></span></h2></td>
 <td valign="top"><b><a href="importplacementbleed/">ImportPlacementBleed</a></b></td>
 <td valign="top">2026-10-29</td>
