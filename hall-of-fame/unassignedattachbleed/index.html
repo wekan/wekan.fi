@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8">
+<title>WeKan — Hall of Fame / UnassignedAttachBleed</title>
+<link rel="icon" href="../../wekan-favicon.png">
+<link rel="stylesheet" href="../../css/main.css">
+<link rel="stylesheet" href="../../font-awesome/css/font-awesome.min.css">
+</head><body class="hall-of-fame">
+<img src="../hof.svg" alt="Hall of Fame" width="300">
+<div class="action-buttons"><a class="button" href="../">Back to Hall of Fame Contents</a>
+<a class="button" href="../../">Back to WeKan Website</a></div>
+<div class="hof"><h1>UnassignedAttachBleed</h1>
+<table border="1"><tr><th>CVE</th><th>Icon</th><th>Vulnerability name</th><th>Date</th>
+<th>Responsible Security Disclosure by</th><th>Stars</th><th>Process</th><th>Vulnerabilities</th></tr>
+<tr>
+<td valign="top">-</td>
+<td class="icon" valign="top"><h2><span role="img" aria-label="UnassignedAttachBleed"><i class="fa fa-paperclip" aria-hidden="true"></i> <i class="fa fa-user-times" aria-hidden="true"></i> <i class="fa fa-trash" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></span></h2></td>
+<td valign="top"><b><a href="./">UnassignedAttachBleed</a></b></td>
+<td valign="top">2026-11-01</td>
+<td class="by" valign="top"><b>Javier García Herrera</b></td>
+<td class="stars" valign="top"><img src="../GoldStar.png" width="30" height="30" alt="Gold star"><img src="../GoldStar.png" width="30" height="30" alt="Gold star"><img src="../GoldStar.png" width="30" height="30" alt="Gold star"><img src="../GoldStar.png" width="30" height="30" alt="Gold star"><img src="../GoldStar.png" width="30" height="30" alt="Gold star"></td>
+<td valign="top"><p>Reported privately by Javier García Herrera through GitHub Security Advisory <a href="https://github.com/wekan/wekan/security/advisories/GHSA-w26g-rc43-q6cm">GHSA-w26g-rc43-q6cm</a>, with reproduction steps against the official v12.74 Docker image and a suggested fix; validated and fixed by xet7.</p>
+</td>
+<td valign="top"><p>A member with the <em>Normal, assigned only</em> role whose card assignment was removed could still add a file to that card and soft-delete its existing attachment through the REST attachment API, which asked only for write access to the board. Copy and move onto a card, and the same API over DDP, had the same gap.</p>
+</td>
+</tr>
+</table>
+<h2 class="hof">Details</h2>
+<p>A board member with an assigned-only role (<em>Normal, assigned only</em>, and the read and comment variants) sees and changes only the cards assigned to them. While assigned, such a member learns the card's id and its attachments' ids. After the board owner removed the assignment, <code>GET /api/attachment/info/:attachmentId</code> answered 403, but <code>POST /api/attachment/upload</code> still added a new file to the card and <code>DELETE /api/attachment/delete/:attachmentId</code> still soft-deleted its existing file: both handlers asked only whether the caller may write to the board. The raw upload stored the file through <code>addAttachmentFromStream</code>, which does not run the upload hook that checks the card. The DDP methods <code>api.attachment.upload</code> and <code>api.attachment.delete</code>, and copy and move onto a target card over REST and DDP, had the same gap. No file was disclosed, nothing was deleted permanently, and no other board was reachable.</p>
+<p><strong>Fix:</strong> every attachment API write - upload, delete, and the target card of copy and move, over REST and DDP - also asks <code>mayWriteCardAttachment</code>, the card rule the ordinary card Delete already applied: an assigned-only member writes only on a card assigned to them.</p>
+<h2>Detection</h2>
+<p>A refused write is recorded in Admin Panel / Problems as UnassignedAttachBleed (key <code>authz.assigned-attachment-write</code>). The interface never offers an assigned-only member a card that is not theirs, so only a caller using kept ids reaches the refusal. Medium severity: it never disables the account.</p>
+<h2>Verification</h2>
+<p>tests/unassignedAttachBleed.test.cjs drives the decision through the reported sequence - assigned, then unassigned - and scans both attachment API files: every handler that writes a card attachment after board write access must also ask the card. tests/playwright/specs/unassigned-attach-bleed.e2e.js replays the reporter's REST requests and the DDP delete against a running server.</p>
+<p><a href="https://github.com/wekan/wekan/commit/532a96da11">Source fix and regression coverage</a></p>
+</div></body></html>

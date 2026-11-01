@@ -70,6 +70,7 @@ because they are missing from the public catalogue.
 
 | Entry | Date | Previous | Current | GHSA evidence | Reason / remaining review |
 | --- | --- | ---: | ---: | --- | --- |
+| UnassignedAttachBleed | 2026-11-01 | 5 | 5 | [GHSA-w26g-rc43-q6cm](https://github.com/wekan/wekan/security/advisories/GHSA-w26g-rc43-q6cm) | GHSA reproduction against v12.74 and a suggested fix for both routes verified; the copy, move and DDP siblings were fixed with them. |
 | CrossBoardExportBleed | 2026-11-01 | 5 | 5 | [GHSA-8885-xrq4-j47h](https://github.com/wekan/wekan/security/advisories/GHSA-8885-xrq4-j47h) | GHSA details, verification code and a suggested fix for both findings verified. |
 | ImportPlacementBleed | 2026-10-29 | 3 | 5 | [GHSA-pm7j-752h-qfvj](https://github.com/wekan/wekan/security/advisories/GHSA-pm7j-752h-qfvj) | Published GHSA details and suggested remediation verified. |
 | SubtaskDepositBleed | 2026-09-14 | 1 | 5 | [GHSA-483r-px2x-cjcg](https://github.com/wekan/wekan/security/advisories/GHSA-483r-px2x-cjcg) | Published GHSA details and suggested remediation verified. |

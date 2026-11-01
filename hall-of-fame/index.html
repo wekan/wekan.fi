@@ -92,6 +92,22 @@
       </tr>
 <tr>
 <td valign="top">-</td>
+<td class="icon" valign="top"><h2><span role="img" aria-label="UnassignedAttachBleed"><i class="fa fa-paperclip" aria-hidden="true"></i> <i class="fa fa-user-times" aria-hidden="true"></i> <i class="fa fa-trash" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></span></h2></td>
+<td valign="top"><b><a href="unassignedattachbleed/">UnassignedAttachBleed</a></b></td>
+<td valign="top">2026-11-01</td>
+<td class="by" valign="top"><b>Javier García Herrera</b></td>
+<td class="stars" valign="top"><img src="GoldStar.png" width="30" height="30" alt="Gold star"><img src="GoldStar.png" width="30" height="30" alt="Gold star"><img src="GoldStar.png" width="30" height="30" alt="Gold star"><img src="GoldStar.png" width="30" height="30" alt="Gold star"><img src="GoldStar.png" width="30" height="30" alt="Gold star"></td>
+<td valign="top"><details><summary>Process</summary>
+
+<p>Reported privately by Javier García Herrera through GitHub Security Advisory <a href="https://github.com/wekan/wekan/security/advisories/GHSA-w26g-rc43-q6cm">GHSA-w26g-rc43-q6cm</a>, with reproduction steps against the official v12.74 Docker image and a suggested fix; validated and fixed by xet7.</p>
+</details></td>
+<td valign="top"><details><summary>Details</summary>
+
+<p>A member with the <em>Normal, assigned only</em> role whose card assignment was removed could still add a file to that card and soft-delete its existing attachment through the REST attachment API, which asked only for write access to the board. Copy and move onto a card, and the same API over DDP, had the same gap.</p><ul><li>CWE-863. Moderate severity. No CVE assigned yet. Fix prepared for the Upcoming release.</li><li><a href="unassignedattachbleed/">More details</a></li></ul>
+</details></td>
+</tr>
+<tr>
+<td valign="top">-</td>
 <td class="icon" valign="top"><h2><span role="img" aria-label="CrossBoardExportBleed"><i class="fa fa-download" aria-hidden="true"></i> <i class="fa fa-check-square-o" aria-hidden="true"></i> <i class="fa fa-user-secret" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></span></h2></td>
 <td valign="top"><b><a href="crossboardexportbleed/">CrossBoardExportBleed</a></b></td>
 <td valign="top">2026-11-01</td>
