@@ -1,4 +1,4 @@
-# Upcoming wekan.fi update
+# v1 2026-11-02 wekan.fi release
 
 - Hall of Fame: ImportPlacementBleed is credited as the GitHub security
   advisory it was reported through,
