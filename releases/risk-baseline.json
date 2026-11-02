@@ -11016,7 +11016,10 @@
       "https://github\\.com/wekan/wekan/commit/ebcd02be6f",
       "https://github\\.com/wekan/wekan/security/advisories",
       "https://github\\.com/zachariah\\-mithani",
-      "https://github\\.com/wekan/wekan/security/advisories/GHSA\\-pm7j\\-752h\\-qfvj"
+      "https://github\\.com/wekan/wekan/security/advisories/GHSA\\-pm7j\\-752h\\-qfvj",
+      "https://github\\.com/ccsimplyspolit",
+      "https://github\\.com/wekan/wekan/security/advisories/GHSA\\-8885\\-xrq4\\-j47h",
+      "https://github\\.com/wekan/wekan/security/advisories/GHSA\\-w26g\\-rc43\\-q6cm"
     ],
     "hall-of-fame/directorygroupbleed/index.html": [
       "https://github\\.com/wekan/wekan/blob/main/docs/Security/Authentication-Boundary-Audit-2026-09-27\\.md",
@@ -11270,6 +11273,15 @@
       "https://github\\.com/wekan/wekan/issues/6572",
       "https://github\\.com/zachariah\\-mithani",
       "https://github\\.com/wekan/wekan/security/advisories/GHSA\\-pm7j\\-752h\\-qfvj"
+    ],
+    "hall-of-fame/crossboardexportbleed/index.html": [
+      "https://github\\.com/ccsimplyspolit",
+      "https://github\\.com/wekan/wekan/commit/be6727607c",
+      "https://github\\.com/wekan/wekan/security/advisories/GHSA\\-8885\\-xrq4\\-j47h"
+    ],
+    "hall-of-fame/unassignedattachbleed/index.html": [
+      "https://github\\.com/wekan/wekan/commit/532a96da11",
+      "https://github\\.com/wekan/wekan/security/advisories/GHSA\\-w26g\\-rc43\\-q6cm"
     ]
   }
 }
