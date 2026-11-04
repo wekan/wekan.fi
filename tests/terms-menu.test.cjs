@@ -55,7 +55,7 @@ const terms = read('terms/index.html');
 const priv = read('privacy/index.html');
 const between = (s, a, b) => s.slice(s.indexOf(a), s.indexOf(b));
 assert.match(terms, /<link rel="stylesheet" href="\.\.\/css\/bootstrap\.min\.css" \/>/);
-assert.equal(between(terms, '<!-- Use same styles', '</head>'), between(priv, '<!-- Use same styles', '</head>'), 'same styles');
+assert.equal(between(terms, '<style>', '</head>'), between(priv, '<style>', '</head>'), 'same styles');
 assert.equal(between(terms, '<body>', '<div class="container-fluid bg-white">').replace(/Terms of Service<\/b>/, 'X').replace(/\n[^\n]*href="\.\.\/privacy\/"[^\n]*/, ''),
   between(priv, '<body>', '<div class="container-fluid bg-white">').replace(/Privacy Policy<\/b>/, 'X').replace(/\n[^\n]*href="\.\.\/terms\/"[^\n]*/, ''), 'same header');
 assert.equal(terms.slice(terms.indexOf('<div class="container-fluid wekan-dark-blue">\n        <div class="container px-4')),
@@ -74,6 +74,10 @@ for (const heading of ['1. Overview and Open Source License', '2. Services and C
   assert.ok(terms.includes(`<h2>${heading}</h2>`), `${heading} is missing`);
 }
 assert.match(terms, /<strong>Last updated:<\/strong> November 2026/);
+// the name is written WeKan everywhere on the page, in text and comments, never Wekan or WEKAN
+const visible = terms.replace(/<[^>]*>/g, ' ');
+assert.doesNotMatch(terms, /\bWekan\b|\bWEKAN\b/, 'the name must be WeKan');
+assert.ok((visible.match(/\bWeKan\b/g) || []).length >= 8, 'WeKan appears in the text');
 
 // the body links to /terms/ beside the Privacy ones
 // relative, not https://wekan.fi/terms/: the release audit flags every new absolute URL in a page, and the
