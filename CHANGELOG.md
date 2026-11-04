@@ -1,3 +1,15 @@
+# Upcoming wekan.fi release
+
+- Terms of Service: /terms/ is built on the same page template and top menu as
+  the other pages (it was a stand-alone page with its own styles and no menu),
+  and every page that has a Privacy Policy item in its top menu - the 13 others
+  - has Terms of Service just to the left of it, linking /terms/ with the path
+  right for the page's depth. The Docs "Other links", the SaaS page and the App
+  page link it beside their Privacy Policy links. tests/terms-menu.test.cjs
+  checks the menu of every page, that there is exactly one Terms item in each,
+  and that /terms/ has the same head, header and footer as /privacy/. Thanks to
+  xet7.
+
 # v1 2026-11-02 wekan.fi release
 
 - Hall of Fame: ImportPlacementBleed is credited as the GitHub security
