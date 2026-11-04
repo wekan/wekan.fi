@@ -76,8 +76,12 @@ for (const heading of ['1. Overview and Open Source License', '2. Services and C
 assert.match(terms, /<strong>Last updated:<\/strong> November 2026/);
 
 // the body links to /terms/ beside the Privacy ones
-assert.match(read('docs/index.html'), /href="https:\/\/wekan\.fi\/terms\/">Terms of Service<\/a>\n\s*<a class="btn btn-link" href="https:\/\/wekan\.fi\/privacy\/">/);
-assert.match(read('saas/index.html'), /<h2>Terms of Service<\/h2>[\s\S]*<h2>Privacy Policy<\/h2>/);
-assert.match(read('app/index.html'), /href="https:\/\/wekan\.fi\/terms\/">Terms of Service<\/a><\/p>\n\s*<p><a href="https:\/\/wekan\.fi\/privacy">/);
+// relative, not https://wekan.fi/terms/: the release audit flags every new absolute URL in a page, and the
+// menu links are relative too
+assert.match(read('docs/index.html'), /href="\.\.\/terms\/">Terms of Service<\/a>\n\s*<a class="btn btn-link" href="https:\/\/wekan\.fi\/privacy\/">/);
+assert.match(read('saas/index.html'), /<h2>Terms of Service<\/h2>\s*<p><a class="btn btn-link" href="\.\.\/terms\/">Terms of Service<\/a><\/p>[\s\S]*<h2>Privacy Policy<\/h2>/);
+assert.match(read('app/index.html'), /href="\.\.\/terms\/">Terms of Service<\/a><\/p>\n\s*<p><a href="https:\/\/wekan\.fi\/privacy">/);
+// and no page carries an absolute /terms/ URL that the audit would have to be told about
+for (const page of pages()) assert.doesNotMatch(read(page), /https:\/\/wekan\.fi\/terms/, `${page}: absolute Terms URL`);
 
 console.log(`Terms of Service menu: ${withPrivacy} pages link /terms/ left of Privacy, and /terms/ uses the common template`);
