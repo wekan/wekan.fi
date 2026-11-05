@@ -16,7 +16,7 @@
 
   <div class="action-buttons">
     <a class="button" href="https://wekan.fi/hall-of-fame">Back to Hall of Fame Contents</a>
-    <a class="button" href="https://wekan.fi">Back to Wekan Website</a>
+    <a class="button" href="https://wekan.fi">Back to WeKan Website</a>
   </div>
 
   <div class="hof">
@@ -55,9 +55,9 @@
           <ul>
             <li>1. <span class="vulnerability-icons" role="img" aria-label="OIDCBleed"><i class="fa fa-id-card" style="color: black;" aria-hidden="true"></i> <i class="fa fa-users" style="color: black;" aria-hidden="true"></i> <i class="fa fa-user-secret" style="color: black;" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></span> OIDC method privilege escalation</li>
             <li>2. <span class="vulnerability-icons" role="img" aria-label="OIDCBleed"><i class="fa fa-id-card" style="color: black;" aria-hidden="true"></i> <i class="fa fa-users" style="color: black;" aria-hidden="true"></i> <i class="fa fa-user-secret" style="color: black;" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></span> OIDC account takeover via email merge</li>
-            <li>Affected Wekan v9.31 and earlier</li>
+            <li>Affected WeKan v9.31 and earlier</li>
             <li>Fixed at
-               <a href="https://github.com/wekan/wekan/blob/main/CHANGELOG.md#v932-2026-05-31-wekan--release">Wekan v9.32 2026-05-31</a>
+               <a href="https://github.com/wekan/wekan/blob/main/CHANGELOG.md#v932-2026-05-31-wekan--release">WeKan v9.32 2026-05-31</a>
             </li>
           </ul>
         </td>
@@ -98,7 +98,7 @@
     <h3>2. OIDC account takeover via unconditional email-based account merge (CVE-2026-52893 GHSA-mp7g-hj5q-gxhq, CWE-287)</h3>
     <p>
       The <code>onCreateUser</code> hook in <code>server/models/users.js</code> unconditionally merged an incoming
-      OIDC login into any existing Wekan account whose email <b>or</b> username matched the (attacker-controlled)
+      OIDC login into any existing WeKan account whose email <b>or</b> username matched the (attacker-controlled)
       OIDC claims — no ownership check, no email-verification check, no notification. An attacker who could present a
       matching <code>email</code>/<code>username</code> claim (trivial on self-hosted Keycloak/Authentik, where the
       <code>email</code>/<code>email_verified</code> claims are attacker-settable) inherited the victim's
@@ -129,7 +129,7 @@
       <tr>
         <td vAlign="top"><b>2026-05-31</b></td>
         <td vAlign="top">Fixed at
-          <a href="https://github.com/wekan/wekan/blob/main/CHANGELOG.md#v932-2026-05-31-wekan--release">Wekan v9.32 2026-05-31</a>
+          <a href="https://github.com/wekan/wekan/blob/main/CHANGELOG.md#v932-2026-05-31-wekan--release">WeKan v9.32 2026-05-31</a>
         </td>
       </tr>
     </table>
@@ -140,7 +140,7 @@
 
   <div class="action-buttons">
     <a class="button" href="https://wekan.fi/hall-of-fame">Back to Hall of Fame Contents</a>
-    <a class="button" href="https://wekan.fi">Back to Wekan Website</a>
+    <a class="button" href="https://wekan.fi">Back to WeKan Website</a>
   </div>
 
   <h1>

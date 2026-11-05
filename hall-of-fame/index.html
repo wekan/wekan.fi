@@ -1987,7 +1987,7 @@ Responsible disclosure through a saved GitHub security advisory; current code an
             <li><span class="vulnerability-icons" role="img" aria-label="CrashBleed"><i class="fa fa-download" style="color: black;" aria-hidden="true"></i> <i class="fa fa-key" style="color: black;" aria-hidden="true"></i> <i class="fa fa-exclamation-triangle" style="color: black;" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></span> CrashBleed &mdash; remote denial of service: an invalid <code>authToken</code> on a board export endpoint crashed the whole server. The board export REST endpoints look a user up by the login token in <code>?authToken=</code>. A token that matches nothing makes that lookup answer <code>undefined</code>, and the next line dereferenced it &mdash; <code>user._id.toString()</code> &mdash; throwing a TypeError out of an async route handler with no <code>try/catch</code>. That escapes as an unhandled promise rejection, which this app turns into a full process crash, so one crafted GET against a private board id took the server down for every user. Reachable by anyone who can obtain a private board id, which on an open-registration instance means anyone at all (CVE-2026-68901 GHSA-3gcg-g6rf-w2rx, CWE-476)</li>
             <li>It was an <b>incomplete fix</b>: <code>models/exportPDF.js</code> and <code>models/exportExcelCard.js</code> already had the <code>if (!user)</code> guard; three handlers in <code>models/export.js</code> and one in <code>models/exportExcel.js</code> were missed</li>
             <li>Fixed on both levels: every token lookup in the export models is now followed by that guard &mdash; 401 &ldquo;Invalid token&rdquo; and return &mdash; including the two handlers that did not crash because they hand the user to <code>canExport()</code> instead of dereferencing it; and every export route body is wrapped in <code>safeRoute()</code> (<code>server/apiMiddleware.js</code>), which awaits the handler, answers 500 once and logs the request that failed, so a throw from any other cause is one broken request instead of an outage</li>
-            <li>Affected Wekan v10.37 and earlier; fixed at <a href="https://github.com/wekan/wekan/blob/main/CHANGELOG.md#v1038-2026-07-26-wekan--release">Wekan v10.38 2026-07-26</a></li>
+            <li>Affected WeKan v10.37 and earlier; fixed at <a href="https://github.com/wekan/wekan/blob/main/CHANGELOG.md#v1038-2026-07-26-wekan--release">WeKan v10.38 2026-07-26</a></li>
             <li><a href="crashbleed/">More details</a></li>
           </ul>
           </details>
@@ -2520,7 +2520,7 @@ Responsible disclosure through a saved GitHub security advisory; current code an
             <li><span class="vulnerability-icons" role="img" aria-label="SortBleed"><i class="fa fa-sort" style="color: black;" aria-hidden="true"></i> <i class="fa fa-columns" style="color: black;" aria-hidden="true"></i> <i class="fa fa-user-secret" style="color: black;" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></span> SortBleed — broken access control / privilege escalation: a low-privilege (comment-only / read-only) board member could escalate to board admin and take over a private board via the board <code>sort</code> collection-allow rule (CVE-2026-68561 GHSA-xm8x-c8wg-jhmf, CWE-863, CWE-269). To support drag-to-reorder, a second <code>Boards.allow({ update })</code> rule returned <code>true</code> for any board member whenever the update touched the <code>sort</code> field. Meteor evaluates allow rules with OR semantics and does not scope an approving rule to the field that satisfied it: once any allow callback approves and no deny rejects, the ENTIRE modifier is applied. Because <code>canUpdateBoardSort</code> only checked that <code>sort</code> was AMONG the modified fields (not the only one), a comment-only / read-only member could smuggle arbitrary board mutations into the same <code>$set</code> as <code>sort</code> in one DDP <code>Boards.update</code> call — <code>{$set: {sort: 99, members: [...self as admin...], permission: 'public', title: '...'}}</code> — making themselves admin, flipping the private board to public, renaming it, and evicting the legitimate owner. The last-admin deny rule did not help because it only inspected <code>$pull</code>. Same allow-rule field-conflation class as <a href="boardbleed/">BoardBleed</a> (CVE-2026-55234), but on the Board document itself</li>
             <li>CVSS:3.1 8.8 High (AV:N/AC:L/PR:L/UI:N/S:U/C:H/I:H/A:H)</li>
             <li>Fixed by restricting <code>canUpdateBoardSort</code> (<code>server/lib/utils.js</code>) so the sort-reorder rule approves an update ONLY when <code>sort</code> is the sole modified field (<code>fieldNames</code> is exactly <code>['sort']</code>). Defense in depth: the last-admin deny rule (<code>server/permissions/boards.js</code>) now also rejects a <code>$set</code> rewrite of the <code>members</code> array that would drop the last active admin. The legitimate All Boards drag-reorder is unaffected — it persists order per-user in <code>profile.boardSortIndex</code>, not in the board document</li>
-            <li>Affected Wekan v9.85 and earlier through the current release; fixed at the upcoming WeKan release</li>
+            <li>Affected WeKan v9.85 and earlier through the current release; fixed at the upcoming WeKan release</li>
             <li><a href="sortbleed/">More details</a></li>
           </ul>
           </details>
@@ -2553,10 +2553,10 @@ Responsible disclosure through a saved GitHub security advisory; current code an
           <summary>Details</summary>
 
           <ul>
-            <li><span class="vulnerability-icons" role="img" aria-label="ScannerBleed"><i class="fa fa-shield" style="color: black;" aria-hidden="true"></i> <i class="fa fa-terminal" style="color: black;" aria-hidden="true"></i> <i class="fa fa-upload" style="color: black;" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></span> ScannerBleed — shell injection (RCE) via a malicious upload filename in the external antivirus scanner command path. In <code>models/fileValidation.js</code>, when an admin-configured external scanner command line with a <code>{file}</code> placeholder is set, the uploaded file path was interpolated and run through <code>asyncExec</code> (<code>promisify(exec)</code>), which spawns <code>/bin/sh -c</code> and interprets all shell metacharacters. Wrapping the path in double quotes is not a shell boundary — inside double quotes the shell still expands <code>$(...)</code>, backticks and <code>\</code> — so a filename like <code>$(touch /tmp/pwn).png</code> or <code>a`id`.png</code> executed as the Wekan server process. Any authenticated user who can upload an attachment could trigger it. Same RCE class as <a href="avatarbleed/">AvatarBleed</a> (CVE-2026-52891), but in a code path that was never covered by that fix (CVE-2026-68560 GHSA-x3xm-pxrv-jg7p, CWE-78)</li>
+            <li><span class="vulnerability-icons" role="img" aria-label="ScannerBleed"><i class="fa fa-shield" style="color: black;" aria-hidden="true"></i> <i class="fa fa-terminal" style="color: black;" aria-hidden="true"></i> <i class="fa fa-upload" style="color: black;" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></span> ScannerBleed — shell injection (RCE) via a malicious upload filename in the external antivirus scanner command path. In <code>models/fileValidation.js</code>, when an admin-configured external scanner command line with a <code>{file}</code> placeholder is set, the uploaded file path was interpolated and run through <code>asyncExec</code> (<code>promisify(exec)</code>), which spawns <code>/bin/sh -c</code> and interprets all shell metacharacters. Wrapping the path in double quotes is not a shell boundary — inside double quotes the shell still expands <code>$(...)</code>, backticks and <code>\</code> — so a filename like <code>$(touch /tmp/pwn).png</code> or <code>a`id`.png</code> executed as the WeKan server process. Any authenticated user who can upload an attachment could trigger it. Same RCE class as <a href="avatarbleed/">AvatarBleed</a> (CVE-2026-52891), but in a code path that was never covered by that fix (CVE-2026-68560 GHSA-x3xm-pxrv-jg7p, CWE-78)</li>
             <li>CVSS:3.1 9.9 Critical (AV:N/AC:L/PR:L/UI:N/S:C/C:H/I:H/A:H)</li>
             <li>Unlike the sibling MIME-detection path (<code>detectMimeFromFile</code>, which already uses <code>execFile</code> with no shell) and unlike the AvatarBleed fix (which strips non-alphanumeric characters), this scanner path had zero sanitization. Fixed by POSIX single-quote-escaping the interpolated file path via a new <code>shellQuote()</code> helper — inside single quotes the shell interprets no metacharacters, so a malicious filename can no longer inject commands, while the admin's command line and the exact on-disk path are preserved</li>
-            <li>Affected Wekan v9.06 and earlier through the current release; fixed at the upcoming WeKan release</li>
+            <li>Affected WeKan v9.06 and earlier through the current release; fixed at the upcoming WeKan release</li>
             <li><a href="scannerbleed/">More details</a></li>
           </ul>
           </details>
@@ -2592,7 +2592,7 @@ Responsible disclosure through a saved GitHub security advisory; current code an
             <li><span class="vulnerability-icons" role="img" aria-label="ExcelBleed"><i class="fa fa-file-excel-o" style="color: black;" aria-hidden="true"></i> <i class="fa fa-download" style="color: black;" aria-hidden="true"></i> <i class="fa fa-unlock" style="color: black;" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></span> ExcelBleed — broken access control in the Excel-export route (<code>GET /api/boards/:boardId/exportExcel</code>): <code>models/exportExcel.js</code> called its guard <code>exporterExcel.canExport(user)</code> <b>without <code>await</code></b>. Because <code>canExport</code> is <code>async</code> it returns an always-truthy Promise, so <code>if (exporterExcel.canExport(user) || impersonateDone)</code> was always true and the export ran regardless of the guard's real result. Any authenticated user could download the full contents of any private board they are not a member of (card titles + descriptions, lists, swimlanes, members, metadata). Same un-awaited async-auth bug class as <a href="bflableed/">BFLABleed</a>, <a href="clonebleed/">CloneBleed</a> and <a href="tokenbleed/">TokenBleed</a> (CVE-2026-68559 GHSA-mwq8-ccpm-r533, CWE-862, CWE-639)</li>
             <li>CVSS:3.1 Moderate (AV:N/AC:L/PR:L/UI:N/S:U/C:H/I:N/A:N)</li>
             <li>The Excel-export route was the lone remaining un-awaited <code>canExport</code> call site; the JSON export route (<code>/export</code>) was correctly awaited and returned 403 to the same non-member. Fixed by adding <code>await</code>, matching every other export route (<code>export.js</code>, <code>exportPDF.js</code>, <code>exportExcelCard.js</code>, <code>import.js</code>)</li>
-            <li>Affected Wekan v9.57.0 and earlier; fixed at the upcoming WeKan release</li>
+            <li>Affected WeKan v9.57.0 and earlier; fixed at the upcoming WeKan release</li>
             <li><a href="excelbleed/">More details</a></li>
           </ul>
           </details>
@@ -2628,7 +2628,7 @@ Responsible disclosure through a saved GitHub security advisory; current code an
             <li><span class="vulnerability-icons" role="img" aria-label="DnsBleed"><i class="fa fa-globe" style="color: black;" aria-hidden="true"></i> <i class="fa fa-server" style="color: black;" aria-hidden="true"></i> <i class="fa fa-external-link" style="color: black;" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></span> DnsBleed — the synchronous outgoing-webhook (board <b>Integrations</b>) URL validator in <code>models/integrations.js</code> blocks private/loopback/link-local IPs by regex-matching the URL <b>hostname string</b> and never resolves DNS, so a public hostname that resolves to a blocked address (e.g. <code>169-254-169-254.nip.io</code> → <code>169.254.169.254</code>, or any attacker A/AAAA record → internal IP) passes the blocklist. Incomplete-fix follow-up to <a href="webhookbleed/">WebhookBleed</a> / <a href="integrationbleed/">IntegrationBleed RebindBleed</a> (CVE-2026-68558 GHSA-66m2-4wfr-c45p, CWE-918)</li>
             <li>CVSS:3.1 High (AV:N/AC:L/PR:L/UI:N/S:C/C:H/I:L/A:N)</li>
             <li>The reported PoC was already blocked at delivery by the RebindBleed <code>fetchSafe</code> guard and at REST input by <code>validateAttachmentUrl()</code>; this release completes the fix by making <code>fetchSafe</code> resolve <b>both</b> address families and validate through the single shared <code>isIpBlocked</code> block-list, removing the block-list drift the advisory points at</li>
-            <li>Affected Wekan v8.36 and later; fixed at the upcoming WeKan release</li>
+            <li>Affected WeKan v8.36 and later; fixed at the upcoming WeKan release</li>
             <li><a href="dnsbleed/">More details</a></li>
           </ul>
           </details>
@@ -2664,7 +2664,7 @@ Responsible disclosure through a saved GitHub security advisory; current code an
             <li><span class="vulnerability-icons" role="img" aria-label="ChecklistBleed"><i class="fa fa-check-square-o" style="color: black;" aria-hidden="true"></i> <i class="fa fa-exchange" style="color: black;" aria-hidden="true"></i> <i class="fa fa-columns" style="color: black;" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></span> ChecklistBleed — the Checklists/ChecklistItems DDP collection allow rules (<code>server/permissions/checklists.js</code>, <code>checklistItems.js</code>) authorized an update against only the document's CURRENT (source) <code>cardId</code>, never the destination. A low-privileged user could move a checklist/item they own onto a card in a private board they are not a member of by <code>$set</code>-ting a new <code>cardId</code>/<code>checklistId</code> (boardId is then denormalized from the destination card), writing attacker-controlled checklist data into the victim's private board — same class as <a href="boardbleed/">BoardBleed</a>, but for the card-attached checklist documents (CVE-2026-59154 GHSA-gv8h-5p3p-6hx7, CWE-863)</li>
             <li>CVSS:3.1 Moderate (AV:N/AC:L/PR:L/UI:N/S:U/C:N/I:L/A:N)</li>
             <li>Fixed by adding <code>denyCrossBoardMoveByCard</code>/<code>denyCrossBoardMoveByChecklistItem</code> in <code>server/lib/utils.js</code> and a <code>Checklists.deny</code>/<code>ChecklistItems.deny</code> update rule that rejects any move whose destination board the caller cannot write to</li>
-            <li>Affected Wekan v9.62 and earlier; fixed at the upcoming WeKan release</li>
+            <li>Affected WeKan v9.62 and earlier; fixed at the upcoming WeKan release</li>
             <li><a href="checklistbleed/">More details</a></li>
           </ul>
           </details>
@@ -2700,7 +2700,7 @@ Responsible disclosure through a saved GitHub security advisory; current code an
             <li><span class="vulnerability-icons" role="img" aria-label="InputBleed"><i class="fa fa-code" style="color: black;" aria-hidden="true"></i> <i class="fa fa-eraser" style="color: black;" aria-hidden="true"></i> <i class="fa fa-keyboard-o" style="color: black;" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></span> InputBleed — <code>stripHtml()</code> in <code>client/lib/importDependencies.js</code> stripped HTML tags with a single pass of <code>/&lt;[^&gt;]*&gt;/g</code>. That is incomplete: a dangling unclosed tag with no closing <code>&gt;</code> (e.g. a trailing <code>&lt;script</code> or <code>&lt;svg/onload=...</code>) is never matched by the regex and survives untouched, leaving <code>&lt;script</code> in the output; and removing one match can splice surrounding text into a new match. A crafted card-dependency ("Red Strings") import file could thus smuggle an HTML/script fragment past the sanitizer (CWE-79, CWE-80, CWE-116)</li>
             <li>GitHub CodeQL code scanning alert #421, rule <code>js/incomplete-multi-character-sanitization</code>, severity High</li>
             <li>Fixed by looping the tag-stripping replacement to a fixed point and then removing any remaining stray <code>&lt;</code>/<code>&gt;</code> characters, so neither a complete nor a partial tag can remain</li>
-            <li>Fixed at <a href="https://github.com/wekan/wekan/blob/main/CHANGELOG.md#v952-2026-06-18-wekan--release">Wekan v9.52 2026-06-18</a></li>
+            <li>Fixed at <a href="https://github.com/wekan/wekan/blob/main/CHANGELOG.md#v952-2026-06-18-wekan--release">WeKan v9.52 2026-06-18</a></li>
             <li><a href="inputbleed/">More details</a></li>
           </ul>
           </details>
@@ -2734,10 +2734,10 @@ Responsible disclosure through a saved GitHub security advisory; current code an
           <summary>Details</summary>
 
           <ul>
-            <li>1. <span class="vulnerability-icons" role="img" aria-label="ProxyBleed"><i class="fa fa-server" style="color: black;" aria-hidden="true"></i> <i class="fa fa-key" style="color: black;" aria-hidden="true"></i> <i class="fa fa-user-secret" style="color: black;" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></span> ProxyBleed — header-login IP allowlist bypass via X-Forwarded-For spoofing (GHSA-jggc-qvfc-jr6x, CWE-290, CWE-287, CWE-348). Wekan's header-login (reverse-proxy SSO) feature gated passwordless login on a source-IP allowlist (<code>HEADER_LOGIN_TRUSTED_IPS</code>) but read the client-supplied <code>X-Forwarded-For</code> header as the source IP. An unauthenticated attacker who can reach the app port directly sends a single GET request with a spoofed <code>X-Forwarded-For: &lt;allowlisted-ip&gt;</code> plus the username header (e.g. <code>X-Auth-User: admin</code>) and is minted a full passwordless login session (<code>meteor_login_token</code>) for any existing user including admin — complete account takeover and admin impersonation. An empty allowlist also failed open</li>
+            <li>1. <span class="vulnerability-icons" role="img" aria-label="ProxyBleed"><i class="fa fa-server" style="color: black;" aria-hidden="true"></i> <i class="fa fa-key" style="color: black;" aria-hidden="true"></i> <i class="fa fa-user-secret" style="color: black;" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></span> ProxyBleed — header-login IP allowlist bypass via X-Forwarded-For spoofing (GHSA-jggc-qvfc-jr6x, CWE-290, CWE-287, CWE-348). WeKan's header-login (reverse-proxy SSO) feature gated passwordless login on a source-IP allowlist (<code>HEADER_LOGIN_TRUSTED_IPS</code>) but read the client-supplied <code>X-Forwarded-For</code> header as the source IP. An unauthenticated attacker who can reach the app port directly sends a single GET request with a spoofed <code>X-Forwarded-For: &lt;allowlisted-ip&gt;</code> plus the username header (e.g. <code>X-Auth-User: admin</code>) and is minted a full passwordless login session (<code>meteor_login_token</code>) for any existing user including admin — complete account takeover and admin impersonation. An empty allowlist also failed open</li>
             <li>CVSS: 9.8 Critical (CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H)</li>
             <li>The fix derives the source IP from the real TCP socket peer, only honors <code>X-Forwarded-For</code> when the immediate peer is a configured trusted proxy (taking the right-most untrusted hop), and fails closed when the allowlist is unset</li>
-            <li>Affected Wekan v9.44 and earlier</li>
+            <li>Affected WeKan v9.44 and earlier</li>
             <li>Fixed at <a href="https://github.com/wekan/wekan/blob/main/CHANGELOG.md#v946-2026-06-15-wekan--release">See CHANGELOG (v9.46)</a></li>
             <li><a href="proxybleed/">More details</a></li>
           </ul>
@@ -2774,7 +2774,7 @@ Responsible disclosure through a saved GitHub security advisory; current code an
             <li>1. <span class="vulnerability-icons" role="img" aria-label="BoardBleed"><i class="fa fa-columns" style="color: black;" aria-hidden="true"></i> <i class="fa fa-exchange" style="color: black;" aria-hidden="true"></i> <i class="fa fa-unlock" style="color: black;" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></span> BoardBleed — broken access control: any authenticated user could move their Cards/Lists/Swimlanes into a private board they are not a member of (cross-board write via collection allow rule) (CVE-2026-55234 GHSA-gm7v-pc38-53jr, CWE-284, CWE-639). The DDP write policies for Cards, Lists and Swimlanes authorized an update by checking only the document's CURRENT (source) <code>boardId</code> and never validated the NEW <code>boardId</code> in the update modifier; any logged-in user could <code>$set</code> <code>boardId</code> to a victim's private board over <code>/cards/update</code>, <code>/lists/update</code> or <code>/swimlanes/update</code> and inject attacker-controlled cards/lists/swimlanes into a board they cannot even read</li>
             <li>CVSS: 7.x High (AV:N/AC:L/PR:L/UI:N/S:C/C:N/I:H/A:L)</li>
             <li>The REST move endpoint (<code>PUT /api/boards/:boardId/lists/:listId/cards/:cardId</code> with <code>newBoardId</code>) was not affected; it checks <code>checkBoardWriteAccess</code> on the destination board. Only the DDP allow/deny layer was vulnerable</li>
-            <li>Affected Wekan v9.35 and earlier</li>
+            <li>Affected WeKan v9.35 and earlier</li>
             <li>Fixed at <a href="https://github.com/wekan/wekan/blob/main/CHANGELOG.md#v937-2026-06-11-wekan--release">See CHANGELOG (v9.37)</a></li>
             <li><a href="boardbleed/">More details</a></li>
           </ul>
@@ -2811,7 +2811,7 @@ Responsible disclosure through a saved GitHub security advisory; current code an
           <ul>
             <li>1. <span class="vulnerability-icons" role="img" aria-label="TokenBleed"><i class="fa fa-key" style="color: black;" aria-hidden="true"></i> <i class="fa fa-plus" style="color: black;" aria-hidden="true"></i> <i class="fa fa-unlock" style="color: black;" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></span> TokenBleed — unauthenticated login-token minting via un-awaited auth check in <code>POST /api/createtoken/:userId</code> (CWE-863, CWE-287). <code>Authentication.checkUserId</code> is <code>async</code>, so its 401/403 throws became rejected promises that a synchronous <code>try/catch</code> could not catch; the un-awaited call never stopped execution, so the handler minted and returned a usable login token for any user ID — including an admin — with no credentials (unauthenticated account takeover)</li>
             <li>2. <span class="vulnerability-icons" role="img" aria-label="TokenBleed"><i class="fa fa-key" style="color: black;" aria-hidden="true"></i> <i class="fa fa-plus" style="color: black;" aria-hidden="true"></i> <i class="fa fa-unlock" style="color: black;" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></span> The same detached-rejection bypass affected the other un-awaited <code>checkUserId</code>/<code>checkAdminOrCondition</code> handlers: <code>GET /api/users</code>, <code>GET /api/users/:userId</code>, <code>PUT /api/users/:userId</code>, <code>POST /api/users/</code>, <code>DELETE /api/users/:userId</code>, <code>POST /api/deletetoken</code>, <code>GET /api/boards</code>, <code>GET /api/boards_count</code>, <code>DELETE /api/boards/:boardId</code>, <code>GET /api/users/:userId/boards</code> and <code>POST /api/boards/:boardId/copy</code> (user enumeration, deletion, takeOwnership, board member changes and board deletion)</li>
-            <li>Affected Wekan v9.35 and earlier</li>
+            <li>Affected WeKan v9.35 and earlier</li>
             <li>Fixed at <a href="https://github.com/wekan/wekan/blob/main/CHANGELOG.md#v936-2026-06-10-wekan--release">See CHANGELOG (v9.36)</a></li>
             <li><a href="tokenbleed/">More details</a></li>
           </ul>
@@ -2860,7 +2860,7 @@ Responsible disclosure through a saved GitHub security advisory; current code an
             <li>12. <span class="vulnerability-icons" role="img" aria-label="CloneBleed"><i class="fa fa-clone" style="color: black;" aria-hidden="true"></i> <i class="fa fa-columns" style="color: black;" aria-hidden="true"></i> <i class="fa fa-eye" style="color: black;" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></span> Comment-reaction allow rules let read-only members add/remove reactions</li>
             <li>13. <span class="vulnerability-icons" role="img" aria-label="CloneBleed"><i class="fa fa-clone" style="color: black;" aria-hidden="true"></i> <i class="fa fa-columns" style="color: black;" aria-hidden="true"></i> <i class="fa fa-eye" style="color: black;" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></span> archiveBoard required only membership, not board admin (UI gates it behind admin)</li>
             <li>14. <span class="vulnerability-icons" role="img" aria-label="CloneBleed"><i class="fa fa-clone" style="color: black;" aria-hidden="true"></i> <i class="fa fa-columns" style="color: black;" aria-hidden="true"></i> <i class="fa fa-eye" style="color: black;" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></span> sendSMTPTestEmail required only login, not global admin</li>
-            <li>Affected Wekan v9.34 and earlier</li>
+            <li>Affected WeKan v9.34 and earlier</li>
             <li>Fixed at <a href="https://github.com/wekan/wekan/blob/main/CHANGELOG.md#v935-2026-06-06-wekan--release">See CHANGELOG (v9.35)</a></li>
             <li><a href="clonebleed/">More details</a></li>
           </ul>
@@ -2897,9 +2897,9 @@ Responsible disclosure through a saved GitHub security advisory; current code an
           <ul>
             <li>1. <span class="vulnerability-icons" role="img" aria-label="OIDCBleed"><i class="fa fa-id-card" style="color: black;" aria-hidden="true"></i> <i class="fa fa-users" style="color: black;" aria-hidden="true"></i> <i class="fa fa-user-secret" style="color: black;" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></span> Missing authorization on OIDC Meteor methods allows privilege escalation to admin (CVE-2026-53444 GHSA-cv95-8h7c-2ffq, CWE-269, CWE-862). Six OIDC-flow methods were globally DDP-callable; <code>groupRoutineOnLogin</code> could set <code>isAdmin</code> from caller data</li>
             <li>2. <span class="vulnerability-icons" role="img" aria-label="OIDCBleed"><i class="fa fa-id-card" style="color: black;" aria-hidden="true"></i> <i class="fa fa-users" style="color: black;" aria-hidden="true"></i> <i class="fa fa-user-secret" style="color: black;" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></span> OIDC account takeover via unconditional email-based account merge in <code>Accounts.onCreateUser</code> (CVE-2026-52893 GHSA-mp7g-hj5q-gxhq, CWE-287)</li>
-            <li>Affected Wekan v9.31 and earlier</li>
+            <li>Affected WeKan v9.31 and earlier</li>
             <li>Fixed at
-               <a href="https://github.com/wekan/wekan/blob/main/CHANGELOG.md#v932-2026-05-31-wekan--release">Wekan v9.32 2026-05-31</a>
+               <a href="https://github.com/wekan/wekan/blob/main/CHANGELOG.md#v932-2026-05-31-wekan--release">WeKan v9.32 2026-05-31</a>
             </li>
             <li><a href="oidcbleed/">More details</a></li>
           </ul>
@@ -2934,9 +2934,9 @@ Responsible disclosure through a saved GitHub security advisory; current code an
 
           <ul>
             <li>1. <span class="vulnerability-icons" role="img" aria-label="ReadOnlyBleed"><i class="fa fa-eye" style="color: black;" aria-hidden="true"></i> <i class="fa fa-pencil" style="color: black;" aria-hidden="true"></i> <i class="fa fa-table" style="color: black;" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></span> Read-only board members could create/modify/delete Custom Fields (CVE-2026-52892 GHSA-6733-4wgq-8xvr, CWE-862). The six mutating Custom Field REST handlers used the read-level <code>checkBoardAccess</code> instead of <code>checkBoardWriteAccess</code></li>
-            <li>Affected Wekan v9.31 and earlier</li>
+            <li>Affected WeKan v9.31 and earlier</li>
             <li>Fixed at
-               <a href="https://github.com/wekan/wekan/blob/main/CHANGELOG.md#v932-2026-05-31-wekan--release">Wekan v9.32 2026-05-31</a>
+               <a href="https://github.com/wekan/wekan/blob/main/CHANGELOG.md#v932-2026-05-31-wekan--release">WeKan v9.32 2026-05-31</a>
             </li>
             <li><a href="readonlybleed/">More details</a></li>
           </ul>
@@ -2974,9 +2974,9 @@ Responsible disclosure through a saved GitHub security advisory; current code an
             <li>1. <span class="vulnerability-icons" role="img" aria-label="WebhookBleed"><i class="fa fa-external-link" style="color: black;" aria-hidden="true"></i> <i class="fa fa-server" style="color: black;" aria-hidden="true"></i> <i class="fa fa-lock" style="color: black;" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></span> Server-Side Request Forgery (SSRF) via webhook integration URLs — input-side validation (CVE-2026-53446 GHSA-hc3x-hq3m-663q, CWE-918). Builds on the v8.35/v8.36 <a href="integrationbleed/">IntegrationBleed</a> delivery-layer fix</li>
             <li>2. <span class="vulnerability-icons" role="img" aria-label="WebhookBleed"><i class="fa fa-external-link" style="color: black;" aria-hidden="true"></i> <i class="fa fa-server" style="color: black;" aria-hidden="true"></i> <i class="fa fa-lock" style="color: black;" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></span> Authorization bypass in <code>copyBoard</code> DDP method allows any user to copy private boards (CVE-2026-53445 GHSA-7w2h-g83c-jqrp, CWE-862). Tightened to require board admin, matching the REST endpoint</li>
             <li>3. <span class="vulnerability-icons" role="img" aria-label="WebhookBleed"><i class="fa fa-external-link" style="color: black;" aria-hidden="true"></i> <i class="fa fa-server" style="color: black;" aria-hidden="true"></i> <i class="fa fa-lock" style="color: black;" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></span> Regression from the avatar RCE fix (CVE-2026-52891 GHSA-35j7-h385-2q9g): external antivirus scanner broken (<code>asyncExec</code> undefined)</li>
-            <li>Affected Wekan v9.31 and earlier</li>
+            <li>Affected WeKan v9.31 and earlier</li>
             <li>Fixed at
-               <a href="https://github.com/wekan/wekan/blob/main/CHANGELOG.md#v932-2026-05-31-wekan--release">Wekan v9.32 2026-05-31</a>
+               <a href="https://github.com/wekan/wekan/blob/main/CHANGELOG.md#v932-2026-05-31-wekan--release">WeKan v9.32 2026-05-31</a>
             </li>
             <li><a href="webhookbleed/">More details</a></li>
           </ul>
@@ -3011,9 +3011,9 @@ Responsible disclosure through a saved GitHub security advisory; current code an
 
           <ul>
             <li>1. <span class="vulnerability-icons" role="img" aria-label="FilePathBleed"><i class="fa fa-paperclip" style="color: black;" aria-hidden="true"></i> <i class="fa fa-folder-open" style="color: black;" aria-hidden="true"></i> <i class="fa fa-eye" style="color: black;" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></span> Arbitrary file read and server DoS via attachment <code>versions.original.path</code> (CVE-2026-52890 GHSA-g6vm-7757-pr88, CWE-22, CWE-400)</li>
-            <li>Affected Wekan v9.30 and earlier</li>
+            <li>Affected WeKan v9.30 and earlier</li>
             <li>Fixed at
-               <a href="https://github.com/wekan/wekan/blob/main/CHANGELOG.md#v931-2026-05-27-wekan--release">Wekan v9.31 2026-05-27</a>
+               <a href="https://github.com/wekan/wekan/blob/main/CHANGELOG.md#v931-2026-05-27-wekan--release">WeKan v9.31 2026-05-27</a>
             </li>
             <li><a href="filebleed/#G6VM">More details</a></li>
           </ul>
@@ -3049,7 +3049,7 @@ Responsible disclosure through a saved GitHub security advisory; current code an
             <ul>
               <li>1. <span class="vulnerability-icons" role="img" aria-label="BFLABleed"><i class="fa fa-road" style="color: black;" aria-hidden="true"></i> <i class="fa fa-columns" style="color: black;" aria-hidden="true"></i> <i class="fa fa-unlock" style="color: black;" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></span> CloneBleed — Broken Function Level Authorization: 48 REST endpoints missing await on board access checks, allowing authenticated non-members to read/write any board.</li>
               <li>CVSS: 8.1 (AV:N/AC:L/PR:L/UI:N/S:U/C:H/I:H/A:N)</li>
-              <li>Affected Wekan v9.20-v9.22</li>
+              <li>Affected WeKan v9.20-v9.22</li>
               <li>Fixed at <a href="https://github.com/wekan/wekan/blob/main/CHANGELOG.md">See CHANGELOG</a></li>
               <li><a href="bflableed/">More details</a></li>
             </ul>
@@ -3090,9 +3090,9 @@ Responsible disclosure through a saved GitHub security advisory; current code an
             <li>5. <span class="vulnerability-icons" role="img" aria-label="DueDateBleed"><i class="fa fa-calendar" style="color: black;" aria-hidden="true"></i> <i class="fa fa-pencil" style="color: black;" aria-hidden="true"></i> <i class="fa fa-unlock" style="color: black;" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></span> DueDateBleed</li>
             <li>6. <span class="vulnerability-icons" role="img" aria-label="CopySwimlaneBleed"><i class="fa fa-clone" style="color: black;" aria-hidden="true"></i> <i class="fa fa-bars" style="color: black;" aria-hidden="true"></i> <i class="fa fa-unlock" style="color: black;" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></span> CopySwimlaneBleed</li>
             <li>7. <span class="vulnerability-icons" role="img" aria-label="MoveListBleed"><i class="fa fa-list" style="color: black;" aria-hidden="true"></i> <i class="fa fa-exchange" style="color: black;" aria-hidden="true"></i> <i class="fa fa-unlock" style="color: black;" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></span> MoveListBleed</li>
-            <li>CVSS: 9.1 — Affected Wekan v9.08 and earlier</li>
+            <li>CVSS: 9.1 — Affected WeKan v9.08 and earlier</li>
             <li>Fixed at
-               <a href="https://github.com/wekan/wekan/blob/main/CHANGELOG.md#v909-2026-05-07-wekan--release">Wekan v9.09 2026-05-07</a>
+               <a href="https://github.com/wekan/wekan/blob/main/CHANGELOG.md#v909-2026-05-07-wekan--release">WeKan v9.09 2026-05-07</a>
             </li>
             <li><a href="authbleed/">More details</a></li>
           </ul>
@@ -3127,9 +3127,9 @@ Responsible disclosure through a saved GitHub security advisory; current code an
 
           <ul>
             <li><span class="vulnerability-icons" role="img" aria-label="AvatarBleed"><i class="fa fa-user-circle" style="color: black;" aria-hidden="true"></i> <i class="fa fa-code" style="color: black;" aria-hidden="true"></i> <i class="fa fa-shield" style="color: black;" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></span> AvatarBleed</li>
-            <li>Affected Wekan v9.06 and earlier</li>
+            <li>Affected WeKan v9.06 and earlier</li>
             <li>Fixed at
-               <a href="https://github.com/wekan/wekan/blob/main/CHANGELOG.md#v906-2026-05-03-wekan--release">Wekan v9.07 2026-05-03</a>
+               <a href="https://github.com/wekan/wekan/blob/main/CHANGELOG.md#v906-2026-05-03-wekan--release">WeKan v9.07 2026-05-03</a>
             </li>
             <li><a href="avatarbleed/">More details</a></li>
           </ul>
@@ -3165,16 +3165,16 @@ Responsible disclosure through a saved GitHub security advisory; current code an
 
           <ul>
             <li>1. <span class="vulnerability-icons" role="img" aria-label="IntegrationFileBleed"><i class="fa fa-plug" style="color: black;" aria-hidden="true"></i> <i class="fa fa-paperclip" style="color: black;" aria-hidden="true"></i> <i class="fa fa-server" style="color: black;" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></span> IntegrationBleed</li>
-            <li>Affected Wekan v8.34 and earlier</li>
+            <li>Affected WeKan v8.34 and earlier</li>
             <li>Fixed at
-               <a href="https://github.com/wekan/wekan/blob/main/CHANGELOG.md#v835-2026-03-05-wekan--release">Wekan v8.35 2026-03-05</a>
+               <a href="https://github.com/wekan/wekan/blob/main/CHANGELOG.md#v835-2026-03-05-wekan--release">WeKan v8.35 2026-03-05</a>
             </li>
             <li>Follow-up fix (2026-10-27, regression audit): HookUrlBleed sibling: the REST reads of a board's integrations gave the webhook URL - whose path carries its secret - to every member who reads the board, read-only and comment-only members included. Non-admins now get what the board publication gives them. <a href="https://github.com/wekan/wekan/commit/ebcd02be6f">Fix</a>.</li>
             <li><a href="integrationbleed/">More details</a></li>
             <li>2. <span class="vulnerability-icons" role="img" aria-label="RebindBleed"><i class="fa fa-globe" style="color: black;" aria-hidden="true"></i> <i class="fa fa-refresh" style="color: black;" aria-hidden="true"></i> <i class="fa fa-server" style="color: black;" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></span> RebindBleed</li>
-            <li>Affected Wekan v8.35 and earlier</li>
+            <li>Affected WeKan v8.35 and earlier</li>
             <li>Fixed at
-               <a href="https://github.com/wekan/wekan/blob/main/CHANGELOG.md#v836-2026-03-20-wekan--release">Wekan v8.36 2026-03-20</a>
+               <a href="https://github.com/wekan/wekan/blob/main/CHANGELOG.md#v836-2026-03-20-wekan--release">WeKan v8.36 2026-03-20</a>
             </li>
             <li><a href="integrationbleed/">More details</a></li>
           </ul>
@@ -3213,9 +3213,9 @@ Responsible disclosure through a saved GitHub security advisory; current code an
             <li>3. GHSL-2026-037_Wekan <span class="vulnerability-icons" role="img" aria-label="GlobalBleed"><i class="fa fa-globe" style="color: black;" aria-hidden="true"></i> <i class="fa fa-eye" style="color: black;" aria-hidden="true"></i> <i class="fa fa-unlock" style="color: black;" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></span> GlobalBleed</li>
             <li>4. GHSL-2026-044_Wekan <span class="vulnerability-icons" role="img" aria-label="CustomFieldBleed"><i class="fa fa-table" style="color: black;" aria-hidden="true"></i> <i class="fa fa-pencil" style="color: black;" aria-hidden="true"></i> <i class="fa fa-unlock" style="color: black;" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></span> CustomFieldBleed</li>
             <li>5. GHSL-2026-045_Wekan <span class="vulnerability-icons" role="img" aria-label="ImportLegacyBleed"><i class="fa fa-upload" style="color: black;" aria-hidden="true"></i> <i class="fa fa-archive" style="color: black;" aria-hidden="true"></i> <i class="fa fa-unlock" style="color: black;" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></span> ImportLegacyBleed</li>
-            <li>Affected Wekan v8.33 and earlier</li>
+            <li>Affected WeKan v8.33 and earlier</li>
             <li>Fixed at
-               <a href="https://github.com/wekan/wekan/blob/main/CHANGELOG.md#v834-2026-02-20-wekan--release">Wekan v8.34 2026-02-20</a>
+               <a href="https://github.com/wekan/wekan/blob/main/CHANGELOG.md#v834-2026-02-20-wekan--release">WeKan v8.34 2026-02-20</a>
             </li>
             <li><a href="anchorbleed/">More details</a></li>
           </ul>
@@ -3250,9 +3250,9 @@ Responsible disclosure through a saved GitHub security advisory; current code an
 
           <ul>
             <li>1. <span class="vulnerability-icons" role="img" aria-label="BackupFileBleed"><i class="fa fa-floppy-o" style="color: black;" aria-hidden="true"></i> <i class="fa fa-paperclip" style="color: black;" aria-hidden="true"></i> <i class="fa fa-code" style="color: black;" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></span> FloppyBleed</li>
-            <li>Affected Wekan v8.24 and earlier</li>
+            <li>Affected WeKan v8.24 and earlier</li>
             <li>Fixed at
-               <a href="https://github.com/wekan/wekan/blob/main/CHANGELOG.md#v825-2026-01-28-wekan--release">Wekan v8.25 2026-01-28</a>
+               <a href="https://github.com/wekan/wekan/blob/main/CHANGELOG.md#v825-2026-01-28-wekan--release">WeKan v8.25 2026-01-28</a>
             </li>
             <li>Follow-up fix (2026-10-27, regression audit): The fs-path-heal upgrade step joined an attachment's stored name into candidate file paths as-is, so a record a client inserted named <code>../../../etc/passwd</code> made the next upgrade copy that file into storage - an arbitrary file read. Only the name's last path component is used now, and the bulk move limits a legacy name's extension the same way. <a href="https://github.com/wekan/wekan/commit/ebcd02be6f">Fix</a>.</li>
             <li><a href="floppybleed/">More details</a></li>
@@ -3301,10 +3301,10 @@ Responsible disclosure through a saved GitHub security advisory; current code an
             <li>12. <span class="vulnerability-icons" role="img" aria-label="FixDuplicateBleed"><i class="fa fa-clone" style="color: black;" aria-hidden="true"></i> <i class="fa fa-wrench" style="color: black;" aria-hidden="true"></i> <i class="fa fa-unlock" style="color: black;" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></span> FixDuplicateBleed</li>
             <li>13. <span class="vulnerability-icons" role="img" aria-label="LinkedBoardActivitiesBleed"><i class="fa fa-link" style="color: black;" aria-hidden="true"></i> <i class="fa fa-columns" style="color: black;" aria-hidden="true"></i> <i class="fa fa-history" style="color: black;" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></span> LinkedBoardActivitiesBleed</li>
             <li>14. <span class="vulnerability-icons" role="img" aria-label="RulesBleed"><i class="fa fa-cogs" style="color: black;" aria-hidden="true"></i> <i class="fa fa-pencil" style="color: black;" aria-hidden="true"></i> <i class="fa fa-unlock" style="color: black;" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></span> RulesBleed</li>
-            <li>Affected Wekan v8.19</li>
+            <li>Affected WeKan v8.19</li>
             <li>Fixed at
-               <a href="https://github.com/wekan/wekan/blob/main/CHANGELOG.md#v820-2026-01-16-wekan--release">Wekan v8.20 2026-01-16</a> and
-               <a href="https://github.com/wekan/wekan/blob/main/CHANGELOG.md#v821-2026-01-18-wekan--release">Wekan v8.21 2026-01-18</a>
+               <a href="https://github.com/wekan/wekan/blob/main/CHANGELOG.md#v820-2026-01-16-wekan--release">WeKan v8.20 2026-01-16</a> and
+               <a href="https://github.com/wekan/wekan/blob/main/CHANGELOG.md#v821-2026-01-18-wekan--release">WeKan v8.21 2026-01-18</a>
             </li>
             <li>Follow-up fix (2026-10-27, regression audit): MoveStorageBleed sibling: <code>validateAttachment</code>, which deletes a file failing the current upload rules, was open to anybody who could see the board, a public one included; only who may change the file, or a site admin, validates now, and a refusal is recorded. AttachmentMigrationBleed sibling: four migration methods answered any logged-in user about any board - <code>deleteDuplicateEmptyLists.getStatus</code> with a private board's list titles - and now require a board the caller can see. <a href="https://github.com/wekan/wekan/commit/ebcd02be6f">Fix</a>.</li>
             <li><a href="snowbleed/">More details</a></li>
@@ -3350,8 +3350,8 @@ Responsible disclosure through a saved GitHub security advisory; current code an
             <li>8. <span class="vulnerability-icons" role="img" aria-label="MegaBleed"><i class="fa fa-cubes" style="color: black;" aria-hidden="true"></i> <i class="fa fa-columns" style="color: black;" aria-hidden="true"></i> <i class="fa fa-unlock" style="color: black;" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></span> Attachments publication leaks metadata without auth</li>
             <li>9. <span class="vulnerability-icons" role="img" aria-label="MegaBleed"><i class="fa fa-cubes" style="color: black;" aria-hidden="true"></i> <i class="fa fa-columns" style="color: black;" aria-hidden="true"></i> <i class="fa fa-unlock" style="color: black;" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></span> Attachment upload not scoped to card/board relationship</li>
             <li>10. <span class="vulnerability-icons" role="img" aria-label="MegaBleed"><i class="fa fa-cubes" style="color: black;" aria-hidden="true"></i> <i class="fa fa-columns" style="color: black;" aria-hidden="true"></i> <i class="fa fa-unlock" style="color: black;" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></span> LDAP filter injection in LDAP auth</li>
-            <li>Affected Wekan v8.18</li>
-            <li>Fixed at <a href="https://github.com/wekan/wekan/blob/main/CHANGELOG.md#v819-2025-12-29-wekan--release">Wekan v8.19 2025-12-29</a></li>
+            <li>Affected WeKan v8.18</li>
+            <li>Fixed at <a href="https://github.com/wekan/wekan/blob/main/CHANGELOG.md#v819-2025-12-29-wekan--release">WeKan v8.19 2025-12-29</a></li>
             <li><a href="megableed/">More details</a></li>
           </ul>
           </details>
@@ -3390,8 +3390,8 @@ Responsible disclosure through a saved GitHub security advisory; current code an
             <li>4. <span class="vulnerability-icons" role="img" aria-label="SpaceBleed"><i class="fa fa-rocket" style="color: black;" aria-hidden="true"></i> <i class="fa fa-paperclip" style="color: black;" aria-hidden="true"></i> <i class="fa fa-code" style="color: black;" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></span> Members can forge others’ votes (Low)<br />
                 Bonus: <span class="vulnerability-icons" role="img" aria-label="SpaceBleed"><i class="fa fa-rocket" style="color: black;" aria-hidden="true"></i> <i class="fa fa-paperclip" style="color: black;" aria-hidden="true"></i> <i class="fa fa-code" style="color: black;" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></span> Similar fixes to planning poker too done by xet7.</li>
             <li>5. <span class="vulnerability-icons" role="img" aria-label="SpaceBleed"><i class="fa fa-rocket" style="color: black;" aria-hidden="true"></i> <i class="fa fa-paperclip" style="color: black;" aria-hidden="true"></i> <i class="fa fa-code" style="color: black;" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></span> Attachment API uses bearer value as userId and DoS (Low)</li>
-            <li>Affected Wekan v8.15</li>
-            <li>Fixed at <a href="https://github.com/wekan/wekan/blob/main/CHANGELOG.md#v816-2025-11-02-wekan--release">Wekan v8.16 2025-11-02</a></li>
+            <li>Affected WeKan v8.15</li>
+            <li>Fixed at <a href="https://github.com/wekan/wekan/blob/main/CHANGELOG.md#v816-2025-11-02-wekan--release">WeKan v8.16 2025-11-02</a></li>
             <li><a href="spacebleed/">More details</a></li>
           </ul>
           </details>
@@ -3430,8 +3430,8 @@ Responsible disclosure through a saved GitHub security advisory; current code an
 
           <ul>
             <li>XSS: <a href="fieldbleed/#FIELD">Javascript saved to field</a>, and <a href="fieldbleed/#SVG">Javascript inside .SVG attachment</a>, is run when page is reloaded</li>
-            <li>Affected Wekan v3.12-v4.11</li>
-            <li>Fixed at <a href="https://github.com/wekan/wekan/blob/main/CHANGELOG.md#v412-2020-06-08-wekan-release">Wekan v4.12 2020-06-08</a></li>
+            <li>Affected WeKan v3.12-v4.11</li>
+            <li>Fixed at <a href="https://github.com/wekan/wekan/blob/main/CHANGELOG.md#v412-2020-06-08-wekan-release">WeKan v4.12 2020-06-08</a></li>
             <li><a href="fieldbleed/">More details</a></li>
             <li>Fixed at <a href="https://github.com/wekan/wekan/releases/tag/v7.98">WeKan v7.98</a> or earlier:
               <ul>
@@ -3476,8 +3476,8 @@ Responsible disclosure through a saved GitHub security advisory; current code an
 
           <ul>
             <li>Security: Links to Social Media at <a href="https://wekan.fi">wekan.fi</a> could lead to theft of sensitive information</li>
-            <li>Affected Wekan website before 2024-05-12 05.34 EET</li>
-            <li>Fixed at Wekan website 2023-05-12 05.34 EET</a></li>
+            <li>Affected WeKan website before 2024-05-12 05.34 EET</li>
+            <li>Fixed at WeKan website 2023-05-12 05.34 EET</a></li>
             <li><a href="socialbleed/">More details</a></li>
           </ul>
           </details>
@@ -3509,8 +3509,8 @@ Responsible disclosure through a saved GitHub security advisory; current code an
 
           <ul>
             <li>Security: Non-Admin could change to Admin</li>
-            <li>Affected Wekan v6.85 and earlier</li>
-            <li>Fixed at Wekan v6.86 2023-04-26</a></li>
+            <li>Affected WeKan v6.85 and earlier</li>
+            <li>Fixed at WeKan v6.86 2023-04-26</a></li>
             <li><a href="adminbleed/">More details</a></li>
           </ul>
           </details>
@@ -3542,8 +3542,8 @@ Responsible disclosure through a saved GitHub security advisory; current code an
 
           <ul>
             <li>Security: HTML comments not visible</li>
-            <li>Affected Wekan v6.85 and earlier</li>
-            <li>Fixed at Wekan v6.86 2023-04-26</a></li>
+            <li>Affected WeKan v6.85 and earlier</li>
+            <li>Fixed at WeKan v6.86 2023-04-26</a></li>
             <li><a href="invisiblebleed/">More details</a></li>
           </ul>
           <p>Follow-up fix (2026-10-02): every hidden comment is made visible, not only the first.</p></details>
@@ -3575,8 +3575,8 @@ Responsible disclosure through a saved GitHub security advisory; current code an
 
           <ul>
             <li>Security: XSS in feature "Reaction to comment"</li>
-            <li>Affected Wekan v5.49 - v6.84</li>
-            <li>Fixed at <a href="https://github.com/wekan/wekan/blob/main/CHANGELOG.md#v685-2023-04-18-wekan--release">Wekan v6.85 2023-04-18</a></li>
+            <li>Affected WeKan v5.49 - v6.84</li>
+            <li>Fixed at <a href="https://github.com/wekan/wekan/blob/main/CHANGELOG.md#v685-2023-04-18-wekan--release">WeKan v6.85 2023-04-18</a></li>
             <li><a href="reactionbleed/">More details</a></li>
           </ul>
           </details>
@@ -3608,8 +3608,8 @@ Responsible disclosure through a saved GitHub security advisory; current code an
 
           <ul>
             <li>Security: XSS in filename</li>
-            <li>Affected Wekan v6.74 and earlier</li>
-            <li>Fixed at <a href="https://github.com/wekan/wekan/blob/main/CHANGELOG.md#v675-2023-02-21-wekan--release">Wekan v6.75 2023-02-21</a></li>
+            <li>Affected WeKan v6.74 and earlier</li>
+            <li>Fixed at <a href="https://github.com/wekan/wekan/blob/main/CHANGELOG.md#v675-2023-02-21-wekan--release">WeKan v6.75 2023-02-21</a></li>
             <li>Follow-up fix (2026-10-27, regression audit): FilePathBleed sibling (GHSA-g6vm-7757-pr88): the insert guard looked only inside <code>versions</code>; with <code>versions</code> left out, ostrio:files falls back to a top-level <code>path</code>, which removing the record deletes and validation reads. A client's top-level <code>path</code> is refused now for attachments and avatars, and recorded in Admin Panel / Problems. <a href="https://github.com/wekan/wekan/commit/ebcd02be6f">Fix</a>.</li>
             <li><a href="filebleed/">More details</a></li>
           </ul>
@@ -3642,8 +3642,8 @@ Responsible disclosure through a saved GitHub security advisory; current code an
 
           <ul>
             <li>Security: SMTP password visible to Admin at Admin Panel by using browser inspect to see behind asterisks</li>
-            <li>Affected Wekan v1.59-v4.98</li>
-            <li>Fixed at <a href="https://github.com/wekan/wekan/blob/main/CHANGELOG.md#v499-2021-02-25-wekan-release">Wekan v4.99 2021-02-25</a></li>
+            <li>Affected WeKan v1.59-v4.98</li>
+            <li>Fixed at <a href="https://github.com/wekan/wekan/blob/main/CHANGELOG.md#v499-2021-02-25-wekan-release">WeKan v4.99 2021-02-25</a></li>
             <li><a href="emailbleed/">More details</a></li>
           </ul>
           </details>
@@ -3676,8 +3676,8 @@ Responsible disclosure through a saved GitHub security advisory; current code an
 
           <ul>
             <li>Security: SSL/TLS certificate validation for LDAP disabled by default</li>
-            <li>Affected Wekan v1.53.1-v4.87</li>
-            <li>Fixed at <a href="https://github.com/wekan/wekan/blob/main/CHANGELOG.md#v488-2021-01-28-wekan-release">Wekan v4.88 2021-01-28</a></li>
+            <li>Affected WeKan v1.53.1-v4.87</li>
+            <li>Fixed at <a href="https://github.com/wekan/wekan/blob/main/CHANGELOG.md#v488-2021-01-28-wekan-release">WeKan v4.88 2021-01-28</a></li>
             <li><a href="ldapbleed/">More details</a></li>
           </ul>
           <p>Follow-up fix (2026-10-02): LDAP certificates are verified by default again, in Docker and the snap too.</p></details>
@@ -3701,7 +3701,7 @@ Responsible disclosure through a saved GitHub security advisory; current code an
           <details>
           <summary>Process</summary>
 
-          Did not notice security issue originally when merging new feature from pull request. Did fix issue when finally noticed it at production at Wekan demo server.
+          Did not notice security issue originally when merging new feature from pull request. Did fix issue when finally noticed it at production at WeKan demo server.
           </details>
         </td>
         <td valign="top">
@@ -3712,8 +3712,8 @@ Responsible disclosure through a saved GitHub security advisory; current code an
             <li>Due Cards and Broken Cards: As Admin user, at All Users view of Due Cards and Broken Cards,
                 fixed to not show cards from other users private boards. This affected only logged in Admin user,
                 not logged in other users.</li>
-            <li>Affected Wekan v4.73-v4.74</li>
-            <li>Fixed at <a href="https://github.com/wekan/wekan/blob/main/CHANGELOG.md#v475-2021-01-11-wekan-release">Wekan v4.75 2021-01-11</a></li>
+            <li>Affected WeKan v4.73-v4.74</li>
+            <li>Fixed at <a href="https://github.com/wekan/wekan/blob/main/CHANGELOG.md#v475-2021-01-11-wekan-release">WeKan v4.75 2021-01-11</a></li>
             <li><a href="duebleed/">More details</a></li>
           </ul>
           </details>
@@ -3751,8 +3751,8 @@ Responsible disclosure through a saved GitHub security advisory; current code an
             <li>DoS</li>
             <li>Unauthenticated Username Change</li>
             <li>Unauthenticated Os Statistics</li>
-            <li>Affected Wekan v0.7-v3.80</li>
-            <li>Fixed at <a href="https://github.com/wekan/wekan/blob/main/CHANGELOG.md#v381-2020-03-01-wekan-release">Wekan v3.81 2020-03-01</a></li>
+            <li>Affected WeKan v0.7-v3.80</li>
+            <li>Fixed at <a href="https://github.com/wekan/wekan/blob/main/CHANGELOG.md#v381-2020-03-01-wekan-release">WeKan v3.81 2020-03-01</a></li>
             <li><a href="bypassbleed/">More details</a></li>
           </ul>
           <p>Follow-up fix (2026-10-02): rule chains stop at depth five, and deeper loops are recorded.</p></details>
@@ -3790,8 +3790,8 @@ Responsible disclosure through a saved GitHub security advisory; current code an
           <ul>
             <li>User data is published unconditionally</li>
             <li>Sessions can be taken over</li>
-            <li>Affected Wekan v0.11.1-rc2 - v1.03</li>
-            <li>Fixed at <a href="https://github.com/wekan/wekan/blob/main/CHANGELOG.md#v104-2018-06-12-wekan-release">Wekan v1.04 2018-06-12</a></li>
+            <li>Affected WeKan v0.11.1-rc2 - v1.03</li>
+            <li>Fixed at <a href="https://github.com/wekan/wekan/blob/main/CHANGELOG.md#v104-2018-06-12-wekan-release">WeKan v1.04 2018-06-12</a></li>
             <li><a href="userbleed/">More details</a></li>
           </ul>
           </details>
@@ -3818,7 +3818,7 @@ Responsible disclosure through a saved GitHub security advisory; current code an
           <details>
           <summary>Process</summary>
 
-          Did not report to Wekan, was found later from CVE
+          Did not report to WeKan, was found later from CVE
           </details>
         </td>
 
@@ -3828,8 +3828,8 @@ Responsible disclosure through a saved GitHub security advisory; current code an
 
           <ul>
             <li>Email / Username Enumeration</li>
-            <li>Affected Wekan v1.04-v2.43</li>
-            <li>Fixed at <a href="https://github.com/wekan/wekan/blob/main/CHANGELOG.md#v244-2019-03-11-wekan-release">Wekan v2.44 2019-03-11</a>.</li>
+            <li>Affected WeKan v1.04-v2.43</li>
+            <li>Fixed at <a href="https://github.com/wekan/wekan/blob/main/CHANGELOG.md#v244-2019-03-11-wekan-release">WeKan v2.44 2019-03-11</a>.</li>
             <li><a href="brutebleed/">More details</a></li>
           </ul>
           <p>Follow-up fix (2026-10-02): guessing one account from many addresses is slowed, without locking its owner out.</p></details>
@@ -3868,7 +3868,7 @@ Responsible disclosure through a saved GitHub security advisory; current code an
             <li>Cross Frame Scripting</li>
             <li>Clickjacking</li>
             <li>Improper Cache Control</li>
-            <li>Affected Wekan v0.7-v0.79</li>
+            <li>Affected WeKan v0.7-v0.79</li>
             <li><a href="framebleed/">More details</a></li>
           </ul>
           <p>Follow-up fix (2026-10-02): the framing headers, commented out since 2022, are restored.</p></details>

@@ -1,5 +1,18 @@
 # Upcoming wekan.fi release
 
+- The name is WeKan in the visible text of every page: 2,695 lines on 573 pages -
+  the API documentation of every version (api/), the Hall of Fame pages and the
+  Standard for Public Code page - had Wekan, WEKAN or wekan. Addresses, file
+  names, class names and code keep their own spelling (wekan.fi,
+  github.com/wekan/wekan, snap install wekan). The API pages are Redoc pages
+  that rebuild their text in the browser from the JSON in __redoc_state, so
+  that JSON says WeKan too (it was checked to parse before and after), and the
+  search index in it, which is lower case on purpose, is untouched. The
+  reporters' quoted words in the Hall of Fame follow the same spelling.
+  tests/brand-spelling.test.cjs checks all 647 pages, the Redoc state, and that
+  an address, a path or a code block is not mistaken for the name; it fails on
+  the pages before this change (4,768 places). Thanks to xet7.
+
 - Terms of Service: /terms/ is built on the same page template and top menu as
   the other pages (it was a stand-alone page with its own styles and no menu),
   and every page that has a Privacy Policy item in its top menu - the 13 others

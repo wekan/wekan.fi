@@ -16,7 +16,7 @@
 
   <div class="action-buttons">
     <a class="button" href="https://wekan.fi/hall-of-fame">Back to Hall of Fame Contents</a>
-    <a class="button" href="https://wekan.fi">Back to Wekan Website</a>
+    <a class="button" href="https://wekan.fi">Back to WeKan Website</a>
   </div>
 
   <div class="hof">
@@ -54,7 +54,7 @@
           <ul>
             <li>1. <span class="vulnerability-icons" role="img" aria-label="SortBleed"><i class="fa fa-sort" style="color: black;" aria-hidden="true"></i> <i class="fa fa-columns" style="color: black;" aria-hidden="true"></i> <i class="fa fa-user-secret" style="color: black;" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></span> SortBleed — a comment-only / read-only board member can escalate to board admin and take over a private board via the <code>sort</code> collection-allow rule (CWE-863 Incorrect Authorization, CWE-269 Improper Privilege Management)</li>
             <li>CVSS:3.1 8.8 High (AV:N/AC:L/PR:L/UI:N/S:U/C:H/I:H/A:H)</li>
-            <li>Affected Wekan v9.85 and earlier</li>
+            <li>Affected WeKan v9.85 and earlier</li>
             <li>Fixed at
                <a href="https://github.com/wekan/wekan/blob/main/CHANGELOG.md#upcoming-wekan--release">upcoming WeKan release</a>
             </li>
@@ -73,7 +73,7 @@
 
     <h3>1. SortBleed — a low-privilege board member can escalate to board admin and take over a private board via the board <code>sort</code> allow rule (CWE-863, CWE-269)</h3>
     <p>
-      Wekan exposes the <code>Boards</code> MongoDB collection to authenticated DDP clients through
+      WeKan exposes the <code>Boards</code> MongoDB collection to authenticated DDP clients through
       Meteor allow/deny rules, so a browser can issue a direct <code>Boards.update(selector, modifier)</code>
       over the wire. The intended board-document write rule is <code>allowIsBoardAdmin</code> (only a board
       admin may update a board), reinforced by deny rules that forbid removing the last admin and forbid
@@ -123,7 +123,7 @@ Boards.allow({
       wholesale <code>$set: { members: [...] }</code> bypassed it entirely.
     </p>
     <p>
-      <b>Attacker model:</b> an authenticated Wekan user who is an active member of the target board in any
+      <b>Attacker model:</b> an authenticated WeKan user who is an active member of the target board in any
       role — including the most restricted roles (comment-only, read-only, worker), which are explicitly
       meant to have no ability to modify the board or its membership. No board-admin rights, no global-admin
       rights, and no victim interaction are required. The only bound on impact is that the attacker must
@@ -135,7 +135,7 @@ Boards.allow({
       service to the owner (<code>$set</code> the whole members array to only themselves, evicting the
       legitimate admin), a confidentiality breach (change <code>permission</code> from private to public,
       exposing swimlanes, lists, cards, comments, attachments and the member list — public boards are
-      world-readable in Wekan), and arbitrary integrity changes (title, color, settings). Once board admin,
+      world-readable in WeKan), and arbitrary integrity changes (title, color, settings). Once board admin,
       the attacker inherits every board-admin capability (adding integrations / outgoing webhooks,
       adding/removing members, archiving or deleting the board, changing everyone's roles). Confirmed at
       runtime by the reporter against a local instance (v9.84 image; the vulnerable code is byte-identical
@@ -204,7 +204,7 @@ export function canUpdateBoardSort(userId, board, fieldNames) {
 
   <div class="action-buttons">
     <a class="button" href="https://wekan.fi/hall-of-fame">Back to Hall of Fame Contents</a>
-    <a class="button" href="https://wekan.fi">Back to Wekan Website</a>
+    <a class="button" href="https://wekan.fi">Back to WeKan Website</a>
   </div>
 
   <h1>

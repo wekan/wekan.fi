@@ -16,7 +16,7 @@
 
   <div class="action-buttons">
     <a class="button" href="https://wekan.fi/hall-of-fame">Back to Hall of Fame Contents</a>
-    <a class="button" href="https://wekan.fi">Back to Wekan Website</a>
+    <a class="button" href="https://wekan.fi">Back to WeKan Website</a>
   </div>
 
   <div class="hof">
@@ -56,7 +56,7 @@
             <li>CVSS:3.1 High (AV:N/AC:L/PR:L/UI:N/S:C/C:H/I:L/A:N)</li>
             <li>Incomplete-fix follow-up to <a href="../webhookbleed/">WebhookBleed</a>
               (GHSA-hc3x-hq3m-663q) and <a href="../integrationbleed/">IntegrationBleed / RebindBleed</a></li>
-            <li>Affected Wekan v8.36 and later</li>
+            <li>Affected WeKan v8.36 and later</li>
             <li>Fixed at the upcoming WeKan release</li>
           </ul>
         </td>
@@ -73,7 +73,7 @@
 
     <h3>SSRF filter bypass via DNS-resolving hostname in outgoing webhooks (CVE-2026-68558 GHSA-66m2-4wfr-c45p, CWE-918)</h3>
     <p>
-      Wekan's outgoing-webhook (board <b>Integrations</b>) URLs are validated by a synchronous validator in
+      WeKan's outgoing-webhook (board <b>Integrations</b>) URLs are validated by a synchronous validator in
       <code>models/integrations.js</code> that blocks private / loopback / link-local addresses by regex-matching the
       URL <b>hostname string</b> — it never resolves DNS. An attacker can therefore supply a public hostname that
       resolves to a blocked address and slip past the blocklist:
@@ -156,7 +156,7 @@
 
   <div class="action-buttons">
     <a class="button" href="https://wekan.fi/hall-of-fame">Back to Hall of Fame Contents</a>
-    <a class="button" href="https://wekan.fi">Back to Wekan Website</a>
+    <a class="button" href="https://wekan.fi">Back to WeKan Website</a>
   </div>
 
   <h1>
