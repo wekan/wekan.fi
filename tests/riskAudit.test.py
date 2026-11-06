@@ -39,6 +39,39 @@ class RiskAudit(unittest.TestCase):
             self.file.write_text('fetch("'+url+'")')
             with self.assertRaisesRegex(ValueError, 'new URL'): r.inspect(self.root, self.policy)
 
+    def test_grouplinkbleed_links_are_exact_and_page_scoped(self):
+        # The deploy of b5d4266 stopped here: the new page's reporter, advisory
+        # and fix links were not in the baseline. The fix link is the commit on
+        # wekan/wekan main (e3458004ec), not the pre-rebase 87c4501ced.
+        policy = json.loads((ROOT/'releases/risk-baseline.json').read_text())
+        self.policy['allowUrlPatternsByFile'] = policy['allowUrlPatternsByFile']
+        reporter = 'https://github.com/bhaswanthc'
+        advisory = 'https://github.com/wekan/wekan/security/advisories/GHSA-v544-rmr5-38gx'
+        commit = 'https://github.com/wekan/wekan/commit/e3458004ec'
+        live = (ROOT/'hall-of-fame/grouplinkbleed/index.html').read_text()
+        self.assertNotIn('87c4501ced', live)
+        for name, urls in [('hall-of-fame/grouplinkbleed/index.html', [reporter, advisory, commit]),
+                           ('hall-of-fame/index.html', [reporter, advisory])]:
+            page = self.root/name
+            page.parent.mkdir(parents=True, exist_ok=True)
+            for url in urls:
+                self.assertIn(url, (ROOT/name).read_text())
+            page.write_text('\n'.join('<a href="'+u+'">Reference</a>' for u in urls))
+            r.inspect(self.root, self.policy)
+            for url in urls:
+                with self.subTest(page=name, url=url):
+                    self.file.write_text('fetch("'+url+'")')
+                    with self.assertRaisesRegex(ValueError, 'main.js: new URL'):
+                        r.inspect(self.root, self.policy)
+            self.file.write_text('console.log("local diagnostics");')
+            for other in [reporter+'?report=1', reporter+'x', advisory+'0',
+                          commit.replace('e3458004ec', '87c4501ced'),
+                          advisory.replace('/wekan/wekan/', '/other/repo/')]:
+                with self.subTest(page=name, url=other):
+                    page.write_text('<a href="'+other+'">Unreviewed</a>')
+                    with self.assertRaisesRegex(ValueError, 'new URL'):
+                        r.inspect(self.root, self.policy)
+            page.unlink()
     def test_october_followup_links_are_exact_and_page_scoped(self):
         policy = json.loads((ROOT/'releases/risk-baseline.json').read_text())
         self.policy['allowUrlPatternsByFile'] = policy['allowUrlPatternsByFile']

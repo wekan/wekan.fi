@@ -31,5 +31,5 @@
 <p>A refused write is recorded in Admin Panel / Problems as GroupLinkBleed (keys <code>authz.group-link</code> and <code>authz.member-add</code>). The interface never makes these writes, so only a client bypassing it reaches the refusal. Medium severity: it never disables the account.</p>
 <h2>Verification</h2>
 <p>tests/groupLinkBleed.test.cjs runs the real deny rules against the reporter's writes and against every write the client legitimately makes, and fails if a board field guarded only by a method is left writable by the client. tests/playwright/specs/group-link-bleed.e2e.js replays the attack over DDP against a running server.</p>
-<p><a href="https://github.com/wekan/wekan/commit/87c4501ced">Source fix and regression coverage</a></p>
+<p><a href="https://github.com/wekan/wekan/commit/e3458004ec">Source fix and regression coverage</a></p>
 </div></body></html>

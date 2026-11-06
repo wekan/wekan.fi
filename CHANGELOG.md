@@ -1,5 +1,17 @@
 # Upcoming wekan.fi release
 
+- Deploy: the GroupLinkBleed Hall of Fame commit stopped the deploy in its
+  source audit, because the new page's GitHub links - the reporter bhaswanthc,
+  GHSA-v544-rmr5-38gx and the fix commit - were not in
+  releases/risk-baseline.json. They are now allowed as exact URLs on those two
+  pages only. The fix link pointed at 87c4501ced, a pre-rebase hash that is not
+  on wekan/wekan main; it now points at e3458004ec, the commit the WeKan
+  changelog links. tests/riskAudit.test.py pins the exact URLs, refuses them
+  in code and refuses near misses, and fails with the old baseline. The API
+  pages of v12.95, v12.96 and v12.97 spelled the name Wekan in their title and
+  description again, because the WeKan API generator still did; they say WeKan
+  and tests/brand-spelling.test.cjs passes. Thanks to xet7.
+
 - The name is WeKan in the visible text of every page: 2,695 lines on 573 pages -
   the API documentation of every version (api/), the Hall of Fame pages and the
   Standard for Public Code page - had Wekan, WEKAN or wekan. Addresses, file
