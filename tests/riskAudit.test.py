@@ -39,6 +39,34 @@ class RiskAudit(unittest.TestCase):
             self.file.write_text('fetch("'+url+'")')
             with self.assertRaisesRegex(ValueError, 'new URL'): r.inspect(self.root, self.policy)
 
+    def test_createbleed_links_are_exact_and_page_scoped(self):
+        policy = json.loads((ROOT/'releases/risk-baseline.json').read_text())
+        self.policy['allowUrlPatternsByFile'] = policy['allowUrlPatternsByFile']
+        reporter = 'https://github.com/tsurutanmen'
+        advisory = 'https://github.com/wekan/wekan/security/advisories/GHSA-qcfm-2g4w-wqcc'
+        commit = 'https://github.com/wekan/wekan/commit/5c1f6088f4'
+        for name, urls in [('hall-of-fame/createbleed/index.html', [reporter, advisory, commit]),
+                           ('hall-of-fame/index.html', [reporter, advisory])]:
+            page = self.root/name
+            page.parent.mkdir(parents=True, exist_ok=True)
+            for url in urls:
+                self.assertIn(url, (ROOT/name).read_text())
+            page.write_text('\n'.join('<a href="'+u+'">Reference</a>' for u in urls))
+            r.inspect(self.root, self.policy)
+            for url in urls:
+                with self.subTest(page=name, url=url):
+                    self.file.write_text('fetch("'+url+'")')
+                    with self.assertRaisesRegex(ValueError, 'main.js: new URL'):
+                        r.inspect(self.root, self.policy)
+            self.file.write_text('console.log("local diagnostics");')
+            for other in [reporter+'?report=1', reporter+'x', advisory+'0',
+                          commit.replace('5c1f6088f4', '5c1f6088f5'),
+                          advisory.replace('/wekan/wekan/', '/other/repo/')]:
+                with self.subTest(page=name, url=other):
+                    page.write_text('<a href="'+other+'">Unreviewed</a>')
+                    with self.assertRaisesRegex(ValueError, 'new URL'):
+                        r.inspect(self.root, self.policy)
+            page.unlink()
     def test_grouplinkbleed_links_are_exact_and_page_scoped(self):
         # The deploy of b5d4266 stopped here: the new page's reporter, advisory
         # and fix links were not in the baseline. The fix link is the commit on

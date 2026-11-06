@@ -92,6 +92,22 @@
       </tr>
 <tr>
 <td valign="top">-</td>
+<td class="icon" valign="top"><h2><span role="img" aria-label="CreateBleed"><i class="fa fa-plus-square" aria-hidden="true"></i> <i class="fa fa-columns" aria-hidden="true"></i> <i class="fa fa-user-times" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></span></h2></td>
+<td valign="top"><b><a href="createbleed/">CreateBleed</a></b></td>
+<td valign="top">2026-11-07</td>
+<td class="by" valign="top"><b><a href="https://github.com/tsurutanmen">tsurutanmen</a></b></td>
+<td class="stars" valign="top"><img src="GoldStar.png" width="30" height="30" alt="Gold star"><img src="GoldStar.png" width="30" height="30" alt="Gold star"><img src="GoldStar.png" width="30" height="30" alt="Gold star"><img src="GoldStar.png" width="30" height="30" alt="Gold star"><img src="GoldStar.png" width="30" height="30" alt="Gold star"></td>
+<td valign="top"><details><summary>Process</summary>
+
+<p>Reported privately by tsurutanmen through GitHub Security Advisory <a href="https://github.com/wekan/wekan/security/advisories/GHSA-qcfm-2g4w-wqcc">GHSA-qcfm-2g4w-wqcc</a>, with the code paths, a proof of concept and a suggested fix; validated and fixed by xet7.</p>
+</details></td>
+<td valign="top"><details><summary>Details</summary>
+
+<p>With "Only admins can create boards" switched on in Admin Panel / Settings / Visibility, a user who is not an admin could still create boards: the setting was checked only by the Add Board form, not by a board insert from the browser console, the REST API, an import, a copy, a clone or a card turned into a board.</p><ul><li>CWE-863. Low severity: the boards belong to their creator, and no other user's data is affected. No CVE assigned yet. Fix prepared for the Upcoming release.</li><li><a href="createbleed/">More details</a></li></ul>
+</details></td>
+</tr>
+<tr>
+<td valign="top">-</td>
 <td class="icon" valign="top"><h2><span role="img" aria-label="GroupLinkBleed"><i class="fa fa-users" aria-hidden="true"></i> <i class="fa fa-link" aria-hidden="true"></i> <i class="fa fa-user-plus" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></span></h2></td>
 <td valign="top"><b><a href="grouplinkbleed/">GroupLinkBleed</a></b></td>
 <td valign="top">2026-11-06</td>

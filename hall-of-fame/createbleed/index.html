@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8">
+<title>WeKan — Hall of Fame / CreateBleed</title>
+<link rel="icon" href="../../wekan-favicon.png">
+<link rel="stylesheet" href="../../css/main.css">
+<link rel="stylesheet" href="../../font-awesome/css/font-awesome.min.css">
+</head><body class="hall-of-fame">
+<img src="../hof.svg" alt="Hall of Fame" width="300">
+<div class="action-buttons"><a class="button" href="../">Back to Hall of Fame Contents</a>
+<a class="button" href="../../">Back to WeKan Website</a></div>
+<div class="hof"><h1>CreateBleed</h1>
+<table border="1"><tr><th>CVE</th><th>Icon</th><th>Vulnerability name</th><th>Date</th>
+<th>Responsible Security Disclosure by</th><th>Stars</th><th>Process</th><th>Vulnerabilities</th></tr>
+<tr>
+<td valign="top">-</td>
+<td class="icon" valign="top"><h2><span role="img" aria-label="CreateBleed"><i class="fa fa-plus-square" aria-hidden="true"></i> <i class="fa fa-columns" aria-hidden="true"></i> <i class="fa fa-user-times" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></span></h2></td>
+<td valign="top"><b><a href="./">CreateBleed</a></b></td>
+<td valign="top">2026-11-07</td>
+<td class="by" valign="top"><b><a href="https://github.com/tsurutanmen">tsurutanmen</a></b></td>
+<td class="stars" valign="top"><img src="../GoldStar.png" width="30" height="30" alt="Gold star"><img src="../GoldStar.png" width="30" height="30" alt="Gold star"><img src="../GoldStar.png" width="30" height="30" alt="Gold star"><img src="../GoldStar.png" width="30" height="30" alt="Gold star"><img src="../GoldStar.png" width="30" height="30" alt="Gold star"></td>
+<td valign="top"><p>Reported privately by tsurutanmen through GitHub Security Advisory <a href="https://github.com/wekan/wekan/security/advisories/GHSA-qcfm-2g4w-wqcc">GHSA-qcfm-2g4w-wqcc</a>, with the code paths, a proof of concept and a suggested fix; validated and fixed by xet7.</p>
+</td>
+<td valign="top"><p>With "Only admins can create boards" switched on in Admin Panel / Settings / Visibility, a user who is not an admin could still create boards: the setting was checked only by the Add Board form, not by a board insert from the browser console, the REST API, an import, a copy, a clone or a card turned into a board.</p>
+</td>
+</tr>
+</table>
+<h2 class="hof">Details</h2>
+<p>The setting (issue #4475) was read in one place, the <code>createBoardWithInitialSwimlanes</code> method behind the Add Board form, and the interface hid that form for a user who is not an admin. Everywhere else a board could be made, nothing asked: <code>Boards.insert(&#123; title: 'x', permission: 'private' &#125;)</code> in the browser console reached the board collection's allow rule, which approves any signed-in user; <code>POST /api/boards</code> and the two board import routes checked only that the caller was signed in - the report. Reviewing the fix found the same gap in the import, clone and copy methods, <code>POST /api/boards/:boardId/copy</code>, and "Create board from card". The boards belonged to their creator; no other user's data was read or changed. Affected v12.99 and earlier.</p>
+<p><strong>Fix:</strong> one decision, <code>models/lib/boardCreationPolicy.js</code>, and one guard, <code>server/lib/boardCreationGuard.js</code>, asked by every path that creates a working board for a user before anything is written, and by a new deny rule for a client insert. A board template stays every member's own, and the boards WeKan makes by itself - a user's Templates board, a board's subtasks board - are not user creations. A refused REST call answers 403. Duplicate in the All Boards sidebar and "Create board from card" are hidden like Add Board.</p>
+<h2>Detection</h2>
+<p>A refusal is recorded in Admin Panel / Problems as CreateBleed (key <code>authz.board-creation</code>). The interface offers none of these paths to a user who is not an admin while the setting is on, so only a client bypassing it reaches the refusal. Low severity: it never disables the account, because a browser tab opened before the administrator switched the setting on still shows the buttons.</p>
+<h2>Verification</h2>
+<p>tests/createBleed.test.cjs runs the decision, the guard and the real deny rule against the reporter's console insert, and fails if any path that creates a board for a user does not ask the guard, or if anything else reads the setting. tests/playwright/specs/createbleed-board-creation-admin-only.e2e.js replays the report - the console insert, the REST and import calls, a copy and a card turned into a board - against a running server, and checks that an administrator and a board template still work.</p>
+<p><a href="https://github.com/wekan/wekan/commit/5c1f6088f4">Source fix and regression coverage</a></p>
+</div></body></html>

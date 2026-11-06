@@ -1,5 +1,14 @@
 # Upcoming wekan.fi release
 
+- Hall of Fame: CreateBleed, reported by tsurutanmen through
+  [GHSA-qcfm-2g4w-wqcc](https://github.com/wekan/wekan/security/advisories/GHSA-qcfm-2g4w-wqcc):
+  "Only admins can create boards" was checked only by the Add Board form, so
+  a user who is not an admin still created boards from the browser console,
+  the REST API, imports, copies, clones and cards. A row on the index with 5
+  stars, its own page, the Audit-Stars.md entry, and the page's GitHub links
+  allowed as exact URLs in releases/risk-baseline.json, pinned by
+  tests/riskAudit.test.py. Thanks to tsurutanmen and xet7.
+
 - Deploy: the GroupLinkBleed Hall of Fame commit stopped the deploy in its
   source audit, because the new page's GitHub links - the reporter bhaswanthc,
   GHSA-v544-rmr5-38gx and the fix commit - were not in

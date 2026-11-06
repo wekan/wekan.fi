@@ -70,6 +70,7 @@ because they are missing from the public catalogue.
 
 | Entry | Date | Previous | Current | GHSA evidence | Reason / remaining review |
 | --- | --- | ---: | ---: | --- | --- |
+| CreateBleed | 2026-11-07 | - | 5 | [GHSA-qcfm-2g4w-wqcc](https://github.com/wekan/wekan/security/advisories/GHSA-qcfm-2g4w-wqcc) | GHSA code paths, proof of concept and suggested fix (one helper on every path) verified against v12.99; import, clone, copy and card-to-board were found with it and guarded too. |
 | GroupLinkBleed | 2026-11-06 | 5 | 5 | [GHSA-v544-rmr5-38gx](https://github.com/wekan/wekan/security/advisories/GHSA-v544-rmr5-38gx) | GHSA proof of concept, regression test and suggested fix verified against v12.97; reactivating a removed member was added to the member check. |
 | UnassignedAttachBleed | 2026-11-01 | 5 | 5 | [GHSA-w26g-rc43-q6cm](https://github.com/wekan/wekan/security/advisories/GHSA-w26g-rc43-q6cm) | GHSA reproduction against v12.74 and a suggested fix for both routes verified; the copy, move and DDP siblings were fixed with them. |
 | CrossBoardExportBleed | 2026-11-01 | 5 | 5 | [GHSA-8885-xrq4-j47h](https://github.com/wekan/wekan/security/advisories/GHSA-8885-xrq4-j47h) | GHSA details, verification code and a suggested fix for both findings verified. |
