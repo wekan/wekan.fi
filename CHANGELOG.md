@@ -10,7 +10,10 @@
   in code and refuses near misses, and fails with the old baseline. The API
   pages of v12.95, v12.96 and v12.97 spelled the name Wekan in their title and
   description again, because the WeKan API generator still did; they say WeKan
-  and tests/brand-spelling.test.cjs passes. Thanks to xet7.
+  and tests/brand-spelling.test.cjs passes.
+  [The WeKan API generator is fixed](https://github.com/wekan/wekan/commit/4d5fe63fc4)
+  too, so the API pages of the next releases say WeKan from the start. Thanks
+  to xet7.
 
 - The name is WeKan in the visible text of every page: 2,695 lines on 573 pages -
   the API documentation of every version (api/), the Hall of Fame pages and the
