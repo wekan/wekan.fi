@@ -92,6 +92,22 @@
       </tr>
 <tr>
 <td valign="top">-</td>
+<td class="icon" valign="top"><h2><span role="img" aria-label="GroupLinkBleed"><i class="fa fa-users" aria-hidden="true"></i> <i class="fa fa-link" aria-hidden="true"></i> <i class="fa fa-user-plus" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></span></h2></td>
+<td valign="top"><b><a href="grouplinkbleed/">GroupLinkBleed</a></b></td>
+<td valign="top">2026-11-06</td>
+<td class="by" valign="top"><b><a href="https://github.com/bhaswanthc">bhaswanthc</a></b></td>
+<td class="stars" valign="top"><img src="GoldStar.png" width="30" height="30" alt="Gold star"><img src="GoldStar.png" width="30" height="30" alt="Gold star"><img src="GoldStar.png" width="30" height="30" alt="Gold star"><img src="GoldStar.png" width="30" height="30" alt="Gold star"><img src="GoldStar.png" width="30" height="30" alt="Gold star"></td>
+<td valign="top"><details><summary>Process</summary>
+
+<p>Reported privately by bhaswanthc through GitHub Security Advisory <a href="https://github.com/wekan/wekan/security/advisories/GHSA-v544-rmr5-38gx">GHSA-v544-rmr5-38gx</a>, with a proof of concept, a regression test and a suggested fix; validated and fixed by xet7.</p>
+</details></td>
+<td valign="top"><details><summary>Details</summary>
+
+<p>A board admin could write the board document directly over DDP instead of calling the board methods, and so skip their checks: attach an organization or team they do not belong to, so that its members saw the board and became its members, and add any user to the board past the invitation checks, including the administrator's same organization/team policy.</p><ul><li>CWE-863. Moderate severity. No CVE assigned yet. Fix prepared for the Upcoming release.</li><li><a href="grouplinkbleed/">More details</a></li></ul>
+</details></td>
+</tr>
+<tr>
+<td valign="top">-</td>
 <td class="icon" valign="top"><h2><span role="img" aria-label="UnassignedAttachBleed"><i class="fa fa-paperclip" aria-hidden="true"></i> <i class="fa fa-user-times" aria-hidden="true"></i> <i class="fa fa-trash" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></span></h2></td>
 <td valign="top"><b><a href="unassignedattachbleed/">UnassignedAttachBleed</a></b></td>
 <td valign="top">2026-11-01</td>

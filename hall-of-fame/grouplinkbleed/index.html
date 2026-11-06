@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8">
+<title>WeKan — Hall of Fame / GroupLinkBleed</title>
+<link rel="icon" href="../../wekan-favicon.png">
+<link rel="stylesheet" href="../../css/main.css">
+<link rel="stylesheet" href="../../font-awesome/css/font-awesome.min.css">
+</head><body class="hall-of-fame">
+<img src="../hof.svg" alt="Hall of Fame" width="300">
+<div class="action-buttons"><a class="button" href="../">Back to Hall of Fame Contents</a>
+<a class="button" href="../../">Back to WeKan Website</a></div>
+<div class="hof"><h1>GroupLinkBleed</h1>
+<table border="1"><tr><th>CVE</th><th>Icon</th><th>Vulnerability name</th><th>Date</th>
+<th>Responsible Security Disclosure by</th><th>Stars</th><th>Process</th><th>Vulnerabilities</th></tr>
+<tr>
+<td valign="top">-</td>
+<td class="icon" valign="top"><h2><span role="img" aria-label="GroupLinkBleed"><i class="fa fa-users" aria-hidden="true"></i> <i class="fa fa-link" aria-hidden="true"></i> <i class="fa fa-user-plus" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></span></h2></td>
+<td valign="top"><b><a href="./">GroupLinkBleed</a></b></td>
+<td valign="top">2026-11-06</td>
+<td class="by" valign="top"><b><a href="https://github.com/bhaswanthc">bhaswanthc</a></b></td>
+<td class="stars" valign="top"><img src="../GoldStar.png" width="30" height="30" alt="Gold star"><img src="../GoldStar.png" width="30" height="30" alt="Gold star"><img src="../GoldStar.png" width="30" height="30" alt="Gold star"><img src="../GoldStar.png" width="30" height="30" alt="Gold star"><img src="../GoldStar.png" width="30" height="30" alt="Gold star"></td>
+<td valign="top"><p>Reported privately by bhaswanthc through GitHub Security Advisory <a href="https://github.com/wekan/wekan/security/advisories/GHSA-v544-rmr5-38gx">GHSA-v544-rmr5-38gx</a>, with a proof of concept, a regression test and a suggested fix; validated and fixed by xet7.</p>
+</td>
+<td valign="top"><p>A board admin could write the board document directly over DDP instead of calling the board methods, and so skip their checks: attach an organization or team they do not belong to, so that its members saw the board and became its members, and add any user to the board past the invitation checks, including the administrator's same organization/team policy.</p>
+</td>
+</tr>
+</table>
+<h2 class="hof">Details</h2>
+<p>The board collection's allow rule lets a board admin update any field of their board. Two restrictions existed only inside Meteor methods: a board admin may add only the organizations and teams they belong to (<code>setBoardOrgs</code>, <code>setBoardTeams</code>, issue #5141), and <code>inviteUserToBoard</code> checks who may invite, refuses a disabled account and applies the administrator's "board members from the same organization/team only" policy (#6116). A client that called <code>/boards/update</code> or <code>/boards/insert</code> directly - <code>Boards.update(boardId, &#123; $set: &#123; teams: [...] &#125; &#125;)</code> in the browser console - reached none of those checks. A team attached that way showed the board to all its members in All Boards and made them members when the group's memberships were propagated; a user pushed into <code>members</code> was a member immediately. No data of another board was exposed. Affected v12.97 and earlier.</p>
+<p><strong>Fix:</strong> new deny rules in <code>server/permissions/boards.js</code> refuse any client insert or update that names <code>orgs</code>, <code>teams</code> or <code>domains</code> - the interface changes them only through the board methods, which write on the server where allow and deny rules do not apply - and any client update that adds a member to <code>members</code> or switches a removed member back on (<code>models/lib/boardWriteGuards.js</code>). Role changes and removals, which the client writes itself, still pass.</p>
+<h2>Detection</h2>
+<p>A refused write is recorded in Admin Panel / Problems as GroupLinkBleed (keys <code>authz.group-link</code> and <code>authz.member-add</code>). The interface never makes these writes, so only a client bypassing it reaches the refusal. Medium severity: it never disables the account.</p>
+<h2>Verification</h2>
+<p>tests/groupLinkBleed.test.cjs runs the real deny rules against the reporter's writes and against every write the client legitimately makes, and fails if a board field guarded only by a method is left writable by the client. tests/playwright/specs/group-link-bleed.e2e.js replays the attack over DDP against a running server.</p>
+<p><a href="https://github.com/wekan/wekan/commit/87c4501ced">Source fix and regression coverage</a></p>
+</div></body></html>
