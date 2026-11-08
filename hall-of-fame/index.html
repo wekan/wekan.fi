@@ -124,6 +124,22 @@
 </tr>
 <tr>
 <td valign="top">-</td>
+<td class="icon" valign="top"><h2><span role="img" aria-label="UnassignedArchiveBleed"><i class="fa fa-archive" aria-hidden="true"></i> <i class="fa fa-user-times" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></span></h2></td>
+<td valign="top"><b><a href="unassignedarchivebleed/">UnassignedArchiveBleed</a></b></td>
+<td valign="top">2026-11-08</td>
+<td class="by" valign="top"><b><a href="https://github.com/tsurutanmen">tsurutanmen</a></b></td>
+<td class="stars" valign="top"><img src="GoldStar.png" width="30" height="30" alt="Gold star"><img src="GoldStar.png" width="30" height="30" alt="Gold star"><img src="GoldStar.png" width="30" height="30" alt="Gold star"><img src="GoldStar.png" width="30" height="30" alt="Gold star"><img src="GoldStar.png" width="30" height="30" alt="Gold star"></td>
+<td valign="top"><details><summary>Process</summary>
+
+<p>Reported privately by tsurutanmen through GitHub Security Advisory <a href="https://github.com/wekan/wekan/security/advisories/GHSA-6xqf-jh8x-4wxc">GHSA-6xqf-jh8x-4wxc</a>, from a read-only review of the source with the affected lines and a suggested fix; validated and fixed by xet7.</p>
+</details></td>
+<td valign="top"><details><summary>Details</summary>
+
+<p>A member with the <em>Normal, assigned only</em> role could archive any card on the board, including cards not assigned to them and cards they cannot see, with the <code>archiveSelectedCards</code> method, and turn any card into a linked-board card with <code>createBoardFromCard</code>: both asked only for write access to the board.</p><ul><li>CWE-863. Moderate severity. No CVE assigned yet. Fix prepared for the Upcoming release.</li><li><a href="unassignedarchivebleed/">More details</a></li></ul>
+</details></td>
+</tr>
+<tr>
+<td valign="top">-</td>
 <td class="icon" valign="top"><h2><span role="img" aria-label="UnassignedAttachBleed"><i class="fa fa-paperclip" aria-hidden="true"></i> <i class="fa fa-user-times" aria-hidden="true"></i> <i class="fa fa-trash" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></span></h2></td>
 <td valign="top"><b><a href="unassignedattachbleed/">UnassignedAttachBleed</a></b></td>
 <td valign="top">2026-11-01</td>

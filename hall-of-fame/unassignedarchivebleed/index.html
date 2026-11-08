@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8">
+<title>WeKan — Hall of Fame / UnassignedArchiveBleed</title>
+<link rel="icon" href="../../wekan-favicon.png">
+<link rel="stylesheet" href="../../css/main.css">
+<link rel="stylesheet" href="../../font-awesome/css/font-awesome.min.css">
+</head><body class="hall-of-fame">
+<img src="../hof.svg" alt="Hall of Fame" width="300">
+<div class="action-buttons"><a class="button" href="../">Back to Hall of Fame Contents</a>
+<a class="button" href="../../">Back to WeKan Website</a></div>
+<div class="hof"><h1>UnassignedArchiveBleed</h1>
+<table border="1"><tr><th>CVE</th><th>Icon</th><th>Vulnerability name</th><th>Date</th>
+<th>Responsible Security Disclosure by</th><th>Stars</th><th>Process</th><th>Vulnerabilities</th></tr>
+<tr>
+<td valign="top">-</td>
+<td class="icon" valign="top"><h2><span role="img" aria-label="UnassignedArchiveBleed"><i class="fa fa-archive" aria-hidden="true"></i> <i class="fa fa-user-times" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></span></h2></td>
+<td valign="top"><b><a href="./">UnassignedArchiveBleed</a></b></td>
+<td valign="top">2026-11-08</td>
+<td class="by" valign="top"><b><a href="https://github.com/tsurutanmen">tsurutanmen</a></b></td>
+<td class="stars" valign="top"><img src="../GoldStar.png" width="30" height="30" alt="Gold star"><img src="../GoldStar.png" width="30" height="30" alt="Gold star"><img src="../GoldStar.png" width="30" height="30" alt="Gold star"><img src="../GoldStar.png" width="30" height="30" alt="Gold star"><img src="../GoldStar.png" width="30" height="30" alt="Gold star"></td>
+<td valign="top"><p>Reported privately by tsurutanmen through GitHub Security Advisory <a href="https://github.com/wekan/wekan/security/advisories/GHSA-6xqf-jh8x-4wxc">GHSA-6xqf-jh8x-4wxc</a>, from a read-only review of the source with the affected lines and a suggested fix; validated and fixed by xet7.</p>
+</td>
+<td valign="top"><p>A member with the <em>Normal, assigned only</em> role could archive any card on the board, including cards not assigned to them and cards they cannot see, with the <code>archiveSelectedCards</code> method, and turn any card into a linked-board card with <code>createBoardFromCard</code>: both asked only for write access to the board.</p>
+</td>
+</tr>
+</table>
+<h2 class="hof">Details</h2>
+<p>A board member with an assigned-only role (<em>Normal, assigned only</em>) sees and changes only the cards assigned to them. The role has the board's <code>write</code> capability, and the DDP methods <code>archiveSelectedCards(boardId, cardIds)</code> and <code>createBoardFromCard(cardId, title)</code> asked for nothing more. Such a member who knew a card's id - from a link shared with them, or from before their role was changed - archived that card and its subtasks, so hiding another member's work, or turned the card into a link to a new board. The REST routes and the other card methods (copy, save as template, the collection writes) already applied the card rule; these two did not. Nothing was disclosed and nothing was deleted permanently: an archived card can be restored.</p>
+<p><strong>Fix:</strong> after the board check, both methods also ask <code>assignedOnlyAllowsCard</code>, as <code>copyCard</code> does: an assigned-only member changes only a card assigned to them. <code>archiveSelectedCards</code> checks every card of the selection before it archives the first, so a refused selection changes nothing.</p>
+<h2>Detection</h2>
+<p>A refusal is recorded in Admin Panel / Problems as UnassignedArchiveBleed (key <code>authz.assigned-card-write</code>). The interface never offers an assigned-only member a card that is not theirs, so only a caller using an id from elsewhere reaches the refusal. Medium severity: it never disables the account.</p>
+<h2>Verification</h2>
+<p>tests/assignedCardMethods.test.cjs drives the decision through the reported case, checks that both methods ask before their first write, and scans every server method that takes a card id: none may decide by the board's write access alone. tests/playwright/specs/assigned-card-methods.e2e.js replays the reporter's calls against a running server.</p>
+<p><a href="https://github.com/wekan/wekan/commit/1513b2e98c">Source fix and regression coverage</a></p>
+</div></body></html>
