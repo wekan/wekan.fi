@@ -1,5 +1,13 @@
 # Upcoming wekan.fi release
 
+- Deploy: the UnassignedArchiveBleed Hall of Fame commit stopped the deploy in
+  its source audit, because the new page's GitHub links - the reporter
+  tsurutanmen, GHSA-6xqf-jh8x-4wxc and the fix commit 1513b2e98c - were not in
+  releases/risk-baseline.json. They are now allowed as exact URLs on that page
+  and the advisory on the index only. tests/riskAudit.test.py pins the exact
+  URLs, refuses them in code, on another page and as near misses. Thanks to
+  xet7.
+
 - Hall of Fame: CreateBleed, reported by tsurutanmen through
   [GHSA-qcfm-2g4w-wqcc](https://github.com/wekan/wekan/security/advisories/GHSA-qcfm-2g4w-wqcc):
   "Only admins can create boards" was checked only by the Add Board form, so
