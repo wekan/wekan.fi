@@ -126,3 +126,6 @@ mongo-tools-patches/
 
 # Generated on the Windows single-EXE runner (releases/append-windows-payload.mjs --manifest)
 wekan-real-files.h
+
+# Python cache
+__pycache__
