@@ -1,5 +1,13 @@
 # Upcoming wekan.fi release
 
+- Hall of Fame: ListLockBleed, reported by tsurutanmen through
+  [GHSA-4734-8vrg-8j3w](https://github.com/wekan/wekan/security/advisories/GHSA-4734-8vrg-8j3w):
+  a list that refused a role write access (#4527) did not refuse that role's
+  checklist and checklist-item REST writes. Its reporter, advisory and fix
+  commit links are allowed as exact URLs on its page, and the advisory on the
+  index, in releases/risk-baseline.json; tests/riskAudit.test.py pins them.
+  Thanks to tsurutanmen and xet7.
+
 - Deploy: the UnassignedArchiveBleed Hall of Fame commit stopped the deploy in
   its source audit, because the new page's GitHub links - the reporter
   tsurutanmen, GHSA-6xqf-jh8x-4wxc and the fix commit 1513b2e98c - were not in

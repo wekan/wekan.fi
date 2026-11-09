@@ -124,6 +124,22 @@
 </tr>
 <tr>
 <td valign="top">-</td>
+<td class="icon" valign="top"><h2><span role="img" aria-label="ListLockBleed"><i class="fa fa-list" aria-hidden="true"></i> <i class="fa fa-lock" aria-hidden="true"></i> <i class="fa fa-check-square-o" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></span></h2></td>
+<td valign="top"><b><a href="listlockbleed/">ListLockBleed</a></b></td>
+<td valign="top">2026-11-09</td>
+<td class="by" valign="top"><b><a href="https://github.com/tsurutanmen">tsurutanmen</a></b></td>
+<td class="stars" valign="top"><img src="GoldStar.png" width="30" height="30" alt="Gold star"><img src="GoldStar.png" width="30" height="30" alt="Gold star"><img src="GoldStar.png" width="30" height="30" alt="Gold star"><img src="GoldStar.png" width="30" height="30" alt="Gold star"><img src="GoldStar.png" width="30" height="30" alt="Gold star"></td>
+<td valign="top"><details><summary>Process</summary>
+
+<p>Reported privately by tsurutanmen through GitHub Security Advisory <a href="https://github.com/wekan/wekan/security/advisories/GHSA-4734-8vrg-8j3w">GHSA-4734-8vrg-8j3w</a>, from a read-only review of the source with the affected lines and a suggested fix; validated and fixed by xet7.</p>
+</details></td>
+<td valign="top"><details><summary>Details</summary>
+
+<p>When a board admin refused a role write access in one list (<code>roleExceptions</code>, #4527), a member with that role could still create, rename, tick and delete the checklists and checklist items of that list's cards through the REST API: the six checklist routes asked only for write access to the board.</p><ul><li>CWE-863. Low severity. No CVE assigned yet. Fix prepared for the Upcoming release.</li><li><a href="listlockbleed/">More details</a></li></ul>
+</details></td>
+</tr>
+<tr>
+<td valign="top">-</td>
 <td class="icon" valign="top"><h2><span role="img" aria-label="UnassignedArchiveBleed"><i class="fa fa-archive" aria-hidden="true"></i> <i class="fa fa-user-times" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></span></h2></td>
 <td valign="top"><b><a href="unassignedarchivebleed/">UnassignedArchiveBleed</a></b></td>
 <td valign="top">2026-11-08</td>

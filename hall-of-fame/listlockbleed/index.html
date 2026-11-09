@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8">
+<title>WeKan — Hall of Fame / ListLockBleed</title>
+<link rel="icon" href="../../wekan-favicon.png">
+<link rel="stylesheet" href="../../css/main.css">
+<link rel="stylesheet" href="../../font-awesome/css/font-awesome.min.css">
+</head><body class="hall-of-fame">
+<img src="../hof.svg" alt="Hall of Fame" width="300">
+<div class="action-buttons"><a class="button" href="../">Back to Hall of Fame Contents</a>
+<a class="button" href="../../">Back to WeKan Website</a></div>
+<div class="hof"><h1>ListLockBleed</h1>
+<table border="1"><tr><th>CVE</th><th>Icon</th><th>Vulnerability name</th><th>Date</th>
+<th>Responsible Security Disclosure by</th><th>Stars</th><th>Process</th><th>Vulnerabilities</th></tr>
+<tr>
+<td valign="top">-</td>
+<td class="icon" valign="top"><h2><span role="img" aria-label="ListLockBleed"><i class="fa fa-list" aria-hidden="true"></i> <i class="fa fa-lock" aria-hidden="true"></i> <i class="fa fa-check-square-o" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></span></h2></td>
+<td valign="top"><b><a href="./">ListLockBleed</a></b></td>
+<td valign="top">2026-11-09</td>
+<td class="by" valign="top"><b><a href="https://github.com/tsurutanmen">tsurutanmen</a></b></td>
+<td class="stars" valign="top"><img src="../GoldStar.png" width="30" height="30" alt="Gold star"><img src="../GoldStar.png" width="30" height="30" alt="Gold star"><img src="../GoldStar.png" width="30" height="30" alt="Gold star"><img src="../GoldStar.png" width="30" height="30" alt="Gold star"><img src="../GoldStar.png" width="30" height="30" alt="Gold star"></td>
+<td valign="top"><p>Reported privately by tsurutanmen through GitHub Security Advisory <a href="https://github.com/wekan/wekan/security/advisories/GHSA-4734-8vrg-8j3w">GHSA-4734-8vrg-8j3w</a>, from a read-only review of the source with the affected lines and a suggested fix; validated and fixed by xet7.</p>
+</td>
+<td valign="top"><p>When a board admin refused a role write access in one list (<code>roleExceptions</code>, #4527), a member with that role could still create, rename, tick and delete the checklists and checklist items of that list's cards through the REST API: the six checklist routes asked only for write access to the board.</p>
+</td>
+</tr>
+</table>
+<h2 class="hof">Details</h2>
+<p>A board admin can give a list its own rule for a role (<code>list.roleExceptions</code>, #4527): for example, Normal members may read a list but not write in it. The card and comment REST routes and the DDP checklist methods applied that rule. The six checklist and checklist-item REST routes did not: they checked only the board's <code>write</code> capability. So a member the list refused, holding an API token, could still add, rename and delete the checklists and items of that list's cards, and tick or untick the items. Nothing outside the board was reached, and the member already had write access to the rest of the board.</p>
+<p><strong>Fix:</strong> after the board and card checks, the POST, PUT and DELETE routes for checklists and checklist items also call <code>assertListNotRefused</code> with the card's list, as the card routes do, and answer 403. A refused call changes nothing.</p>
+<h2>Detection</h2>
+<p>A refusal is recorded in Admin Panel / Problems as ListLockBleed (key <code>authz.list-locked</code>). The interface never offers a write in a list that refuses it, so only a direct API call reaches the refusal. Medium severity in Problems: it never disables the account.</p>
+<h2>Verification</h2>
+<p>tests/listPermissions.test.cjs scans every REST write route of the tree that names a card and fails on one that does not ask the card's list. It also checks that the refusal is recorded. tests/playwright/specs/list-lock-checklists.e2e.js replays all six writes against a running server: in a locked list they are refused and change nothing; in an open list the same member writes, and the board admin writes in the locked one.</p>
+<p><a href="https://github.com/wekan/wekan/commit/214b20e7ad">Source fix and regression coverage</a></p>
+</div></body></html>

@@ -67,6 +67,40 @@ class RiskAudit(unittest.TestCase):
                     with self.assertRaisesRegex(ValueError, 'new URL'):
                         r.inspect(self.root, self.policy)
             page.unlink()
+    def test_listlockbleed_links_are_exact_and_page_scoped(self):
+        policy = json.loads((ROOT/'releases/risk-baseline.json').read_text())
+        self.policy['allowUrlPatternsByFile'] = policy['allowUrlPatternsByFile']
+        reporter = 'https://github.com/tsurutanmen'
+        advisory = 'https://github.com/wekan/wekan/security/advisories/GHSA-4734-8vrg-8j3w'
+        commit = 'https://github.com/wekan/wekan/commit/214b20e7ad'
+        for name, urls in [('hall-of-fame/listlockbleed/index.html', [reporter, advisory, commit]),
+                           ('hall-of-fame/index.html', [reporter, advisory])]:
+            page = self.root/name
+            page.parent.mkdir(parents=True, exist_ok=True)
+            for url in urls:
+                self.assertIn(url, (ROOT/name).read_text())
+            page.write_text('\n'.join('<a href="'+u+'">Reference</a>' for u in urls))
+            r.inspect(self.root, self.policy)
+            for url in urls:
+                with self.subTest(page=name, url=url):
+                    self.file.write_text('fetch("'+url+'")')
+                    with self.assertRaisesRegex(ValueError, 'main.js: new URL'):
+                        r.inspect(self.root, self.policy)
+            self.file.write_text('console.log("local diagnostics");')
+            for other in [advisory+'0', advisory+'?report=1',
+                          commit.replace('214b20e7ad', '214b20e7ae'),
+                          advisory.replace('/wekan/wekan/', '/other/repo/')]:
+                with self.subTest(page=name, url=other):
+                    page.write_text('<a href="'+other+'">Unreviewed</a>')
+                    with self.assertRaisesRegex(ValueError, 'new URL'):
+                        r.inspect(self.root, self.policy)
+            page.unlink()
+        # The new page's links are not allowed on an unrelated page.
+        page = self.root/'hall-of-fame/createbleed/index.html'
+        page.parent.mkdir(parents=True, exist_ok=True)
+        page.write_text('<a href="'+commit+'">Elsewhere</a>')
+        with self.assertRaisesRegex(ValueError, 'createbleed/index.html: new URL'):
+            r.inspect(self.root, self.policy)
     def test_unassignedarchivebleed_links_are_exact_and_page_scoped(self):
         policy = json.loads((ROOT/'releases/risk-baseline.json').read_text())
         self.policy['allowUrlPatternsByFile'] = policy['allowUrlPatternsByFile']
