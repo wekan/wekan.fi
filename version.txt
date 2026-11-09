@@ -1,4 +1,4 @@
-WeKan 13.03
+WeKan 13.04
 FerretDB 1.107.0
 Meteor 3.6-rc.1
 Node 26.13.0
