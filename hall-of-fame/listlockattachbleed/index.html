@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8">
+<title>WeKan — Hall of Fame / ListLockAttachBleed</title>
+<link rel="icon" href="../../wekan-favicon.png">
+<link rel="stylesheet" href="../../css/main.css">
+<link rel="stylesheet" href="../../font-awesome/css/font-awesome.min.css">
+</head><body class="hall-of-fame">
+<img src="../hof.svg" alt="Hall of Fame" width="300">
+<div class="action-buttons"><a class="button" href="../">Back to Hall of Fame Contents</a>
+<a class="button" href="../../">Back to WeKan Website</a></div>
+<div class="hof"><h1>ListLockAttachBleed</h1>
+<table border="1"><tr><th>CVE</th><th>Icon</th><th>Vulnerability name</th><th>Date</th>
+<th>Responsible Security Disclosure by</th><th>Stars</th><th>Process</th><th>Vulnerabilities</th></tr>
+<tr>
+<td valign="top">-</td>
+<td class="icon" valign="top"><h2><span role="img" aria-label="ListLockAttachBleed"><i class="fa fa-list" aria-hidden="true"></i> <i class="fa fa-lock" aria-hidden="true"></i> <i class="fa fa-paperclip" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></span></h2></td>
+<td valign="top"><b><a href="./">ListLockAttachBleed</a></b></td>
+<td valign="top">2026-11-11</td>
+<td class="by" valign="top"><b>Furkan Derse</b></td>
+<td class="stars" valign="top"><img src="../GoldStar.png" width="30" height="30" alt="Gold star"><img src="../GoldStar.png" width="30" height="30" alt="Gold star"><img src="../GoldStar.png" width="30" height="30" alt="Gold star"></td>
+<td valign="top"><p>Reported privately by Furkan Derse by email, with the affected lines, a proof of concept and a suggested fix; validated and fixed by xet7. The report arrived without a GitHub Security Advisory: the researcher will add one when GitHub's advisory creation limit allows, and the GHSA is awaited.</p>
+</td>
+<td valign="top"><p>When a board admin refused a role write access in one list (<code>roleExceptions</code>, #4527), a normal member could still upload, delete, copy and move the attachments of that list's cards through the attachment API, over REST and DDP: those routes asked for board write access and the assigned-only rule, never the card's list.</p>
+</td>
+</tr>
+</table>
+<h2 class="hof">Details</h2>
+<p>A board admin can give a list its own rule for a role (<code>list.roleExceptions</code>, #4527): for example, Normal members may read a list but not write in it. The card screen, the card and checklist routes (<a href="../listlockbleed/">ListLockBleed</a>) and the interface's own attachment upload and delete applied that rule. The attachment API did not: <code>POST /api/attachment/upload</code>, <code>DELETE /api/attachment/delete/:attachmentId</code>, <code>POST /api/attachment/copy</code>, <code>POST /api/attachment/move</code> and their DDP methods <code>api.attachment.upload</code>, <code>.delete</code>, <code>.copy</code> and <code>.move</code> asked for the board's <code>write</code> capability and <code>mayWriteCardAttachment</code>, which for a member who is not assigned-only allows every card. So a normal member the list refused, holding an API token or a session, could still add files to that list's cards, delete theirs, and copy or move files onto and off them. Nothing outside the board was reached, and the member already had write access to the rest of the board.</p>
+<p><strong>Fix:</strong> every attachment write that names a card also asks <code>mayWriteInCardList</code> with that card (<code>server/lib/assignedOnlyAttachments.js</code>), beside the board and assigned-only checks, and answers 403 (REST) or <code>not-authorized</code> (DDP). A move asks both the card it takes the file from and the card it puts it on. The card's own board decides, whatever board the caller named. As for the REST card routes, only a list's refusal counts: a list's grant does not open the API to a role the board does not let write. A refused call changes nothing.</p>
+<h2>Detection</h2>
+<p>A refusal is recorded in Admin Panel / Problems as ListLockAttachBleed (key <code>authz.list-locked-attachment</code>), with the refusing route as its source. The interface never offers an attachment write in a list that refuses it, so only a direct API call reaches the refusal. Medium severity in Problems: it never disables the account.</p>
+<h2>Verification</h2>
+<p>tests/listLockAttachments.test.cjs runs the guard itself on the reporter's board, a normal member and a list refusing <code>normal.write</code>, for all eight routes. It checks the negative cases (an open list, a granting list, the board admin, a board-level file, a caller naming another board) and the record in Problems. It also scans the whole tree, so that every <code>mayWriteCardAttachment</code> call is paired with the list check under the same source. tests/playwright/specs/list-lock-attachments.e2e.js replays upload, delete, copy and move, and the DDP delete, against a running server: in a locked list they are refused and change nothing; in an open list the same member writes, and the board admin writes in the locked one.</p>
+<p><a href="https://github.com/wekan/wekan/commit/7bb3e13ba9">Source fix and regression coverage</a></p>
+</div></body></html>
