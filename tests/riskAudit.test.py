@@ -101,6 +101,35 @@ class RiskAudit(unittest.TestCase):
         page.write_text('<a href="'+commit+'">Elsewhere</a>')
         with self.assertRaisesRegex(ValueError, 'createbleed/index.html: new URL'):
             r.inspect(self.root, self.policy)
+    def test_listlockattachbleed_link_is_exact_and_page_scoped(self):
+        # The deploy of ca3bd21 stopped here: the new page's fix commit link
+        # was not in the baseline.
+        policy = json.loads((ROOT/'releases/risk-baseline.json').read_text())
+        self.policy['allowUrlPatternsByFile'] = policy['allowUrlPatternsByFile']
+        commit = 'https://github.com/wekan/wekan/commit/7bb3e13ba9'
+        name = 'hall-of-fame/listlockattachbleed/index.html'
+        self.assertIn(commit, (ROOT/name).read_text())
+        page = self.root/name
+        page.parent.mkdir(parents=True, exist_ok=True)
+        page.write_text('<a href="'+commit+'">Source fix</a>')
+        r.inspect(self.root, self.policy)
+        self.file.write_text('fetch("'+commit+'")')
+        with self.assertRaisesRegex(ValueError, 'main.js: new URL'):
+            r.inspect(self.root, self.policy)
+        self.file.write_text('console.log("local diagnostics");')
+        for other in [commit+'0', commit+'?report=1',
+                      commit.replace('7bb3e13ba9', '7bb3e13ba8'),
+                      commit.replace('/wekan/wekan/', '/other/repo/')]:
+            with self.subTest(url=other):
+                page.write_text('<a href="'+other+'">Unreviewed</a>')
+                with self.assertRaisesRegex(ValueError, 'new URL'):
+                    r.inspect(self.root, self.policy)
+        page.unlink()
+        other_page = self.root/'hall-of-fame/listlockbleed/index.html'
+        other_page.parent.mkdir(parents=True, exist_ok=True)
+        other_page.write_text('<a href="'+commit+'">Elsewhere</a>')
+        with self.assertRaisesRegex(ValueError, 'listlockbleed/index.html: new URL'):
+            r.inspect(self.root, self.policy)
     def test_unassignedarchivebleed_links_are_exact_and_page_scoped(self):
         policy = json.loads((ROOT/'releases/risk-baseline.json').read_text())
         self.policy['allowUrlPatternsByFile'] = policy['allowUrlPatternsByFile']

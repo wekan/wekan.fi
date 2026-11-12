@@ -11308,6 +11308,9 @@
       "https://github\\.com/tsurutanmen",
       "https://github\\.com/wekan/wekan/commit/214b20e7ad",
       "https://github\\.com/wekan/wekan/security/advisories/GHSA\\-4734\\-8vrg\\-8j3w"
+    ],
+    "hall-of-fame/listlockattachbleed/index.html": [
+      "https://github\\.com/wekan/wekan/commit/7bb3e13ba9"
     ]
   }
 }
