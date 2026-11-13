@@ -1,5 +1,16 @@
 # Upcoming wekan.fi release
 
+- Deploy: the v13.08, v13.09 and v13.10 API pages stopped the deploy in its
+  source audit, because they load Redoc v3.1.0 from cdn.redocly.com and only
+  the v3.0.1 bundle was an allowed URL. The WeKan API generator renders with
+  @redocly/cli@latest, so the pinned Redoc changes when Redocly releases, and
+  an exact URL would stop a deploy again at the next bump. The audit now also
+  takes URL patterns scoped by a path glob (allowUrlPatternsByPath, matched one
+  path segment at a time), and api/v*/index.html allows an exact-version
+  cdn.redocly.com Redoc standalone bundle and nothing else.
+  tests/riskAudit.test.py refuses other hosts, files, deeper pages, query
+  strings and a "latest" bundle, and fails with the old audit. Thanks to xet7.
+
 - Hall of Fame: ListLockBleed, reported by tsurutanmen through
   [GHSA-4734-8vrg-8j3w](https://github.com/wekan/wekan/security/advisories/GHSA-4734-8vrg-8j3w):
   a list that refused a role write access (#4527) did not refuse that role's

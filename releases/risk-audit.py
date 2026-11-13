@@ -6,6 +6,7 @@ keywords and new URL literals fail with paths/evidence. Baseline edits are ordin
 maintainer configuration; no AI approval or whole-dependency review is required.
 """
 import argparse
+import fnmatch
 import hashlib
 import json
 from pathlib import Path
@@ -24,6 +25,15 @@ KEYWORDS = ('TelemetryClient', 'ThrottledAnalytics', 'sendTelemetry', 'emitApiCa
 # Standard package distribution URLs are dependency resolution, not usage reporting.
 REGISTRY = ('https://registry.npmjs.org/', 'https://proxy.golang.org/', 'https://sum.golang.org/')
 URL = re.compile(r'https?://[^\s\x00-\x20<>"\'`\\)\]}]+')
+
+
+def path_glob_matches(glob, name):
+    """Match a relative path against a glob ONE SEGMENT AT A TIME, so `*` never
+    crosses a `/`: api/v*/index.html is api/v13.10/index.html, never
+    api/v1/anything/index.html."""
+    globs, names = glob.split('/'), name.split('/')
+    return len(globs) == len(names) and all(
+        fnmatch.fnmatchcase(n, g) for g, n in zip(globs, names))
 
 
 def collect(root, policy):
@@ -86,6 +96,15 @@ def inspect(root, policy):
         for url in entry['urls']:
             allowed = any(re.fullmatch(pattern, url) for pattern in
                           policy.get('allowUrlPatternsByFile', {}).get(name, []))
+            # A page that is written anew every release (api/v13.10/index.html)
+            # cannot be listed by name ahead of time, so these patterns are
+            # scoped by a path glob instead; each pattern still has to match the
+            # WHOLE URL.
+            allowed = allowed or any(
+                re.fullmatch(pattern, url)
+                for glob, patterns in policy.get('allowUrlPatternsByPath', {}).items()
+                if path_glob_matches(glob, name)
+                for pattern in patterns)
             if initialized and url not in known_urls and not allowed:
                 # Do not expose query strings or credentials in logs.
                 from urllib.parse import urlsplit

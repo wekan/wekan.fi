@@ -16,6 +16,11 @@
   "allowUrls": [
     "https://cdn.redocly.com/redoc/v3.0.1/bundles/redoc.standalone.js"
   ],
+  "allowUrlPatternsByPath": {
+    "api/v*/index.html": [
+      "https://cdn\\.redocly\\.com/redoc/v\\d+\\.\\d+\\.\\d+/bundles/redoc\\.standalone\\.js"
+    ]
+  },
   "files": {
     ".github/workflows/release-all-missing.yml": {
       "sha256": "eeae140355693bf7987fe7704f788153e0a8771d52300390cbb320d5d9951a91",

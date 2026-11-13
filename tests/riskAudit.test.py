@@ -39,6 +39,40 @@ class RiskAudit(unittest.TestCase):
             self.file.write_text('fetch("'+url+'")')
             with self.assertRaisesRegex(ValueError, 'new URL'): r.inspect(self.root, self.policy)
 
+    def test_api_pages_allow_only_an_exact_version_redoc_bundle(self):
+        # The API docs are rendered with @redocly/cli@latest, so each release's
+        # page pins whichever Redoc it ships (v3.0.1, then v3.1.0). The
+        # release must not stop on that, and must still stop on anything else.
+        policy = json.loads((ROOT/'releases/risk-baseline.json').read_text())
+        self.policy['allowUrlPatternsByPath'] = policy['allowUrlPatternsByPath']
+        bundle = 'https://cdn.redocly.com/redoc/v{}/bundles/redoc.standalone.js'
+        for real in ['api/v13.08/index.html', 'api/v13.10/index.html']:
+            self.assertIn(bundle.format('3.1.0'), (ROOT/real).read_text())
+        page = self.root/'api/v99.01/index.html'
+        page.parent.mkdir(parents=True)
+        for version in ['3.0.1', '3.1.0', '4.12.7']:
+            page.write_text('<script src="'+bundle.format(version)+'"></script>')
+            r.inspect(self.root, self.policy)
+        for url in [bundle.format('latest'), bundle.format('3.1.0')+'?report=1',
+                    'https://cdn.redocly.com/redoc/v3.1.0/bundles/other.js',
+                    'https://evil.example/redoc/v3.1.0/bundles/redoc.standalone.js',
+                    'https://cdn.redocly.com.evil.example/redoc/v3.1.0/bundles/redoc.standalone.js']:
+            with self.subTest(url=url):
+                page.write_text('<script src="'+url+'"></script>')
+                with self.assertRaisesRegex(ValueError, 'api/v99.01/index.html: new URL'):
+                    r.inspect(self.root, self.policy)
+        page.write_text('')
+        # The allowance belongs to the API pages only: not other files, and not
+        # a page nested deeper under api/ (the glob never crosses a "/").
+        for name in ['main.js', 'api/v99.01/x/index.html', 'apiv1/index.html']:
+            with self.subTest(name=name):
+                other = self.root/name
+                other.parent.mkdir(parents=True, exist_ok=True)
+                other.write_text('<script src="'+bundle.format('3.1.0')+'"></script>')
+                with self.assertRaisesRegex(ValueError, name+': new URL'):
+                    r.inspect(self.root, self.policy)
+                other.write_text('')
+
     def test_createbleed_links_are_exact_and_page_scoped(self):
         policy = json.loads((ROOT/'releases/risk-baseline.json').read_text())
         self.policy['allowUrlPatternsByFile'] = policy['allowUrlPatternsByFile']
