@@ -52,7 +52,7 @@ rows were updated together, including legacy five-column rows. Repeated names
 and follow-ups are matched by date; older reports are not conflated with newer
 advisories. Unrelated cross-links do not receive another vulnerability's award.
 
-**21 entries remain evidence-limited**, marked below. Two-star assignments in
+**16 entries remain evidence-limited**, marked below. Two-star assignments in
 those rows reflect the available public evidence and require historical/private
 confirmation. No one-star award is inferred without an email and an unanswered
 additional-information request. InvisibleBleed's page describes a chat report
@@ -138,11 +138,11 @@ because they are missing from the public catalogue.
 | CrashBleed | 2026-07-26 | 2 | 5 | [GHSA-3gcg-g6rf-w2rx](https://github.com/wekan/wekan/security/advisories/GHSA-3gcg-g6rf-w2rx) | Published GHSA details and suggested remediation verified. |
 | ZipBleed | 2026-07-25 | 1 | 3 | No matched published advisory | No matching GHSA; code review/patch contribution recorded (not a researcher advisory). |
 | ExportBleed | 2026-07-22 | 1 | 5 | [GHSA-8r5p-4q9j-f5jx](https://github.com/wekan/wekan/security/advisories/GHSA-8r5p-4q9j-f5jx) | Published GHSA details and suggested remediation verified. |
-| RedirectBleed | 2026-07-19 | 1 | 2 | No matched published advisory | No matching GHSA and no researcher-suggested fix documented; private/historical evidence may change this. **Evidence-limited.** |
-| SourceBleed | 2026-07-19 | 1 | 2 | No matched published advisory | No matching GHSA and no researcher-suggested fix documented; private/historical evidence may change this. **Evidence-limited.** |
-| LiveBleed | 2026-07-19 | 1 | 2 | No matched published advisory | No matching GHSA and no researcher-suggested fix documented; private/historical evidence may change this. **Evidence-limited.** |
-| CasRaceBleed | 2026-07-19 | 1 | 2 | No matched published advisory | No matching GHSA and no researcher-suggested fix documented; private/historical evidence may change this. **Evidence-limited.** |
-| MetricsBleed | 2026-07-19 | 1 | 2 | No matched published advisory | No matching GHSA and no researcher-suggested fix documented; private/historical evidence may change this. **Evidence-limited.** |
+| RedirectBleed | 2026-07-19 | 2 | 5 | [GHSA-g98f-44gc-hqcc](https://github.com/wekan/wekan/security/advisories/GHSA-g98f-44gc-hqcc) | The private report later arrived as a GHSA (triage, 2026-11-16) with details, a proof of concept and a suggested fix; the fix was already in WeKan and was verified against the GHSA. |
+| SourceBleed | 2026-07-19 | 2 | 5 | [GHSA-x6fh-wrr5-3426](https://github.com/wekan/wekan/security/advisories/GHSA-x6fh-wrr5-3426) | The private report later arrived as a GHSA (triage, 2026-11-16) with details, a proof of concept and a suggested fix; the fix was already in WeKan and was verified against the GHSA. |
+| LiveBleed | 2026-07-19 | 2 | 5 | [GHSA-28hr-j65r-grj2](https://github.com/wekan/wekan/security/advisories/GHSA-28hr-j65r-grj2) | The private report later arrived as a GHSA (triage, 2026-11-16) with details, a proof of concept and a suggested fix; the fix was already in WeKan and was verified against the GHSA. |
+| CasRaceBleed | 2026-07-19 | 2 | 5 | [GHSA-mrhx-8xm7-chrq](https://github.com/wekan/wekan/security/advisories/GHSA-mrhx-8xm7-chrq) | The private report later arrived as a GHSA (triage, 2026-11-16) with details, a proof of concept and a suggested fix; the fix was already in WeKan and was verified against the GHSA. |
+| MetricsBleed | 2026-07-19 | 2 | 5 | [GHSA-83qj-w8mp-w4qf](https://github.com/wekan/wekan/security/advisories/GHSA-83qj-w8mp-w4qf) | The private report later arrived as a GHSA (triage, 2026-11-16) with details, a proof of concept and a suggested fix; the fix was already in WeKan and was verified against the GHSA. |
 | ImpersonateBleed | 2026-07-19 | 1 | 2 | No matched published advisory | No matching GHSA and no researcher-suggested fix documented; private/historical evidence may change this. **Evidence-limited.** |
 | InviteBleed | 2026-07-19 | 1 | 2 | No matched published advisory | No matching GHSA and no researcher-suggested fix documented; private/historical evidence may change this. **Evidence-limited.** |
 | SpliceBleed | 2026-07-22 | 2 | 3 | No matched published advisory | No matching GHSA; code review/patch contribution recorded (not a researcher advisory). |
