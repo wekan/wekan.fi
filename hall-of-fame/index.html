@@ -91,7 +91,7 @@
         <th width="19%">Vulnerabilities</th>
       </tr>
 <tr>
-<td valign="top">-</td>
+<td valign="top">CVE requested</td>
 <td class="icon" valign="top"><h2><span role="img" aria-label="RaceBleed"><i class="fa fa-random" aria-hidden="true"></i> <i class="fa fa-trash" aria-hidden="true"></i> <i class="fa fa-clock-o" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></span></h2></td>
 <td valign="top"><b><a href="racebleed/">RaceBleed</a></b></td>
 <td valign="top">2026-11-18</td>
@@ -103,7 +103,7 @@
 </details></td>
 <td valign="top"><details><summary>Details</summary>
 
-<p>A card DELETE racing a move of that card to another board destroyed the card&#39;s checklists, checklist items, comments and attachments, while the card itself survived on a board the deleter could not read: the children were deleted by card id first, and the card last, keyed on the board the caller was authorised for.</p><ul><li>CWE-367. Moderate severity. No CVE assigned yet. Fix prepared for the Upcoming release.</li><li><a href="racebleed/">More details</a></li></ul>
+<p>A card DELETE racing a move of that card to another board destroyed the card&#39;s checklists, checklist items, comments and attachments, while the card itself survived on a board the deleter could not read: the children were deleted by card id first, and the card last, keyed on the board the caller was authorised for.</p><ul><li>CWE-367. Moderate severity. CVE requested. Fix prepared for the Upcoming release.</li><li><a href="racebleed/">More details</a></li></ul>
 </details></td>
 </tr>
 <tr>
@@ -123,7 +123,7 @@
 </details></td>
 </tr>
 <tr>
-<td valign="top">-</td>
+<td valign="top">CVE requested</td>
 <td class="icon" valign="top"><h2><span role="img" aria-label="CreateBleed"><i class="fa fa-plus-square" aria-hidden="true"></i> <i class="fa fa-columns" aria-hidden="true"></i> <i class="fa fa-user-times" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></span></h2></td>
 <td valign="top"><b><a href="createbleed/">CreateBleed</a></b></td>
 <td valign="top">2026-11-07</td>
@@ -135,11 +135,11 @@
 </details></td>
 <td valign="top"><details><summary>Details</summary>
 
-<p>With "Only admins can create boards" switched on in Admin Panel / Settings / Visibility, a user who is not an admin could still create boards: the setting was checked only by the Add Board form, not by a board insert from the browser console, the REST API, an import, a copy, a clone or a card turned into a board.</p><ul><li>CWE-863. Low severity: the boards belong to their creator, and no other user's data is affected. No CVE assigned yet. Fix prepared for the Upcoming release.</li><li><a href="createbleed/">More details</a></li></ul>
+<p>With "Only admins can create boards" switched on in Admin Panel / Settings / Visibility, a user who is not an admin could still create boards: the setting was checked only by the Add Board form, not by a board insert from the browser console, the REST API, an import, a copy, a clone or a card turned into a board.</p><ul><li>CWE-863. Low severity: the boards belong to their creator, and no other user's data is affected. CVE requested. Fix prepared for the Upcoming release.</li><li><a href="createbleed/">More details</a></li></ul>
 </details></td>
 </tr>
 <tr>
-<td valign="top">-</td>
+<td valign="top">CVE requested</td>
 <td class="icon" valign="top"><h2><span role="img" aria-label="GroupLinkBleed"><i class="fa fa-users" aria-hidden="true"></i> <i class="fa fa-link" aria-hidden="true"></i> <i class="fa fa-user-plus" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></span></h2></td>
 <td valign="top"><b><a href="grouplinkbleed/">GroupLinkBleed</a></b></td>
 <td valign="top">2026-11-06</td>
@@ -151,11 +151,11 @@
 </details></td>
 <td valign="top"><details><summary>Details</summary>
 
-<p>A board admin could write the board document directly over DDP instead of calling the board methods, and so skip their checks: attach an organization or team they do not belong to, so that its members saw the board and became its members, and add any user to the board past the invitation checks, including the administrator's same organization/team policy.</p><ul><li>CWE-863. Moderate severity. No CVE assigned yet. Fix prepared for the Upcoming release.</li><li><a href="grouplinkbleed/">More details</a></li></ul>
+<p>A board admin could write the board document directly over DDP instead of calling the board methods, and so skip their checks: attach an organization or team they do not belong to, so that its members saw the board and became its members, and add any user to the board past the invitation checks, including the administrator's same organization/team policy.</p><ul><li>CWE-863. Moderate severity. CVE requested. Fix prepared for the Upcoming release.</li><li><a href="grouplinkbleed/">More details</a></li></ul>
 </details></td>
 </tr>
 <tr>
-<td valign="top">-</td>
+<td valign="top">CVE requested</td>
 <td class="icon" valign="top"><h2><span role="img" aria-label="ListLockBleed"><i class="fa fa-list" aria-hidden="true"></i> <i class="fa fa-lock" aria-hidden="true"></i> <i class="fa fa-check-square-o" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></span></h2></td>
 <td valign="top"><b><a href="listlockbleed/">ListLockBleed</a></b></td>
 <td valign="top">2026-11-09</td>
@@ -167,11 +167,11 @@
 </details></td>
 <td valign="top"><details><summary>Details</summary>
 
-<p>When a board admin refused a role write access in one list (<code>roleExceptions</code>, #4527), a member with that role could still create, rename, tick and delete the checklists and checklist items of that list's cards through the REST API: the six checklist routes asked only for write access to the board.</p><ul><li>CWE-863. Low severity. No CVE assigned yet. Fix prepared for the Upcoming release.</li><li><a href="listlockbleed/">More details</a></li></ul>
+<p>When a board admin refused a role write access in one list (<code>roleExceptions</code>, #4527), a member with that role could still create, rename, tick and delete the checklists and checklist items of that list's cards through the REST API: the six checklist routes asked only for write access to the board.</p><ul><li>CWE-863. Low severity. CVE requested. Fix prepared for the Upcoming release.</li><li><a href="listlockbleed/">More details</a></li></ul>
 </details></td>
 </tr>
 <tr>
-<td valign="top">-</td>
+<td valign="top">CVE requested</td>
 <td class="icon" valign="top"><h2><span role="img" aria-label="UnassignedArchiveBleed"><i class="fa fa-archive" aria-hidden="true"></i> <i class="fa fa-user-times" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></span></h2></td>
 <td valign="top"><b><a href="unassignedarchivebleed/">UnassignedArchiveBleed</a></b></td>
 <td valign="top">2026-11-08</td>
@@ -183,11 +183,11 @@
 </details></td>
 <td valign="top"><details><summary>Details</summary>
 
-<p>A member with the <em>Normal, assigned only</em> role could archive any card on the board, including cards not assigned to them and cards they cannot see, with the <code>archiveSelectedCards</code> method, and turn any card into a linked-board card with <code>createBoardFromCard</code>: both asked only for write access to the board.</p><ul><li>CWE-863. Moderate severity. No CVE assigned yet. Fix prepared for the Upcoming release.</li><li><a href="unassignedarchivebleed/">More details</a></li></ul>
+<p>A member with the <em>Normal, assigned only</em> role could archive any card on the board, including cards not assigned to them and cards they cannot see, with the <code>archiveSelectedCards</code> method, and turn any card into a linked-board card with <code>createBoardFromCard</code>: both asked only for write access to the board.</p><ul><li>CWE-863. Moderate severity. CVE requested. Fix prepared for the Upcoming release.</li><li><a href="unassignedarchivebleed/">More details</a></li></ul>
 </details></td>
 </tr>
 <tr>
-<td valign="top">-</td>
+<td valign="top">CVE requested</td>
 <td class="icon" valign="top"><h2><span role="img" aria-label="UnassignedAttachBleed"><i class="fa fa-paperclip" aria-hidden="true"></i> <i class="fa fa-user-times" aria-hidden="true"></i> <i class="fa fa-trash" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></span></h2></td>
 <td valign="top"><b><a href="unassignedattachbleed/">UnassignedAttachBleed</a></b></td>
 <td valign="top">2026-11-01</td>
@@ -199,11 +199,11 @@
 </details></td>
 <td valign="top"><details><summary>Details</summary>
 
-<p>A member with the <em>Normal, assigned only</em> role whose card assignment was removed could still add a file to that card and soft-delete its existing attachment through the REST attachment API, which asked only for write access to the board. Copy and move onto a card, and the same API over DDP, had the same gap.</p><ul><li>CWE-863. Moderate severity. No CVE assigned yet. Fix prepared for the Upcoming release.</li><li><a href="unassignedattachbleed/">More details</a></li></ul>
+<p>A member with the <em>Normal, assigned only</em> role whose card assignment was removed could still add a file to that card and soft-delete its existing attachment through the REST attachment API, which asked only for write access to the board. Copy and move onto a card, and the same API over DDP, had the same gap.</p><ul><li>CWE-863. Moderate severity. CVE requested. Fix prepared for the Upcoming release.</li><li><a href="unassignedattachbleed/">More details</a></li></ul>
 </details></td>
 </tr>
 <tr>
-<td valign="top">-</td>
+<td valign="top">CVE requested</td>
 <td class="icon" valign="top"><h2><span role="img" aria-label="CrossBoardExportBleed"><i class="fa fa-download" aria-hidden="true"></i> <i class="fa fa-check-square-o" aria-hidden="true"></i> <i class="fa fa-user-secret" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></span></h2></td>
 <td valign="top"><b><a href="crossboardexportbleed/">CrossBoardExportBleed</a></b></td>
 <td valign="top">2026-11-01</td>
@@ -215,11 +215,11 @@
 </details></td>
 <td valign="top"><details><summary>Details</summary>
 
-<p>A board export scoped with <code>?checklistId=</code> streamed a checklist of another board - a private one too - with its items and its creator. The streaming CSV/TSV export ignored Disable all export and Anonymize export users, and so did the Excel, PDF, chart, calendar and external-format exports.</p><ul><li>CWE-639 and CWE-863. Moderate severity. No CVE assigned yet. Fix prepared for the Upcoming release.</li><li><a href="crossboardexportbleed/">More details</a></li></ul>
+<p>A board export scoped with <code>?checklistId=</code> streamed a checklist of another board - a private one too - with its items and its creator. The streaming CSV/TSV export ignored Disable all export and Anonymize export users, and so did the Excel, PDF, chart, calendar and external-format exports.</p><ul><li>CWE-639 and CWE-863. Moderate severity. CVE requested. Fix prepared for the Upcoming release.</li><li><a href="crossboardexportbleed/">More details</a></li></ul>
 </details></td>
 </tr>
 <tr>
-<td valign="top">-</td>
+<td valign="top">CVE requested</td>
 <td class="icon" valign="top"><h2><span role="img" aria-label="ImportPlacementBleed"><i class="fa fa-file-archive-o" aria-hidden="true"></i> <i class="fa fa-columns" aria-hidden="true"></i> <i class="fa fa-random" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></span></h2></td>
 <td valign="top"><b><a href="importplacementbleed/">ImportPlacementBleed</a></b></td>
 <td valign="top">2026-10-29</td>
@@ -267,7 +267,7 @@
 </details></td>
 </tr>
 <tr>
-<td valign="top">-</td>
+<td valign="top">CVE requested</td>
 <td class="icon" valign="top"><h2><i class="fa fa-id-card" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></h2></td>
 <td valign="top"><b><a href="samlsubjectbleed/">SamlSubjectBleed</a></b></td>
 <td valign="top">2026-10-03</td>
@@ -279,7 +279,7 @@
 </details></td>
 <td valign="top"><details><summary>Details</summary>
 
-<p>SAML login matched mutable usernames or email addresses and overwrote the stored NameID. A different IdP subject claiming the same username could take over an existing SAML account. Login now resolves issuer and qualified NameID first, refuses rebinding even when merging is enabled, and stores the binding atomically. Email is no longer marked verified without an explicit assertion attestation. CWE-287; high severity. No CVE assigned. Fix prepared locally for the Upcoming release.</p>
+<p>SAML login matched mutable usernames or email addresses and overwrote the stored NameID. A different IdP subject claiming the same username could take over an existing SAML account. Login now resolves issuer and qualified NameID first, refuses rebinding even when merging is enabled, and stores the binding atomically. Email is no longer marked verified without an explicit assertion attestation. CWE-287; high severity. CVE requested. Fix prepared locally for the Upcoming release.</p>
 </details></td>
 </tr>
 
@@ -482,7 +482,7 @@ Found while auditing outbound requests after SyncBleed; fixed by xet7.</details>
 <p>The live Trello import downloaded attachments, the board background and member avatars with the importing user's Trello API key and token in an OAuth header, whatever host the URL named. A link attachment's URL is chosen by anyone who can edit the Trello board, and one renamed to look like a file was downloaded like an upload, so its host received the importer's token. The background and avatar downloads retried with the token after a public download failed.</p><p>The credential now goes only to Trello's own HTTPS hosts; every other download goes without it.</p><p>CWE-201, CWE-522. High severity: it needs the victim to import a board the attacker can add an attachment to. No CVE assigned. Fix prepared locally for the Upcoming release; not yet released.</p><p><a href="relaybleed/">Fix and verification</a></p></details></td>
 </tr>
 <tr>
-<td valign="top">-</td>
+<td valign="top">CVE requested</td>
 <td valign="top"><h2><span role="img" aria-label="SyncBleed"><i class="fa fa-refresh" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></span></h2></td>
 <td valign="top"><b><a href="syncbleed/">SyncBleed</a></b></td>
 <td valign="top">2026-10-02</td>
@@ -493,10 +493,10 @@ Found while auditing outbound requests after SyncBleed; fixed by xet7.</details>
 Reported privately by alham-rizvi through GitHub Security Advisory GHSA-5q84-p3vr-f3xv, with details, a proof of concept and a suggested fix; validated and fixed by xet7.</details></td>
 <td valign="top"><details><summary>Details</summary>
 
-<p>List Sync's Gitea, Forgejo, GitLab and Jira server address is chosen by any board member with write access, and it was fetched without the SSRF guard WeKan uses for every other outbound request. A member could make the server send requests to 127.0.0.1, private networks and the cloud metadata address, and read back up to 200 bytes of what answered in the error the sync preview returned or the list stored. An open and a closed internal port also answered differently.</p><p>Every List Sync request now goes through the guard, internal addresses are refused when Sync settings are saved and on every request, and an error carries only the server's origin and HTTP status. A self-hosted tracker on the server's own network can be allowed by the server administrator only. Validation also found that an IPv6 address in brackets was looked up as a name; it is now checked as the address it is.</p><p>CWE-918. Medium severity (CVSS 5.0). No CVE assigned. Affected v12.14 and earlier versions with List Sync. Fix prepared locally for the Upcoming release; not yet released.</p><p><a href="syncbleed/">Fix and verification</a></p></details></td>
+<p>List Sync's Gitea, Forgejo, GitLab and Jira server address is chosen by any board member with write access, and it was fetched without the SSRF guard WeKan uses for every other outbound request. A member could make the server send requests to 127.0.0.1, private networks and the cloud metadata address, and read back up to 200 bytes of what answered in the error the sync preview returned or the list stored. An open and a closed internal port also answered differently.</p><p>Every List Sync request now goes through the guard, internal addresses are refused when Sync settings are saved and on every request, and an error carries only the server's origin and HTTP status. A self-hosted tracker on the server's own network can be allowed by the server administrator only. Validation also found that an IPv6 address in brackets was looked up as a name; it is now checked as the address it is.</p><p>CWE-918. Medium severity (CVSS 5.0). CVE requested. Affected v12.14 and earlier versions with List Sync. Fix prepared locally for the Upcoming release; not yet released.</p><p><a href="syncbleed/">Fix and verification</a></p></details></td>
 </tr>
 <tr>
-<td valign="top">-</td>
+<td valign="top">CVE requested</td>
 <td valign="top"><h2><span role="img" aria-label="CacheBleed"><i class="fa fa-hdd-o" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></span></h2></td>
 <td valign="top"><b><a href="cachebleed/">CacheBleed</a></b></td>
 <td valign="top">2026-10-02</td>
@@ -507,10 +507,10 @@ Reported privately by alham-rizvi through GitHub Security Advisory GHSA-5q84-p3v
 Reported privately by alham-rizvi through GitHub Security Advisory GHSA-w3qg-pf27-g68r, with details, a proof of concept and a suggested fix; validated and fixed by xet7.</details></td>
 <td valign="top"><details><summary>Details</summary>
 
-<p>Attachments were answered with <code>Cache-Control: public, max-age=31536000</code> and no <code>Vary</code>, after the board access check. A shared cache in front of WeKan (a CDN, a caching reverse proxy, a corporate proxy) could store a board member's copy and serve it to anyone who knew the URL, without credentials, for a year, also after the member was removed from the board.</p><p>Validation found the same header in both download branches and both avatar routes, and Meteor-Files' own <code>/cdn/storage</code> route sent its default public, one-year header as well.</p><p>Every file response, its 304 and the thumbnail are now <code>private, no-cache</code> with <code>Vary: Cookie, Authorization, X-Auth-Token</code>, on public boards too, because a board made private later would otherwise leave a public copy behind.</p><p>CWE-524, CWE-525. Medium severity (CVSS 5.9). No CVE assigned. Affected v8.16 through v12.14. Fix prepared locally for the Upcoming release; not yet released.</p><p><a href="cachebleed/">Fix and verification</a></p><p>Follow-up fix (2026-10-02): API answers are no-store, and legacy attachments are private.</p></details></td>
+<p>Attachments were answered with <code>Cache-Control: public, max-age=31536000</code> and no <code>Vary</code>, after the board access check. A shared cache in front of WeKan (a CDN, a caching reverse proxy, a corporate proxy) could store a board member's copy and serve it to anyone who knew the URL, without credentials, for a year, also after the member was removed from the board.</p><p>Validation found the same header in both download branches and both avatar routes, and Meteor-Files' own <code>/cdn/storage</code> route sent its default public, one-year header as well.</p><p>Every file response, its 304 and the thumbnail are now <code>private, no-cache</code> with <code>Vary: Cookie, Authorization, X-Auth-Token</code>, on public boards too, because a board made private later would otherwise leave a public copy behind.</p><p>CWE-524, CWE-525. Medium severity (CVSS 5.9). CVE requested. Affected v8.16 through v12.14. Fix prepared locally for the Upcoming release; not yet released.</p><p><a href="cachebleed/">Fix and verification</a></p><p>Follow-up fix (2026-10-02): API answers are no-store, and legacy attachments are private.</p></details></td>
 </tr>
 <tr>
-<td valign="top">-</td>
+<td valign="top">CVE requested</td>
 <td valign="top"><h2><span role="img" aria-label="ReplyBleed"><i class="fa fa-reply" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></span></h2></td>
 <td valign="top"><b><a href="replybleed/">ReplyBleed</a></b></td>
 <td valign="top">2026-09-30</td>
@@ -521,7 +521,7 @@ Reported privately by alham-rizvi through GitHub Security Advisory GHSA-w3qg-pf2
 Reported privately by alex131125 through GitHub Security Advisory GHSA-mc7c-cv99-64h7, with details and suggested remediation; validated and fixed by xet7.</details></td>
 <td valign="top"><details><summary>Details</summary>
 
-<p>The reply-by-email token in a notification's Reply-To address signed only the card, so every recipient of that card held the same address, and the webhook took the comment author from the reply's From field, which the sender controls. Anyone holding one card's reply address could have posted a comment on it as any user.</p><p>Validation found that the webhook module was never imported by the server entry point, so released versions did not register <code>/api/inbound-email</code> and the flaw could not be reached. The endpoint is now registered with the fix.</p><p>The reply address now names the card and the one recipient, and expires (30 days by default). The author is that recipient, the From address must be one of that recipient's own addresses, and the recipient must still be allowed to comment on the card. An optional provider secret authenticates the mail provider. Addresses in the old card-only form are refused.</p><p>CWE-346. Medium severity (CVSS 4.3). No CVE assigned. Fix prepared locally for the Upcoming release; not yet released.</p><p><a href="replybleed/">Fix and verification</a></p></details></td>
+<p>The reply-by-email token in a notification's Reply-To address signed only the card, so every recipient of that card held the same address, and the webhook took the comment author from the reply's From field, which the sender controls. Anyone holding one card's reply address could have posted a comment on it as any user.</p><p>Validation found that the webhook module was never imported by the server entry point, so released versions did not register <code>/api/inbound-email</code> and the flaw could not be reached. The endpoint is now registered with the fix.</p><p>The reply address now names the card and the one recipient, and expires (30 days by default). The author is that recipient, the From address must be one of that recipient's own addresses, and the recipient must still be allowed to comment on the card. An optional provider secret authenticates the mail provider. Addresses in the old card-only form are refused.</p><p>CWE-346. Medium severity (CVSS 4.3). CVE requested. Fix prepared locally for the Upcoming release; not yet released.</p><p><a href="replybleed/">Fix and verification</a></p></details></td>
 </tr>
 <tr>
 <td valign="top">-</td>
@@ -534,7 +534,7 @@ Reported privately by alex131125 through GitHub Security Advisory GHSA-mc7c-cv99
 <td valign="top"><details><summary>Details</summary><p>Caller-controlled card-copy overrides could replace the source card identifier after its board membership check, causing private children from another card to be copied into a readable destination.</p><p>Copy overrides now accept only title and description text on a separate card object. Other fields are refused before sorting or copying children.</p><p>Board copying had the same fault: the copy method assigned caller-supplied properties, including the identifier, onto the source board, so a board admin could duplicate another private board. Board copies now accept only title, sort, type and card selection on a separate board object.</p><p>CWE-915. High severity. No CVE assigned. Fix prepared locally for the Upcoming release; not yet released.</p><p><a href="copyidentitybleed/">Fix and verification</a></p></details></td>
 </tr>
 <tr>
-<td valign="top">-</td>
+<td valign="top">CVE requested</td>
 <td valign="top"><h2><span role="img" aria-label="AdminFieldBleed"><i class="fa fa-lock" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></span></h2></td>
 <td valign="top"><b><a href="adminfieldbleed/">AdminFieldBleed</a></b></td>
 <td valign="top">2026-09-28</td>
@@ -545,7 +545,7 @@ Reported privately by alex131125 through GitHub Security Advisory GHSA-mc7c-cv99
 Reported privately by Hama1cco through GitHub Security Advisory GHSA-m8gh-2h78-f57x; validated and fixed by xet7.</details></td>
 <td valign="top"><details><summary>Details</summary>
 
-<p>Non-admin board members could read admin-only custom-field values through raw card responses and set them during card creation or copying. Whole-array updates also bypassed the indexed-value guard.</p><p>The fix enforces the value boundary on server publications, API and method results, card writes and exports, including live permission changes. Protected definition changes require administration of every affected board.</p><p>CWE-863. High severity. No CVE assigned. Fix prepared locally for the Upcoming release; not yet released.</p><p><a href="adminfieldbleed/">Fix and verification</a></p></details></td>
+<p>Non-admin board members could read admin-only custom-field values through raw card responses and set them during card creation or copying. Whole-array updates also bypassed the indexed-value guard.</p><p>The fix enforces the value boundary on server publications, API and method results, card writes and exports, including live permission changes. Protected definition changes require administration of every affected board.</p><p>CWE-863. High severity. CVE requested. Fix prepared locally for the Upcoming release; not yet released.</p><p><a href="adminfieldbleed/">Fix and verification</a></p></details></td>
 </tr>
 <tr>
 <td valign="top">-</td>
@@ -572,7 +572,7 @@ Found and fixed while integrating Scrum with universal History; current access a
 <p>Universal History returned hidden cards to assigned-only members and could retain private-board history access after membership was removed. Its reversal path could also use an old board’s access to edit a card now on another board. Reads now enforce current scope before searching or counting; restore, undo and redo share current scope and card edit checks.</p><p>CWE-863. High severity. No CVE assigned. Fix prepared for the Upcoming release.</p><p><a href="historyscopebleed/">Fix and verification</a></p><p>Follow-up fix (2026-10-02): history follows what it changes to its current board.</p></details></td>
 </tr>
 <tr>
-<td valign="top">-</td>
+<td valign="top">CVE requested</td>
 <td class="icon" valign="top"><h2><span role="img" aria-label="LdapBindBleed"><i class="fa fa-sign-in" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></span></h2></td>
 <td valign="top"><b><a href="ldapbindbleed/">LdapBindBleed</a></b></td>
 <td valign="top">2026-09-27</td>
@@ -583,7 +583,7 @@ Found and fixed while integrating Scrum with universal History; current access a
 Responsible disclosure through private GitHub advisory GHSA-m87f-f43w-hwmc, with a detailed report and suggested fix; validated and fixed by xet7.</details></td>
 <td valign="top"><details><summary>Details</summary>
 
-<p>LDAP direct user-bind mode accepted empty passwords. On a directory that permits unauthenticated binds and the subsequent user search, this could authenticate a matching WeKan account without its password. Both user-authentication helpers and the DDP/REST login boundary now reject empty or malformed credentials before binding or falling back.</p><p>CWE-287. Conditional critical authentication bypass. No CVE assigned. The OpenLDAP administrator guide states that unauthenticated binds are disabled by default; the report’s stock-default claim was not confirmed.</p><p>Fix prepared for the Upcoming release.</p><p><a href="ldapbindbleed/">Fix and verification</a></p></details></td>
+<p>LDAP direct user-bind mode accepted empty passwords. On a directory that permits unauthenticated binds and the subsequent user search, this could authenticate a matching WeKan account without its password. Both user-authentication helpers and the DDP/REST login boundary now reject empty or malformed credentials before binding or falling back.</p><p>CWE-287. Conditional critical authentication bypass. CVE requested. The OpenLDAP administrator guide states that unauthenticated binds are disabled by default; the report’s stock-default claim was not confirmed.</p><p>Fix prepared for the Upcoming release.</p><p><a href="ldapbindbleed/">Fix and verification</a></p></details></td>
 </tr>
 <tr>
 <td valign="top">-</td>
@@ -615,7 +615,7 @@ Found and fixed during the sibling authentication audit; reproduced with locally
 </tr>
 
 <tr>
-<td valign="top">-</td>
+<td valign="top">CVE requested</td>
 <td class="icon" valign="top"><h2><span role="img" aria-label="InactiveBleed"><i class="fa fa-user-times" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></span></h2></td>
 <td valign="top"><b><a href="inactivebleed/">InactiveBleed</a></b></td>
 <td valign="top">2026-09-26</td>
@@ -626,7 +626,7 @@ Found and fixed during the sibling authentication audit; reproduced with locally
 <p>Responsible disclosure through a private GitHub security advisory; confirmed against current source and remediated by xet7.</p>
 <p>GitHub Security Advisory <a href="https://github.com/wekan/wekan/security/advisories/GHSA-f246-3x88-w3w3">GHSA-f246-3x88-w3w3</a>.</p>
 </details></td>
-<td valign="top"><details><summary>Details</summary><p>Disabled accounts could authenticate through REST and retain existing sessions. The People status toggle failed to persist, and admin-created inactive accounts did not receive their requested status. Shared authentication guards, token revocation and atomic account creation now enforce account status.</p><p>No CVE assigned. CWE-287 and CWE-613. Fix prepared for the Upcoming release.</p><p><a href="inactivebleed/">Fix and verification</a></p></details></td>
+<td valign="top"><details><summary>Details</summary><p>Disabled accounts could authenticate through REST and retain existing sessions. The People status toggle failed to persist, and admin-created inactive accounts did not receive their requested status. Shared authentication guards, token revocation and atomic account creation now enforce account status.</p><p>CVE requested. CWE-287 and CWE-613. Fix prepared for the Upcoming release.</p><p><a href="inactivebleed/">Fix and verification</a></p></details></td>
 </tr>
       <tr>
         <td valign="top">-</td>
@@ -644,7 +644,7 @@ Found and fixed during the sibling authentication audit; reproduced with locally
         </details></td>
       </tr>
       <tr>
-        <td valign="top">-</td>
+        <td valign="top">CVE requested</td>
         <td class="icon" valign="top"><h2><span class="vulnerability-icons" role="img" aria-label="SubtaskDepositBleed"><i class="fa fa-sitemap" style="color: black;" aria-hidden="true"></i> <i class="fa fa-inbox" style="color: black;" aria-hidden="true"></i> <i class="fa fa-lock" style="color: black;" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></span> </h2></td>
         <td valign="top"><b><a href="subtaskdepositbleed/">SubtaskDepositBleed</a></b></td>
         <td valign="top">2026-09-14</td>
@@ -659,11 +659,11 @@ Found and fixed during the sibling authentication audit; reproduced with locally
         <td valign="top"><details>
 <summary>Details</summary>
 
-<p>An unvalidated deposit pointer bridged private cards and related content into the source board feed, and subtask creation skipped destination write authorization. Source card scopes now exclude foreign pointers and null IDs. Deposit content follows a reactive authorized board cursor with its own assignment restrictions. Assigned-card content follows reactive card cursors. Writes and pointer changes require destination write access. Write refusals are summarized in Problems; ordinary filtered reads are not attack events.</p><p><a href="https://github.com/wekan/wekan/commit/c50d7b4ea">Source fix and regression coverage</a>. Targeted tests pass; live browser execution remains pending. No CVE is assigned here.</p><p><a href="subtaskdepositbleed/">More details</a></p>
+<p>An unvalidated deposit pointer bridged private cards and related content into the source board feed, and subtask creation skipped destination write authorization. Source card scopes now exclude foreign pointers and null IDs. Deposit content follows a reactive authorized board cursor with its own assignment restrictions. Assigned-card content follows reactive card cursors. Writes and pointer changes require destination write access. Write refusals are summarized in Problems; ordinary filtered reads are not attack events.</p><p><a href="https://github.com/wekan/wekan/commit/c50d7b4ea">Source fix and regression coverage</a>. Targeted tests pass; live browser execution remains pending. CVE requested.</p><p><a href="subtaskdepositbleed/">More details</a></p>
 <p>Follow-up fix (2026-10-02): inviting to the deposit board requires being allowed to invite on it.</p></details></td>
       </tr>
       <tr>
-        <td valign="top">-</td>
+        <td valign="top">CVE requested</td>
         <td class="icon" valign="top"><h2><span class="vulnerability-icons" role="img" aria-label="LinkedWriteBleed"><i class="fa fa-link" style="color: black;" aria-hidden="true"></i> <i class="fa fa-pencil" style="color: black;" aria-hidden="true"></i> <i class="fa fa-lock" style="color: black;" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></span> </h2></td>
         <td valign="top"><b><a href="linkedwritebleed/">LinkedWriteBleed</a></b></td>
         <td valign="top">2026-09-14</td>
@@ -678,11 +678,11 @@ Found and fixed during the sibling authentication audit; reproduced with locally
         <td valign="top"><details>
 <summary>Details</summary>
 
-<p>Comment-only source members could create links on self-owned boards and use delegated write checks to modify the source. Source write access is now required for method and DDP link creation and pointer changes. Explicit non-writing source roles cap delegation through legacy links. UI permissions follow the ceiling. Denied attempts use bounded Problems summaries.</p><p><a href="https://github.com/wekan/wekan/commit/26e9e7030">Source fix and regression coverage</a>. Targeted tests pass; live browser execution remains pending. No CVE is assigned here.</p><p><a href="linkedwritebleed/">More details</a></p>
+<p>Comment-only source members could create links on self-owned boards and use delegated write checks to modify the source. Source write access is now required for method and DDP link creation and pointer changes. Explicit non-writing source roles cap delegation through legacy links. UI permissions follow the ceiling. Denied attempts use bounded Problems summaries.</p><p><a href="https://github.com/wekan/wekan/commit/26e9e7030">Source fix and regression coverage</a>. Targeted tests pass; live browser execution remains pending. CVE requested.</p><p><a href="linkedwritebleed/">More details</a></p>
 <p>Follow-up fix (2026-10-02): the REST route for linked cards uses the same check.</p></details></td>
       </tr>
       <tr>
-        <td valign="top">-</td>
+        <td valign="top">CVE requested</td>
         <td class="icon" valign="top"><h2><span class="vulnerability-icons" role="img" aria-label="InvitationBoardBleed"><i class="fa fa-envelope" style="color: black;" aria-hidden="true"></i> <i class="fa fa-columns" style="color: black;" aria-hidden="true"></i> <i class="fa fa-lock" style="color: black;" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></span> </h2></td>
         <td valign="top"><b><a href="invitationboardbleed/">InvitationBoardBleed</a></b></td>
         <td valign="top">2026-09-14</td>
@@ -697,11 +697,11 @@ Found and fixed during the sibling authentication audit; reproduced with locally
         <td valign="top"><details>
 <summary>Details</summary>
 
-<p>When domain-approved users could send registration invitations, the supplied board list was stored without board authorization. The complete list now requires existing boards and the same configured inviter-role policy as board invitations, with a site-admin bypass. Denied grants are summarized in Problems. Live mail delivery and redemption remain unverified.</p><p><a href="https://github.com/wekan/wekan/commit/af9362126">Source fix and regression coverage</a>. Targeted tests pass; live browser execution remains pending. No CVE is assigned here.</p><p><a href="invitationboardbleed/">More details</a></p>
+<p>When domain-approved users could send registration invitations, the supplied board list was stored without board authorization. The complete list now requires existing boards and the same configured inviter-role policy as board invitations, with a site-admin bypass. Denied grants are summarized in Problems. Live mail delivery and redemption remain unverified.</p><p><a href="https://github.com/wekan/wekan/commit/af9362126">Source fix and regression coverage</a>. Targeted tests pass; live browser execution remains pending. CVE requested.</p><p><a href="invitationboardbleed/">More details</a></p>
 </details></td>
       </tr>
       <tr>
-        <td valign="top">-</td>
+        <td valign="top">CVE requested</td>
         <td class="icon" valign="top"><h2><span class="vulnerability-icons" role="img" aria-label="InviteProfileBleed"><i class="fa fa-envelope" style="color: black;" aria-hidden="true"></i> <i class="fa fa-id-card" style="color: black;" aria-hidden="true"></i> <i class="fa fa-pencil" style="color: black;" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></span> </h2></td>
         <td valign="top"><b><a href="inviteprofilebleed/">InviteProfileBleed</a></b></td>
         <td valign="top">2026-09-14</td>
@@ -716,11 +716,11 @@ Found and fixed during the sibling authentication audit; reproduced with locally
         <td valign="top"><details>
 <summary>Details</summary>
 
-<p>Removed members could forge profile.invitedBoards and call acceptInvite to reactivate their retained membership row. Client permission gates now protect that capability, including operator paths, parent replacement and rename destinations. Ordinary leaf preferences remain editable. Denied invitation changes appear as bounded Problems summaries; logging cannot break refusal.</p><p><a href="https://github.com/wekan/wekan/commit/055cf42d4">Source fix and regression coverage</a>. Targeted tests pass; live browser execution remains pending. No CVE is assigned here.</p><p><a href="inviteprofilebleed/">More details</a></p>
+<p>Removed members could forge profile.invitedBoards and call acceptInvite to reactivate their retained membership row. Client permission gates now protect that capability, including operator paths, parent replacement and rename destinations. Ordinary leaf preferences remain editable. Denied invitation changes appear as bounded Problems summaries; logging cannot break refusal.</p><p><a href="https://github.com/wekan/wekan/commit/055cf42d4">Source fix and regression coverage</a>. Targeted tests pass; live browser execution remains pending. CVE requested.</p><p><a href="inviteprofilebleed/">More details</a></p>
 </details></td>
       </tr>
       <tr>
-        <td valign="top">-</td>
+        <td valign="top">CVE requested</td>
         <td class="icon" valign="top"><h2><span class="vulnerability-icons" role="img" aria-label="RuleButtonBleed"><i class="fa fa-hand-pointer-o" style="color: black;" aria-hidden="true"></i> <i class="fa fa-cogs" style="color: black;" aria-hidden="true"></i> <i class="fa fa-lock" style="color: black;" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></span> </h2></td>
         <td valign="top"><b><a href="rulebuttonbleed/">RuleButtonBleed</a></b></td>
         <td valign="top">2026-09-14</td>
@@ -735,11 +735,11 @@ Found and fixed during the sibling authentication audit; reproduced with locally
         <td valign="top"><details>
 <summary>Details</summary>
 
-<p>Manual button rules accepted non-writing members and unbound card IDs. Both the method and shared action dispatcher now require write access and authoritative card-to-rule board binding before executing actions. Cardless board buttons remain supported. Denied contexts are summarized in Problems; logging cannot break refusal.</p><p><a href="https://github.com/wekan/wekan/commit/64123a603">Source fix and regression coverage</a>. Targeted tests pass; live browser execution remains pending. No CVE is assigned here.</p><p><a href="rulebuttonbleed/">More details</a></p>
+<p>Manual button rules accepted non-writing members and unbound card IDs. Both the method and shared action dispatcher now require write access and authoritative card-to-rule board binding before executing actions. Cardless board buttons remain supported. Denied contexts are summarized in Problems; logging cannot break refusal.</p><p><a href="https://github.com/wekan/wekan/commit/64123a603">Source fix and regression coverage</a>. Targeted tests pass; live browser execution remains pending. CVE requested.</p><p><a href="rulebuttonbleed/">More details</a></p>
 </details></td>
       </tr>
       <tr>
-        <td valign="top">-</td>
+        <td valign="top">CVE requested</td>
         <td class="icon" valign="top"><h2><span class="vulnerability-icons" role="img" aria-label="ManageBoardBleed"><i class="fa fa-columns" style="color: black;" aria-hidden="true"></i> <i class="fa fa-wrench" style="color: black;" aria-hidden="true"></i> <i class="fa fa-user-secret" style="color: black;" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></span> </h2></td>
         <td valign="top"><b><a href="manageboardbleed/">ManageBoardBleed</a></b></td>
         <td valign="top">2026-09-14</td>
@@ -754,11 +754,11 @@ Found and fixed during the sibling authentication audit; reproduced with locally
         <td valign="top"><details>
 <summary>Details</summary>
 
-<p>REST management endpoints incorrectly accepted ordinary write capability. Title, card-settings and rule mutation endpoints now require board or site administrator privileges, aligning with DDP. Unauthorized management attempts are summarized in Problems; logging cannot break refusal.</p><p><a href="https://github.com/wekan/wekan/commit/c33e9c3bf">Source fix and regression coverage</a>. Targeted tests pass; live browser execution remains pending. No CVE is assigned here.</p><p><a href="manageboardbleed/">More details</a></p>
+<p>REST management endpoints incorrectly accepted ordinary write capability. Title, card-settings and rule mutation endpoints now require board or site administrator privileges, aligning with DDP. Unauthorized management attempts are summarized in Problems; logging cannot break refusal.</p><p><a href="https://github.com/wekan/wekan/commit/c33e9c3bf">Source fix and regression coverage</a>. Targeted tests pass; live browser execution remains pending. CVE requested.</p><p><a href="manageboardbleed/">More details</a></p>
 </details></td>
       </tr>
       <tr>
-        <td valign="top">-</td>
+        <td valign="top">CVE requested</td>
         <td class="icon" valign="top"><h2><span class="vulnerability-icons" role="img" aria-label="CommentBoundaryBleed"><i class="fa fa-comment" style="color: black;" aria-hidden="true"></i> <i class="fa fa-columns" style="color: black;" aria-hidden="true"></i> <i class="fa fa-chain-broken" style="color: black;" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></span> </h2></td>
         <td valign="top"><b><a href="commentboundarybleed/">CommentBoundaryBleed</a></b></td>
         <td valign="top">2026-09-14</td>
@@ -784,7 +784,7 @@ Found and fixed during the sibling authentication audit; reproduced with locally
       </tr>
 
       <tr>
-        <td valign="top">-</td>
+        <td valign="top">CVE requested</td>
         <td class="icon" valign="top"><h2><span class="vulnerability-icons" role="img" aria-label="MutationBleed"><i class="fa fa-pencil" style="color: black;" aria-hidden="true"></i> <i class="fa fa-exchange" style="color: black;" aria-hidden="true"></i> <i class="fa fa-lock" style="color: black;" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></span> </h2></td>
         <td valign="top"><b><a href="mutationbleed/">MutationBleed</a></b></td>
         <td valign="top">2026-09-14</td>
@@ -808,7 +808,7 @@ Found and fixed during the sibling authentication audit; reproduced with locally
       </tr>
 
       <tr>
-        <td valign="top">-</td>
+        <td valign="top">CVE requested</td>
         <td class="icon" valign="top"><h2><span class="vulnerability-icons" role="img" aria-label="VisibilityBleed"><i class="fa fa-eye" style="color: black;" aria-hidden="true"></i> <i class="fa fa-columns" style="color: black;" aria-hidden="true"></i> <i class="fa fa-unlock" style="color: black;" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></span> </h2></td>
         <td valign="top"><b><a href="visibilitybleed/">VisibilityBleed</a></b></td>
         <td valign="top">2026-09-14</td>
@@ -828,7 +828,7 @@ Found and fixed during the sibling authentication audit; reproduced with locally
       </tr>
 
       <tr>
-        <td valign="top">-</td>
+        <td valign="top">CVE requested</td>
         <td class="icon" valign="top"><h2><span class="vulnerability-icons" role="img" aria-label="WipeBleed"><i class="fa fa-files-o" style="color: black;" aria-hidden="true"></i> <i class="fa fa-trash" style="color: black;" aria-hidden="true"></i> <i class="fa fa-unlock" style="color: black;" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></span> </h2></td>
         <td valign="top"><b><a href="wipebleed/">WipeBleed</a></b></td>
         <td valign="top">2026-09-09</td>
@@ -851,7 +851,7 @@ Found and fixed during the sibling authentication audit; reproduced with locally
       </tr>
 
       <tr>
-        <td valign="top">-</td>
+        <td valign="top">CVE requested</td>
         <td class="icon" valign="top"><h2><span class="vulnerability-icons" role="img" aria-label="UploadPathBleed"><i class="fa fa-upload" style="color: black;" aria-hidden="true"></i> <i class="fa fa-folder-open" style="color: black;" aria-hidden="true"></i> <i class="fa fa-level-up" style="color: black;" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></span> </h2></td>
         <td valign="top"><b><a href="uploadpathbleed/">UploadPathBleed</a></b></td>
         <td valign="top">2026-09-09</td>
@@ -874,7 +874,7 @@ Found and fixed during the sibling authentication audit; reproduced with locally
       </tr>
 
       <tr>
-        <td valign="top">-</td>
+        <td valign="top">CVE requested</td>
         <td class="icon" valign="top"><h2><span class="vulnerability-icons" role="img" aria-label="PortraitBleed"><i class="fa fa-user-circle" style="color: black;" aria-hidden="true"></i> <i class="fa fa-download" style="color: black;" aria-hidden="true"></i> <i class="fa fa-unlock" style="color: black;" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></span> </h2></td>
         <td valign="top"><b><a href="portraitbleed/">PortraitBleed</a></b></td>
         <td valign="top">2026-09-09</td>
@@ -897,7 +897,7 @@ Found and fixed during the sibling authentication audit; reproduced with locally
       </tr>
 
       <tr>
-        <td valign="top">-</td>
+        <td valign="top">CVE requested</td>
         <td class="icon" valign="top"><h2><span class="vulnerability-icons" role="img" aria-label="RelicAvatarBleed"><i class="fa fa-history" style="color: black;" aria-hidden="true"></i> <i class="fa fa-user-circle" style="color: black;" aria-hidden="true"></i> <i class="fa fa-download" style="color: black;" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></span> </h2></td>
         <td valign="top"><b><a href="relicavatarbleed/">RelicAvatarBleed</a></b></td>
         <td valign="top">2026-09-09</td>
@@ -920,7 +920,7 @@ Found and fixed during the sibling authentication audit; reproduced with locally
       </tr>
 
       <tr>
-        <td valign="top"><a href="https://github.com/wekan/wekan/security/advisories/GHSA-crq2-phg8-4xvg">GHSA-crq2-phg8-4xvg</a></td>
+        <td valign="top"><a href="https://github.com/wekan/wekan/security/advisories/GHSA-crq2-phg8-4xvg">GHSA-crq2-phg8-4xvg</a> CVE requested</td>
         <td class="icon" valign="top"><h2><span class="vulnerability-icons" role="img" aria-label="SheetColorBleed"><i class="fa fa-file-excel-o" style="color: black;" aria-hidden="true"></i> <i class="fa fa-paint-brush" style="color: black;" aria-hidden="true"></i> <i class="fa fa-code" style="color: black;" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></span> </h2></td>
         <td valign="top"><b><a href="sheetcolorbleed/">SheetColorBleed</a></b></td><td valign="top">2026-09-05</td>
         <td class="by" valign="top"><b><a href="https://github.com/rbbjinioeq">rbbjinioeq</a></b> and <b><a href="https://github.com/xet7">xet7</a></b></td>
@@ -936,7 +936,7 @@ Found and fixed during the sibling authentication audit; reproduced with locally
       </tr>
 
       <tr>
-        <td valign="top"><a href="https://github.com/wekan/wekan/security/advisories/GHSA-rv5g-5p4g-3v89">GHSA-rv5g-5p4g-3v89</a></td>
+        <td valign="top"><a href="https://github.com/wekan/wekan/security/advisories/GHSA-rv5g-5p4g-3v89">GHSA-rv5g-5p4g-3v89</a> CVE requested</td>
         <td class="icon" valign="top"><h2><span class="vulnerability-icons" role="img" aria-label="MimeStorageBleed"><i class="fa fa-file-code-o" style="color: black;" aria-hidden="true"></i> <i class="fa fa-archive" style="color: black;" aria-hidden="true"></i> <i class="fa fa-code" style="color: black;" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></span> </h2></td>
         <td valign="top"><b><a href="mimebleed/">MimeStorageBleed</a></b></td><td valign="top">2026-09-01</td>
         <td class="by" valign="top"><b><a href="https://github.com/avrlab233">avrlab233</a></b> and <b><a href="https://github.com/xet7">xet7</a></b></td>
@@ -952,7 +952,7 @@ Found and fixed during the sibling authentication audit; reproduced with locally
       </tr>
 
       <tr>
-        <td valign="top"><a href="https://github.com/wekan/wekan/security/advisories/GHSA-8phm-9rqm-v9hc">GHSA-8phm-9rqm-v9hc</a></td>
+        <td valign="top"><a href="https://github.com/wekan/wekan/security/advisories/GHSA-8phm-9rqm-v9hc">GHSA-8phm-9rqm-v9hc</a> CVE requested</td>
         <td class="icon" valign="top"><h2><span class="vulnerability-icons" role="img" aria-label="CookieTokenBleed"><i class="fa fa-key" style="color: black;" aria-hidden="true"></i> <i class="fa fa-desktop" style="color: black;" aria-hidden="true"></i> <i class="fa fa-eye" style="color: black;" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></span> </h2></td>
         <td valign="top"><b><a href="cookietokenbleed/">CookieTokenBleed</a></b></td><td valign="top">2026-08-29</td>
         <td class="by" valign="top"><b><a href="https://github.com/binary-lover">binary-lover</a></b> and <b><a href="https://github.com/xet7">xet7</a></b></td>
@@ -968,7 +968,7 @@ Found and fixed during the sibling authentication audit; reproduced with locally
       </tr>
 
       <tr>
-        <td valign="top"><a href="https://github.com/wekan/wekan/security/advisories/GHSA-hp9m-vff5-7pvw">GHSA-hp9m-vff5-7pvw</a></td>
+        <td valign="top"><a href="https://github.com/wekan/wekan/security/advisories/GHSA-hp9m-vff5-7pvw">GHSA-hp9m-vff5-7pvw</a> CVE requested</td>
         <td class="icon" valign="top"><h2><span class="vulnerability-icons" role="img" aria-label="MailTitleBleed"><i class="fa fa-envelope" style="color: black;" aria-hidden="true"></i> <i class="fa fa-header" style="color: black;" aria-hidden="true"></i> <i class="fa fa-code" style="color: black;" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></span> </h2></td>
         <td valign="top"><b><a href="mailtitlebleed/">MailTitleBleed</a></b></td><td valign="top">2026-08-29</td>
         <td class="by" valign="top"><b><a href="https://github.com/binary-lover">binary-lover</a></b> and <b><a href="https://github.com/xet7">xet7</a></b></td>
@@ -984,7 +984,7 @@ Found and fixed during the sibling authentication audit; reproduced with locally
       </tr>
 
       <tr>
-        <td valign="top"><a href="https://github.com/wekan/wekan/security/advisories/GHSA-33h9-rc5h-667p">GHSA-33h9-rc5h-667p</a></td>
+        <td valign="top"><a href="https://github.com/wekan/wekan/security/advisories/GHSA-33h9-rc5h-667p">GHSA-33h9-rc5h-667p</a> CVE requested</td>
         <td class="icon" valign="top"><h2><span class="vulnerability-icons" role="img" aria-label="SearchBleed"><i class="fa fa-search" style="color: black;" aria-hidden="true"></i> <i class="fa fa-database" style="color: black;" aria-hidden="true"></i> <i class="fa fa-code" style="color: black;" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></span> </h2></td>
         <td valign="top"><b><a href="searchbleed/">SearchBleed</a></b></td><td valign="top">2026-08-29</td>
         <td class="by" valign="top"><b><a href="https://github.com/crypto-nidh">crypto-nidh</a></b> and <b><a href="https://github.com/xet7">xet7</a></b></td>
@@ -1006,7 +1006,7 @@ Found and fixed during the sibling authentication audit; reproduced with locally
       </tr>
 
       <tr>
-        <td valign="top"><a href="https://github.com/wekan/wekan/security/advisories/GHSA-9w4x-hf2r-hc9v">GHSA-9w4x-hf2r-hc9v</a></td>
+        <td valign="top"><a href="https://github.com/wekan/wekan/security/advisories/GHSA-9w4x-hf2r-hc9v">GHSA-9w4x-hf2r-hc9v</a> CVE requested</td>
         <td class="icon" valign="top"><h2><span class="vulnerability-icons" role="img" aria-label="RuleBleed"><i class="fa fa-cogs" style="color: black;" aria-hidden="true"></i> <i class="fa fa-columns" style="color: black;" aria-hidden="true"></i> <i class="fa fa-lock" style="color: black;" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></span> </h2></td>
         <td valign="top"><b><a href="rulebleed/">RuleBleed</a></b></td><td valign="top">2026-08-29</td>
         <td class="by" valign="top"><b><a href="https://github.com/crypto-nidh">crypto-nidh</a></b> and <b><a href="https://github.com/xet7">xet7</a></b></td>
@@ -1028,7 +1028,7 @@ Found and fixed during the sibling authentication audit; reproduced with locally
       </tr>
 
       <tr>
-        <td valign="top"><a href="https://github.com/wekan/wekan/security/advisories/GHSA-4mjm-vj9f-p629">GHSA-4mjm-vj9f-p629</a></td>
+        <td valign="top"><a href="https://github.com/wekan/wekan/security/advisories/GHSA-4mjm-vj9f-p629">GHSA-4mjm-vj9f-p629</a> CVE requested</td>
         <td class="icon" valign="top"><h2><span class="vulnerability-icons" role="img" aria-label="AvatarMimeBleed"><i class="fa fa-user-circle" style="color: black;" aria-hidden="true"></i> <i class="fa fa-file-code-o" style="color: black;" aria-hidden="true"></i> <i class="fa fa-code" style="color: black;" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></span> </h2></td>
         <td valign="top"><b><a href="avatarmimebleed/">AvatarMimeBleed</a></b></td><td valign="top">2026-08-28</td>
         <td class="by" valign="top"><b><a href="https://github.com/crypto-nidh">crypto-nidh</a></b> and <b><a href="https://github.com/xet7">xet7</a></b></td>
@@ -1050,7 +1050,7 @@ Found and fixed during the sibling authentication audit; reproduced with locally
       </tr>
 
       <tr>
-        <td valign="top"><a href="https://github.com/wekan/wekan/security/advisories/GHSA-xcxp-hx9w-q5q9">GHSA-xcxp-hx9w-q5q9</a></td>
+        <td valign="top"><a href="https://github.com/wekan/wekan/security/advisories/GHSA-xcxp-hx9w-q5q9">GHSA-xcxp-hx9w-q5q9</a> CVE requested</td>
         <td class="icon" valign="top"><h2><span class="vulnerability-icons" role="img" aria-label="LegacyAttachBleed"><i class="fa fa-history" style="color: black;" aria-hidden="true"></i> <i class="fa fa-paperclip" style="color: black;" aria-hidden="true"></i> <i class="fa fa-file-code-o" style="color: black;" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></span> </h2></td>
         <td valign="top"><b><a href="legacyattachbleed/">LegacyAttachBleed</a></b></td><td valign="top">2026-08-28</td>
         <td class="by" valign="top"><b><a href="https://github.com/crypto-nidh">crypto-nidh</a></b> and <b><a href="https://github.com/xet7">xet7</a></b></td>
@@ -1074,7 +1074,7 @@ Found and fixed during the sibling authentication audit; reproduced with locally
       </tr>
 
       <tr>
-        <td valign="top"><a href="https://github.com/wekan/wekan/security/advisories/GHSA-2x89-6mq2-834r">GHSA-2x89-6mq2-834r</a></td>
+        <td valign="top"><a href="https://github.com/wekan/wekan/security/advisories/GHSA-2x89-6mq2-834r">GHSA-2x89-6mq2-834r</a> CVE requested</td>
         <td class="icon" valign="top"><h2><span class="vulnerability-icons" role="img" aria-label="SwimlaneBleed"><i class="fa fa-bars" style="color: black;" aria-hidden="true"></i> <i class="fa fa-plus" style="color: black;" aria-hidden="true"></i> <i class="fa fa-lock" style="color: black;" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></span> </h2></td>
         <td valign="top"><b><a href="swimlanebleed/">SwimlaneBleed</a></b></td><td valign="top">2026-08-28</td>
         <td class="by" valign="top"><b><a href="https://github.com/crypto-nidh">crypto-nidh</a></b> and <b><a href="https://github.com/xet7">xet7</a></b></td>
@@ -1118,7 +1118,7 @@ Found and fixed during the sibling authentication audit; reproduced with locally
       </tr>
 
       <tr>
-        <td valign="top"><a href="https://github.com/wekan/wekan/security/advisories/GHSA-5gcv-2hhj-7rg9">GHSA-5gcv-2hhj-7rg9</a></td>
+        <td valign="top"><a href="https://github.com/wekan/wekan/security/advisories/GHSA-5gcv-2hhj-7rg9">GHSA-5gcv-2hhj-7rg9</a> CVE requested</td>
         <td class="icon" valign="top"><h2><span class="vulnerability-icons" role="img" aria-label="SessionBleed"><i class="fa fa-search" style="color: black;" aria-hidden="true"></i> <i class="fa fa-key" style="color: black;" aria-hidden="true"></i> <i class="fa fa-chain-broken" style="color: black;" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></span> </h2></td>
         <td valign="top"><b><a href="sessionbleed/">SessionBleed</a></b></td><td valign="top">2026-08-27</td>
         <td class="by" valign="top"><b><a href="https://github.com/crypto-nidh">crypto-nidh</a></b> and <b><a href="https://github.com/xet7">xet7</a></b></td>
@@ -1140,7 +1140,7 @@ Found and fixed during the sibling authentication audit; reproduced with locally
       </tr>
 
       <tr>
-        <td valign="top"><a href="https://github.com/wekan/wekan/security/advisories/GHSA-xwv8-m73h-68vg">GHSA-xwv8-m73h-68vg</a></td>
+        <td valign="top"><a href="https://github.com/wekan/wekan/security/advisories/GHSA-xwv8-m73h-68vg">GHSA-xwv8-m73h-68vg</a> CVE requested</td>
         <td class="icon" valign="top"><h2><span class="vulnerability-icons" role="img" aria-label="ClaimBleed"><i class="fa fa-id-card" style="color: black;" aria-hidden="true"></i> <i class="fa fa-key" style="color: black;" aria-hidden="true"></i> <i class="fa fa-exchange" style="color: black;" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></span> </h2></td>
         <td valign="top"><b><a href="claimbleed/">ClaimBleed</a></b></td><td valign="top">2026-08-26</td>
         <td class="by" valign="top"><b><a href="https://github.com/crypto-nidh">crypto-nidh</a></b> and <b><a href="https://github.com/xet7">xet7</a></b></td>
@@ -1149,7 +1149,7 @@ Found and fixed during the sibling authentication audit; reproduced with locally
         <td valign="top"><details><summary>Details</summary><ul><li>Whitelisted OIDC claims could replace account identity and service-owned token fields (CWE-863, CWE-566)</li><li>No Problems event is emitted because legitimate OIDC logins use the same claim-processing path</li><li><a href="claimbleed/">More details</a></li></ul></details></td>
       </tr>
       <tr>
-        <td valign="top"><a href="https://github.com/wekan/wekan/security/advisories/GHSA-5r3j-h65h-fg22">GHSA-5r3j-h65h-fg22</a></td>
+        <td valign="top"><a href="https://github.com/wekan/wekan/security/advisories/GHSA-5r3j-h65h-fg22">GHSA-5r3j-h65h-fg22</a> CVE requested</td>
         <td class="icon" valign="top"><h2><span class="vulnerability-icons" role="img" aria-label="MembershipBleed"><i class="fa fa-users" style="color: black;" aria-hidden="true"></i> <i class="fa fa-eye" style="color: black;" aria-hidden="true"></i> <i class="fa fa-unlock" style="color: black;" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></span> </h2></td>
         <td valign="top"><b><a href="membershipbleed/">MembershipBleed</a></b></td><td valign="top">2026-08-26</td>
         <td class="by" valign="top"><b><a href="https://github.com/crypto-nidh">crypto-nidh</a></b> and <b><a href="https://github.com/xet7">xet7</a></b></td>
@@ -1158,7 +1158,7 @@ Found and fixed during the sibling authentication audit; reproduced with locally
         <td valign="top"><details><summary>Details</summary><ul><li>Logged-out clients could enumerate authentication methods, teams and organizations (CWE-200)</li><li>Denied attempts are summarized in Admin Panel &rarr; Problems</li><li><a href="membershipbleed/">More details</a></li></ul></details></td>
       </tr>
       <tr>
-        <td valign="top"><a href="https://github.com/wekan/wekan/security/advisories/GHSA-9cgp-m28v-64xv">GHSA-9cgp-m28v-64xv</a></td>
+        <td valign="top"><a href="https://github.com/wekan/wekan/security/advisories/GHSA-9cgp-m28v-64xv">GHSA-9cgp-m28v-64xv</a> CVE requested</td>
         <td class="icon" valign="top"><h2><span class="vulnerability-icons" role="img" aria-label="ResetBleed"><i class="fa fa-key" style="color: black;" aria-hidden="true"></i> <i class="fa fa-envelope" style="color: black;" aria-hidden="true"></i> <i class="fa fa-repeat" style="color: black;" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></span> </h2></td>
         <td valign="top"><b><a href="resetbleed/">ResetBleed</a></b></td><td valign="top">2026-08-26</td>
         <td class="by" valign="top"><b><a href="https://github.com/crypto-nidh">crypto-nidh</a></b> and <b><a href="https://github.com/xet7">xet7</a></b></td>
@@ -1168,7 +1168,7 @@ Found and fixed during the sibling authentication audit; reproduced with locally
       </tr>
 
       <tr>
-        <td valign="top"><a href="https://github.com/wekan/wekan/security/advisories/GHSA-88mv-h439-rj8j">GHSA-88mv-h439-rj8j</a><br /><a href="https://github.com/wekan/wekan/security/advisories/GHSA-9846-cj96-6hv5">CVE-2026-119300 GHSA-9846-cj96-6hv5</a></td>
+        <td valign="top"><a href="https://github.com/wekan/wekan/security/advisories/GHSA-88mv-h439-rj8j">GHSA-88mv-h439-rj8j</a> CVE requested<br /><a href="https://github.com/wekan/wekan/security/advisories/GHSA-9846-cj96-6hv5">CVE-2026-119300 GHSA-9846-cj96-6hv5</a></td>
         <td class="icon" valign="top"><h2><span class="vulnerability-icons" role="img" aria-label="UserSearchBleed"><i class="fa fa-search" style="color: black;" aria-hidden="true"></i> <i class="fa fa-user" style="color: black;" aria-hidden="true"></i> <i class="fa fa-asterisk" style="color: black;" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></span> </h2></td>
         <td valign="top"><b><a href="usersearchbleed/">UserSearchBleed</a></b></td><td valign="top">2026-08-25</td>
         <td class="by" valign="top"><b><a href="https://github.com/Char0n1507">Char0n1507</a></b>, <b><a href="https://github.com/Reload3d">Reload3d</a></b> and <b><a href="https://github.com/xet7">xet7</a></b></td>
@@ -1177,7 +1177,7 @@ Found and fixed during the sibling authentication audit; reproduced with locally
         <td valign="top"><details><summary>Details</summary><ul><li>User search disclosed private account metadata and evaluated attacker-controlled regular expressions (CWE-284, CWE-359, CWE-400, CWE-1333)</li><li>No Problems event is emitted because legitimate searches use the same path</li><li><a href="usersearchbleed/">More details</a></li></ul></details></td>
       </tr>
       <tr>
-        <td valign="top"><a href="https://github.com/wekan/wekan/security/advisories/GHSA-c3ch-34g5-x3x7">GHSA-c3ch-34g5-x3x7</a></td>
+        <td valign="top"><a href="https://github.com/wekan/wekan/security/advisories/GHSA-c3ch-34g5-x3x7">GHSA-c3ch-34g5-x3x7</a> CVE requested</td>
         <td class="icon" valign="top"><h2><span class="vulnerability-icons" role="img" aria-label="MiniProfileBleed"><i class="fa fa-id-badge" style="color: black;" aria-hidden="true"></i> <i class="fa fa-eye" style="color: black;" aria-hidden="true"></i> <i class="fa fa-unlock" style="color: black;" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></span> </h2></td>
         <td valign="top"><b><a href="miniprofilebleed/">MiniProfileBleed</a></b></td><td valign="top">2026-08-25</td>
         <td class="by" valign="top"><b><a href="https://github.com/Char0n1507">Char0n1507</a></b> and <b><a href="https://github.com/xet7">xet7</a></b></td>
@@ -1186,7 +1186,7 @@ Found and fixed during the sibling authentication audit; reproduced with locally
         <td valign="top"><details><summary>Details</summary><ul><li>Logged-out clients could enumerate user profile and membership metadata (CWE-306, CWE-359)</li><li>Denied attempts are summarized in Admin Panel &rarr; Problems</li><li><a href="miniprofilebleed/">More details</a></li></ul></details></td>
       </tr>
       <tr>
-        <td valign="top"><a href="https://github.com/wekan/wekan/security/advisories/GHSA-5fc2-m4gw-j6qq">GHSA-5fc2-m4gw-j6qq</a></td>
+        <td valign="top"><a href="https://github.com/wekan/wekan/security/advisories/GHSA-5fc2-m4gw-j6qq">GHSA-5fc2-m4gw-j6qq</a> CVE requested</td>
         <td class="icon" valign="top"><h2><span class="vulnerability-icons" role="img" aria-label="PositionHistoryBleed"><i class="fa fa-undo" style="color: black;" aria-hidden="true"></i> <i class="fa fa-columns" style="color: black;" aria-hidden="true"></i> <i class="fa fa-chain-broken" style="color: black;" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></span> </h2></td>
         <td valign="top"><b><a href="positionhistorybleed/">PositionHistoryBleed</a></b></td><td valign="top">2026-08-25</td>
         <td class="by" valign="top"><b><a href="https://github.com/Char0n1507">Char0n1507</a></b> and <b><a href="https://github.com/xet7">xet7</a></b></td>
@@ -1195,7 +1195,7 @@ Found and fixed during the sibling authentication audit; reproduced with locally
         <td valign="top"><details><summary>Details</summary><ul><li>Forged undo history could inject a card into another private board (CWE-284, CWE-639)</li><li>Denied attempts are summarized in Admin Panel &rarr; Problems</li><li><a href="positionhistorybleed/">More details</a></li></ul><p>Follow-up fix (2026-10-02): client inserts are denied; undo and redo apply only applicable entries.</p></details></td>
       </tr>
       <tr>
-        <td valign="top"><a href="https://github.com/wekan/wekan/security/advisories/GHSA-hvvr-j425-5xxm">GHSA-hvvr-j425-5xxm</a></td>
+        <td valign="top"><a href="https://github.com/wekan/wekan/security/advisories/GHSA-hvvr-j425-5xxm">GHSA-hvvr-j425-5xxm</a> CVE requested</td>
         <td class="icon" valign="top"><h2><span class="vulnerability-icons" role="img" aria-label="SubtaskExportBleed"><i class="fa fa-sitemap" style="color: black;" aria-hidden="true"></i> <i class="fa fa-download" style="color: black;" aria-hidden="true"></i> <i class="fa fa-eye" style="color: black;" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></span> </h2></td>
         <td valign="top"><b><a href="subtaskexportbleed/">SubtaskExportBleed</a></b></td><td valign="top">2026-08-25</td>
         <td class="by" valign="top"><b><a href="https://github.com/Char0n1507">Char0n1507</a></b> and <b><a href="https://github.com/xet7">xet7</a></b></td>
@@ -1204,7 +1204,7 @@ Found and fixed during the sibling authentication audit; reproduced with locally
         <td valign="top"><details><summary>Details</summary><ul><li>Parent-only subtask queries could export private-board card data across board boundaries (CWE-200, CWE-639)</li><li>No Problems event is emitted because legitimate exports use the same path</li><li><a href="subtaskexportbleed/">More details</a></li></ul></details></td>
       </tr>
       <tr>
-        <td valign="top"><a href="https://github.com/wekan/wekan/security/advisories/GHSA-5797-pjx8-9h6m">GHSA-5797-pjx8-9h6m</a></td>
+        <td valign="top"><a href="https://github.com/wekan/wekan/security/advisories/GHSA-5797-pjx8-9h6m">GHSA-5797-pjx8-9h6m</a> CVE requested</td>
         <td class="icon" valign="top"><h2><span class="vulnerability-icons" role="img" aria-label="CasAccountMergeBleed"><i class="fa fa-id-card" style="color: black;" aria-hidden="true"></i> <i class="fa fa-user" style="color: black;" aria-hidden="true"></i> <i class="fa fa-compress" style="color: black;" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></span> </h2></td>
         <td valign="top"><b><a href="casbleed/">CasAccountMergeBleed</a></b></td><td valign="top">2026-08-25</td>
         <td class="by" valign="top"><b><a href="https://github.com/Char0n1507">Char0n1507</a></b>, <b><a href="https://github.com/crypto-nidh">crypto-nidh</a></b> and <b><a href="https://github.com/xet7">xet7</a></b></td>
@@ -1214,7 +1214,7 @@ Found and fixed during the sibling authentication audit; reproduced with locally
       </tr>
 
       <tr>
-        <td valign="top"><a href="https://github.com/wekan/wekan/security/advisories/GHSA-qp32-wqxw-wq3h">GHSA-qp32-wqxw-wq3h</a></td>
+        <td valign="top"><a href="https://github.com/wekan/wekan/security/advisories/GHSA-qp32-wqxw-wq3h">GHSA-qp32-wqxw-wq3h</a> CVE requested</td>
         <td class="icon" valign="top"><h2><span class="vulnerability-icons" role="img" aria-label="ImportBleed"><i class="fa fa-upload" style="color: black;" aria-hidden="true"></i> <i class="fa fa-users" style="color: black;" aria-hidden="true"></i> <i class="fa fa-unlock" style="color: black;" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></span> </h2></td>
         <td valign="top"><b><a href="importbleed/">ImportBleed</a></b></td><td valign="top">2026-08-23</td>
         <td class="by" valign="top"><b><a href="https://github.com/Char0n1507">Char0n1507</a></b> and <b><a href="https://github.com/xet7">xet7</a></b></td>
@@ -1224,7 +1224,7 @@ Found and fixed during the sibling authentication audit; reproduced with locally
       </tr>
 
       <tr>
-        <td valign="top"><a href="https://github.com/wekan/wekan/security/advisories/GHSA-5r4m-5xx6-96jf">GHSA-5r4m-5xx6-96jf</a></td>
+        <td valign="top"><a href="https://github.com/wekan/wekan/security/advisories/GHSA-5r4m-5xx6-96jf">GHSA-5r4m-5xx6-96jf</a> CVE requested</td>
         <td class="icon" valign="top"><h2><span class="vulnerability-icons" role="img" aria-label="ChecklistWriteBleed"><i class="fa fa-check-square-o" style="color: black;" aria-hidden="true"></i> <i class="fa fa-pencil" style="color: black;" aria-hidden="true"></i> <i class="fa fa-lock" style="color: black;" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></span> </h2></td>
         <td valign="top"><b><a href="checklistwritebleed/">ChecklistWriteBleed</a></b></td><td valign="top">2026-08-22</td>
         <td class="by" valign="top"><b><a href="https://github.com/Char0n1507">Char0n1507</a></b> and <b><a href="https://github.com/xet7">xet7</a></b></td>
@@ -1233,7 +1233,7 @@ Found and fixed during the sibling authentication audit; reproduced with locally
         <td valign="top"><details><summary>Details</summary><ul><li>Read-only members could mutate checklist content (CWE-863)</li><li><a href="checklistwritebleed/">More details</a></li></ul></details></td>
       </tr>
       <tr>
-        <td valign="top"><a href="https://github.com/wekan/wekan/security/advisories/GHSA-5r57-9vj7-c64f">GHSA-5r57-9vj7-c64f</a></td>
+        <td valign="top"><a href="https://github.com/wekan/wekan/security/advisories/GHSA-5r57-9vj7-c64f">GHSA-5r57-9vj7-c64f</a> CVE requested</td>
         <td class="icon" valign="top"><h2><span class="vulnerability-icons" role="img" aria-label="TokenAuditBleed"><i class="fa fa-key" style="color: black;" aria-hidden="true"></i> <i class="fa fa-user-secret" style="color: black;" aria-hidden="true"></i> <i class="fa fa-eye-slash" style="color: black;" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></span> </h2></td>
         <td valign="top"><b><a href="tokenauditbleed/">TokenAuditBleed</a></b></td><td valign="top">2026-08-22</td>
         <td class="by" valign="top"><b><a href="https://github.com/Char0n1507">Char0n1507</a></b> and <b><a href="https://github.com/xet7">xet7</a></b></td>
@@ -1242,7 +1242,7 @@ Found and fixed during the sibling authentication audit; reproduced with locally
         <td valign="top"><details><summary>Details</summary><ul><li>Administrator token issuance bypassed impersonation auditing (CWE-778)</li><li><a href="tokenauditbleed/">More details</a></li></ul></details></td>
       </tr>
       <tr>
-        <td valign="top"><a href="https://github.com/wekan/wekan/security/advisories/GHSA-6jvj-85q3-6q2m">GHSA-6jvj-85q3-6q2m</a></td>
+        <td valign="top"><a href="https://github.com/wekan/wekan/security/advisories/GHSA-6jvj-85q3-6q2m">GHSA-6jvj-85q3-6q2m</a> CVE requested</td>
         <td class="icon" valign="top"><h2><span class="vulnerability-icons" role="img" aria-label="OwnerBleed"><i class="fa fa-columns" style="color: black;" aria-hidden="true"></i> <i class="fa fa-user" style="color: black;" aria-hidden="true"></i> <i class="fa fa-flag" style="color: black;" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></span> </h2></td>
         <td valign="top"><b><a href="ownerbleed/">OwnerBleed</a></b></td><td valign="top">2026-08-22</td>
         <td class="by" valign="top"><b><a href="https://github.com/Char0n1507">Char0n1507</a></b> and <b><a href="https://github.com/xet7">xet7</a></b></td>
@@ -1251,7 +1251,7 @@ Found and fixed during the sibling authentication audit; reproduced with locally
         <td valign="top"><details><summary>Details</summary><ul><li>Board creation trusted client-selected ownership (CWE-639)</li><li><a href="ownerbleed/">More details</a></li></ul><p>Follow-up fix (2026-10-02): a client board insert naming other members is denied.</p></details></td>
       </tr>
       <tr>
-        <td valign="top"><a href="https://github.com/wekan/wekan/security/advisories/GHSA-cp24-5m9m-wm97">GHSA-cp24-5m9m-wm97</a></td>
+        <td valign="top"><a href="https://github.com/wekan/wekan/security/advisories/GHSA-cp24-5m9m-wm97">GHSA-cp24-5m9m-wm97</a> CVE requested</td>
         <td class="icon" valign="top"><h2><span class="vulnerability-icons" role="img" aria-label="RoleBleed"><i class="fa fa-users" style="color: black;" aria-hidden="true"></i> <i class="fa fa-table" style="color: black;" aria-hidden="true"></i> <i class="fa fa-unlock" style="color: black;" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></span> </h2></td>
         <td valign="top"><b><a href="rolebleed/">RoleBleed</a></b></td><td valign="top">2026-08-22</td>
         <td class="by" valign="top"><b><a href="https://github.com/senti-man">senti-man</a></b> and <b><a href="https://github.com/xet7">xet7</a></b></td>
@@ -1260,7 +1260,7 @@ Found and fixed during the sibling authentication audit; reproduced with locally
         <td valign="top"><details><summary>Details</summary><ul><li>REST capabilities drifted from the canonical role table (CWE-863)</li><li><a href="rolebleed/">More details</a></li></ul></details></td>
       </tr>
       <tr>
-        <td valign="top"><a href="https://github.com/wekan/wekan/security/advisories/GHSA-h59p-76c3-8345">GHSA-h59p-76c3-8345</a></td>
+        <td valign="top"><a href="https://github.com/wekan/wekan/security/advisories/GHSA-h59p-76c3-8345">GHSA-h59p-76c3-8345</a> CVE requested</td>
         <td class="icon" valign="top"><h2><span class="vulnerability-icons" role="img" aria-label="ErrorBleed"><i class="fa fa-exclamation-triangle" style="color: black;" aria-hidden="true"></i> <i class="fa fa-code" style="color: black;" aria-hidden="true"></i> <i class="fa fa-eye" style="color: black;" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></span> </h2></td>
         <td valign="top"><b><a href="errorbleed/">ErrorBleed</a></b></td><td valign="top">2026-08-22</td>
         <td class="by" valign="top"><b><a href="https://github.com/Char0n1507">Char0n1507</a></b> and <b><a href="https://github.com/xet7">xet7</a></b></td>
@@ -1269,7 +1269,7 @@ Found and fixed during the sibling authentication audit; reproduced with locally
         <td valign="top"><details><summary>Details</summary><ul><li>Raw errors were returned as successful REST responses (CWE-209)</li><li><a href="errorbleed/">More details</a></li></ul><p>Follow-up fix (2026-10-02): error details are hidden in ten more files.</p></details></td>
       </tr>
       <tr>
-        <td valign="top"><a href="https://github.com/wekan/wekan/security/advisories/GHSA-qf5c-63jx-mpv4">GHSA-qf5c-63jx-mpv4</a></td>
+        <td valign="top"><a href="https://github.com/wekan/wekan/security/advisories/GHSA-qf5c-63jx-mpv4">GHSA-qf5c-63jx-mpv4</a> CVE requested</td>
         <td class="icon" valign="top"><h2><span class="vulnerability-icons" role="img" aria-label="CommentWriteBleed"><i class="fa fa-comment" style="color: black;" aria-hidden="true"></i> <i class="fa fa-plus" style="color: black;" aria-hidden="true"></i> <i class="fa fa-lock" style="color: black;" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></span> </h2></td>
         <td valign="top"><b><a href="commentwritebleed/">CommentWriteBleed</a></b></td><td valign="top">2026-08-22</td>
         <td class="by" valign="top"><b><a href="https://github.com/Char0n1507">Char0n1507</a></b> and <b><a href="https://github.com/xet7">xet7</a></b></td>
@@ -1280,7 +1280,7 @@ Found and fixed during the sibling authentication audit; reproduced with locally
 
       <tr>
         <td valign="top">
-          <a href="https://github.com/wekan/wekan/security/advisories/GHSA-p4cq-83j9-7g73">GHSA-p4cq-83j9-7g73</a>
+          <a href="https://github.com/wekan/wekan/security/advisories/GHSA-p4cq-83j9-7g73">GHSA-p4cq-83j9-7g73</a> CVE requested
         </td>
         <td class="icon" valign="top"><h2><span class="vulnerability-icons" role="img" aria-label="TenantBleed"><i class="fa fa-building" style="color: black;" aria-hidden="true"></i> <i class="fa fa-users" style="color: black;" aria-hidden="true"></i> <i class="fa fa-wrench" style="color: black;" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></span> </h2></td>
         <td valign="top"><b><a href="tenantbleed/">TenantBleed</a></b></td>
@@ -1311,7 +1311,7 @@ Found and fixed during the sibling authentication audit; reproduced with locally
 
       <tr>
         <td valign="top">
-          <a href="https://github.com/wekan/wekan/security/advisories/GHSA-f396-42fx-vr88">GHSA-f396-42fx-vr88</a><br /><a href="https://github.com/wekan/wekan/security/advisories/GHSA-3cgr-47wm-9cc9">GHSA-3cgr-47wm-9cc9</a><br /><a href="https://github.com/wekan/wekan/security/advisories/GHSA-r4gm-mjj9-g3x8">GHSA-r4gm-mjj9-g3x8</a>
+          <a href="https://github.com/wekan/wekan/security/advisories/GHSA-f396-42fx-vr88">GHSA-f396-42fx-vr88</a> CVE requested<br /><a href="https://github.com/wekan/wekan/security/advisories/GHSA-3cgr-47wm-9cc9">GHSA-3cgr-47wm-9cc9</a> CVE requested<br /><a href="https://github.com/wekan/wekan/security/advisories/GHSA-r4gm-mjj9-g3x8">GHSA-r4gm-mjj9-g3x8</a> CVE requested
         </td>
         <td class="icon" valign="top"><h2><span class="vulnerability-icons" role="img" aria-label="AssignedBleed"><i class="fa fa-user" style="color: black;" aria-hidden="true"></i> <i class="fa fa-check-square-o" style="color: black;" aria-hidden="true"></i> <i class="fa fa-pencil" style="color: black;" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></span> </h2></td>
         <td valign="top"><b><a href="assignedbleed/">AssignedBleed</a></b></td>
@@ -1352,7 +1352,7 @@ Found and fixed during the sibling authentication audit; reproduced with locally
 
       <tr>
         <td valign="top">
-          <a href="https://github.com/wekan/wekan/security/advisories/GHSA-fpm6-r5fg-2mrg">GHSA-fpm6-r5fg-2mrg</a>
+          <a href="https://github.com/wekan/wekan/security/advisories/GHSA-fpm6-r5fg-2mrg">GHSA-fpm6-r5fg-2mrg</a> CVE requested
         </td>
         <td class="icon" valign="top"><h2><span class="vulnerability-icons" role="img" aria-label="CalendarBleed"><i class="fa fa-calendar" style="color: black;" aria-hidden="true"></i> <i class="fa fa-upload" style="color: black;" aria-hidden="true"></i> <i class="fa fa-lock" style="color: black;" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></span> </h2></td>
         <td valign="top"><b><a href="calendarbleed/">CalendarBleed</a></b></td>
@@ -1427,7 +1427,7 @@ Found and fixed during the sibling authentication audit; reproduced with locally
 
       <tr>
         <td valign="top">
-          <a href="https://github.com/wekan/wekan/security/advisories/GHSA-rf3w-rj48-jxcc">GHSA-rf3w-rj48-jxcc</a>
+          <a href="https://github.com/wekan/wekan/security/advisories/GHSA-rf3w-rj48-jxcc">GHSA-rf3w-rj48-jxcc</a> CVE requested
           <br /> <br />
         </td>
         <td class="icon" valign="top"><h2><span class="vulnerability-icons" role="img" aria-label="JamBleed"><i class="fa fa-user" style="color: black;" aria-hidden="true"></i> <i class="fa fa-ban" style="color: black;" aria-hidden="true"></i> <i class="fa fa-repeat" style="color: black;" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></span> </h2></td>
@@ -1508,7 +1508,7 @@ Found and fixed during the sibling authentication audit; reproduced with locally
 
       <tr>
         <td valign="top">
-          <a href="https://github.com/wekan/wekan/security/advisories/GHSA-8cqr-x6m5-v4w6">GHSA-8cqr-x6m5-v4w6</a>
+          <a href="https://github.com/wekan/wekan/security/advisories/GHSA-8cqr-x6m5-v4w6">GHSA-8cqr-x6m5-v4w6</a> CVE requested
           <br /> <br />
         </td>
         <td class="icon" valign="top"><h2><span class="vulnerability-icons" role="img" aria-label="PurgeBleed"><i class="fa fa-columns" style="color: black;" aria-hidden="true"></i> <i class="fa fa-trash" style="color: black;" aria-hidden="true"></i> <i class="fa fa-chain-broken" style="color: black;" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></span> </h2></td>
@@ -1547,7 +1547,7 @@ Found and fixed during the sibling authentication audit; reproduced with locally
 
       <tr>
         <td valign="top">
-          <a href="https://github.com/wekan/wekan/security/advisories/GHSA-6qpx-x7vr-p9w6">GHSA-6qpx-x7vr-p9w6</a>
+          <a href="https://github.com/wekan/wekan/security/advisories/GHSA-6qpx-x7vr-p9w6">GHSA-6qpx-x7vr-p9w6</a> CVE requested
           <br /> <br />
         </td>
         <td class="icon" valign="top"><h2><span class="vulnerability-icons" role="img" aria-label="HashBleed"><i class="fa fa-key" style="color: black;" aria-hidden="true"></i> <i class="fa fa-database" style="color: black;" aria-hidden="true"></i> <i class="fa fa-eye" style="color: black;" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></span> </h2></td>
@@ -1586,7 +1586,7 @@ Found and fixed during the sibling authentication audit; reproduced with locally
 
       <tr>
         <td valign="top">
-          <a href="https://github.com/wekan/wekan/security/advisories/GHSA-whxm-pxgj-7wqv">GHSA-whxm-pxgj-7wqv</a>
+          <a href="https://github.com/wekan/wekan/security/advisories/GHSA-whxm-pxgj-7wqv">GHSA-whxm-pxgj-7wqv</a> CVE requested
           <br /> <br />
         </td>
         <td class="icon" valign="top"><h2><span class="vulnerability-icons" role="img" aria-label="GuestBleed"><i class="fa fa-user-plus" style="color: black;" aria-hidden="true"></i> <i class="fa fa-columns" style="color: black;" aria-hidden="true"></i> <i class="fa fa-eye" style="color: black;" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></span> </h2></td>
@@ -1625,7 +1625,7 @@ Found and fixed during the sibling authentication audit; reproduced with locally
 
       <tr>
         <td valign="top">
-          <a href="https://github.com/wekan/wekan/security/advisories/GHSA-r8r3-23vr-8jh6">GHSA-r8r3-23vr-8jh6</a>
+          <a href="https://github.com/wekan/wekan/security/advisories/GHSA-r8r3-23vr-8jh6">GHSA-r8r3-23vr-8jh6</a> CVE requested
           <br /> <br />
         </td>
         <td class="icon" valign="top"><h2><span class="vulnerability-icons" role="img" aria-label="StaleBleed"><i class="fa fa-user-times" style="color: black;" aria-hidden="true"></i> <i class="fa fa-history" style="color: black;" aria-hidden="true"></i> <i class="fa fa-eye" style="color: black;" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></span> </h2></td>
@@ -1664,7 +1664,7 @@ Found and fixed during the sibling authentication audit; reproduced with locally
 
       <tr>
         <td valign="top">
-          <a href="https://github.com/wekan/wekan/security/advisories/GHSA-6jr3-42jf-vhm5">GHSA-6jr3-42jf-vhm5</a>
+          <a href="https://github.com/wekan/wekan/security/advisories/GHSA-6jr3-42jf-vhm5">GHSA-6jr3-42jf-vhm5</a> CVE requested
           <br /> <br />
         </td>
         <td class="icon" valign="top"><h2><span class="vulnerability-icons" role="img" aria-label="AuthorBleed"><i class="fa fa-pencil" style="color: black;" aria-hidden="true"></i> <i class="fa fa-user-secret" style="color: black;" aria-hidden="true"></i> <i class="fa fa-history" style="color: black;" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></span> </h2></td>
@@ -1703,7 +1703,7 @@ Found and fixed during the sibling authentication audit; reproduced with locally
 
       <tr>
         <td valign="top">
-          <a href="https://github.com/wekan/wekan/security/advisories/GHSA-6p5m-f9p2-wqm5">GHSA-6p5m-f9p2-wqm5</a>
+          <a href="https://github.com/wekan/wekan/security/advisories/GHSA-6p5m-f9p2-wqm5">GHSA-6p5m-f9p2-wqm5</a> CVE requested
           <br /> <br />
         </td>
         <td class="icon" valign="top"><h2><span class="vulnerability-icons" role="img" aria-label="PassBleed"><i class="fa fa-file-excel-o" style="color: black;" aria-hidden="true"></i> <i class="fa fa-download" style="color: black;" aria-hidden="true"></i> <i class="fa fa-chain-broken" style="color: black;" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></span> </h2></td>
@@ -1741,7 +1741,7 @@ Found and fixed during the sibling authentication audit; reproduced with locally
 
       <tr>
         <td valign="top">
-          <a href="https://github.com/wekan/wekan/security/advisories/GHSA-phm4-4v26-j2vq">GHSA-phm4-4v26-j2vq</a>
+          <a href="https://github.com/wekan/wekan/security/advisories/GHSA-phm4-4v26-j2vq">GHSA-phm4-4v26-j2vq</a> CVE requested
           <br /> <br />
         </td>
         <td class="icon" valign="top"><h2><span class="vulnerability-icons" role="img" aria-label="WhereBleed"><i class="fa fa-database" style="color: black;" aria-hidden="true"></i> <i class="fa fa-terminal" style="color: black;" aria-hidden="true"></i> <i class="fa fa-code" style="color: black;" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></span> </h2></td>
@@ -1780,7 +1780,7 @@ Found and fixed during the sibling authentication audit; reproduced with locally
 
       <tr>
         <td valign="top">
-          <a href="https://github.com/wekan/wekan/security/advisories/GHSA-4mxf-m8pq-xc9p">GHSA-4mxf-m8pq-xc9p</a>
+          <a href="https://github.com/wekan/wekan/security/advisories/GHSA-4mxf-m8pq-xc9p">GHSA-4mxf-m8pq-xc9p</a> CVE requested
           <br /> <br />
         </td>
         <td class="icon" valign="top"><h2><span class="vulnerability-icons" role="img" aria-label="PathBleed"><i class="fa fa-user-circle" style="color: black;" aria-hidden="true"></i> <i class="fa fa-folder-open" style="color: black;" aria-hidden="true"></i> <i class="fa fa-pencil" style="color: black;" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></span> </h2></td>
@@ -1817,7 +1817,7 @@ Found and fixed during the sibling authentication audit; reproduced with locally
 
       <tr>
         <td valign="top">
-          <a href="https://github.com/wekan/wekan/security/advisories/GHSA-jvv9-498p-hxrg">GHSA-jvv9-498p-hxrg</a>
+          <a href="https://github.com/wekan/wekan/security/advisories/GHSA-jvv9-498p-hxrg">GHSA-jvv9-498p-hxrg</a> CVE requested
           <br /> <br />
         </td>
         <td class="icon" valign="top"><h2><span class="vulnerability-icons" role="img" aria-label="ParentBleed"><i class="fa fa-sitemap" style="color: black;" aria-hidden="true"></i> <i class="fa fa-level-up" style="color: black;" aria-hidden="true"></i> <i class="fa fa-eye" style="color: black;" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></span> </h2></td>
@@ -1853,7 +1853,7 @@ Found and fixed during the sibling authentication audit; reproduced with locally
 
       <tr>
         <td valign="top">
-          <a href="https://github.com/wekan/wekan/security/advisories/GHSA-gwc4-fw7p-gw58">GHSA-gwc4-fw7p-gw58</a>
+          <a href="https://github.com/wekan/wekan/security/advisories/GHSA-gwc4-fw7p-gw58">GHSA-gwc4-fw7p-gw58</a> CVE requested
           <br /> <br />
         </td>
         <td class="icon" valign="top"><h2><span class="vulnerability-icons" role="img" aria-label="RevokeBleed"><i class="fa fa-users" style="color: black;" aria-hidden="true"></i> <i class="fa fa-ban" style="color: black;" aria-hidden="true"></i> <i class="fa fa-eye" style="color: black;" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></span> </h2></td>
@@ -1889,7 +1889,7 @@ Found and fixed during the sibling authentication audit; reproduced with locally
 
       <tr>
         <td valign="top">
-          <a href="https://github.com/wekan/wekan/security/advisories/GHSA-pqr4-rxgp-hv2m">GHSA-pqr4-rxgp-hv2m</a>
+          <a href="https://github.com/wekan/wekan/security/advisories/GHSA-pqr4-rxgp-hv2m">GHSA-pqr4-rxgp-hv2m</a> CVE requested
           <br /> <br />
         </td>
         <td class="icon" valign="top"><h2><span class="vulnerability-icons" role="img" aria-label="CommentBleed"><i class="fa fa-comment" style="color: black;" aria-hidden="true"></i> <i class="fa fa-trash" style="color: black;" aria-hidden="true"></i> <i class="fa fa-lock" style="color: black;" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></span> </h2></td>
@@ -1962,7 +1962,7 @@ Found and fixed during the sibling authentication audit; reproduced with locally
 
       <tr>
         <td valign="top">
-          <a href="https://github.com/wekan/wekan/security/advisories/GHSA-2g94-9x3m-hv37">GHSA-2g94-9x3m-hv37</a>
+          <a href="https://github.com/wekan/wekan/security/advisories/GHSA-2g94-9x3m-hv37">GHSA-2g94-9x3m-hv37</a> CVE requested
           <br /> <br />
         </td>
         <td class="icon" valign="top"><h2><span class="vulnerability-icons" role="img" aria-label="LockoutBleed"><i class="fa fa-key" style="color: black;" aria-hidden="true"></i> <i class="fa fa-unlock" style="color: black;" aria-hidden="true"></i> <i class="fa fa-repeat" style="color: black;" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></span> </h2></td>
@@ -1999,7 +1999,7 @@ Found and fixed during the sibling authentication audit; reproduced with locally
 
       <tr>
         <td valign="top">
-          <a href="https://github.com/wekan/wekan/security/advisories/GHSA-j9p2-jm73-p549">GHSA-j9p2-jm73-p549</a>
+          <a href="https://github.com/wekan/wekan/security/advisories/GHSA-j9p2-jm73-p549">GHSA-j9p2-jm73-p549</a> CVE requested
           <br /> <br />
         </td>
         <td class="icon" valign="top"><h2><span class="vulnerability-icons" role="img" aria-label="FollowBleed"><i class="fa fa-upload" style="color: black;" aria-hidden="true"></i> <i class="fa fa-share" style="color: black;" aria-hidden="true"></i> <i class="fa fa-server" style="color: black;" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></span> </h2></td>
@@ -2036,7 +2036,7 @@ Found and fixed during the sibling authentication audit; reproduced with locally
 
       <tr>
         <td valign="top">
-          <a href="https://github.com/wekan/wekan/security/advisories/GHSA-c5xr-mg26-vq5w">GHSA-c5xr-mg26-vq5w</a>
+          <a href="https://github.com/wekan/wekan/security/advisories/GHSA-c5xr-mg26-vq5w">GHSA-c5xr-mg26-vq5w</a> CVE requested
           <br /> <br />
         </td>
         <td class="icon" valign="top"><h2><span class="vulnerability-icons" role="img" aria-label="TransitBleed"><i class="fa fa-globe" style="color: black;" aria-hidden="true"></i> <i class="fa fa-exchange" style="color: black;" aria-hidden="true"></i> <i class="fa fa-server" style="color: black;" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></span> </h2></td>
@@ -2180,7 +2180,7 @@ Found and fixed during the sibling authentication audit; reproduced with locally
 
       <tr>
         <td valign="top">
-          -
+          CVE requested
           <br /> <br />
         </td>
         <td class="icon" valign="top"><h2><span class="vulnerability-icons" role="img" aria-label="RedirectBleed"><i class="fa fa-user-circle" style="color: black;" aria-hidden="true"></i> <i class="fa fa-share" style="color: black;" aria-hidden="true"></i> <i class="fa fa-server" style="color: black;" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></span> </h2></td>
@@ -2215,7 +2215,7 @@ Found and fixed during the sibling authentication audit; reproduced with locally
 
       <tr>
         <td valign="top">
-          -
+          CVE requested
           <br /> <br />
         </td>
         <td class="icon" valign="top"><h2><span class="vulnerability-icons" role="img" aria-label="SourceBleed"><i class="fa fa-upload" style="color: black;" aria-hidden="true"></i> <i class="fa fa-link" style="color: black;" aria-hidden="true"></i> <i class="fa fa-code" style="color: black;" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></span> </h2></td>
@@ -2250,7 +2250,7 @@ Found and fixed during the sibling authentication audit; reproduced with locally
 
       <tr>
         <td valign="top">
-          -
+          CVE requested
           <br /> <br />
         </td>
         <td class="icon" valign="top"><h2><span class="vulnerability-icons" role="img" aria-label="LiveBleed"><i class="fa fa-upload" style="color: black;" aria-hidden="true"></i> <i class="fa fa-paperclip" style="color: black;" aria-hidden="true"></i> <i class="fa fa-server" style="color: black;" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></span> </h2></td>
@@ -2285,7 +2285,7 @@ Found and fixed during the sibling authentication audit; reproduced with locally
 
       <tr>
         <td valign="top">
-          -
+          CVE requested
           <br /> <br />
         </td>
         <td class="icon" valign="top"><h2><span class="vulnerability-icons" role="img" aria-label="CasRaceBleed"><i class="fa fa-id-card" style="color: black;" aria-hidden="true"></i> <i class="fa fa-exchange" style="color: black;" aria-hidden="true"></i> <i class="fa fa-clock-o" style="color: black;" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></span> </h2></td>
@@ -2320,7 +2320,7 @@ Found and fixed during the sibling authentication audit; reproduced with locally
 
       <tr>
         <td valign="top">
-          -
+          CVE requested
           <br /> <br />
         </td>
         <td class="icon" valign="top"><h2><span class="vulnerability-icons" role="img" aria-label="MetricsBleed"><i class="fa fa-bar-chart" style="color: black;" aria-hidden="true"></i> <i class="fa fa-server" style="color: black;" aria-hidden="true"></i> <i class="fa fa-user-secret" style="color: black;" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></span> </h2></td>

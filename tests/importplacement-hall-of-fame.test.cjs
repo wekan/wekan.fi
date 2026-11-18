@@ -20,8 +20,9 @@ const rowOf = html => {
 for (const [file, star] of [['index.html', 'GoldStar.png'], ['importplacementbleed/index.html', '../GoldStar.png']]) {
   const html = fs.readFileSync(path.join(root, file), 'utf8');
   const cells = rowOf(html);
-  // No CVE yet: requested through the GHSA, so the cell stays "-" until GitHub assigns one.
-  assert.equal(cells[0], '<td valign="top">-</td>', file);
+  // No CVE yet: one has been requested through the GHSA, as for every GHSA, and
+  // the cell says so until GitHub assigns it.
+  assert.equal(cells[0], '<td valign="top">CVE requested</td>', file);
   assert.equal(cells[3], '<td valign="top">2026-10-29</td>', file);
   assert.equal(cells[4], '<td class="by" valign="top"><b><a href="https://github.com/zachariah-mithani">zachariah-mithani</a></b></td>', file);
   assert.equal((cells[5].match(new RegExp(star.replace(/[.]/g, '\\.'), 'g')) || []).length, 5, `${file}: GHSA with a suggested fix is 5 stars`);

@@ -12,14 +12,14 @@
 <table border="1"><tr><th>CVE</th><th>Icon</th><th>Vulnerability name</th><th>Date</th>
 <th>Responsible Security Disclosure by</th><th>Stars</th><th>Process</th><th>Vulnerabilities</th></tr>
 <tr>
-<td valign="top">-</td>
+<td valign="top">CVE requested</td>
 <td class="icon" valign="top"><h2><span role="img" aria-label="LdapBindBleed"><i class="fa fa-sign-in" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></span></h2></td>
 <td valign="top"><b>LdapBindBleed</b></td>
 <td valign="top">2026-09-27</td>
 <td class="by" valign="top"><b><a href="https://github.com/kta1kri">kta1kri</a></b></td>
 <td class="stars" valign="top"><img src="../GoldStar.png" width="30" height="30" alt="Gold star"><img src="../GoldStar.png" width="30" height="30" alt="Gold star"><img src="../GoldStar.png" width="30" height="30" alt="Gold star"><img src="../GoldStar.png" width="30" height="30" alt="Gold star"><img src="../GoldStar.png" width="30" height="30" alt="Gold star"></td>
 <td valign="top">Responsible disclosure through private GitHub advisory GHSA-m87f-f43w-hwmc, with a detailed report and suggested fix; validated and fixed by xet7.</td>
-<td valign="top"><p>LDAP direct user-bind mode accepted empty passwords. On a directory that permits unauthenticated binds and the subsequent user search, this could authenticate a matching WeKan account without its password. Both user-authentication helpers and the DDP/REST login boundary now reject empty or malformed credentials before binding or falling back.</p><p>CWE-287. Conditional critical authentication bypass. No CVE assigned. The OpenLDAP administrator guide states that unauthenticated binds are disabled by default; the report’s stock-default claim was not confirmed.</p><p>Fix prepared for the Upcoming release.</p></td>
+<td valign="top"><p>LDAP direct user-bind mode accepted empty passwords. On a directory that permits unauthenticated binds and the subsequent user search, this could authenticate a matching WeKan account without its password. Both user-authentication helpers and the DDP/REST login boundary now reject empty or malformed credentials before binding or falling back.</p><p>CWE-287. Conditional critical authentication bypass. CVE requested. The OpenLDAP administrator guide states that unauthenticated binds are disabled by default; the report’s stock-default claim was not confirmed.</p><p>Fix prepared for the Upcoming release.</p></td>
 </tr>
 </table>
 <h2 class="hof">Details</h2>

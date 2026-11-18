@@ -11,7 +11,10 @@ for(const [name,reporter,stars]of [['LdapBindBleed','kta1kri',5],['DirectoryGrou
  assert.match(cells[7],/<details><summary>Details<\/summary>/);
  const page=fs.readFileSync(path.join(root,name.toLowerCase(),'index.html'),'utf8');
  assert.doesNotMatch(page,/<details>/);assert.match(page,/<h2 class="hof">Details<\/h2>/);
- assert.match(page,/679a8b349/);assert.match(page,/No CVE assigned/);assert.match(page,/Upcoming release/);
+ assert.match(page,/679a8b349/);// Every GHSA has had a CVE requested, and until GitHub assigns it the page
+ // says so; a finding with no GHSA has no CVE request behind it.
+ if(/GHSA-[a-z0-9]{4}-[a-z0-9]{4}-[a-z0-9]{4}/.test(rows[0])){assert.match(page,/CVE requested/,name);assert.doesNotMatch(page,/No CVE (is |has been )?assigned/,name);}
+ else{assert.match(page,/No CVE assigned/,name);assert.doesNotMatch(page,/CVE requested/,name);}assert.match(page,/Upcoming release/);
  assert.doesNotMatch(page,/fixed in v\d/i);
  assert.match(page,/not tested/);
 }

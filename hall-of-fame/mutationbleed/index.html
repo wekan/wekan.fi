@@ -1,7 +1,7 @@
 <html><head><meta charset="UTF-8"><title>WeKan — MutationBleed</title><link rel="stylesheet" href="../../css/main.css"><link rel="stylesheet" href="../../font-awesome/css/font-awesome.min.css"></head><body class="hall-of-fame">
 <h1>MutationBleed</h1><table class="hof" width="100%"><tr><th>CVE</th><th>Icon</th><th>Vulnerability name</th><th>Date</th><th>Responsible Security Disclosure by</th><th>Stars</th><th>Process</th><th>Vulnerabilities</th></tr>
       <tr>
-        <td valign="top">-</td>
+        <td valign="top">CVE requested</td>
         <td class="icon" valign="top"><h2><span class="vulnerability-icons" role="img" aria-label="MutationBleed"><i class="fa fa-pencil" style="color: black;" aria-hidden="true"></i> <i class="fa fa-exchange" style="color: black;" aria-hidden="true"></i> <i class="fa fa-lock" style="color: black;" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></span> </h2></td>
         <td valign="top"><b>MutationBleed</b></td>
         <td valign="top">2026-09-14</td>
@@ -20,6 +20,6 @@
         </td>
       </tr>
 
-</table><h2 class="hof">Details</h2><p>Server methods bypass collection allow/deny. Membership alone does not grant write access: comment-only, comment-assigned-only, worker and read-only roles cannot perform general board mutations.</p><p>Both sides of list, swimlane and checklist moves, scoped import, attachment rename and history write paths now enforce the canonical role capability. The No comments role keeps its intended write access. Denied attempts use bounded Problems summaries; logging cannot break enforcement.</p><p><a href="https://github.com/wekan/wekan/commit/9b1fb5214">Source fix and regression coverage</a>. Role decisions, reported moveList attack and sibling inventory tests pass. Browser regression added and syntax-checked; live execution pending. No CVE is assigned here.</p><h2>Follow-up fixes (2026-10-02)</h2>
+</table><h2 class="hof">Details</h2><p>Server methods bypass collection allow/deny. Membership alone does not grant write access: comment-only, comment-assigned-only, worker and read-only roles cannot perform general board mutations.</p><p>Both sides of list, swimlane and checklist moves, scoped import, attachment rename and history write paths now enforce the canonical role capability. The No comments role keeps its intended write access. Denied attempts use bounded Problems summaries; logging cannot break enforcement.</p><p><a href="https://github.com/wekan/wekan/commit/9b1fb5214">Source fix and regression coverage</a>. Role decisions, reported moveList attack and sibling inventory tests pass. Browser regression added and syntax-checked; live execution pending. CVE requested.</p><h2>Follow-up fixes (2026-10-02)</h2>
 <p>The remaining mutation paths - shared board display settings such as list width, auto width and sticky list headers - now require write access. <a href="https://github.com/wekan/wekan/commit/fd458543f9">Fix</a>, <a href="https://github.com/wekan/wekan/commit/5de71ba789">test follow-up</a>.</p>
 </body></html>
