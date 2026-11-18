@@ -92,6 +92,22 @@
       </tr>
 <tr>
 <td valign="top">-</td>
+<td class="icon" valign="top"><h2><span role="img" aria-label="RaceBleed"><i class="fa fa-random" aria-hidden="true"></i> <i class="fa fa-trash" aria-hidden="true"></i> <i class="fa fa-clock-o" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></span></h2></td>
+<td valign="top"><b><a href="racebleed/">RaceBleed</a></b></td>
+<td valign="top">2026-11-18</td>
+<td class="by" valign="top"><b><a href="https://github.com/xingmuse">xingmuse</a></b></td>
+<td class="stars" valign="top"><img src="GoldStar.png" width="30" height="30" alt="Gold star"><img src="GoldStar.png" width="30" height="30" alt="Gold star"><img src="GoldStar.png" width="30" height="30" alt="Gold star"><img src="GoldStar.png" width="30" height="30" alt="Gold star"><img src="GoldStar.png" width="30" height="30" alt="Gold star"></td>
+<td valign="top"><details><summary>Process</summary>
+
+<p>Coordinated disclosure via GitHub Security Advisory <a href="https://github.com/wekan/wekan/security/advisories/GHSA-3vjg-3p4q-8fwh">GHSA-3vjg-3p4q-8fwh</a>, with the affected code path, a dual-browser proof of concept and a suggested fix; validated and fixed by xet7.</p>
+</details></td>
+<td valign="top"><details><summary>Details</summary>
+
+<p>A card DELETE racing a move of that card to another board destroyed the card&#39;s checklists, checklist items, comments and attachments, while the card itself survived on a board the deleter could not read: the children were deleted by card id first, and the card last, keyed on the board the caller was authorised for.</p><ul><li>CWE-367. Moderate severity. No CVE assigned yet. Fix prepared for the Upcoming release.</li><li><a href="racebleed/">More details</a></li></ul>
+</details></td>
+</tr>
+<tr>
+<td valign="top">-</td>
 <td class="icon" valign="top"><h2><span role="img" aria-label="ListLockAttachBleed"><i class="fa fa-list" aria-hidden="true"></i> <i class="fa fa-lock" aria-hidden="true"></i> <i class="fa fa-paperclip" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></span></h2></td>
 <td valign="top"><b><a href="listlockattachbleed/">ListLockAttachBleed</a></b></td>
 <td valign="top">2026-11-11</td>

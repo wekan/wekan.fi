@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8">
+<title>WeKan — Hall of Fame / RaceBleed</title>
+<link rel="icon" href="../../wekan-favicon.png">
+<link rel="stylesheet" href="../../css/main.css">
+<link rel="stylesheet" href="../../font-awesome/css/font-awesome.min.css">
+</head><body class="hall-of-fame">
+<img src="../hof.svg" alt="Hall of Fame" width="300">
+<div class="action-buttons"><a class="button" href="../">Back to Hall of Fame Contents</a>
+<a class="button" href="../../">Back to WeKan Website</a></div>
+<div class="hof"><h1>RaceBleed</h1>
+<table border="1"><tr><th>CVE</th><th>Icon</th><th>Vulnerability name</th><th>Date</th>
+<th>Responsible Security Disclosure by</th><th>Stars</th><th>Process</th><th>Vulnerabilities</th></tr>
+<tr>
+<td valign="top">-</td>
+<td class="icon" valign="top"><h2><span role="img" aria-label="RaceBleed"><i class="fa fa-random" aria-hidden="true"></i> <i class="fa fa-trash" aria-hidden="true"></i> <i class="fa fa-clock-o" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></span></h2></td>
+<td valign="top"><b><a href="./">RaceBleed</a></b></td>
+<td valign="top">2026-11-18</td>
+<td class="by" valign="top"><b><a href="https://github.com/xingmuse">xingmuse</a></b></td>
+<td class="stars" valign="top"><img src="../GoldStar.png" width="30" height="30" alt="Gold star"><img src="../GoldStar.png" width="30" height="30" alt="Gold star"><img src="../GoldStar.png" width="30" height="30" alt="Gold star"><img src="../GoldStar.png" width="30" height="30" alt="Gold star"><img src="../GoldStar.png" width="30" height="30" alt="Gold star"></td>
+<td valign="top"><p>Coordinated disclosure via GitHub Security Advisory <a href="https://github.com/wekan/wekan/security/advisories/GHSA-3vjg-3p4q-8fwh">GHSA-3vjg-3p4q-8fwh</a>, with the affected code path, a dual-browser proof of concept and a suggested fix; validated and fixed by xet7.</p>
+</td>
+<td valign="top"><p>A card DELETE racing a move of that card to another board destroyed the card&#39;s checklists, checklist items, comments and attachments, while the card itself survived on a board the deleter could not read: the children were deleted by card id first, and the card last, keyed on the board the caller was authorised for.</p>
+</td>
+</tr>
+</table>
+<h2 class="hof">Details</h2>
+<p>The REST card deletion <code>DELETE /api/boards/:boardId/lists/:listId/cards/:cardId</code> checked the caller&#39;s write access to the board, looked the card up on that board (the <a href="../purgebleed/">PurgeBleed</a> fix), then ran <code>cardRemover</code>, which deletes the card&#39;s checklists, checklist items, comments, attachments and subcards by card id alone, and only then removed the card itself, keyed on the board and list. Nothing held the card in place between the lookup and that last removal. When a board admin moved the card to another board in that window, the removal matched nothing, so the card survived on the destination board, which the deleter may not even read, without any of its children, and both requests answered 200. The bulk deletion had the same order. So did every hooked removal: <code>matb33:collection-hooks</code> runs <code>Cards.before.remove</code>, where the cascade was, and then removes by the caller&#39;s original selector (a swimlane, a delete batch, a parent card), which a moved card no longer matches. The clean-up of custom-field links on other cards did the same. The attack needs a concurrent move by somebody else, so it is a spray-and-wait race, and the data it destroys is lost for good.</p>
+<p><strong>Fix:</strong> the card document is the claim (<code>models/lib/claimedCardRemoval.js</code>). The single and bulk REST deletions remove the card first, keyed on where the caller was authorised, and destroy its children only when that removal matched. Once the card is gone, a concurrent move matches nothing; when the move won, the removal matches nothing and nothing else is touched. Hooked removals cascade from <code>Cards.after.remove</code>, and only for a card that is really gone, and a list deletion removes a card only while it is still in that list. The REST board move that loses to a delete now answers 404 instead of a 500.</p>
+<h2>Detection</h2>
+<p>A delete that lost the race, or one that arrived after the card had been moved away from the board it names, is refused (404) and recorded in Admin Panel / Problems as RaceBleed (key <code>authz.card-delete-race</code>). It is medium severity and never disables the account: a member deleting a card that somebody had just moved is working from a stale view, not attacking. The PurgeBleed record, which is critical and disables the account, is kept for a card that was never on the named board.</p>
+<h2>Verification</h2>
+<p>tests/claimedCardRemoval.test.cjs replays the reported race against the decision itself: the move lands after the lookup, and the card keeps every child. A negative test shows the old order losing them. Further tests scan <code>server/</code> so that no <code>Cards.before.remove</code> cascades and every direct <code>cardRemover</code> goes through the claim. tests/playwright/specs/race-bleed.e2e.js runs against a live server: it races twelve moves against twelve deletes by another member and checks that a surviving card always keeps its checklist and item, that the move that lost answers 404, and that a stale delete leaves the member&#39;s account usable.</p>
+<p><a href="https://github.com/wekan/wekan/commit/c7a496c9cf">Source fix and regression coverage</a></p>
+</div></body></html>
