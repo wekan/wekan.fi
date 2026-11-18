@@ -11037,7 +11037,21 @@
       "https://github\\.com/wekan/wekan/security/advisories/GHSA\\-g98f\\-44gc\\-hqcc",
       "https://github\\.com/wekan/wekan/security/advisories/GHSA\\-mrhx\\-8xm7\\-chrq",
       "https://github\\.com/wekan/wekan/security/advisories/GHSA\\-x6fh\\-wrr5\\-3426",
-      "https://github\\.com/xingmuse"
+      "https://github\\.com/xingmuse",
+      "https://github\\.com/wekan/wekan/security/advisories/GHSA\\-f246\\-3x88\\-w3w3",
+      "https://github\\.com/wekan/wekan/security/advisories/GHSA\\-9qg3\\-jfch\\-jwqv",
+      "https://github\\.com/wekan/wekan/security/advisories/GHSA\\-p9qq\\-frc9\\-qfhm",
+      "https://github\\.com/wekan/wekan/security/advisories/GHSA\\-jp39\\-3pf7\\-q5ww",
+      "https://github\\.com/wekan/wekan/security/advisories/GHSA\\-h2g5\\-h8g8\\-grxf",
+      "https://github\\.com/wekan/wekan/security/advisories/GHSA\\-v368\\-jwmq\\-53h8",
+      "https://github\\.com/wekan/wekan/security/advisories/GHSA\\-8g7j\\-c3xh\\-36h7",
+      "https://github\\.com/wekan/wekan/security/advisories/GHSA\\-7c42\\-4mc2\\-99g2",
+      "https://github\\.com/wekan/wekan/security/advisories/GHSA\\-47xv\\-5hh2\\-x5c9",
+      "https://github\\.com/wekan/wekan/security/advisories/GHSA\\-483r\\-px2x\\-cjcg",
+      "https://github\\.com/wekan/wekan/security/advisories/GHSA\\-6h68\\-m988\\-228w",
+      "https://github\\.com/wekan/wekan/security/advisories/GHSA\\-49wg\\-hc9w\\-fw45",
+      "https://github\\.com/wekan/wekan/security/advisories/GHSA\\-xhc4\\-477v\\-jmg3",
+      "https://github\\.com/wekan/wekan/security/advisories/GHSA\\-32gm\\-7gcp\\-w2c6"
     ],
     "hall-of-fame/directorygroupbleed/index.html": [
       "https://github\\.com/wekan/wekan/blob/main/docs/Security/Authentication-Boundary-Audit-2026-09-27\\.md",
@@ -11065,7 +11079,8 @@
     "hall-of-fame/inactivebleed/index.html": [
       "https://github\\.com/esbrito81",
       "https://github\\.com/wekan/wekan/blob/main/tests/inactiveAccountSecurity\\.test\\.cjs",
-      "https://github\\.com/wekan/wekan/commit/c3caf87a1"
+      "https://github\\.com/wekan/wekan/commit/c3caf87a1",
+      "https://github\\.com/wekan/wekan/security/advisories/GHSA\\-f246\\-3x88\\-w3w3"
     ],
     "install/index.html": [
       "https://nodejs\\.org/dist/v26\\.\\d+\\.\\d+/",
@@ -11174,7 +11189,8 @@
       "https://github\\.com/wekan/wekan/security/advisories/GHSA-r4gm-mjj9-g3x8"
     ],
     "hall-of-fame/visibilitybleed/index.html": [
-      "https://github\\.com/wekan/wekan/commit/3af89a6a00"
+      "https://github\\.com/wekan/wekan/commit/3af89a6a00",
+      "https://github\\.com/wekan/wekan/security/advisories/GHSA\\-9qg3\\-jfch\\-jwqv"
     ],
     "hall-of-fame/metricsbleed/index.html": [
       "https://github\\.com/wekan/wekan/commit/a4b524a5fc",
@@ -11197,10 +11213,12 @@
       "https://github\\.com/wekan/wekan/commit/433ff5506c"
     ],
     "hall-of-fame/linkedwritebleed/index.html": [
-      "https://github\\.com/wekan/wekan/commit/3da444db74"
+      "https://github\\.com/wekan/wekan/commit/3da444db74",
+      "https://github\\.com/wekan/wekan/security/advisories/GHSA\\-jp39\\-3pf7\\-q5ww"
     ],
     "hall-of-fame/subtaskdepositbleed/index.html": [
-      "https://github\\.com/wekan/wekan/commit/1167a2ae2f"
+      "https://github\\.com/wekan/wekan/commit/1167a2ae2f",
+      "https://github\\.com/wekan/wekan/security/advisories/GHSA\\-483r\\-px2x\\-cjcg"
     ],
     "hall-of-fame/parentbleed/index.html": [
       "https://github\\.com/wekan/wekan/commit/c6f59fc923"
@@ -11215,7 +11233,8 @@
       "https://github\\.com/wekan/wekan/commit/3d080956be"
     ],
     "hall-of-fame/uploadpathbleed/index.html": [
-      "https://github\\.com/wekan/wekan/commit/06b8ea5750"
+      "https://github\\.com/wekan/wekan/commit/06b8ea5750",
+      "https://github\\.com/wekan/wekan/security/advisories/GHSA\\-32gm\\-7gcp\\-w2c6"
     ],
     "hall-of-fame/avatarmimebleed/index.html": [
       "https://github\\.com/wekan/wekan/commit/e14671efa6"
@@ -11228,7 +11247,8 @@
     ],
     "hall-of-fame/mutationbleed/index.html": [
       "https://github\\.com/wekan/wekan/commit/fd458543f9",
-      "https://github\\.com/wekan/wekan/commit/5de71ba789"
+      "https://github\\.com/wekan/wekan/commit/5de71ba789",
+      "https://github\\.com/wekan/wekan/security/advisories/GHSA\\-8g7j\\-c3xh\\-36h7"
     ],
     "hall-of-fame/invisiblebleed/index.html": [
       "https://github\\.com/wekan/wekan/commit/1076c08381"
@@ -11343,6 +11363,30 @@
     ],
     "hall-of-fame/sourcebleed/index.html": [
       "https://github\\.com/wekan/wekan/security/advisories/GHSA\\-x6fh\\-wrr5\\-3426"
+    ],
+    "hall-of-fame/invitationboardbleed/index.html": [
+      "https://github\\.com/wekan/wekan/security/advisories/GHSA\\-p9qq\\-frc9\\-qfhm"
+    ],
+    "hall-of-fame/inviteprofilebleed/index.html": [
+      "https://github\\.com/wekan/wekan/security/advisories/GHSA\\-h2g5\\-h8g8\\-grxf"
+    ],
+    "hall-of-fame/manageboardbleed/index.html": [
+      "https://github\\.com/wekan/wekan/security/advisories/GHSA\\-v368\\-jwmq\\-53h8"
+    ],
+    "hall-of-fame/rulebuttonbleed/index.html": [
+      "https://github\\.com/wekan/wekan/security/advisories/GHSA\\-7c42\\-4mc2\\-99g2"
+    ],
+    "hall-of-fame/commentboundarybleed/index.html": [
+      "https://github\\.com/wekan/wekan/security/advisories/GHSA\\-47xv\\-5hh2\\-x5c9"
+    ],
+    "hall-of-fame/portraitbleed/index.html": [
+      "https://github\\.com/wekan/wekan/security/advisories/GHSA\\-6h68\\-m988\\-228w"
+    ],
+    "hall-of-fame/relicavatarbleed/index.html": [
+      "https://github\\.com/wekan/wekan/security/advisories/GHSA\\-49wg\\-hc9w\\-fw45"
+    ],
+    "hall-of-fame/wipebleed/index.html": [
+      "https://github\\.com/wekan/wekan/security/advisories/GHSA\\-xhc4\\-477v\\-jmg3"
     ]
   }
 }
