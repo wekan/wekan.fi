@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8">
+<title>WeKan — Hall of Fame / ListLockBulkBleed</title>
+<link rel="icon" href="../../wekan-favicon.png">
+<link rel="stylesheet" href="../../css/main.css">
+<link rel="stylesheet" href="../../font-awesome/css/font-awesome.min.css">
+</head><body class="hall-of-fame">
+<img src="../hof.svg" alt="Hall of Fame" width="300">
+<div class="action-buttons"><a class="button" href="../">Back to Hall of Fame Contents</a>
+<a class="button" href="../../">Back to WeKan Website</a></div>
+<div class="hof"><h1>ListLockBulkBleed</h1>
+<table border="1"><tr><th>CVE</th><th>Icon</th><th>Vulnerability name</th><th>Date</th>
+<th>Responsible Security Disclosure by</th><th>Stars</th><th>Process</th><th>Vulnerabilities</th></tr>
+<tr>
+<td valign="top">CVE requested</td>
+<td class="icon" valign="top"><h2><span role="img" aria-label="ListLockBulkBleed"><i class="fa fa-list" aria-hidden="true"></i> <i class="fa fa-lock" aria-hidden="true"></i> <i class="fa fa-clone" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></span></h2></td>
+<td valign="top"><b><a href="./">ListLockBulkBleed</a></b></td>
+<td valign="top">2026-11-18</td>
+<td class="by" valign="top"><b><a href="https://github.com/immanuwell">immanuwell</a></b></td>
+<td class="stars" valign="top"><img src="../GoldStar.png" width="30" height="30" alt="Gold star"><img src="../GoldStar.png" width="30" height="30" alt="Gold star"><img src="../GoldStar.png" width="30" height="30" alt="Gold star"><img src="../GoldStar.png" width="30" height="30" alt="Gold star"></td>
+<td valign="top"><p>Coordinated disclosure via GitHub Security Advisory <a href="https://github.com/wekan/wekan/security/advisories/GHSA-83w9-74mx-7v83">GHSA-83w9-74mx-7v83</a>, with the affected lines and a proof of concept against the official v13.15 image; validated and fixed by xet7.</p>
+</td>
+<td valign="top"><p>When a board admin refused a role write access in one list (<code>roleExceptions</code>, #4527), a normal member could still delete and relabel that list&#39;s cards through the REST bulk routes, archive them, and copy or link new cards into the list through Meteor methods: those paths asked only for write access to the board.</p>
+</td>
+</tr>
+</table>
+<h2 class="hof">Details</h2>
+<p>A board admin can give a list its own rule for a role (<code>list.roleExceptions</code>, #4527): for example, Normal members may read a list but not write in it. The card screen, the per-card REST routes (<a href="../listlockbleed/">ListLockBleed</a>) and the attachment API (<a href="../listlockattachbleed/">ListLockAttachBleed</a>) apply that rule, and client collection writes meet it in the Cards allow/deny rules. Five paths did not. <code>DELETE /api/boards/:boardId/cards/bulk</code> and <code>POST /api/boards/:boardId/cards/labels</code> take their cards from the request body, so no URL names a list, and they asked only for write access to the board. The Meteor methods <code>archiveSelectedCards</code>, <code>copyCard</code> and <code>createLinkedCard</code> write from server code, where allow/deny rules do not run, and asked the board and the assigned-only rule but never the list. So a normal member the list refused, with an API token or a session, could permanently delete every card in that list in one request, relabel them, archive them, and put copies or linked cards into it. Nothing outside the board was reached, and the member already had write access to the rest of the board.</p>
+<p><strong>Fix:</strong> the bulk routes read every card first and ask the list of each (<code>assertCardListsNotRefused</code> in <code>server/lib/listPermissionGate.js</code>) before the first write, answering 403 and changing nothing when any list refuses; each removal and relabel is then keyed on the list that was checked, so a card moved into a refusing list in between is not touched. The three methods ask <code>assertListsWritable</code> for every card&#39;s list, or for the destination list, before writing, and answer <code>not-authorized</code>. As for the other REST card routes, only a list&#39;s refusal counts: a list&#39;s grant does not open them to a role the board does not let write. The board admin, whom no list exception binds, is unaffected.</p>
+<p><strong>The same shape elsewhere:</strong> a search of every server path that writes a card on board-level rights alone found twelve more, fixed with the same check before their first write: converting a card to a board, adding a subtask to its landing list, <code>createCardWithDueDate</code> (which also did not check that the list was on the board), the iCalendar import over DDP and REST, sending and receiving board email (a reply on a card, and a new card in the Inbox or placement list), creating a version-control issue, moving cards, checklists and items between boards, History&#39;s undo, redo and Restore and the position history&#39;s undo and redo of a card, renaming an attachment, the scoped import into a list or below a card, and pressing a card&#39;s rule button. Dependency lines keep their own board-wide rule, as decided for <a href="../listlockbleed/">ListLockBleed</a>.</p>
+<h2>Detection</h2>
+<p>A refused bulk request is recorded in Admin Panel / Problems as ListLockBulkBleed (key <code>authz.list-locked-bulk</code>), with the route as its source. No screen calls those routes, so only a direct API call reaches the refusal. Medium severity in Problems: it never disables the account. The methods&#39; refusals are not recorded: Copy Card&#39;s destination picker and Multi-Selection reach them in ordinary use, so a refusal there is not evidence of an attempt.</p>
+<h2>Verification</h2>
+<p>tests/listLockBulkBleed.test.cjs runs the guard itself on the reporter&#39;s board, a normal member and a list refusing <code>normal.write</code>, for the bulk routes and the methods. It checks the negative cases (an open list, a granting list, the board admin, a list on another board) and the record in Problems. It pins that each of the five paths, and each of the twelve siblings, asks before its first write, and scans every REST card route whose URL names no list and no card, so a new bulk route cannot skip the list. The tests for the reported paths fail on the unfixed code. tests/playwright/specs/list-lock-bulk.e2e.js replays the report against a running server: in a locked list the bulk delete, bulk labels, archive, copy and link are refused and change nothing; in an open list the same member writes, and the board admin deletes in the locked one.</p>
+</div></body></html>
