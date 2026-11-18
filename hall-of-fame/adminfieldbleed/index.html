@@ -17,7 +17,7 @@
 <td valign="top"><b>AdminFieldBleed</b></td>
 <td valign="top">2026-09-28</td>
 <td valign="top"><b><a href="https://github.com/Hama1cco">Hama1cco</a></b></td>
-<td valign="top"><img src="../GoldStar.png" width="30" height="30" alt="Gold star"><img src="../GoldStar.png" width="30" height="30" alt="Gold star"><img src="../GoldStar.png" width="30" height="30" alt="Gold star"></td>
+<td valign="top"><img src="../GoldStar.png" width="30" height="30" alt="Gold star"><img src="../GoldStar.png" width="30" height="30" alt="Gold star"><img src="../GoldStar.png" width="30" height="30" alt="Gold star"><img src="../GoldStar.png" width="30" height="30" alt="Gold star"><img src="../GoldStar.png" width="30" height="30" alt="Gold star"></td>
 <td valign="top">Reported privately by Hama1cco through GitHub Security Advisory GHSA-m8gh-2h78-f57x; validated and fixed by xet7.</td>
 <td valign="top"><p>Non-admin board members could read admin-only custom-field values through raw card responses and set them during card creation or copying. Whole-array updates also bypassed the indexed-value guard.</p><p>The fix enforces the value boundary on server publications, API and method results, card writes and exports, including live permission changes. Protected definition changes require administration of every affected board.</p><p>CWE-863. High severity. CVE requested. Fix prepared locally for the Upcoming release; not yet released.</p></td>
 </tr>
