@@ -11,7 +11,7 @@ assert.equal(cells.length, 8);
 assert.equal(cells[0], '<td valign="top">-</td>');
 assert.match(cells[1], /fa-tint" style="color: red;"/);
 assert.equal(cells[3], '<td valign="top">2026-10-02</td>');
-assert.match(cells[4], /^<td valign="top"><b><a href="https:\/\/github.com\/xet7">xet7<\/a><\/b><\/td>$/);
+assert.match(cells[4], /^<td class="by" valign="top"><b><a href="https:\/\/github.com\/xet7">xet7<\/a><\/b><\/td>$/);
 // Found and fixed by the maintainer, no GHSA: three stars (Audit-Stars.md).
 assert.equal((cells[5].match(/GoldStar.png/g) || []).length, 3);
 assert.match(cells[6], /<details><summary>Process<\/summary>[\s\S]*Found while auditing/);

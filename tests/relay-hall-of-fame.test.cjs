@@ -8,7 +8,7 @@ const rows = index.match(/<tr>[\s\S]*?<\/tr>/g).filter(row => row.includes('<b><
 assert.equal(rows.length, 1);
 const cells = rows[0].match(/<td\b[^>]*>[\s\S]*?<\/td>/g);
 assert.equal(cells.length, 8);
-assert.match(cells[4], /^<td valign="top"><b><a href="https:\/\/github.com\/xet7">xet7<\/a><\/b><\/td>$/);
+assert.match(cells[4], /^<td class="by" valign="top"><b><a href="https:\/\/github.com\/xet7">xet7<\/a><\/b><\/td>$/);
 // Found and fixed by the maintainer, no GHSA: three stars (Audit-Stars.md).
 assert.equal((cells[5].match(/GoldStar.png/g) || []).length, 3);
 assert.match(cells[6], /<details><summary>Process<\/summary>[\s\S]*Found while auditing/);

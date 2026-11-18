@@ -32,6 +32,11 @@ for (const row of index.match(/<tr>[\s\S]*?<\/tr>/g)) {
   const name = text(cells[2]);
   const stars = (cells[5].match(/GoldStar\.png/g) || []).length;
   assert.ok(stars >= 1, `${name}: has stars`);
+  // The page's own style keeps a row's stars on one line by td.stars, and the
+  // reporter cell is td.by: a row without them draws its stars full size and
+  // lets them wrap.
+  assert.match(cells[5], /^<td class="stars"/, `${name}: the stars cell has class="stars"`);
+  assert.match(cells[4], /^<td class="by"/, `${name}: the reporter cell has class="by"`);
 
   const used = [...cells[1].matchAll(/<i class="fa (fa-[a-z0-9-]+)"/g)].map((m) => m[1]);
   assert.equal(used.at(-1), 'fa-tint', `${name}: the red drop comes last`);
