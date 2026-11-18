@@ -1,5 +1,13 @@
 # Upcoming wekan.fi release
 
+- Deploy: the v13.16 update stopped in its source audit, because the
+  ListLockBulkBleed row on the Hall of Fame index and its own page link the
+  reporter, [immanuwell](https://github.com/immanuwell), and
+  [GHSA-83w9-74mx-7v83](https://github.com/wekan/wekan/security/advisories/GHSA-83w9-74mx-7v83),
+  which were not in the baseline. Both are allowed as exact URLs on those two
+  pages only, in releases/risk-baseline.json; tests/riskAudit.test.py refuses
+  any other URL or page. Thanks to immanuwell and xet7.
+
 - Deploy: the v13.08, v13.09 and v13.10 API pages stopped the deploy in its
   source audit, because they load Redoc v3.1.0 from cdn.redocly.com and only
   the v3.0.1 bundle was an allowed URL. The WeKan API generator renders with

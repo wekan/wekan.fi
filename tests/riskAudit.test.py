@@ -135,6 +135,33 @@ class RiskAudit(unittest.TestCase):
         page.write_text('<a href="'+commit+'">Elsewhere</a>')
         with self.assertRaisesRegex(ValueError, 'createbleed/index.html: new URL'):
             r.inspect(self.root, self.policy)
+    def test_listlockbulkbleed_links_are_exact_and_page_scoped(self):
+        # The deploy of the v13.16 update stopped here: ListLockBulkBleed's
+        # reporter and advisory links were not in the baseline.
+        policy = json.loads((ROOT/'releases/risk-baseline.json').read_text())
+        self.policy['allowUrlPatternsByFile'] = policy['allowUrlPatternsByFile']
+        links = ['https://github.com/immanuwell',
+                 'https://github.com/wekan/wekan/security/advisories/GHSA-83w9-74mx-7v83']
+        for name in ['hall-of-fame/index.html', 'hall-of-fame/listlockbulkbleed/index.html']:
+            for link in links:
+                self.assertIn(link, (ROOT/name).read_text())
+            page = self.root/name
+            page.parent.mkdir(parents=True, exist_ok=True)
+            page.write_text(''.join('<a href="'+link+'">x</a>' for link in links))
+            r.inspect(self.root, self.policy)
+            for other in [links[0]+'2', links[1]+'?report=1', links[1].replace('83w9', '83w8')]:
+                with self.subTest(name=name, url=other):
+                    page.write_text('<a href="'+other+'">Unreviewed</a>')
+                    with self.assertRaisesRegex(ValueError, 'new URL'):
+                        r.inspect(self.root, self.policy)
+            page.unlink()
+        # Negative: only those two pages, not another one.
+        other_page = self.root/'hall-of-fame/racebleed/index.html'
+        other_page.parent.mkdir(parents=True, exist_ok=True)
+        other_page.write_text('<a href="'+links[0]+'">Elsewhere</a>')
+        with self.assertRaisesRegex(ValueError, 'racebleed/index.html: new URL'):
+            r.inspect(self.root, self.policy)
+
     def test_listlockattachbleed_link_is_exact_and_page_scoped(self):
         # The deploy of ca3bd21 stopped here: the new page's fix commit link
         # was not in the baseline.
