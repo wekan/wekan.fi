@@ -125,7 +125,9 @@
         <p>A short summary of what WeKan has. Everything below is in the current
         release — see the
         <a href="https://github.com/wekan/wekan/blob/main/CHANGELOG.md">ChangeLog</a>
-        for when each part arrived.</p>
+        for when each part arrived, and the
+        <a href="https://github.com/wekan/wekan/blob/main/docs/Features/Features.md">feature docs</a>,
+        which follow WeKan's menus.</p>
 
         <div class="table-responsive">
         <table class="table table-sm table-striped table-bordered">
@@ -134,72 +136,112 @@
           </thead>
           <tbody>
             <tr><td><b>Board views</b></td>
-                <td>Swimlanes, Lists, Table, Calendar, Gantt and Stats.</td></tr>
+                <td>Swimlanes, Lists, Table, Calendar, Multi-board Calendar, Time, Timeline,
+                    Gantt (three engines), Map, Chat, Email, Version Control, Group by Assignee,
+                    Statistics and Bigboard, shown, hidden and ordered per board.</td></tr>
+            <tr><td><b>Charts and reports</b></td>
+                <td>Burndown, Burnup, Cumulative Flow, Control Chart, Cycle Time, Lead Time,
+                    Flow Efficiency, Throughput, WIP Run, Aging WIP, Blocker Analysis, Monte
+                    Carlo forecasts and Process Behavior (XmR), and twelve <a
+                    href="https://github.com/wekan/wekan/blob/main/docs/Features/Board-Header/Board-Views/Charts/Board-Reports.md">reports</a>
+                    - Created vs. Resolved, Net Flow, Time in List, Average Age, Throughput Run,
+                    Due Date Performance, Release Burndown, Epic Progress, Workload,
+                    Distribution, Dependency Map and Activity Heatmap - each exportable as PDF
+                    and Excel.</td></tr>
+            <tr><td><b>Scrum</b></td>
+                <td>Product Backlog, Sprints, sprint reports, velocity, roadmap, planning poker,
+                    Definition of Ready and Done, a <a
+                    href="https://github.com/wekan/wekan/blob/main/docs/Features/Board-Sidebar/Board-Settings/Scrum-Meetings.md">daily
+                    standup timer and a retrospective board</a>.</td></tr>
+            <tr><td><b>Kanban flow</b></td>
+                <td><a
+                    href="https://github.com/wekan/wekan/blob/main/docs/Features/Cards/Flow-Fields.md">Flow
+                    fields</a> Blocked, Class of service, MoSCoW priority and WSJF score; <a
+                    href="https://github.com/wekan/wekan/blob/main/docs/Features/Lists/Flow-Policies.md">list
+                    policies</a>, a commitment point, a WIP limit per person, WIP limit groups,
+                    and lists split into Doing and Done. Each is hidden until a board turns it
+                    on, and the Admin Panel can hide it everywhere.</td></tr>
             <tr><td><b>Cards</b></td>
-                <td>Description, labels, members, assignees, requester and assigner,
-                    received / start / due / end dates, checklists, subtasks, custom
-                    fields, attachments, comments, activity history, card colour,
-                    stickers, location, card-to-card dependencies, copy / move / link,
-                    card templates and archive.</td></tr>
+                <td>Description, labels, members, assignees, requester and assigner, received /
+                    start / due / end dates, checklists, subtasks, custom fields, attachments
+                    with PDF and Office previews, comments and replies, activity history, card
+                    colour, stickers, location, voting, card-to-card dependencies, copy / move /
+                    link, card templates and archive.</td></tr>
             <tr><td><b>Lists and swimlanes</b></td>
-                <td>Collapse a list or a swimlane, drag to set list width and swimlane
-                    height, cards-per-list counter and sum of a custom number field in
-                    the list header, work-in-progress limit, and sorting.</td></tr>
+                <td>Collapse a list or a swimlane, drag to set list width and swimlane height,
+                    cards-per-list counter and sum of a custom number field in the list header,
+                    work-in-progress limits, and sorting.</td></tr>
             <tr><td><b>Multi-selection</b></td>
-                <td>Copy, move or recolour many selected cards at once.</td></tr>
+                <td>Copy, move or recolour many selected cards at once; drag-and-drop reorder of
+                    boards, swimlanes, lists, cards and checklists.</td></tr>
             <tr><td><b>Search and filter</b></td>
-                <td>Per-board filter, advanced filter, sorting, and global search across
-                    all your boards.</td></tr>
+                <td>Per-board filter, advanced filter, sorting, and global search across all
+                    your boards; My Cards, Due Cards and My Attachments.</td></tr>
             <tr><td><b>Automation</b></td>
-                <td>Rules as trigger &rarr; action, board buttons that run a rule, and
+                <td>Rules as trigger &rarr; action, shown as lists, workflows or blocks; board
+                    buttons that run a rule; import of n8n, Node-RED and Trello Butler rules;
                     global and per-board outgoing webhooks.</td></tr>
             <tr><td><b>Roles</b></td>
-                <td>Nine per-board roles: admin, normal, normal-assigned-only,
-                    no-comments, comment-only, comment-assigned-only, worker, read-only
-                    and read-assigned-only.</td></tr>
+                <td>Nine per-board roles: admin, normal, normal-assigned-only, no-comments,
+                    comment-only, comment-assigned-only, worker, read-only and
+                    read-assigned-only.</td></tr>
             <tr><td><b>Organizations and teams</b></td>
-                <td>Multi-tenancy, and boards can be limited to members of the same
+                <td>Multi-tenancy, workspaces, and boards limited to members of the same
                     organization or team.</td></tr>
             <tr><td><b>Import</b></td>
-                <td>Trello (JSON and ZIP), WeKan JSON, CSV / TSV, Excel, Jira and
-                    Kanboard, with mapping of imported members to real accounts.</td></tr>
+                <td><a
+                    href="https://github.com/wekan/wekan/blob/main/docs/Features/Board-Sidebar/Board-Settings/Import-Export/External-Tools.md">About
+                    sixty formats</a>: WeKan JSON and .zip, CSV / TSV, Excel, Trello (JSON and
+                    .zip), Jira, Kanboard, Nextcloud Deck, OpenProject, GitHub, GitLab, Gitea,
+                    Forgejo, Asana, Taiga, Vikunja, Planka and many more task tools; mail,
+                    calendars, Google Takeout and Keep, Evernote, and chats from Slack,
+                    Mattermost, Telegram, WhatsApp and Discord. Large files are streamed to disk
+                    within its free space; imported members are mapped to real accounts.</td></tr>
             <tr><td><b>Export</b></td>
-                <td>JSON with or without attachments, Excel, CSV (comma or semicolon),
-                    TSV, and card dependencies as JSON or SVG.</td></tr>
+                <td>JSON with or without attachments, PDF, Excel, HTML, CSV, TSV, iCal, card
+                    dependencies as JSON or SVG, and the formats of over forty other tools,
+                    including a Trello .zip with attachments; one board or all boards at once.
+                    Every export is written a page of cards at a time.</td></tr>
             <tr><td><b>File storage</b></td>
-                <td>Attachments and avatars on filesystem, GridFS, S3 / MinIO, Azure
-                    Blob Storage or Google Cloud Storage; move them between storages,
-                    and repair files whose recorded location no longer matches.</td></tr>
+                <td>Attachments and avatars on filesystem, GridFS, S3 / MinIO, Azure Blob
+                    Storage or Google Cloud Storage; move them between storages, and repair
+                    files whose recorded location no longer matches; scheduled and continuous
+                    backups.</td></tr>
             <tr><td><b>Sign-in</b></td>
-                <td>Password, LDAP, CAS, OIDC / OAuth2 and Sandstorm; invitation codes;
-                    switches for self-registration and forgot-password.</td></tr>
+                <td>Password, passwordless, two-factor authentication, LDAP, SAML, CAS, OIDC /
+                    OAuth2 and Sandstorm; invitation codes; switches for self-registration and
+                    forgot-password.</td></tr>
             <tr><td><b>Admin Panel</b></td>
-                <td>Four sections. <b>Settings</b> — version, visibility, announcement,
-                    accessibility, translation, PWA and global webhooks. <b>People</b> —
-                    login, e-mail, domains, organizations, teams, users, locked users,
-                    roles and shared templates. <b>Attachments</b> — backup, the storage
-                    backends and moving files between them. <b>Problems</b> — instance
-                    health and the report tables.</td></tr>
+                <td>Four sections. <b>Settings</b> - version, features and feature profiles,
+                    appearance, announcement, accessibility, translation, PWA and global
+                    webhooks. <b>People</b> - login, e-mail, notifications, domains,
+                    organizations, teams, users, locked users, roles and shared templates.
+                    <b>Attachments</b> - backup, the storage backends and moving files between
+                    them. <b>Problems</b> - instance health, attempted attacks by Hall of Fame
+                    name, speed, tests and the report tables.</td></tr>
             <tr><td><b>Notifications</b></td>
-                <td>Watch, track or mute a board, a notifications drawer, and
-                    e-mail.</td></tr>
+                <td>Watch, track or mute a board, a notifications drawer, and e-mail, with
+                    overrides by the Admin Panel, the board and the member.</td></tr>
             <tr><td><b>Databases</b></td>
-                <td>FerretDB v1 storing into SQLite (the default), PostgreSQL, MySQL,
-                    MariaDB or SAP HANA; MongoDB 6, 7, 8 and 9; or FerretDB 2 on
-                    PostgreSQL — with migration between them, and backup and restore.
-                    <a href="https://github.com/wekan/wekan/blob/main/docs/Databases/Supported.md">Which are supported, and how each is tested</a>.</td></tr>
+                <td>FerretDB v1 storing into SQLite (the default), PostgreSQL, MySQL, MariaDB or
+                    SAP HANA; MongoDB 6, 7, 8 and 9; or FerretDB 2 on PostgreSQL - with
+                    migration between them, and backup and restore. <a
+                    href="https://github.com/wekan/wekan/blob/main/docs/Databases/Supported.md">Which
+                    are supported, and how each is tested</a>.</td></tr>
             <tr><td><b>Platforms</b></td>
-                <td>Docker, Snap, Sandstorm and from source; installable as a PWA, with
-                    separate phone and desktop layouts.</td></tr>
+                <td>Docker, Kubernetes, Snap, AppImage, Windows / Mac / Linux bundles, Sandstorm
+                    and from source; installable as a PWA, with separate phone and desktop
+                    layouts.</td></tr>
             <tr><td><b>Languages</b></td>
-                <td>English plus 142 translations, maintained at
-                    <a href="https://explore.transifex.com/wekan/wekan/">Transifex</a>.</td></tr>
+                <td>English plus 245 translations, maintained at <a
+                    href="https://explore.transifex.com/wekan/wekan/">Transifex</a>.</td></tr>
             <tr><td><b>API</b></td>
-                <td><a href="https://wekan.fi/api/">REST API</a> and a
-                    <a href="https://raw.githubusercontent.com/wekan/wekan/refs/heads/main/api.py">Python client</a>.</td></tr>
+                <td><a href="https://wekan.fi/api/">REST API</a> and a <a
+                    href="https://raw.githubusercontent.com/wekan/wekan/refs/heads/main/api.py">Python
+                    client</a>.</td></tr>
             <tr><td><b>Look and feel</b></td>
-                <td>Board colours and themes, fonts, interface density, zoom, drag
-                    handles, and right-to-left languages.</td></tr>
+                <td>Board colours and themes, background images, fonts, interface density, zoom,
+                    drag handles, date and calendar formats, and right-to-left languages.</td></tr>
           </tbody>
         </table>
         </div>
