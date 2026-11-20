@@ -36,20 +36,21 @@
 
       <tr>
         <td valign="top">
-          -
+          CVE requested
           <br /> <br />
         </td>
         <td valign="top"><b>ImpersonateBleed</b> <h2><span class="vulnerability-icons" role="img" aria-label="ImpersonateBleed"><i class="fa fa-user-secret" style="color: black;" aria-hidden="true"></i> <i class="fa fa-history" style="color: black;" aria-hidden="true"></i> <i class="fa fa-download" style="color: black;" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></span> </h2></td>
         <td valign="top">2026-07-19</td>
         <td valign="top">
-          <b>meifukun</b> (<a href="https://github.com/meifukun">GitHub</a>) and <b>xet7</b> (fix)<br />
-          <img src="../GoldStar.png" width="30px" height="auto" /><img src="../GoldStar.png" width="30px" height="auto" /><br />
-          Privately reported 8 issues reviewed against WeKan v9.95.0.
+          <b><a href="https://github.com/meifukun">meifukun</a></b> and <b><a href="https://github.com/xet7">xet7</a></b><br />
+          <img src="../GoldStar.png" width="30px" height="auto" /><img src="../GoldStar.png" width="30px" height="auto" /><img src="../GoldStar.png" width="30px" height="auto" /><img src="../GoldStar.png" width="30px" height="auto" /><img src="../GoldStar.png" width="30px" height="auto" /><br />
+          Privately reported 8 issues reviewed against WeKan v9.95.0. Later submitted as GitHub Security Advisory <a href="https://github.com/wekan/wekan/security/advisories/GHSA-j4x8-689m-h4hv">GHSA-j4x8-689m-h4hv</a>, with the details, a proof of concept and a suggested fix.
         </td>
         <td valign="top">
           <ul>
             <li><span class="vulnerability-icons" role="img" aria-label="ImpersonateBleed"><i class="fa fa-user-secret" style="color: black;" aria-hidden="true"></i> <i class="fa fa-history" style="color: black;" aria-hidden="true"></i> <i class="fa fa-download" style="color: black;" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></span> ImpersonateBleed &mdash; several board export endpoints (<code>models/export.js</code>, <code>exportExcel.js</code>, <code>exportExcelCard.js</code>, <code>exportPDF.js</code>) authorized export with <code>canExport(user) || impersonateDone</code>, where <code>impersonateDone</code> was merely the existence of ANY historical <code>ImpersonatedUsers</code> record for the user. A former admin who ever used impersonation kept permanent export access to any private board even after being demoted. Fixed by removing the impersonation bypass so export requires real board visibility (<code>canExport</code>) only (CWE-863 Incorrect Authorization)</li>
             <li>Reported privately by meifukun (<a href="https://github.com/meifukun">https://github.com/meifukun</a>)</li>
+            <li>GitHub Security Advisory <a href="https://github.com/wekan/wekan/security/advisories/GHSA-j4x8-689m-h4hv">GHSA-j4x8-689m-h4hv</a>, with a suggested fix</li>
             <li>Fixed at <a href="https://github.com/wekan/wekan/blob/main/CHANGELOG.md#upcoming-wekan--release">upcoming WeKan release</a></li>
             <li><a href="./">More details</a></li>
           </ul>

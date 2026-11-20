@@ -2371,7 +2371,7 @@ Found and fixed during the sibling authentication audit; reproduced with locally
 
       <tr>
         <td valign="top">
-          -
+          CVE requested
           <br /> <br />
         </td>
         <td class="icon" valign="top"><h2><span class="vulnerability-icons" role="img" aria-label="ImpersonateBleed"><i class="fa fa-user-secret" style="color: black;" aria-hidden="true"></i> <i class="fa fa-history" style="color: black;" aria-hidden="true"></i> <i class="fa fa-download" style="color: black;" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></span> </h2></td>
@@ -2381,13 +2381,13 @@ Found and fixed during the sibling authentication audit; reproduced with locally
           <b><a href="https://github.com/meifukun">meifukun</a></b> and <b><a href="https://github.com/xet7">xet7</a></b>
         </td>
         <td class="stars" valign="top">
-          <img src="GoldStar.png" width="30px" height="auto" /><img src="GoldStar.png" width="30px" height="auto" />
+          <img src="GoldStar.png" width="30px" height="auto" /><img src="GoldStar.png" width="30px" height="auto" /><img src="GoldStar.png" width="30px" height="auto" /><img src="GoldStar.png" width="30px" height="auto" /><img src="GoldStar.png" width="30px" height="auto" />
         </td>
         <td valign="top">
           <details>
           <summary>Process</summary>
 
-          Privately reported 8 issues reviewed against WeKan v9.95.0.
+          Privately reported 8 issues reviewed against WeKan v9.95.0. Later submitted as GitHub Security Advisory <a href="https://github.com/wekan/wekan/security/advisories/GHSA-j4x8-689m-h4hv">GHSA-j4x8-689m-h4hv</a>, with the details, a proof of concept and a suggested fix.
           </details>
         </td>
         <td valign="top">
@@ -2406,7 +2406,7 @@ Found and fixed during the sibling authentication audit; reproduced with locally
 
       <tr>
         <td valign="top">
-          -
+          CVE requested
           <br /> <br />
         </td>
         <td class="icon" valign="top"><h2><span class="vulnerability-icons" role="img" aria-label="InviteBleed"><i class="fa fa-envelope" style="color: black;" aria-hidden="true"></i> <i class="fa fa-key" style="color: black;" aria-hidden="true"></i> <i class="fa fa-random" style="color: black;" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></span> </h2></td>
@@ -2416,13 +2416,13 @@ Found and fixed during the sibling authentication audit; reproduced with locally
           <b><a href="https://github.com/meifukun">meifukun</a></b> and <b><a href="https://github.com/xet7">xet7</a></b>
         </td>
         <td class="stars" valign="top">
-          <img src="GoldStar.png" width="30px" height="auto" /><img src="GoldStar.png" width="30px" height="auto" />
+          <img src="GoldStar.png" width="30px" height="auto" /><img src="GoldStar.png" width="30px" height="auto" /><img src="GoldStar.png" width="30px" height="auto" /><img src="GoldStar.png" width="30px" height="auto" /><img src="GoldStar.png" width="30px" height="auto" />
         </td>
         <td valign="top">
           <details>
           <summary>Process</summary>
 
-          Privately reported 8 issues reviewed against WeKan v9.95.0.
+          Privately reported 8 issues reviewed against WeKan v9.95.0. Later submitted as GitHub Security Advisory <a href="https://github.com/wekan/wekan/security/advisories/GHSA-rg85-qx5c-qx67">GHSA-rg85-qx5c-qx67</a>, with the details, a proof of concept and a suggested fix.
           </details>
         </td>
         <td valign="top">
@@ -2435,7 +2435,7 @@ Found and fixed during the sibling authentication audit; reproduced with locally
             <li>Fixed at <a href="https://github.com/wekan/wekan/blob/main/CHANGELOG.md#upcoming-wekan--release">upcoming WeKan release</a></li>
             <li><a href="invitebleed/">More details</a></li>
           </ul>
-          </details>
+          <p>Follow-up fix (2026-11-20, <a href="https://github.com/wekan/wekan/security/advisories/GHSA-rg85-qx5c-qx67">GHSA-rg85-qx5c-qx67</a>): an invitation made before the fix still had its six-digit code and was still accepted, and the throttle was on <code>createUser</code> while the sign-up form calls <code>ATCreateUserServer</code>. A code shorter than 22 base64url characters is now refused at sign-up and replaced on a re-invite, and <code>ATCreateUserServer</code> is limited to 10 attempts a minute per address, a refusal shown in Admin Panel &rarr; Problems.</p></details>
         </td>
       </tr>
 

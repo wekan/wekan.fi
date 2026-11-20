@@ -36,23 +36,25 @@
 
       <tr>
         <td valign="top">
-          -
+          CVE requested
           <br /> <br />
         </td>
         <td valign="top"><b>InviteBleed</b> <h2><span class="vulnerability-icons" role="img" aria-label="InviteBleed"><i class="fa fa-envelope" style="color: black;" aria-hidden="true"></i> <i class="fa fa-key" style="color: black;" aria-hidden="true"></i> <i class="fa fa-random" style="color: black;" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></span> </h2></td>
         <td valign="top">2026-07-19</td>
         <td valign="top">
-          <b>meifukun</b> (<a href="https://github.com/meifukun">GitHub</a>) and <b>xet7</b> (fix)<br />
-          <img src="../GoldStar.png" width="30px" height="auto" /><img src="../GoldStar.png" width="30px" height="auto" /><br />
-          Privately reported 8 issues reviewed against WeKan v9.95.0.
+          <b><a href="https://github.com/meifukun">meifukun</a></b> and <b><a href="https://github.com/xet7">xet7</a></b><br />
+          <img src="../GoldStar.png" width="30px" height="auto" /><img src="../GoldStar.png" width="30px" height="auto" /><img src="../GoldStar.png" width="30px" height="auto" /><img src="../GoldStar.png" width="30px" height="auto" /><img src="../GoldStar.png" width="30px" height="auto" /><br />
+          Privately reported 8 issues reviewed against WeKan v9.95.0. Later submitted as GitHub Security Advisory <a href="https://github.com/wekan/wekan/security/advisories/GHSA-rg85-qx5c-qx67">GHSA-rg85-qx5c-qx67</a>, with the details, a proof of concept and a suggested fix.
         </td>
         <td valign="top">
           <ul>
             <li><span class="vulnerability-icons" role="img" aria-label="InviteBleed"><i class="fa fa-envelope" style="color: black;" aria-hidden="true"></i> <i class="fa fa-key" style="color: black;" aria-hidden="true"></i> <i class="fa fa-random" style="color: black;" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></span> InviteBleed &mdash; when public registration is disabled, invitation registration used a 6-digit code generated with <code>Math.random()</code> (~900,000 keyspace, non-cryptographic RNG; <code>server/models/settings.js</code>) with no throttling on the sign-up validation, so an attacker who knew a pending invitee's email could brute-force the code, claim the account and join its private boards. Fixed by generating a 128-bit <code>crypto.randomBytes</code> invitation code and rate-limiting <code>createUser</code> with <code>DDPRateLimiter</code> (CWE-330 Insufficiently Random Values + CWE-307 Excessive Auth Attempts)</li>
             <li>Reported privately by meifukun (<a href="https://github.com/meifukun">https://github.com/meifukun</a>)</li>
+            <li>GitHub Security Advisory <a href="https://github.com/wekan/wekan/security/advisories/GHSA-rg85-qx5c-qx67">GHSA-rg85-qx5c-qx67</a>, with a suggested fix</li>
             <li>Fixed at <a href="https://github.com/wekan/wekan/blob/main/CHANGELOG.md#upcoming-wekan--release">upcoming WeKan release</a></li>
             <li><a href="./">More details</a></li>
           </ul>
+          <p>Follow-up fix (2026-11-20, <a href="https://github.com/wekan/wekan/security/advisories/GHSA-rg85-qx5c-qx67">GHSA-rg85-qx5c-qx67</a>): an invitation made before the fix still had its six-digit code and was still accepted, and the throttle was on <code>createUser</code> while the sign-up form calls <code>ATCreateUserServer</code>. A code shorter than 22 base64url characters is now refused at sign-up and replaced on a re-invite, and <code>ATCreateUserServer</code> is limited to 10 attempts a minute per address, a refusal shown in Admin Panel &rarr; Problems.</p>
         </td>
       </tr>
 
@@ -75,6 +77,20 @@
       <code>f602b9459fa1622f60ee8c3b639f02035f3ab32b</code>) on local self-hosted instances only.
       Fixed at the
       <a href="https://github.com/wekan/wekan/blob/main/CHANGELOG.md#upcoming-wekan--release">upcoming WeKan release</a>.
+    </p>
+    <h3>Follow-up fix, 2026-11-20</h3>
+    <p>
+      The same report later arrived as GitHub Security Advisory
+      <a href="https://github.com/wekan/wekan/security/advisories/GHSA-rg85-qx5c-qx67">GHSA-rg85-qx5c-qx67</a>,
+      and checking it against the current code found two things the first fix left. An invitation
+      created before the fix, and not used yet, kept its six-digit code and was still accepted at
+      sign-up - a re-invite even mailed the same code again. And the <code>DDPRateLimiter</code> rule
+      was on <code>createUser</code>, which a client is refused anyway, while the sign-up form creates
+      the account through <code>ATCreateUserServer</code>, which had no limit. Now a code shorter than
+      the 22 base64url characters of a 128-bit code is refused at sign-up and replaced by a strong one
+      on a re-invite (<code>models/lib/invitationCodeEmail.js</code> <code>isStrongInvitationCode</code>),
+      and <code>ATCreateUserServer</code> takes at most 10 attempts a minute per address, each refusal
+      counted in Admin Panel &rarr; Problems under InviteBleed.
     </p>
   </div>
 
