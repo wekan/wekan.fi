@@ -139,8 +139,10 @@
                 <td>Under six headings of the Board View menu: Swimlanes, Lists, Table, Group by
                     Assignee, Bigboard, Map and Column sets; Calendar, Calendar Mode, Multi-board
                     Calendar, Time, Timeline, Gantt (three engines) and Roadmap; the Scrum, Kanban
-                    flow and overview charts below; and Email, Chat and Version Control - each
-                    shown, hidden and ordered per board.</td></tr>
+                    flow and overview charts below; and Email, Chat, Version Control and <a
+                    href="https://github.com/wekan/wekan/blob/main/docs/Features/Board-Sidebar/Board-Settings/Import-Export/Website/Website.md">Website</a>
+                    - the board as a website, which a public board can show at its own address
+                    instead of the kanban - each shown, hidden and ordered per board.</td></tr>
             <tr><td><b>Charts and reports</b></td>
                 <td>Burndown, Burnup, Cumulative Flow, Control Chart, Cycle Time, Lead Time,
                     Flow Efficiency, Throughput, WIP Run, Aging WIP, Blocker Analysis, Monte
@@ -187,12 +189,31 @@
                 <td>Nine per-board roles: admin, normal, normal-assigned-only, no-comments,
                     comment-only, comment-assigned-only, worker, read-only and
                     read-assigned-only.</td></tr>
+            <tr><td><b>Professional services</b></td>
+                <td><a
+                    href="https://github.com/wekan/wekan/blob/main/docs/Features/Workload/Workload.md">Workload
+                    and capacity</a>: each person's hours against their working time across
+                    boards, absences, public holidays, allocations and placeholders for roles,
+                    billable utilization against a target, and skills with who could do the work.
+                    <a href="https://github.com/wekan/wekan/blob/main/docs/Features/Billing/Billing.md">Budget
+                    and billing</a>: rates and cost rates, budget against cost, forecast and margin,
+                    time by day and its approval, expenses, fixed fees and monthly retainers, quotes,
+                    and invoices of a period with VAT, payments and credit notes - as PDF, SVG,
+                    Excel, CSV and Peppol e-invoice, with the payment QR codes and bank barcodes of
+                    many countries, in each currency's own decimals.</td></tr>
+            <tr><td><b>Cloud Panel</b></td>
+                <td>For hosting many customer domains: at its own domain, the <a
+                    href="https://github.com/wekan/wekan/blob/main/docs/Features/Admin-Panel/Cloud-Panel.md">Cloud
+                    Panel</a> keeps each domain with its own WeKan and MongoDB, or sharing one
+                    WeKan, and merges many WeKans into one; it writes the CloudFlare DNS records
+                    and the Caddy routes, keeps each customer's invoices, and has a chat with
+                    earlier Rocket.Chat and SandChat conversations imported.</td></tr>
             <tr><td><b>Organizations and teams</b></td>
                 <td>Multi-tenancy, workspaces, and boards limited to members of the same
                     organization or team.</td></tr>
             <tr><td><b>Import</b></td>
                 <td><a
-                    href="https://github.com/wekan/wekan/blob/main/docs/Features/Board-Sidebar/Board-Settings/Import-Export/External-Tools.md">78
+                    href="https://github.com/wekan/wekan/blob/main/docs/Features/Board-Sidebar/Board-Settings/Import-Export/External-Tools.md">85
                     sources</a>, listed under headings, a company's products under its name:
                     WeKan JSON and .zip; <b>37signals</b> Basecamp and Fizzy; <b>Atlassian</b> Trello
                     (JSON and .zip) and Jira; <b>Google</b> Takeout, Tasks and Keep; <b>Microsoft</b>
@@ -203,7 +224,10 @@
                     issue trackers GitLab, Gitea, Forgejo, Linear and Redmine; task apps such as
                     Todoist, TickTick and Vikunja; CSV / TSV, Markdown and outlines; and mail,
                     calendars, Evernote and chats from Slack, Mattermost, Rocket.Chat, Telegram,
-                    WhatsApp and Discord, with their files. Several services are fetched from their
+                    WhatsApp and Discord, with their files; and <b>Website</b>: WordPress (and
+                    Squarespace, Wix and others that export its file), the WordPress REST API,
+                    Ghost, Blogger, Hugo, Jekyll, Eleventy and Astro, HTML sites, Medium and
+                    Substack, pages and posts with their images. Several services are fetched from their
                     API with your token. Many boards import at once, an app's whole export can
                     become a board per project, large files are streamed to disk within its free
                     space, and imported members are mapped to real accounts.</td></tr>
@@ -212,7 +236,9 @@
                     dependencies as JSON or SVG, and the formats of some sixty other tools under
                     the same headings - among them a Trello .zip with attachments, Jira, Fizzy,
                     Microsoft Planner, Azure DevOps Boards, Lists, Project, Outlook, Teams and
-                    OneNote, and Sandstorm grain backups of nine apps that Sandstorm restores;
+                    OneNote, Sandstorm grain backups of nine apps that Sandstorm restores, and
+                    websites - WordPress, Ghost, Blogger, a Hugo / Jekyll / Eleventy / Astro site,
+                    and the published HTML site itself, ready for any web server;
                     one board or all boards at once. Every export is written a page of cards at
                     a time, and most are read back by the tool's own import.</td></tr>
             <tr><td><b>File storage</b></td>
@@ -227,8 +253,8 @@
             <tr><td><b>Admin Panel</b></td>
                 <td>Four sections. <b>Settings</b> - version, features and feature profiles,
                     appearance, announcement, accessibility, translation, PWA and global
-                    webhooks. <b>People</b> - login, e-mail, notifications, domains,
-                    organizations, teams, users, locked users, roles and shared templates.
+                    webhooks. <b>People</b> - login, e-mail, notifications, domains, the Cloud
+                    Panel, organizations, teams, users, locked users, roles and shared templates.
                     <b>Attachments</b> - backup, the storage backends and moving files between
                     them. <b>Problems</b> - instance health, attempted attacks by Hall of Fame
                     name, speed, tests and the report tables.</td></tr>

@@ -1,5 +1,13 @@
 # Upcoming wekan.fi release
 
+- Docs: the Features table names WeKan's newest parts - Professional
+  services (Workload and capacity, and Budget and billing with expenses,
+  fees, quotes and invoices as PDF, SVG, Excel and e-invoice), the Cloud
+  Panel for hosting many customer domains, and Website: WordPress, Ghost,
+  Blogger, static and HTML sites imported and exported, and the board as a
+  website at a public board's address. Import counts 85 sources. Thanks to
+  xet7.
+
 - Security: GitHub CodeQL code scanning alerts 1-175. The 86 API pages of
   v7.51 to v8.42 carry the same jQuery 3.2.1 and search script. The search
   built each result as an HTML string from the text of a heading, so text that
