@@ -1,5 +1,9 @@
 # Upcoming wekan.fi release
 
+- Hall of Fame: ListLockBulkBleed's icons, list + lock + clone, are listed in
+  hall-of-fame/Audit-Icons.md, so tests/hall-of-fame-audits.test.cjs passes
+  again. Thanks to xet7.
+
 - Deploy: the v13.16 update stopped in its source audit, because the
   ListLockBulkBleed row on the Hall of Fame index and its own page link the
   reporter, [immanuwell](https://github.com/immanuwell), and

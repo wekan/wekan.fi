@@ -116,6 +116,7 @@ Star methodology: [Audit-Stars.md](Audit-Stars.md).
 | LinkedWriteBleed | `fa-link`, `fa-pencil`, `fa-lock` | link + pencil + lock | 2 |
 | ListLockAttachBleed | `fa-list`, `fa-lock`, `fa-paperclip` | list + lock + paperclip | 2 |
 | ListLockBleed | `fa-list`, `fa-lock`, `fa-check-square-o` | list + lock + check square | 2 |
+| ListLockBulkBleed | `fa-list`, `fa-lock`, `fa-clone` | list + lock + clone | 2 |
 | ListWIPBleed | `fa-list`, `fa-tasks`, `fa-unlock` | list + tasks + unlock | 2 |
 | LiveBleed | `fa-upload`, `fa-paperclip`, `fa-server` | upload + paperclip + server | 4 |
 | LockoutBleed | `fa-key`, `fa-unlock`, `fa-repeat` | key + unlock + repeat | 4 |
