@@ -25,7 +25,7 @@ for (const [file, star] of [['index.html', 'GoldStar.png'], ['importplacementble
   assert.equal(cells[0], '<td valign="top">CVE requested</td>', file);
   assert.equal(cells[3], '<td valign="top">2026-10-29</td>', file);
   assert.equal(cells[4], '<td class="by" valign="top"><b><a href="https://github.com/zachariah-mithani">zachariah-mithani</a></b></td>', file);
-  assert.equal((cells[5].match(new RegExp(star.replace(/[.]/g, '\\.'), 'g')) || []).length, 5, `${file}: GHSA with a suggested fix is 5 stars`);
+  assert.equal(cells[5].split(star).length - 1, 5, `${file}: GHSA with a suggested fix is 5 stars`);
   assert.ok(cells[6].includes(`through GitHub Security Advisory <a href="${URL}">${GHSA}</a>, with details, a proof of concept and a suggested fix`), file);
   assert.ok(cells[7].includes(`CVE requested through <a href="${URL}">${GHSA}</a>`), file);
   assert.match(cells[7], /fixed in v12\.69/, file);
@@ -35,6 +35,10 @@ for (const [file, star] of [['index.html', 'GoldStar.png'], ['importplacementble
     assert.doesNotMatch(cell, /e-?mail|awaited|three stars|not yet released|No CVE assigned/i, file);
   }
 }
+// negative: the star count is a plain substring count, so a name with regular
+// expression characters in it is counted literally, not as a pattern
+assert.equal('GoldStarXpng GoldStar.png'.split('GoldStar.png').length - 1, 1);
+
 const audit = fs.readFileSync(path.join(root, 'Audit-Stars.md'), 'utf8');
 assert.ok(audit.includes(`| ImportPlacementBleed | 2026-10-29 | 3 | 5 | [${GHSA}](${URL}) |`));
 assert.doesNotMatch(audit.split('\n').find(line => line.startsWith('| ImportPlacementBleed')), /mail|awaited/i);

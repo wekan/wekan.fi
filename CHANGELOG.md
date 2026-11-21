@@ -1,5 +1,23 @@
 # Upcoming wekan.fi release
 
+- Security: GitHub CodeQL code scanning alerts 1-175. The 86 API pages of
+  v7.51 to v8.42 carry the same jQuery 3.2.1 and search script. The search
+  built each result as an HTML string from the text of a heading, so text that
+  looked like markup became markup (js/xss-through-dom, 86 alerts); the
+  results are built as elements now, with the heading text set as text, and
+  look the same. jQuery's htmlPrefilter expanded self-closing tags with a
+  regular expression that can match inside an attribute value
+  (js/unsafe-html-expansion, 86 alerts); it returns its input unchanged, as
+  jQuery 3.5 and later do. tests/api-pages-dom-html.test.cjs scans every page
+  and script for both shapes and fails with the old pages. Three tests
+  sanitized HTML incompletely: tests/brand-spelling.test.cjs finds script
+  elements in any case and with any end tag (js/bad-tag-filter),
+  tests/terms-menu.test.cjs reads menu text in one pass instead of removing
+  tags with a regular expression (js/incomplete-multi-character-sanitization)
+  and tests/importplacement-hall-of-fame.test.cjs counts stars as a plain
+  string instead of a half-escaped pattern (js/incomplete-sanitization), each
+  with a negative test. Thanks to GitHub CodeQL and xet7.
+
 - Hall of Fame: ListLockBulkBleed's icons, list + lock + clone, are listed in
   hall-of-fame/Audit-Icons.md, so tests/hall-of-fame-audits.test.cjs passes
   again. Thanks to xet7.

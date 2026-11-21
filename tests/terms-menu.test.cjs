@@ -22,6 +22,18 @@ function pages(dir = '.') {
 // the top menu is the block of `btn btn-link text-white` links in the page header
 const menuOf = html => html.match(/^[ \t]*<a class="btn btn-link text-white"[^\n]*<\/a>$/gm) || [];
 const hrefOf = a => /href="([^"]*)"/.exec(a)[1];
+// the text of a menu item: every character outside a tag, read in one pass, so
+// no tag can be left behind by a removal that joins two halves into a new one
+const textOf = html => {
+  let out = '';
+  let inTag = false;
+  for (const c of html) {
+    if (c === '<') inTag = true;
+    else if (c === '>' && inTag) inTag = false;
+    else if (!inTag) out += c;
+  }
+  return out;
+};
 
 let withPrivacy = 0;
 for (const page of pages()) {
@@ -61,7 +73,7 @@ assert.equal(between(terms, '<body>', '<div class="container-fluid bg-white">').
 assert.equal(terms.slice(terms.indexOf('<div class="container-fluid wekan-dark-blue">\n        <div class="container px-4')),
   priv.slice(priv.indexOf('<div class="container-fluid wekan-dark-blue">\n        <div class="container px-4')), 'same footer');
 const tmenu = menuOf(terms);
-const items = tmenu.map(a => a.replace(/<[^>]*>/g, '').trim());
+const items = tmenu.map(a => textOf(a).trim());
 assert.deepEqual(items.slice(items.indexOf('Terms of Service')), ['Terms of Service', 'Privacy Policy', 'Blog']);
 assert.match(tmenu[items.indexOf('Terms of Service')], /aria-current="page" href="\."><b>Terms of Service<\/b>/, 'Terms is the current page');
 assert.equal(items.slice(0, 13).join(','), 'Home,Status,Docs,Install,Upgrade,SaaS,App,Sponsors,Awards,Success,FLOSS Developers Only,Private Paid Commercial Support,Sponsor');
@@ -87,5 +99,8 @@ assert.match(read('saas/index.html'), /<h2>Terms of Service<\/h2>\s*<p><a class=
 assert.match(read('app/index.html'), /href="\.\.\/terms\/">Terms of Service<\/a><\/p>\n\s*<p><a href="https:\/\/wekan\.fi\/privacy">/);
 // and no page carries an absolute /terms/ URL that the audit would have to be told about
 for (const page of pages()) assert.doesNotMatch(read(page), /https:\/\/wekan\.fi\/terms/, `${page}: absolute Terms URL`);
+// negative: a tag split around another one is not joined back into a tag
+assert.equal(textOf('<b>Terms</b> of <scr<script>ipt>Service'), 'Terms of ipt>Service');
+assert.doesNotMatch(textOf('<<script>script>alert(1)<</script>/script>'), /<script/i);
 
 console.log(`Terms of Service menu: ${withPrivacy} pages link /terms/ left of Privacy, and /terms/ uses the common template`);

@@ -31,6 +31,10 @@ function visibleText(html) {
     .replace(/<[^>]*>/g, ' ');
 }
 
+// a whole script element: the tags in any case and with any attributes, and an
+// end tag such as </script > or </SCRIPT\n>, as a browser reads them
+const SCRIPT = /<script\b[^>]*>[\s\S]*?<\/script\b[^>]*>/gi;
+
 const found = [];
 let checked = 0;
 for (const page of pages()) {
@@ -40,7 +44,7 @@ for (const page of pages()) {
   for (const re of [CAP, LOW]) {
     for (const m of text.matchAll(re)) found.push(`${page}: "${text.slice(Math.max(0, m.index - 25), m.index + 30).replace(/\s+/g, ' ')}"`);
   }
-  for (const block of html.match(/<script>[\s\S]*?<\/script>/g) || []) {
+  for (const block of html.match(SCRIPT) || []) {
     if (!block.includes('__redoc_state')) continue;
     // the search index in the state is lower case on purpose; the prose is not
     for (const m of block.matchAll(CAP)) found.push(`${page}: redoc state "${block.slice(Math.max(0, m.index - 25), m.index + 30)}"`);
@@ -55,5 +59,8 @@ const bad = visibleText('<p>Welcome to Wekan, WEKAN and the wekan server.</p>');
 assert.equal((bad.match(CAP) || []).length + (bad.match(LOW) || []).length, 3);
 const fine = visibleText('<p>See <a href="https://wekan.fi/wekan/Wekan">WeKan</a> at wekan.fi, github.com/wekan/wekan, wekan-light-blue, wekan/wekan</p><pre>snap install wekan\nWekan</pre><code>wekan</code>');
 assert.equal((fine.match(CAP) || []).length + (fine.match(LOW) || []).length, 0);
+// negative: a script element is found however its tags are written, and only a script
+const scripts = '<SCRIPT>a</SCRIPT><script type="x">b</script ><Script>c</script\n><scripts>d</scripts>'.match(SCRIPT);
+assert.deepEqual(scripts, ['<SCRIPT>a</SCRIPT>', '<script type="x">b</script >', '<Script>c</script\n>']);
 
 console.log(`brand spelling: ${checked} pages, the name is WeKan in the visible text`);
