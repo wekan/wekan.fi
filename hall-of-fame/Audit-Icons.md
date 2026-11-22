@@ -41,6 +41,7 @@ Star methodology: [Audit-Stars.md](Audit-Stars.md).
 | BackupFileBleed | `fa-floppy-o`, `fa-paperclip`, `fa-code` | floppy + paperclip + code | 2 |
 | BoardBleed | `fa-columns`, `fa-exchange`, `fa-unlock` | columns + exchange + unlock | 4 |
 | BoardTitleRESTBleed | `fa-columns`, `fa-header`, `fa-road` | columns + header + road | 2 |
+| BounceBleed | `fa-envelope`, `fa-ban` | envelope + ban | 2 |
 | BruteBleed | `fa-envelope`, `fa-user`, `fa-search` | envelope + user + search | 2 |
 | BypassBleed | `fa-key`, `fa-server`, `fa-unlock` | key + server + unlock | 2 |
 | CacheBleed | `fa-hdd-o` | hdd | 2 |
@@ -54,6 +55,7 @@ Star methodology: [Audit-Stars.md](Audit-Stars.md).
 | ChecklistWriteBleed | `fa-check-square-o`, `fa-pencil`, `fa-lock` | check square + pencil + lock | 2 |
 | ClaimBleed | `fa-id-card`, `fa-key`, `fa-exchange` | id card + key + exchange | 2 |
 | CloneBleed | `fa-clone`, `fa-columns`, `fa-eye` | clone + columns + eye | 17 |
+| CloudPanelBleed | `fa-cloud`, `fa-database` | cloud + database | 2 |
 | CodeBleed | `fa-keyboard-o`, `fa-clock-o` | keyboard + clock | 2 |
 | CommentBleed | `fa-comment`, `fa-trash`, `fa-lock` | comment + trash + lock | 4 |
 | CommentBoundaryBleed | `fa-comment`, `fa-columns`, `fa-chain-broken` | comment + columns + chain broken | 2 |

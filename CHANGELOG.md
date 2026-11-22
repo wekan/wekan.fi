@@ -1,5 +1,19 @@
 # Upcoming wekan.fi release
 
+- Deploy: the deploy of 2026-11-22 stopped in its source audit, because the
+  BounceBleed page links its three advisories (GHSA-7w85-38ph-c96v,
+  GHSA-2wcc-f289-3r95, GHSA-735h-p955-fwxp), and the ListLockMoveBleed row and
+  page link the reporter, adityasunny06help-coder, and GHSA-394w-8q99-q4qx,
+  none of them in the baseline. Each is allowed as an exact URL on its own
+  pages only, in releases/risk-baseline.json; tests/riskAudit.test.py refuses
+  other URLs and pages. Thanks to crypto-nidh, adityasunny06help-coder and
+  xet7.
+
+- Hall of Fame: BounceBleed (envelope + ban, 5 stars) and CloudPanelBleed
+  (cloud + database, 3 stars) are listed in hall-of-fame/Audit-Icons.md and
+  Audit-Stars.md, so tests/hall-of-fame-audits.test.cjs passes again. Thanks
+  to xet7.
+
 - Docs: the Features table names WeKan's newest parts - Professional
   services (Workload and capacity, and Budget and billing with expenses,
   fees, quotes and invoices as PDF, SVG, Excel and e-invoice), the Cloud

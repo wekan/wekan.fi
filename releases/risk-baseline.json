@@ -11055,7 +11055,9 @@
       "https://github\\.com/immanuwell",
       "https://github\\.com/wekan/wekan/security/advisories/GHSA\\-83w9\\-74mx\\-7v83",
       "https://github\\.com/wekan/wekan/security/advisories/GHSA\\-j4x8\\-689m\\-h4hv",
-      "https://github\\.com/wekan/wekan/security/advisories/GHSA\\-rg85\\-qx5c\\-qx67"
+      "https://github\\.com/wekan/wekan/security/advisories/GHSA\\-rg85\\-qx5c\\-qx67",
+      "https://github\\.com/adityasunny06help\\-coder",
+      "https://github\\.com/wekan/wekan/security/advisories/GHSA\\-394w\\-8q99\\-q4qx"
     ],
     "hall-of-fame/directorygroupbleed/index.html": [
       "https://github\\.com/wekan/wekan/blob/main/docs/Security/Authentication-Boundary-Audit-2026-09-27\\.md",
@@ -11401,6 +11403,15 @@
     ],
     "hall-of-fame/invitebleed/index.html": [
       "https://github\\.com/wekan/wekan/security/advisories/GHSA\\-rg85\\-qx5c\\-qx67"
+    ],
+    "hall-of-fame/listlockmovebleed/index.html": [
+      "https://github\\.com/adityasunny06help\\-coder",
+      "https://github\\.com/wekan/wekan/security/advisories/GHSA\\-394w\\-8q99\\-q4qx"
+    ],
+    "hall-of-fame/bouncebleed/index.html": [
+      "https://github\\.com/wekan/wekan/security/advisories/GHSA\\-2wcc\\-f289\\-3r95",
+      "https://github\\.com/wekan/wekan/security/advisories/GHSA\\-735h\\-p955\\-fwxp",
+      "https://github\\.com/wekan/wekan/security/advisories/GHSA\\-7w85\\-38ph\\-c96v"
     ]
   }
 }

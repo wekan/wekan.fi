@@ -162,6 +162,38 @@ class RiskAudit(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, 'racebleed/index.html: new URL'):
             r.inspect(self.root, self.policy)
 
+    def test_listlockmovebleed_and_bouncebleed_links_are_exact_and_page_scoped(self):
+        # The deploy of 2026-11-22 stopped here: BounceBleed's three advisories,
+        # and ListLockMoveBleed's reporter and advisory, were not in the baseline.
+        policy = json.loads((ROOT/'releases/risk-baseline.json').read_text())
+        self.policy['allowUrlPatternsByFile'] = policy['allowUrlPatternsByFile']
+        move = ['https://github.com/adityasunny06help-coder',
+                'https://github.com/wekan/wekan/security/advisories/GHSA-394w-8q99-q4qx']
+        bounce = ['https://github.com/wekan/wekan/security/advisories/GHSA-2wcc-f289-3r95',
+                  'https://github.com/wekan/wekan/security/advisories/GHSA-735h-p955-fwxp',
+                  'https://github.com/wekan/wekan/security/advisories/GHSA-7w85-38ph-c96v']
+        for name, links in [('hall-of-fame/index.html', move),
+                            ('hall-of-fame/listlockmovebleed/index.html', move),
+                            ('hall-of-fame/bouncebleed/index.html', bounce)]:
+            for link in links:
+                self.assertIn(link, (ROOT/name).read_text())
+            page = self.root/name
+            page.parent.mkdir(parents=True, exist_ok=True)
+            page.write_text(''.join('<a href="'+link+'">x</a>' for link in links))
+            r.inspect(self.root, self.policy)
+            for other in [links[0]+'2', links[-1]+'?report=1', links[-1][:-1]+'z']:
+                with self.subTest(name=name, url=other):
+                    page.write_text('<a href="'+other+'">Unreviewed</a>')
+                    with self.assertRaisesRegex(ValueError, 'new URL'):
+                        r.inspect(self.root, self.policy)
+            page.unlink()
+        # Negative: only those pages, not another one.
+        other_page = self.root/'hall-of-fame/racebleed/index.html'
+        other_page.parent.mkdir(parents=True, exist_ok=True)
+        other_page.write_text('<a href="'+move[0]+'"></a><a href="'+bounce[0]+'">Elsewhere</a>')
+        with self.assertRaisesRegex(ValueError, 'racebleed/index.html: new URL'):
+            r.inspect(self.root, self.policy)
+
     def test_listlockattachbleed_link_is_exact_and_page_scoped(self):
         # The deploy of ca3bd21 stopped here: the new page's fix commit link
         # was not in the baseline.
