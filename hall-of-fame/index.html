@@ -92,6 +92,20 @@
       </tr>
 <tr>
 <td valign="top">CVE requested</td>
+<td class="icon" valign="top"><h2><span role="img" aria-label="BounceBleed"><i class="fa fa-envelope" aria-hidden="true"></i> <i class="fa fa-ban" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></span></h2></td>
+<td valign="top"><b><a href="bouncebleed/">BounceBleed</a></b></td>
+<td valign="top">2026-11-22</td>
+<td class="by" valign="top"><b><a href="https://github.com/crypto-nidh">crypto-nidh</a></b></td>
+<td class="stars" valign="top"><img src="GoldStar.png" width="30" height="30" alt="Gold star"><img src="GoldStar.png" width="30" height="30" alt="Gold star"><img src="GoldStar.png" width="30" height="30" alt="Gold star"><img src="GoldStar.png" width="30" height="30" alt="Gold star"><img src="GoldStar.png" width="30" height="30" alt="Gold star"></td>
+<td valign="top"><details><summary>Process</summary>
+
+Reported privately by crypto-nidh through GitHub Security Advisory GHSA-7w85-38ph-c96v (also filed as GHSA-2wcc-f289-3r95 and GHSA-735h-p955-fwxp), with a source-to-sink trace, a proof of concept and a suggested fix; validated and fixed by xet7.</details></td>
+<td valign="top"><details><summary>Details</summary>
+
+<p>POST <code>/api/inbound-email</code> needs no secret by default, and every email it received was checked for being a delivery status notification before anything else. One forged notification naming any address was recorded as a hard bounce, and one hard bounce is enough to stop email: from then on WeKan silently dropped every email to that address, invitations, notifications, password resets and verification mail alike. The person could not undo it; only an administrator could.</p><p>Validation confirmed it on the current code: the secret was checked only when one was configured, the bounce check ran first and accepted any sender, and turning off the REST API did not help, because the inbound endpoint is exempt from that gate.</p><p>A bounce is now recorded only from a transport that proves where the mail came from: the webhook with its secret configured and matched, Amazon SES through a verified SNS signature, an IMAP mailbox WeKan signs in to, and the Sandstorm grain's own mailbox. From anywhere else the bounce is refused, and it does not become a card or a comment either. The named bounce webhooks keep their signature and password checks. Email to card and reply by email are unchanged.</p><p>CWE-306. Medium severity (CVSS 6.5). CVE requested. Affected v12.40 through v13.27. Fix prepared locally for the Upcoming release; not yet released.</p><p><a href="bouncebleed/">Fix and verification</a></p></details></td>
+</tr>
+<tr>
+<td valign="top">CVE requested</td>
 <td class="icon" valign="top"><h2><span role="img" aria-label="ListLockBulkBleed"><i class="fa fa-list" aria-hidden="true"></i> <i class="fa fa-lock" aria-hidden="true"></i> <i class="fa fa-clone" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></span></h2></td>
 <td valign="top"><b><a href="listlockbulkbleed/">ListLockBulkBleed</a></b></td>
 <td valign="top">2026-11-18</td>

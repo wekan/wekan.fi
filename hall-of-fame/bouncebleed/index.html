@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8">
+<title>WeKan — Hall of Fame / BounceBleed</title>
+<link rel="icon" href="../../wekan-favicon.png">
+<link rel="stylesheet" href="../../css/main.css">
+<link rel="stylesheet" href="../../font-awesome/css/font-awesome.min.css">
+</head><body class="hall-of-fame">
+<img src="../hof.svg" alt="Hall of Fame" width="300">
+<div class="action-buttons"><a class="button" href="../">Back to Hall of Fame Contents</a>
+<a class="button" href="../../">Back to WeKan Website</a></div>
+<div class="hof"><h1>BounceBleed</h1>
+<table border="1"><tr><th>CVE</th><th>Icon</th><th>Vulnerability name</th><th>Date</th>
+<th>Responsible Security Disclosure by</th><th>Stars</th><th>Process</th><th>Vulnerabilities</th></tr>
+<tr>
+<td valign="top">CVE requested</td>
+<td valign="top"><h2><span role="img" aria-label="BounceBleed"><i class="fa fa-envelope" aria-hidden="true"></i> <i class="fa fa-ban" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></span></h2></td>
+<td valign="top"><b>BounceBleed</b></td>
+<td valign="top">2026-11-22</td>
+<td valign="top"><b><a href="https://github.com/crypto-nidh">crypto-nidh</a></b></td>
+<td valign="top"><img src="../GoldStar.png" width="30" height="30" alt="Gold star"><img src="../GoldStar.png" width="30" height="30" alt="Gold star"><img src="../GoldStar.png" width="30" height="30" alt="Gold star"><img src="../GoldStar.png" width="30" height="30" alt="Gold star"><img src="../GoldStar.png" width="30" height="30" alt="Gold star"></td>
+<td valign="top">Reported privately by crypto-nidh through GitHub Security Advisory GHSA-7w85-38ph-c96v (also filed as GHSA-2wcc-f289-3r95 and GHSA-735h-p955-fwxp), with a source-to-sink trace, a proof of concept and a suggested fix; validated and fixed by xet7.</td>
+<td valign="top"><p>POST <code>/api/inbound-email</code> needs no secret by default, and every email it received was checked for being a delivery status notification before anything else. One forged notification naming any address was recorded as a hard bounce, and one hard bounce is enough to stop email: from then on WeKan silently dropped every email to that address, invitations, notifications, password resets and verification mail alike. The person could not undo it; only an administrator could.</p><p>Validation confirmed it on the current code: the secret was checked only when one was configured, the bounce check ran first and accepted any sender, and turning off the REST API did not help, because the inbound endpoint is exempt from that gate.</p><p>A bounce is now recorded only from a transport that proves where the mail came from: the webhook with its secret configured and matched, Amazon SES through a verified SNS signature, an IMAP mailbox WeKan signs in to, and the Sandstorm grain's own mailbox. From anywhere else the bounce is refused, and it does not become a card or a comment either. The named bounce webhooks keep their signature and password checks. Email to card and reply by email are unchanged.</p><p>CWE-306. Medium severity (CVSS 6.5). CVE requested. Affected v12.40 through v13.27. Fix prepared locally for the Upcoming release; not yet released.</p></td>
+</tr>
+</table>
+<h2 class="hof">Details</h2>
+<p>Advisory <a href="https://github.com/wekan/wekan/security/advisories/GHSA-7w85-38ph-c96v">GHSA-7w85-38ph-c96v</a> (the same report as <a href="https://github.com/wekan/wekan/security/advisories/GHSA-2wcc-f289-3r95">GHSA-2wcc-f289-3r95</a> and <a href="https://github.com/wekan/wekan/security/advisories/GHSA-735h-p955-fwxp">GHSA-735h-p955-fwxp</a>) traced one unauthenticated request from <code>/api/inbound-email</code> to the filter that removes stopped addresses from every email WeKan sends. Bounce handling came with commits 79ac301675 and 57e05c4304, in v12.40.</p>
+<h2>Fix</h2>
+<p><code>handleBounceEmail()</code> records a bounce only when its caller says the transport is trusted, and every place that hands an email to <code>receiveEmail()</code> now says whether it may carry one: the webhook only when <code>INBOUND_EMAIL_WEBHOOK_SECRET</code> (or the Admin Panel's webhook secret) is configured, and so checked; SES after its SNS signature and topic are verified; IMAP and the Sandstorm grain mailbox. A refused bounce answers 403 and makes no card or comment. To keep bounce handling on the generic webhook, set the secret and have the mail provider send it in <code>x-wekan-inbound-secret</code> or <code>?secret=</code>.</p>
+<h2>Detection</h2>
+<p>A bounce report refused for coming without the secret is summarized as BounceBleed in Admin Panel → Problems. Until the secret is set, a real provider's bounces land there too, and the row says to set it.</p>
+<h2>Verification</h2>
+<p>A full-app test posts the advisory's forged notification over HTTP: without the secret it is refused and nothing is recorded or stopped; with a secret set and not given, it is refused; with the secret, the bounce is recorded. A source test fails if any receiver hands in email without saying whether it may carry a bounce, if an untrusted one says yes, or if anything records a bounce around the gate.</p>
+</div></body></html>
