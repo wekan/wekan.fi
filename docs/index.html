@@ -379,6 +379,16 @@
                     board per domain, and limits the addresses a Cloud Admin may sign in from. A
                     customer signs in there with the password of their own WeKan, checked against
                     its database. No REST API at that address.</td></tr>
+            <tr><td><b>Admin Panel allowed addresses</b></td>
+                <td><a
+                    href="https://github.com/wekan/wekan/blob/main/docs/Features/Admin-Panel/Admin-Panel-Allowed-Addresses.md">Allowed
+                    addresses</a> in Admin Panel / Settings / Privacy and security: the IPv4 and IPv6
+                    addresses and CIDR ranges the Admin Panel and the admin REST API can be used
+                    from. From any other address a site administrator is a member like any other,
+                    their boards still work, and the attempt is in Admin Panel / Problems. A list
+                    without your own address is not saved, and the server's
+                    <code>ADMIN_PANEL_ALLOWED_IP_ADDRESSES</code> overrides it, <code>any</code>
+                    included.</td></tr>
             <tr><td><b>Organizations and teams</b></td>
                 <td><a
                     href="https://github.com/wekan/wekan/blob/main/docs/Features/Login-Page/Multitenancy.md">Multi-tenancy</a>,
