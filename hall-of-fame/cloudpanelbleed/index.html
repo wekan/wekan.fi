@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8">
+<title>WeKan — Hall of Fame / CloudPanelBleed</title>
+<link rel="icon" href="../../wekan-favicon.png">
+<link rel="stylesheet" href="../../css/main.css">
+<link rel="stylesheet" href="../../font-awesome/css/font-awesome.min.css">
+</head><body class="hall-of-fame">
+<img src="../hof.svg" alt="Hall of Fame" width="300">
+<div class="action-buttons"><a class="button" href="../">Back to Hall of Fame Contents</a>
+<a class="button" href="../../">Back to WeKan Website</a></div>
+<div class="hof"><h1>CloudPanelBleed</h1>
+<table border="1"><tr><th>CVE</th><th>Icon</th><th>Vulnerability name</th><th>Date</th>
+<th>Responsible Security Disclosure by</th><th>Stars</th><th>Process</th><th>Vulnerabilities</th></tr>
+<tr>
+<td valign="top">-</td>
+<td valign="top"><h2><span role="img" aria-label="CloudPanelBleed"><i class="fa fa-cloud" aria-hidden="true"></i> <i class="fa fa-database" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></span></h2></td>
+<td valign="top"><b>CloudPanelBleed</b></td>
+<td valign="top">2026-11-22</td>
+<td valign="top"><b><a href="https://github.com/xet7">xet7</a></b></td>
+<td valign="top"><img src="../GoldStar.png" width="30" height="30" alt="Gold star"><img src="../GoldStar.png" width="30" height="30" alt="Gold star"><img src="../GoldStar.png" width="30" height="30" alt="Gold star"></td>
+<td valign="top">Found while reworking the Cloud Panel into a separate Cloud Admin container; fixed by xet7.</td>
+<td valign="top"><p>The Cloud Panel could be turned on from the browser: any site administrator of any WeKan could set the Cloud Panel Domain and its SuperAdmin in Admin Panel / People / Cloud, and then save a customer domain with a MongoDB host, port and credentials of their choosing. The server connected to that database to test it and to import from it. On a host where every customer runs their own WeKan container and is its administrator, that let a customer make their WeKan reach MongoDB servers on the internal network and read from them.</p><p>The Cloud Panel now exists only when the server has the environment variable <code>CLOUD</code> set to its domain, typically in a separate Cloud Admin container. It cannot be set or changed from the browser or the API, and a value stored in the database has no effect. Every Cloud Panel method, and the one place that connects to a database from given credentials, refuses without it, and the attempt is shown in Admin Panel / Problems. The Cloud Admins are that container's administrators; a Cloud Admin may be limited to chosen IPv4 and IPv6 addresses, and the Cloud address has no REST API for requests without a login.</p><p>CWE-918, CWE-284. High severity. Fix prepared locally for the Upcoming release; not yet released.</p></td>
+</tr>
+</table>
+<h2 class="hof">Details</h2>
+<p>The Cloud Panel keeps many customer domains, each with its own WeKan container and MongoDB database, and holds those databases' passwords so it can test them and merge them into one WeKan. Until this fix its domain and SuperAdmin were set from the browser, in Admin Panel / People / Cloud, by any site administrator - also of a customer's own WeKan, where the customer is the administrator.</p>
+<h2>Fix</h2>
+<p><code>cloudDomainFromEnv()</code> in <code>models/lib/cloudPanel.js</code> is the only source of the panel's domain: the <code>CLOUD</code> environment variable. <code>requireCloud()</code> in <code>server/cloudPanel.js</code> is called by every Cloud Panel method before its argument checks, and by <code>withSource()</code>, the one place that builds a MongoDB client from given credentials. The People / Cloud settings pane is gone, and the methods that set the domain always refuse. The Cloud Admins are the container's site administrators; Admin Panel / Cloud may limit them to chosen addresses, and the Cloud address answers no REST API request without a login.</p>
+<h2>Detection</h2>
+<p>A Cloud Panel method called on a WeKan without <code>CLOUD</code>, a Cloud Admin from an address that is not allowed, and an unauthenticated REST request at the Cloud address are summarized as CloudPanelBleed in Admin Panel / Problems.</p>
+<h2>Verification</h2>
+<p><code>tests/cloudPanelGate.test.cjs</code> fails when any <code>MongoClient</code> is built from data that is not the server's own environment outside the gate; <code>tests/cloudPanelAccess.test.cjs</code> runs the real methods and login handler with and without <code>CLOUD</code>; a Playwright spec checks there is no Cloud tab or pane without <code>CLOUD</code>, even with a domain stored in the database, and the whole panel with it.</p>
+</div></body></html>

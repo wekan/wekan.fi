@@ -91,6 +91,20 @@
         <th width="19%">Vulnerabilities</th>
       </tr>
 <tr>
+<td valign="top">-</td>
+<td class="icon" valign="top"><h2><span role="img" aria-label="CloudPanelBleed"><i class="fa fa-cloud" aria-hidden="true"></i> <i class="fa fa-database" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></span></h2></td>
+<td valign="top"><b><a href="cloudpanelbleed/">CloudPanelBleed</a></b></td>
+<td valign="top">2026-11-22</td>
+<td class="by" valign="top"><b><a href="https://github.com/xet7">xet7</a></b></td>
+<td class="stars" valign="top"><img src="GoldStar.png" width="30" height="30" alt="Gold star"><img src="GoldStar.png" width="30" height="30" alt="Gold star"><img src="GoldStar.png" width="30" height="30" alt="Gold star"></td>
+<td valign="top"><details><summary>Process</summary>
+
+Found while reworking the Cloud Panel into a separate Cloud Admin container; fixed by xet7.</details></td>
+<td valign="top"><details><summary>Details</summary>
+
+<p>The Cloud Panel could be turned on from the browser: any site administrator of any WeKan could set the Cloud Panel Domain and its SuperAdmin in Admin Panel / People / Cloud, and then save a customer domain with a MongoDB host, port and credentials of their choosing. The server connected to that database to test it and to import from it. On a host where every customer runs their own WeKan container and is its administrator, that let a customer make their WeKan reach MongoDB servers on the internal network and read from them.</p><p>The Cloud Panel now exists only when the server has the environment variable <code>CLOUD</code> set to its domain, typically in a separate Cloud Admin container. It cannot be set or changed from the browser or the API, and a value stored in the database has no effect. Every Cloud Panel method, and the one place that connects to a database from given credentials, refuses without it, and the attempt is shown in Admin Panel / Problems. The Cloud Admins are that container's administrators; a Cloud Admin may be limited to chosen IPv4 and IPv6 addresses, and the Cloud address has no REST API for requests without a login.</p><p>CWE-918, CWE-284. High severity. Fix prepared locally for the Upcoming release; not yet released.</p><p><a href="cloudpanelbleed/">Fix and verification</a></p></details></td>
+</tr>
+<tr>
 <td valign="top">CVE requested</td>
 <td class="icon" valign="top"><h2><span role="img" aria-label="BounceBleed"><i class="fa fa-envelope" aria-hidden="true"></i> <i class="fa fa-ban" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></span></h2></td>
 <td valign="top"><b><a href="bouncebleed/">BounceBleed</a></b></td>
