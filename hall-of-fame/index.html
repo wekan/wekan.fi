@@ -91,6 +91,22 @@
         <th width="19%">Vulnerabilities</th>
       </tr>
 <tr>
+<td valign="top">CVE requested</td>
+<td class="icon" valign="top"><h2><span role="img" aria-label="ListLockMoveBleed"><i class="fa fa-list" aria-hidden="true"></i> <i class="fa fa-lock" aria-hidden="true"></i> <i class="fa fa-exchange" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></span></h2></td>
+<td valign="top"><b><a href="listlockmovebleed/">ListLockMoveBleed</a></b></td>
+<td valign="top">2026-11-22</td>
+<td class="by" valign="top"><b><a href="https://github.com/adityasunny06help-coder">adityasunny06help-coder</a></b></td>
+<td class="stars" valign="top"><img src="GoldStar.png" width="30" height="30" alt="Gold star"><img src="GoldStar.png" width="30" height="30" alt="Gold star"><img src="GoldStar.png" width="30" height="30" alt="Gold star"><img src="GoldStar.png" width="30" height="30" alt="Gold star"><img src="GoldStar.png" width="30" height="30" alt="Gold star"></td>
+<td valign="top"><details><summary>Process</summary>
+
+<p>Coordinated disclosure via GitHub Security Advisory <a href="https://github.com/wekan/wekan/security/advisories/GHSA-394w-8q99-q4qx">GHSA-394w-8q99-q4qx</a>, with the affected lines, an end-to-end proof of concept against the official v13.27 bundle and a suggested fix; validated and fixed by xet7.</p>
+</details></td>
+<td valign="top"><details><summary>Details</summary>
+
+<p>When a board admin refused a role write access in one list (<code>roleExceptions</code>, #4527), a normal member could still move the whole swimlane holding that list&#39;s cards to another board with <code>POST /api/boards/:boardId/swimlanes/:swimlaneId/move</code>: the route asked only for write access to the two boards, and the cards landed in lists on the other board with no exceptions, where the member could edit or delete them.</p><ul><li>CWE-862, CWE-863. Medium severity (CVSS 6.5). CVE requested. Affected v13.04 through v13.27. Fix prepared for the Upcoming release.</li><li><a href="listlockmovebleed/">More details</a></li></ul>
+</details></td>
+</tr>
+<tr>
 <td valign="top">-</td>
 <td class="icon" valign="top"><h2><span role="img" aria-label="CloudPanelBleed"><i class="fa fa-cloud" aria-hidden="true"></i> <i class="fa fa-database" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></span></h2></td>
 <td valign="top"><b><a href="cloudpanelbleed/">CloudPanelBleed</a></b></td>

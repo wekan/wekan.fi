@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8">
+<title>WeKan — Hall of Fame / ListLockMoveBleed</title>
+<link rel="icon" href="../../wekan-favicon.png">
+<link rel="stylesheet" href="../../css/main.css">
+<link rel="stylesheet" href="../../font-awesome/css/font-awesome.min.css">
+</head><body class="hall-of-fame">
+<img src="../hof.svg" alt="Hall of Fame" width="300">
+<div class="action-buttons"><a class="button" href="../">Back to Hall of Fame Contents</a>
+<a class="button" href="../../">Back to WeKan Website</a></div>
+<div class="hof"><h1>ListLockMoveBleed</h1>
+<table border="1"><tr><th>CVE</th><th>Icon</th><th>Vulnerability name</th><th>Date</th>
+<th>Responsible Security Disclosure by</th><th>Stars</th><th>Process</th><th>Vulnerabilities</th></tr>
+<tr>
+<td valign="top">CVE requested</td>
+<td class="icon" valign="top"><h2><span role="img" aria-label="ListLockMoveBleed"><i class="fa fa-list" aria-hidden="true"></i> <i class="fa fa-lock" aria-hidden="true"></i> <i class="fa fa-exchange" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></span></h2></td>
+<td valign="top"><b><a href="./">ListLockMoveBleed</a></b></td>
+<td valign="top">2026-11-22</td>
+<td class="by" valign="top"><b><a href="https://github.com/adityasunny06help-coder">adityasunny06help-coder</a></b></td>
+<td class="stars" valign="top"><img src="../GoldStar.png" width="30" height="30" alt="Gold star"><img src="../GoldStar.png" width="30" height="30" alt="Gold star"><img src="../GoldStar.png" width="30" height="30" alt="Gold star"><img src="../GoldStar.png" width="30" height="30" alt="Gold star"><img src="../GoldStar.png" width="30" height="30" alt="Gold star"></td>
+<td valign="top"><p>Coordinated disclosure via GitHub Security Advisory <a href="https://github.com/wekan/wekan/security/advisories/GHSA-394w-8q99-q4qx">GHSA-394w-8q99-q4qx</a>, with the affected lines, an end-to-end proof of concept against the official v13.27 bundle and a suggested fix; validated and fixed by xet7.</p>
+</td>
+<td valign="top"><p>When a board admin refused a role write access in one list (<code>roleExceptions</code>, #4527), a normal member could still move the whole swimlane holding that list&#39;s cards to another board with <code>POST /api/boards/:boardId/swimlanes/:swimlaneId/move</code>: the route asked only for write access to the two boards, and the cards landed in lists on the other board with no exceptions, where the member could edit or delete them.</p>
+<p>CWE-862, CWE-863. Medium severity (CVSS 6.5). CVE requested. Affected v13.04 through v13.27. Fix prepared for the Upcoming release.</p>
+</td>
+</tr>
+</table>
+<h2 class="hof">Details</h2>
+<p>A board admin can give a list its own rule for a role (<code>list.roleExceptions</code>, #4527): for example, Normal members may read a list but not write in it. Since 2026-11-18 that refusal also covers deleting, archiving and moving a swimlane that holds cards in the list, and every path enforced it but one. The Meteor method <code>moveSwimlane</code> asks <code>assertSwimlaneListsWritable</code>, the REST swimlane delete asks <code>assertSwimlaneListsNotRefused</code>, and client writes meet the Swimlanes deny rule. <code>POST /api/boards/:boardId/swimlanes/:swimlaneId/move</code> asked only for write access to the source and destination boards. Moving a swimlane moves its cards: for each list, <code>swimlane.move()</code> finds or creates a list of the same title on the destination board and moves the cards into it, and those lists carry no exceptions. So a normal member refused by the list, with an API token, could move the swimlane to another board they belong to, and then edit or delete the locked list&#39;s cards there. It is the same shape as <a href="../listlockbleed/">ListLockBleed</a> and <a href="../listlockbulkbleed/">ListLockBulkBleed</a>: one path of a family left asking only for board-level write access.</p>
+<p><strong>Fix:</strong> the REST move asks <code>assertSwimlaneListsNotRefused</code> in <code>server/lib/listPermissionGate.js</code> for every list holding the swimlane&#39;s cards, or bound to it, before <code>swimlane.move()</code>, and answers 403 and moves nothing when one refuses the caller&#39;s role. As for the other REST routes, only a list&#39;s refusal counts, and the board admin, whom no list exception binds, is unaffected.</p>
+<p><strong>Found with it:</strong> the reporter noticed that every REST swimlane move, an allowed one too, answered 500 after its first card had already moved: the card move read <code>Meteor.userId()</code> for its position history, which throws on the server outside a Meteor method. The mover is now read without throwing, so a REST move of a swimlane or a card completes instead of stopping half done.</p>
+<h2>Detection</h2>
+<p>A refused move is recorded in Admin Panel / Problems as ListLockMoveBleed (key <code>authz.list-locked-move</code>, source <code>rest:swimlane-move</code>). The board&#39;s menu does not offer the move to such a member, so only a direct API call reaches the refusal. Medium severity in Problems: it never disables the account. An allowed move records nothing.</p>
+<h2>Verification</h2>
+<p>tests/listLockStructure.test.cjs runs the gate on a board with a list refusing <code>normal.write</code> and checks that the move is refused with 403 and recorded under ListLockMoveBleed, with the negative cases of an open swimlane, the board admin and a missing swimlane. It pins that the move route asks the gate before <code>swimlane.move(</code>, and scans every server file for a swimlane <code>move(</code> whose handler does not ask the gate first, so the same mistake cannot return on another path. tests/cardMoveOutsideMethod.test.cjs pins the card move&#39;s guarded read of the user. tests/playwright/specs/list-lock-move.e2e.js replays the report against a running server: the member&#39;s move to board B is refused and every card stays on board A, the board admin moves it, and the same member moves a swimlane with no refusing list with 200, every card arriving on board B.</p>
+</div></body></html>
