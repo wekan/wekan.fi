@@ -7,6 +7,3 @@ file.
 
 - Rerun "Deploy static content to Pages": its dependency risk check passes
   now, and the deploy failed with a 500 from GitHub's Pages API.
-- ListLockMoveBleed and BounceBleed say "CVE requested": request the CVEs
-  through their GitHub Security Advisories after the WeKan release, then put
-  the CVE numbers in their rows.

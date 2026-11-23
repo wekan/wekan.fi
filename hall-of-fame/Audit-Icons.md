@@ -49,6 +49,7 @@ Star methodology: [Audit-Stars.md](Audit-Stars.md).
 | CardPubSubBleed | `fa-sticky-note`, `fa-rss`, `fa-eye` | sticky note + rss + eye | 2 |
 | CasAccountMergeBleed | `fa-id-card`, `fa-user`, `fa-compress` | id card + user + compress | 1 |
 | CasRaceBleed | `fa-id-card`, `fa-exchange`, `fa-clock-o` | id card + exchange + clock | 4 |
+| OidcRaceBleed | `fa-openid`, `fa-exchange`, `fa-clock-o` | OpenID + exchange + clock: CasRaceBleed's race, in the OIDC login | 4 |
 | CasTokenBleed | `fa-ticket`, `fa-id-card` | ticket + id card | 2 |
 | ChecklistBleed | `fa-check-square-o`, `fa-exchange`, `fa-columns` | check square + exchange + columns | 4 |
 | ChecklistRESTBleed | `fa-check-square-o`, `fa-road`, `fa-unlock` | check square + road + unlock | 2 |

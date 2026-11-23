@@ -1,5 +1,14 @@
 # Upcoming wekan.fi release
 
+- Hall of Fame: OidcRaceBleed, the eighth issue of meifukun's report - two
+  concurrent OIDC logins shared one serviceData, so a login could receive
+  another user's account - fixed in WeKan v9.97 (#4897). Its advisory,
+  GHSA-6944-p22h-3qpx, was published on 2026-11-20 and was the one published
+  WeKan advisory without a row. Row, page, Audit-Icons.md, Audit-Stars.md (5
+  stars) and its exact URLs in releases/risk-baseline.json. TODO.md no longer
+  waits for the ListLockMoveBleed and BounceBleed CVEs: they are requested.
+  Thanks to meifukun and xet7.
+
 - Deploy: the deploy of 2026-11-22 stopped in its source audit, because the
   BounceBleed page links its three advisories (GHSA-7w85-38ph-c96v,
   GHSA-2wcc-f289-3r95, GHSA-735h-p955-fwxp), and the ListLockMoveBleed row and

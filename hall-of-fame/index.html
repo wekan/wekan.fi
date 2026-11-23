@@ -2383,6 +2383,41 @@ Found and fixed during the sibling authentication audit; reproduced with locally
           CVE requested
           <br /> <br />
         </td>
+        <td class="icon" valign="top"><h2><span class="vulnerability-icons" role="img" aria-label="OidcRaceBleed"><i class="fa fa-openid" style="color: black;" aria-hidden="true"></i> <i class="fa fa-exchange" style="color: black;" aria-hidden="true"></i> <i class="fa fa-clock-o" style="color: black;" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></span> </h2></td>
+        <td valign="top"><b><a href="oidcracebleed/">OidcRaceBleed</a></b></td>
+        <td valign="top">2026-07-19</td>
+        <td class="by" valign="top">
+          <b><a href="https://github.com/meifukun">meifukun</a></b> and <b><a href="https://github.com/xet7">xet7</a></b>
+        </td>
+        <td class="stars" valign="top">
+          <img src="GoldStar.png" width="30px" height="auto" /><img src="GoldStar.png" width="30px" height="auto" /><img src="GoldStar.png" width="30px" height="auto" /><img src="GoldStar.png" width="30px" height="auto" /><img src="GoldStar.png" width="30px" height="auto" />
+        </td>
+        <td valign="top">
+          <details>
+          <summary>Process</summary>
+
+          Privately reported 8 issues reviewed against WeKan v9.95.0. Later submitted as GitHub Security Advisory <a href="https://github.com/wekan/wekan/security/advisories/GHSA-6944-p22h-3qpx">GHSA-6944-p22h-3qpx</a>, with the details, a proof of concept and a suggested fix.
+          </details>
+        </td>
+        <td valign="top">
+          <details>
+          <summary>Details</summary>
+
+          <ul>
+            <li><span class="vulnerability-icons" role="img" aria-label="OidcRaceBleed"><i class="fa fa-openid" style="color: black;" aria-hidden="true"></i> <i class="fa fa-exchange" style="color: black;" aria-hidden="true"></i> <i class="fa fa-clock-o" style="color: black;" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></span> OidcRaceBleed &mdash; with OIDC login enabled, <code>packages/wekan-oidc/oidc_server.js</code> kept each login's <code>profile</code>, <code>serviceData</code> and <code>userinfo</code> in module-level objects shared by every login. The login callback awaits the token, userinfo and mapping requests, so two concurrent logins wrote into the same <code>serviceData</code>: an attacker logging in with their own OIDC code could receive a session for another user's WeKan account. Fixed by making all login state local to each login (CWE-362 Race Condition &rarr; Account Takeover)</li>
+            <li>Reported privately by meifukun (<a href="https://github.com/meifukun">https://github.com/meifukun</a>)</li>
+            <li>Fixed in WeKan v9.97 (<a href="https://github.com/wekan/wekan/commit/9ddbc777dd417f1c9e226da845f7555be2ceb947">commit</a>, <a href="https://github.com/wekan/wekan/issues/4897">#4897</a>)</li>
+            <li><a href="oidcracebleed/">More details</a></li>
+          </ul>
+          </details>
+        </td>
+      </tr>
+
+      <tr>
+        <td valign="top">
+          CVE requested
+          <br /> <br />
+        </td>
         <td class="icon" valign="top"><h2><span class="vulnerability-icons" role="img" aria-label="MetricsBleed"><i class="fa fa-bar-chart" style="color: black;" aria-hidden="true"></i> <i class="fa fa-server" style="color: black;" aria-hidden="true"></i> <i class="fa fa-user-secret" style="color: black;" aria-hidden="true"></i> <i class="fa fa-tint" style="color: red;" aria-hidden="true"></i></span> </h2></td>
         <td valign="top"><b><a href="metricsbleed/">MetricsBleed</a></b></td>
         <td valign="top">2026-07-19</td>
