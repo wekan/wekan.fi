@@ -1,5 +1,12 @@
 # Upcoming wekan.fi release
 
+- Deploy: the v13.34 deploy (run 45882142858) uploaded its Pages artifact,
+  github-pages-1, and half a second later deploy-pages found 0 artifacts by
+  that name and failed: GitHub's artifact list had not caught up with the
+  upload. A failed deploy now waits a minute and deploys the same artifact
+  once more; a second failure still fails the job.
+  tests/pages-deploy-retry.test.cjs pins both. Thanks to xet7.
+
 - Hall of Fame: OidcRaceBleed, the eighth issue of meifukun's report - two
   concurrent OIDC logins shared one serviceData, so a login could receive
   another user's account - fixed in WeKan v9.97 (#4897). Its advisory,

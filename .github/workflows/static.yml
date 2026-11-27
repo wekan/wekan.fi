@@ -23,7 +23,7 @@ jobs:
   deploy:
     environment:
       name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
+      url: ${{ steps.deployment.outputs.page_url || steps.deployment_retry.outputs.page_url }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -53,9 +53,23 @@ jobs:
         with:
           name: github-pages-${{ github.run_attempt }}
           path: '.'
+      # The artifact list is read half a second after the upload finalized,
+      # and GitHub can still answer "Found 0 artifact(s)" (run 45882142858,
+      # v13.34: uploaded as github-pages-1, then "No artifacts named
+      # github-pages-1 were found"). That is the listing lagging, not a
+      # missing upload, so wait and deploy the same artifact again once.
       - uses: actions/deploy-pages@v5
         if: steps.plan.outputs.deploy == 'true'
         id: deployment
+        continue-on-error: true
+        with:
+          artifact_name: github-pages-${{ github.run_attempt }}
+      - name: Wait for the artifact to be listed
+        if: steps.plan.outputs.deploy == 'true' && steps.deployment.outcome == 'failure'
+        run: sleep 60
+      - uses: actions/deploy-pages@v5
+        if: steps.plan.outputs.deploy == 'true' && steps.deployment.outcome == 'failure'
+        id: deployment_retry
         with:
           artifact_name: github-pages-${{ github.run_attempt }}
       - name: Record completed website release
